@@ -1,0 +1,13 @@
+﻿<Window x:Class="Wu.ComTool.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:prism="http://prismlibrary.com/"
+        Title="{Binding Title}"
+        Width="525"
+        Height="350"
+        prism:ViewModelLocator.AutoWireViewModel="True">
+    <Grid>
+        <TextBlock Text=" XX    " />
+        <ContentControl prism:RegionManager.RegionName="ContentRegion" />
+    </Grid>
+</Window>
