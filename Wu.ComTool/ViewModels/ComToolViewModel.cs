@@ -3,6 +3,7 @@ using Prism.Ioc;
 using Prism.Mvvm;
 using System;
 using System.IO.Ports;
+using Wu.ComTool.Models;
 
 namespace Wu.ComTool.ViewModels
 {
@@ -20,7 +21,17 @@ namespace Wu.ComTool.ViewModels
         }
 
         #region **************************************** 属性 ****************************************
+        /// <summary>
+        /// 打开抽屉
+        /// </summary>
+        public IsDrawersOpen IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
+        private IsDrawersOpen _IsDrawersOpen = new();
 
+        /// <summary>
+        /// Com口配置
+        /// </summary>
+        public ComConfig ComConfig { get => _ComConfig; set => SetProperty(ref _ComConfig, value); }
+        private ComConfig _ComConfig = new();
         #endregion
 
 
@@ -39,10 +50,16 @@ namespace Wu.ComTool.ViewModels
             {
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
+                case "OpenCom":
+                    var xx = Convert.ToInt32(ComConfig.BaudRate);
+                    break;
+                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 default:
                     break;
             }
         }
+
+
         public async void GetDataAsync()
         {
             try

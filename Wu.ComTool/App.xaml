@@ -21,6 +21,9 @@
                 <ResourceDictionary Source="ResourceDictonarys\FormDictionary.xaml" />
                 <!--  全局样式  -->
                 <ResourceDictionary Source="ResourceDictonarys\GlobalDictionary.xaml" />
+                <!--  枚举  -->
+                <ResourceDictionary Source="ResourceDictonarys\EnumDictionary.xaml" />
+
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
