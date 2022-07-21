@@ -8,6 +8,9 @@ using Wu.Comm.Converters;
 
 namespace Wu.Comm.Models
 {
+    /// <summary>
+    /// 波特率
+    /// </summary>
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum BaudRate : int
     {
