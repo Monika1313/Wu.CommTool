@@ -6,6 +6,12 @@
     <AssemblyName>Wu通讯调试工具</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\XX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\XX.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="HandyControl" Version="3.3.0" />
     <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
