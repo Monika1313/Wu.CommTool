@@ -1,0 +1,135 @@
+﻿<Window
+    x:Class="Wu.Comm.Views.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ext="clr-namespace:Wu.Comm.Extensions"
+    xmlns:hd="https://handyorg.github.io/handycontrol"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:prism="http://prismlibrary.com/"
+    Width="1300"
+    Height="800"
+    prism:ViewModelLocator.AutoWireViewModel="True">
+    <WindowChrome.WindowChrome>
+        <WindowChrome />
+    </WindowChrome.WindowChrome>
+
+    <md:DialogHost
+        x:Name="DialogHost"
+        DialogTheme="Inherit"
+        Identifier="Root">
+        <md:DrawerHost x:Name="drawerHost">
+            <!--  左侧菜单栏  -->
+            <md:DrawerHost.LeftDrawerContent>
+                <DockPanel MinWidth="170">
+                    <StackPanel DockPanel.Dock="Top">
+                        <!--<Image Width="50"
+                               Height="50"
+                               Margin="0,20,0,5"
+                               Source="/Images/XX.png">
+                            <Image.Clip>
+                                <EllipseGeometry Center="25,25"
+                                                 RadiusX="25"
+                                                 RadiusY="25" />
+                            </Image.Clip>
+                        </Image>-->
+                        <TextBlock
+                            Margin="0,10"
+                            HorizontalAlignment="Center"
+                            Text="xxx" />
+                    </StackPanel>
+                    <ListBox
+                        x:Name="menuBar"
+                        ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
+                        ItemsSource="{Binding MenuBars}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Background="Transparent" Orientation="Horizontal">
+                                    <md:PackIcon Margin="20,0" Kind="{Binding Icon}" />
+                                    <TextBlock Margin="10,0" Text="{Binding Title}" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
+            </md:DrawerHost.LeftDrawerContent>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <md:Snackbar
+                    x:Name="Snackbar"
+                    Panel.ZIndex="1"
+                    MessageQueue="{md:MessageQueue}" />
+                <md:ColorZone
+                    x:Name="ColorZone"
+                    Padding="8"
+                    md:ShadowAssist.ShadowDepth="Depth2"
+                    DockPanel.Dock="Top"
+                    Mode="PrimaryMid">
+                    <Grid>
+                        <TextBlock
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="22"
+                            Text="XX" />
+
+                        <DockPanel LastChildFill="False">
+                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+
+                                <!--<md:PopupBox>
+                                -->
+                                <!--<md:PopupBox.ToggleContent>
+                                        <Image Width="25"
+                                               Height="25"
+                                               Source="/Images/XX.png"
+                                               Stretch="Fill">
+                                            <Image.Clip>
+                                                <EllipseGeometry Center="12.5,12.5"
+                                                                 RadiusX="12.5"
+                                                                 RadiusY="12.5" />
+                                            </Image.Clip>
+                                        </Image>
+                                    </md:PopupBox.ToggleContent>-->
+                                <!--
+                                    <StackPanel>
+                                        <Button CommandParameter="用户中心" Content="用户中心" />
+                                        <Button Command="{Binding LogOutCommand}"
+                                                CommandParameter="注销当前账号"
+                                                Content="注销" />
+                                    </StackPanel>
+                                </md:PopupBox>-->
+
+                                <Button
+                                    x:Name="btnMin"
+                                    Content="—"
+                                    Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                <Button
+                                    x:Name="btnMax"
+                                    Content="☐"
+                                    Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                <Button
+                                    x:Name="btnClose"
+                                    Content="✕"
+                                    Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                            </StackPanel>
+
+                            <!--<ToggleButton x:Name="MenuToggleButton"
+                                          IsChecked="False"
+                                          Style="{StaticResource MaterialDesignHamburgerToggleButton}" />-->
+                        </DockPanel>
+                    </Grid>
+                </md:ColorZone>
+                <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
+            </Grid>
+        </md:DrawerHost>
+    </md:DialogHost>
+</Window>
