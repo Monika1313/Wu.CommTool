@@ -5,16 +5,92 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.ComTool.ViewModels.DesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.ComTool.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:model="clr-namespace:Wu.ComTool.Models"
+             xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
              d:DataContext="{x:Static dvm:ComToolDesignViewModel.Instance}"
              d:DesignHeight="600"
              d:DesignWidth="800"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="MessageTextBlock" TargetType="TextBlock">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="0">
+                    <Setter Property="Foreground" Value="#096dd9" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="1">
+                    <Setter Property="Foreground" Value="#389E0D" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="2">
+                    <Setter Property="Foreground" Value="#faae19" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="3">
+                    <Setter Property="Foreground" Value="#cf1322" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="4">
+                    <Setter Property="Foreground" Value="#d5ca14" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style x:Key="MessageBorder" TargetType="Border">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="0">
+                    <Setter Property="Background" Value="#e6f7ff" />
+                    <Setter Property="BorderBrush" Value="#91d5ff" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="4">
+                    <Setter Property="Background" Value="#fdffe5" />
+                    <Setter Property="BorderBrush" Value="#f6ff91" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="1">
+                    <Setter Property="Background" Value="#f6ffed" />
+                    <Setter Property="BorderBrush" Value="#b7eb8f" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="2">
+                    <Setter Property="Background" Value="#fffbe6" />
+                    <Setter Property="BorderBrush" Value="#ffe89b" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="3">
+                    <Setter Property="Background" Value="#fff1f0" />
+                    <Setter Property="BorderBrush" Value="#ffa39e" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+        <Style x:Key="MessageTextBox" TargetType="TextBox">
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Background" Value="#00FFFFFF" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Type}" Value="0">
+                    <Setter Property="Foreground" Value="#096dd9" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="1">
+                    <Setter Property="Foreground" Value="#389E0D" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="2">
+                    <Setter Property="Foreground" Value="#faae19" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="3">
+                    <Setter Property="Foreground" Value="#cf1322" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="4">
+                    <Setter Property="Foreground" Value="#d5ca14" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+
+    </UserControl.Resources>
+
     <md:DialogHost Identifier="ComToolView">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}">
+            <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
                 <DockPanel Width="300">
                     <Border Margin="5"
@@ -29,16 +105,21 @@
                                        Text="串口设置" />
                             <ComboBox hc:InfoElement.Placeholder="请选择串口..."
                                       hc:InfoElement.Title="串口"
-                                      SelectedItem="{Binding RepairSearchParameter.FaultArea, UpdateSourceTrigger=PropertyChanged}"
+                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
+                                      ItemsSource="{Binding ComPorts}"
+                                      SelectedIndex="0"
+                                      SelectedValue="{Binding SelectedCom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}" />
                             <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
                                       hc:InfoElement.Title="波特率"
+                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
                                       ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
                                       SelectedIndex="5"
                                       SelectedItem="{Binding ComConfig.BaudRate}"
                                       Style="{StaticResource FormComboBox}" />
                             <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
                                       hc:InfoElement.Title="校验位"
+                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
                                       SelectedIndex="0"
                                       Style="{StaticResource FormComboBox}">
                                 <ComboBoxItem>无校验 None</ComboBoxItem>
@@ -47,6 +128,7 @@
                             </ComboBox>
                             <ComboBox hc:InfoElement.Placeholder="请选择数据位..."
                                       hc:InfoElement.Title="数据位"
+                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
                                       SelectedIndex="0"
                                       Style="{StaticResource FormComboBox}">
                                 <ComboBoxItem>8</ComboBoxItem>
@@ -55,6 +137,7 @@
                             </ComboBox>
                             <ComboBox hc:InfoElement.Placeholder="请选择停止位..."
                                       hc:InfoElement.Title="停止位"
+                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
                                       SelectedIndex="0"
                                       Style="{StaticResource FormComboBox}">
                                 <ComboBoxItem>1</ComboBoxItem>
@@ -87,8 +170,10 @@
                 </DockPanel>
             </md:DrawerHost.LeftDrawerContent>
 
+            <!--  主体内容  -->
             <DockPanel>
                 <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                    <!--  塞选器按钮  -->
                     <Button Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
@@ -101,7 +186,36 @@
                                      Height="24"
                                      Kind="COG" />
                     </Button>
+
+                    <Button Width="30"
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="Clear"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            ToolTip="MaterialDesignFloatingActionMiniButton">
+                        <md:PackIcon Width="24"
+                                     Height="24"
+                                     Kind="DeleteOffOutline" />
+                    </Button>
+
+
+                    <Button Width="30"
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="Test"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                            ToolTip="MaterialDesignFloatingActionMiniButton">
+                        <md:PackIcon Width="24"
+                                     Height="24"
+                                     Kind="ADD" />
+                    </Button>
                 </DockPanel>
+
                 <StackPanel Height="30"
                             Background="AliceBlue"
                             DockPanel.Dock="Bottom"
@@ -115,25 +229,72 @@
                             BorderBrush="Blue"
                             BorderThickness="1" />
                     <TextBlock VerticalAlignment="Center" Text="Send:" />
-
                 </StackPanel>
 
 
-                <DockPanel Height="200" DockPanel.Dock="Bottom">
+                <DockPanel Height="100" DockPanel.Dock="Bottom">
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                        <TextBlock VerticalAlignment="Center" Text="校验：" />
+                        <TextBlock Margin="5"
+                                   VerticalAlignment="Center"
+                                   Text="校验：" />
                         <ComboBox SelectedIndex="0">
                             <ComboBoxItem Content="Modbus" />
+                            <ComboBoxItem Content="None" />
                         </ComboBox>
-                        <Button Content="发送" />
+                        <Button Margin="10,0"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Send"
+                                Content="发送" />
                     </StackPanel>
-                    <TextBox Margin="5" VerticalContentAlignment="Top" />
-                </DockPanel>
-                <Grid>
                     <TextBox Margin="5"
                              VerticalContentAlignment="Top"
-                             Text="OutPut" />
-                </Grid>
+                             Text="{Binding SendMessage}"
+                             TextWrapping="Wrap" />
+                </DockPanel>
+
+                <Border Margin="5"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                    <hc:ScrollViewer IsInertiaEnabled="True">
+                        <!--  页面消息  -->
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="3"
+                                            Padding="3"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Style="{StaticResource MessageBorder}">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock Margin="5"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+                                            <TextBlock Margin="5"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Type}" />
+                                            <!--<TextBlock Margin="5"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Content}" />-->
+                                            <TextBox Margin="5"
+                                                     VerticalAlignment="Center"
+                                                     IsReadOnly="True"
+                                                     Style="{StaticResource MessageTextBox}"
+                                                     Text="{Binding Content}" />
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
+                </Border>
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>
