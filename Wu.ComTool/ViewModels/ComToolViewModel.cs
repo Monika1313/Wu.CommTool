@@ -8,9 +8,9 @@ using System.IO.Ports;
 using Wu.ComTool.Models;
 using System.Management;
 using HandyControl.Controls;
-using System.IO;
-using Wu.FzWater.Mqtt;
 using System.Text;
+using System.Windows.Controls;
+using System.Diagnostics;
 
 namespace Wu.ComTool.ViewModels
 {
@@ -27,8 +27,34 @@ namespace Wu.ComTool.ViewModels
             this.provider = provider;
             ExecuteCommand = new(Execute);
 
+            ComDevice.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
+
             //更新串口列表
             GetComPorts();
+        }
+
+        /// <summary>
+        /// 接收消息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        {
+            //数据接收完整性
+            //这里不知道是用延时好，还是循环读取缓冲区好，待验证……
+            //Thread.Sleep(50);
+            string data = string.Empty;
+            while (ComDevice.BytesToRead > 0)
+            {
+                data += ComDevice.ReadExisting();  //数据读取,直到读完缓冲区数据
+                var XX = ComDevice.ReadByte();
+            }
+            //
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ShowMessage(data, MessageType.Receive);
+            }));
         }
 
         #region **************************************** 属性 ****************************************
@@ -114,8 +140,6 @@ namespace Wu.ComTool.ViewModels
         /// </summary>
         private bool Send()
         {
-            //FileInfo fi = new FileInfo("D:\\Desktop\\XX.png");
-            //ShowMessage("创建时间：" + fi.CreationTime.ToString() + "写入文件的时间" + fi.LastWriteTime + "访问的时间" + fi.LastAccessTime);
             byte[] data = Encoding.ASCII.GetBytes(SendMessage);
             if (ComDevice.IsOpen)
             {
@@ -271,7 +295,14 @@ namespace Wu.ComTool.ViewModels
 
         private void ShowMessage(string message, MessageType type = MessageType.Info)
         {
-            Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+            try
+            {
+                Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         #endregion
     }
