@@ -125,18 +125,28 @@ namespace Wu.ComTool.ViewModels
             {
                 try
                 {
+                    List<byte> crc = new();
+                    //根据选择进行CRC校验
+                    switch (CrcMode)
+                    {
+                        //无校验
+                        case CrcMode.None:
+                            break;
 
-                    #region 根据选择进行校验
-                    //CRC校验
-                    var crcCode = Wu.Utils.Crc.Crc16Modbus(msg);
-                    //字节顺序反序
-                    Array.Reverse(crcCode);
-                    #endregion
+                        //Modebus校验
+                        case CrcMode.Modbus:
+                            var code = Wu.Utils.Crc.Crc16Modbus(msg);
+                            Array.Reverse(code);
+                            crc.AddRange(code);
+                            break;
+                        default:
+                            break;
+                    }
 
                     //合并数组
                     List<byte> list = new List<byte>();
                     list.AddRange(msg);
-                    list.AddRange(crcCode);
+                    list.AddRange(crc);
                     var data = list.ToArray();
                     ComDevice.Write(data, 0, data.Length);//发送数据
                     ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
@@ -153,6 +163,8 @@ namespace Wu.ComTool.ViewModels
             }
             return false;
         }
+
+
 
         /// <summary>
         /// 接收消息
