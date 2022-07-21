@@ -3,6 +3,22 @@
                     xmlns:hc="https://handyorg.github.io/handycontrol"
                     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes">
 
+    <!--  颜色  -->
+    <SolidColorBrush x:Key="Green_Foreground">#389E0D</SolidColorBrush>
+    <SolidColorBrush x:Key="Green_BorderBrush">#b7eb8f</SolidColorBrush>
+    <SolidColorBrush x:Key="Green_Background">#f6ffed</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Blue_Foreground">#096dd9</SolidColorBrush>
+    <SolidColorBrush x:Key="Blue_BorderBrush">#91d5ff</SolidColorBrush>
+    <SolidColorBrush x:Key="Blue_Background">#e6f7ff</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Red_Foreground">#cf1322</SolidColorBrush>
+    <SolidColorBrush x:Key="Red_BorderBrush">#ffa39e</SolidColorBrush>
+    <SolidColorBrush x:Key="Red_Background">#fff1f0</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Yellow_Foreground">#faad14</SolidColorBrush>
+    <SolidColorBrush x:Key="Yellow_BorderBrush">#f6ff91</SolidColorBrush>
+    <SolidColorBrush x:Key="Yellow_Background">#fdffe5</SolidColorBrush>
 
     <!--  导航菜单按钮样式  -->
     <Style x:Key="MenuBarsListBoxItem" TargetType="ListBoxItem">

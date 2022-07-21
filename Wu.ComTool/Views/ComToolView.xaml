@@ -10,6 +10,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:model="clr-namespace:Wu.ComTool.Models"
+             xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
              d:DataContext="{x:Static dvm:ComToolDesignViewModel.Instance}"
              d:DesignHeight="600"
@@ -19,16 +21,16 @@
         <Style x:Key="MessageTextBlock" TargetType="TextBlock">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Type}" Value="0">
-                    <Setter Property="Foreground" Value="#096dd9" />
+                    <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="1">
-                    <Setter Property="Foreground" Value="#389E0D" />
+                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="2">
-                    <Setter Property="Foreground" Value="#faae19" />
+                    <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="3">
-                    <Setter Property="Foreground" Value="#cf1322" />
+                    <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="4">
                     <Setter Property="Foreground" Value="#d5ca14" />
@@ -36,28 +38,27 @@
             </Style.Triggers>
         </Style>
 
-
         <Style x:Key="MessageBorder" TargetType="Border">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Type}" Value="0">
-                    <Setter Property="Background" Value="#e6f7ff" />
-                    <Setter Property="BorderBrush" Value="#91d5ff" />
+                    <Setter Property="Background" Value="{StaticResource Blue_Background}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="1">
+                    <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="2">
+                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Type}" Value="3">
+                    <Setter Property="Background" Value="{StaticResource Red_Background}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding Type}" Value="4">
                     <Setter Property="Background" Value="#fdffe5" />
                     <Setter Property="BorderBrush" Value="#f6ff91" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="1">
-                    <Setter Property="Background" Value="#f6ffed" />
-                    <Setter Property="BorderBrush" Value="#b7eb8f" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="2">
-                    <Setter Property="Background" Value="#fffbe6" />
-                    <Setter Property="BorderBrush" Value="#ffe89b" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="3">
-                    <Setter Property="Background" Value="#fff1f0" />
-                    <Setter Property="BorderBrush" Value="#ffa39e" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -92,9 +93,9 @@
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}">
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
-                <DockPanel Width="300">
+                <DockPanel Width="300" Background="#DDDDDD">
                     <Border Margin="5"
-                            Background="AliceBlue"
+                            Background="White"
                             BorderThickness="1"
                             CornerRadius="5"
                             DockPanel.Dock="Top">
@@ -105,46 +106,48 @@
                                        Text="串口设置" />
                             <ComboBox hc:InfoElement.Placeholder="请选择串口..."
                                       hc:InfoElement.Title="串口"
-                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
+                                      IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                       ItemsSource="{Binding ComPorts}"
-                                      SelectedIndex="0"
-                                      SelectedValue="{Binding SelectedCom, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}" />
                             <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
                                       hc:InfoElement.Title="波特率"
-                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
+                                      IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                       ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
-                                      SelectedIndex="5"
-                                      SelectedItem="{Binding ComConfig.BaudRate}"
+                                      SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}" />
+
                             <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
                                       hc:InfoElement.Title="校验位"
-                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
+                                      IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                       ItemsSource="{Binding Source={StaticResource ValueParity}}"
-                                      SelectedIndex="0"
                                       SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Style="{StaticResource FormComboBox}">
-                                <!--<ComboBoxItem>无校验 None</ComboBoxItem>
-                                <ComboBoxItem>奇校验 Odd</ComboBoxItem>
-                                <ComboBoxItem>偶校验 Even</ComboBoxItem>-->
-                            </ComboBox>
+                                      Style="{StaticResource FormComboBox}" />
+
                             <ComboBox hc:InfoElement.Placeholder="请选择数据位..."
                                       hc:InfoElement.Title="数据位"
-                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
-                                      SelectedIndex="0"
-                                      Style="{StaticResource FormComboBox}">
-                                <ComboBoxItem>8</ComboBoxItem>
-                                <ComboBoxItem>7</ComboBoxItem>
-                                <ComboBoxItem>6</ComboBoxItem>
-                            </ComboBox>
+                                      IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                      ItemsSource="{StaticResource DataBits}"
+                                      SelectedItem="{Binding ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Style="{StaticResource FormComboBox}" />
                             <ComboBox hc:InfoElement.Placeholder="请选择停止位..."
                                       hc:InfoElement.Title="停止位"
-                                      IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
-                                      SelectedIndex="0"
+                                      IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                      ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
+                                      SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}">
-                                <ComboBoxItem>1</ComboBoxItem>
-                                <ComboBoxItem>1.5</ComboBoxItem>
-                                <ComboBoxItem>2</ComboBoxItem>
+                                <!--<ComboBoxItem>
+                                    <port:StopBits>None</port:StopBits>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <port:StopBits>One</port:StopBits>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <port:StopBits>Two</port:StopBits>
+                                </ComboBoxItem>
+                                <ComboBoxItem>
+                                    <port:StopBits>3</port:StopBits>
+                                </ComboBoxItem>-->
                             </ComboBox>
 
 
@@ -157,11 +160,29 @@
                                                         ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}" />
                             </hc:TransitioningContentControl>-->
 
-                            <Button Margin="30,5"
+                            <Button MinHeight="30"
+                                    Margin="30,5"
                                     Command="{Binding ExecuteCommand}"
-                                    CommandParameter="OpenCom"
-                                    Content="打开串口"
-                                    Cursor="Hand" />
+                                    CommandParameter="OpenCom">
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" TargetType="Button">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="true">
+                                                <Setter Property="Content" Value="关闭串口" />
+                                                <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+                                                <Setter Property="Background" Value="{StaticResource Red_Background}" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="false">
+                                                <Setter Property="Content" Value="打开串口" />
+                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
 
                         </StackPanel>
                     </Border>
@@ -236,13 +257,13 @@
 
                 <DockPanel Height="100" DockPanel.Dock="Bottom">
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                        <TextBlock Margin="5"
-                                   VerticalAlignment="Center"
-                                   Text="校验：" />
-                        <ComboBox SelectedIndex="0">
-                            <ComboBoxItem Content="Modbus" />
-                            <ComboBoxItem Content="None" />
-                        </ComboBox>
+                        <ComboBox MinWidth="190"
+                                  hc:InfoElement.Placeholder="请选择校验模式..."
+                                  hc:InfoElement.Title="自动校验模式: "
+                                  hc:InfoElement.TitleWidth="90"
+                                  ItemsSource="{Binding Source={StaticResource ValueCrcMode}}"
+                                  SelectedItem="{Binding CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource FormComboBox}" />
                         <Button Margin="10,0"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="Send"
@@ -287,6 +308,8 @@
                                                        Style="{StaticResource MessageTextBlock}"
                                                        Text="{Binding Content}" />-->
                                             <TextBox VerticalAlignment="Center"
+                                                     FontSize="12"
+                                                     FontWeight="Bold"
                                                      IsReadOnly="True"
                                                      Style="{StaticResource MessageTextBox}"
                                                      Text="{Binding Content}"

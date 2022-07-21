@@ -35,7 +35,7 @@ namespace Wu.ComTool.ViewModels
             GetComPorts();
         }
 
-       
+
 
         #region **************************************** 属性 ****************************************
         /// <summary>
@@ -48,7 +48,7 @@ namespace Wu.ComTool.ViewModels
         /// Com口配置
         /// </summary>
         public ComConfig ComConfig { get => _ComConfig; set => SetProperty(ref _ComConfig, value); }
-        private ComConfig _ComConfig = new();
+        private ComConfig _ComConfig = new(){ };
 
         /// <summary>
         /// 串口列表
@@ -69,16 +69,16 @@ namespace Wu.ComTool.ViewModels
         private ObservableCollection<MessageData> _Messages = new();
 
         /// <summary>
-        /// 串口是否已打开
-        /// </summary>
-        public bool IsComOpened { get => _IsComOpened; set => SetProperty(ref _IsComOpened, value); }
-        private bool _IsComOpened = false;
-
-        /// <summary>
         /// 发送的消息
         /// </summary>
         public string SendMessage { get => _SendMessage; set => SetProperty(ref _SendMessage, value); }
         private string _SendMessage = string.Empty;
+
+        /// <summary>
+        /// Crc校验模式
+        /// </summary>
+        public CrcMode CrcMode { get => _CrcMode; set => SetProperty(ref _CrcMode, value); }
+        private CrcMode _CrcMode = CrcMode.Modbus;
         #endregion
 
 
@@ -99,7 +99,6 @@ namespace Wu.ComTool.ViewModels
                 case "Add": break;
                 case "Send": Send(); break;
                 case "Clear": Clear(); break;
-                case "Test": Test(); break;
                 case "OpenCom": OperatePort(); break;        //打开串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 default:
@@ -121,14 +120,26 @@ namespace Wu.ComTool.ViewModels
         private bool Send()
         {
             //TODO 发送数据
-            //byte[] data = Encoding.ASCII.GetBytes(SendMessage);
-            byte[] data = SendMessage.GetBytes();
+            byte[] msg = SendMessage.GetBytes();
             if (ComDevice.IsOpen)
             {
                 try
                 {
+
+                    #region 根据选择进行校验
+                    //CRC校验
+                    var crcCode = Wu.Utils.Crc.Crc16Modbus(msg);
+                    //字节顺序反序
+                    Array.Reverse(crcCode);
+                    #endregion
+
+                    //合并数组
+                    List<byte> list = new List<byte>();
+                    list.AddRange(msg);
+                    list.AddRange(crcCode);
+                    var data = list.ToArray();
                     ComDevice.Write(data, 0, data.Length);//发送数据
-                    ShowMessage(SendMessage, MessageType.Send);
+                    ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
                     return true;
                 }
                 catch (Exception ex)
@@ -167,10 +178,9 @@ namespace Wu.ComTool.ViewModels
             byte[] buf = new byte[n];
             ComDevice.Read(buf, 0, n);
 
-
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ShowMessage(BitConverter.ToString(buf), MessageType.Receive);
+                ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
             }));
         }
 
@@ -184,38 +194,36 @@ namespace Wu.ComTool.ViewModels
             {
                 if (ComDevice.IsOpen == false)
                 {
-                    //打开串口
-                    ComDevice.PortName = SelectedCom.Key;               //串口
-                    ComDevice.BaudRate = (int)ComConfig.BaudRate;     //波特率
-                                                   //ComDevice.BaudRate = ((int)ComConfig.BaudRate);     //波特率
-                    ComDevice.Parity = ComConfig.Parity;                      //校验
-                    ComDevice.DataBits = 8;                             //数据位
-                    ComDevice.StopBits = StopBits.One;                  //停止位
+                    //配置串口
+                    ComDevice.PortName = ComConfig.Port.Key;                     //串口
+                    ComDevice.BaudRate = (int)ComConfig.BaudRate;             //波特率
+                    ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;                      //校验
+                    ComDevice.DataBits = ComConfig.DataBits;                  //数据位
+                    ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;                  //停止位
                     try
                     {
-                        ComDevice.Open();
-                        IsComOpened = true;
+                        ComDevice.Open();               //打开串口
+                        ComConfig.IsOpened = true;      //标记串口已打开
                         ShowMessage($"开打串口{ComDevice.PortName}");
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "错误");
+                        ShowMessage(ex.Message, MessageType.Error);
                         return;
                     }
                     IsDrawersOpen.IsLeftDrawerOpen = false;
                 }
                 else
                 {
-                    //关闭串口
                     try
                     {
-                        ComDevice.Close();
-                        IsComOpened = false;
+                        ComDevice.Close();                   //关闭串口
+                        ComConfig.IsOpened = false;          //标记串口已关闭
                         ShowMessage($"关闭串口{ComDevice.PortName}");
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show(ex.Message, "错误");
+                        ShowMessage(ex.Message, MessageType.Error);
                     }
                 }
 
@@ -226,30 +234,11 @@ namespace Wu.ComTool.ViewModels
             }
             finally
             {
-               
+
             }
         }
 
 
-
-
-
-
-
-        /// <summary>
-        /// Test
-        /// </summary>
-        private void Test()
-        {
-            var xx = SerialPort.GetPortNames();
-            ////var y = SerialPort.
-            //Ports.Clear();
-            //foreach (var item in xx)
-            //{
-            //    Ports.Add(item);
-            //}
-            GetComPorts();
-        }
 
         /// <summary>
         /// 查询数据
@@ -272,23 +261,14 @@ namespace Wu.ComTool.ViewModels
 
 
         /// <summary>
-        /// definity
-        /// </summary>
-        public ObservableCollection<KeyValuePair<string, string>> AAA { get => _Test; set => SetProperty(ref _Test, value); }
-        private ObservableCollection<KeyValuePair<string, string>> _Test = new();
-        /// <summary>
-        /// 串口列表
-        /// </summary>
-        //public ObservableCollection<Dictionary<string, string>> Coms { get => _Coms; set => SetProperty(ref _Coms, value); }
-        //private ObservableCollection<Dictionary<string, string>> _Coms;
-        /// <summary>
         /// 获取串口完整名字（包括驱动名字）
         /// </summary>
         private void GetComPorts()
         {
             //清空列表
             ComPorts.Clear();
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_PnPEntity where Name like '%(COM%'"))
+            //查找Com口
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'"))
             {
                 var hardInfos = searcher.Get();
                 foreach (var hardInfo in hardInfos)
@@ -304,20 +284,26 @@ namespace Wu.ComTool.ViewModels
                         ComPorts.Add(new KeyValuePair<string, string>(key, name));
                     }
                 }
+                if(ComPorts.Count != 0)
+                {
+                    ComConfig.Port = ComPorts[0];
+                }
                 ShowMessage("获取串口成功");
             }
         }
 
+        /// <summary>
+        /// 界面显示数据
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="type"></param>
         private void ShowMessage(string message, MessageType type = MessageType.Info)
         {
             try
             {
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type));
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch (Exception ex) {}
         }
         #endregion
     }
