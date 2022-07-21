@@ -98,6 +98,7 @@ namespace Wu.ComTool.ViewModels
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "Send": Send(); break;
+                case "GetComPorts": GetComPorts(); break;
                 case "Clear": Clear(); break;
                 case "OpenCom": OperatePort(); break;        //打开串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;
@@ -300,7 +301,12 @@ namespace Wu.ComTool.ViewModels
                 {
                     ComConfig.Port = ComPorts[0];
                 }
-                ShowMessage("获取串口成功");
+                string str = $"获取串口成功, 共{ComPorts.Count}个。";
+                foreach (var item in ComPorts)
+                {
+                    str += $"{item.Key}:{item.Value};";
+                }
+                ShowMessage(str);
             }
         }
 
