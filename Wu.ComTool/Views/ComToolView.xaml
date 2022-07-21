@@ -120,11 +120,13 @@
                             <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
                                       hc:InfoElement.Title="校验位"
                                       IsEnabled="{Binding IsComOpened, Converter={wucvt:ReverseBool}}"
+                                      ItemsSource="{Binding Source={StaticResource ValueParity}}"
                                       SelectedIndex="0"
+                                      SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}">
-                                <ComboBoxItem>无校验 None</ComboBoxItem>
+                                <!--<ComboBoxItem>无校验 None</ComboBoxItem>
                                 <ComboBoxItem>奇校验 Odd</ComboBoxItem>
-                                <ComboBoxItem>偶校验 Even</ComboBoxItem>
+                                <ComboBoxItem>偶校验 Even</ComboBoxItem>-->
                             </ComboBox>
                             <ComboBox hc:InfoElement.Placeholder="请选择数据位..."
                                       hc:InfoElement.Title="数据位"
@@ -273,21 +275,22 @@
                                             CornerRadius="4"
                                             Style="{StaticResource MessageBorder}">
                                         <WrapPanel Orientation="Horizontal">
-                                            <TextBlock Margin="5"
+                                            <TextBlock Margin="3"
+                                                       VerticalAlignment="Center"
                                                        Style="{StaticResource MessageTextBlock}"
                                                        Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
-                                            <TextBlock Margin="5"
+                                            <TextBlock VerticalAlignment="Center"
                                                        Style="{StaticResource MessageTextBlock}"
                                                        Text="{Binding Type}" />
                                             <!--<TextBlock Margin="5"
                                                        VerticalAlignment="Center"
                                                        Style="{StaticResource MessageTextBlock}"
                                                        Text="{Binding Content}" />-->
-                                            <TextBox Margin="5"
-                                                     VerticalAlignment="Center"
+                                            <TextBox VerticalAlignment="Center"
                                                      IsReadOnly="True"
                                                      Style="{StaticResource MessageTextBox}"
-                                                     Text="{Binding Content}" />
+                                                     Text="{Binding Content}"
+                                                     TextWrapping="Wrap" />
                                         </WrapPanel>
                                     </Border>
                                 </DataTemplate>

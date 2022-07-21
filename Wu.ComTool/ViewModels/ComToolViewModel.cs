@@ -11,6 +11,8 @@ using HandyControl.Controls;
 using System.Text;
 using System.Windows.Controls;
 using System.Diagnostics;
+using System.Threading;
+using Wu.Extensions;
 
 namespace Wu.ComTool.ViewModels
 {
@@ -33,29 +35,7 @@ namespace Wu.ComTool.ViewModels
             GetComPorts();
         }
 
-        /// <summary>
-        /// 接收消息
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
-        {
-            //数据接收完整性
-            //这里不知道是用延时好，还是循环读取缓冲区好，待验证……
-            //Thread.Sleep(50);
-            string data = string.Empty;
-            while (ComDevice.BytesToRead > 0)
-            {
-                data += ComDevice.ReadExisting();  //数据读取,直到读完缓冲区数据
-                var XX = ComDevice.ReadByte();
-            }
-            //
-            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                ShowMessage(data, MessageType.Receive);
-            }));
-        }
+       
 
         #region **************************************** 属性 ****************************************
         /// <summary>
@@ -140,7 +120,9 @@ namespace Wu.ComTool.ViewModels
         /// </summary>
         private bool Send()
         {
-            byte[] data = Encoding.ASCII.GetBytes(SendMessage);
+            //TODO 发送数据
+            //byte[] data = Encoding.ASCII.GetBytes(SendMessage);
+            byte[] data = SendMessage.GetBytes();
             if (ComDevice.IsOpen)
             {
                 try
@@ -162,6 +144,38 @@ namespace Wu.ComTool.ViewModels
         }
 
         /// <summary>
+        /// 接收消息
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        {
+            //TODO 接收数据
+            //数据接收完整性
+            //延时读取数据 等待数据接收完成
+            Thread.Sleep(100);
+            string data = string.Empty;
+            //while (ComDevice.BytesToRead > 0)
+            //{
+            //    data += ComDevice.ReadExisting();  //数据读取,直到读完缓冲区数据
+            //    //var XX = ComDevice.ReadByte();
+            //}
+            //
+
+            int n = ComDevice.BytesToRead;
+            byte[] buf = new byte[n];
+            ComDevice.Read(buf, 0, n);
+
+
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ShowMessage(BitConverter.ToString(buf), MessageType.Receive);
+            }));
+        }
+
+
+        /// <summary>
         /// 打开串口
         /// </summary>
         private void OperatePort()
@@ -172,9 +186,9 @@ namespace Wu.ComTool.ViewModels
                 {
                     //打开串口
                     ComDevice.PortName = SelectedCom.Key;               //串口
-                    ComDevice.BaudRate = 9600;     //波特率
+                    ComDevice.BaudRate = (int)ComConfig.BaudRate;     //波特率
                                                    //ComDevice.BaudRate = ((int)ComConfig.BaudRate);     //波特率
-                    ComDevice.Parity = Parity.Odd;                      //校验
+                    ComDevice.Parity = ComConfig.Parity;                      //校验
                     ComDevice.DataBits = 8;                             //数据位
                     ComDevice.StopBits = StopBits.One;                  //停止位
                     try
@@ -188,6 +202,7 @@ namespace Wu.ComTool.ViewModels
                         MessageBox.Show(ex.Message, "错误");
                         return;
                     }
+                    IsDrawersOpen.IsLeftDrawerOpen = false;
                 }
                 else
                 {
@@ -211,7 +226,7 @@ namespace Wu.ComTool.ViewModels
             }
             finally
             {
-                IsDrawersOpen.IsLeftDrawerOpen = false;
+               
             }
         }
 

@@ -65,7 +65,7 @@
                              Panel.ZIndex="1"
                              MessageQueue="{md:MessageQueue}" />
                 <md:ColorZone x:Name="ColorZone"
-                              Padding="16"
+                              Padding="8"
                               md:ShadowAssist.ShadowDepth="Depth2"
                               DockPanel.Dock="Top"
                               Mode="PrimaryMid">
