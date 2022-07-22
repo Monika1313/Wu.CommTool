@@ -132,6 +132,12 @@ namespace Wu.Comm.ViewModels
             //TODO 发送数据
             try
             {
+                //串口未打开
+                if(ComConfig.IsOpened == false)
+                {
+                    ShowMessage("串口未打开", MessageType.Error);
+                    return false;
+                }
                 //发送数据不为空
                 if(SendMessage is null || SendMessage.Length.Equals(0))
                 {
