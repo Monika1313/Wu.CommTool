@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
-namespace Wu.Comm.Views
+namespace Wu.CommTool.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:model="clr-namespace:Wu.Comm.Models"
+                    xmlns:model="clr-namespace:Wu.CommTool.Models"
                     xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 

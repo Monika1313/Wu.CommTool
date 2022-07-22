@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Wu.Comm.Converters;
+using Wu.CommTool.Converters;
 
-namespace Wu.Comm.Models
+namespace Wu.CommTool.Models
 {
     /// <summary>
     /// 校验

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wu.Comm.Extensions
+namespace Wu.CommTool.Extensions
 {
     /// <summary>
     /// Prism区域导航管理

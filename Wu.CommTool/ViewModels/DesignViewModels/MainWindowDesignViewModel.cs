@@ -1,4 +1,4 @@
-﻿namespace Wu.Comm.ViewModels.DesignViewModels
+﻿namespace Wu.CommTool.ViewModels.DesignViewModels
 {
     public class MainWindowDesignViewModel : MainWindowViewModel
     {

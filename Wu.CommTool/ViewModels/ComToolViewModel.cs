@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO.Ports;
-using Wu.Comm.Models;
+using Wu.CommTool.Models;
 using System.Management;
 using HandyControl.Controls;
 using System.Text;
@@ -15,7 +15,7 @@ using System.Threading;
 using Wu.Extensions;
 using System.Text.RegularExpressions;
 
-namespace Wu.Comm.ViewModels
+namespace Wu.CommTool.ViewModels
 {
     public class ComToolViewModel : BindableBase
     {

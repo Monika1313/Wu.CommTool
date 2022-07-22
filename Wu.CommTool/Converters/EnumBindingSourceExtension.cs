@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Markup;
 
-namespace Wu.Comm.Converters
+namespace Wu.CommTool.Converters
 {
     public class EnumBindingSourceExtension : MarkupExtension
     {

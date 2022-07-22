@@ -4,12 +4,12 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
-using Wu.Comm.Common;
-using Wu.Comm.Extensions;
-using Wu.Comm.Models;
-using Wu.Comm.Views;
+using Wu.CommTool.Common;
+using Wu.CommTool.Extensions;
+using Wu.CommTool.Models;
+using Wu.CommTool.Views;
 
-namespace Wu.Comm.ViewModels
+namespace Wu.CommTool.ViewModels
 {
     public class MainWindowViewModel : BindableBase, IConfigureService
     {

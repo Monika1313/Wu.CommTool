@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wu.Comm.Common
+namespace Wu.CommTool.Common
 {
     public interface IConfigureService
     {

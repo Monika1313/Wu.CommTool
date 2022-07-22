@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wu.Comm.Converters
+namespace Wu.CommTool.Converters
 {
     public class EnumDescriptionTypeConverter : EnumConverter
     {

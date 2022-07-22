@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Wu.Comm.Models
+namespace Wu.CommTool.Models
 {
     /// <summary>
     /// 串口配置

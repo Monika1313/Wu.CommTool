@@ -1,10 +1,10 @@
 ﻿using Prism.Ioc;
 using System.Windows;
-using Wu.Comm.Common;
-using Wu.Comm.ViewModels;
-using Wu.Comm.Views;
+using Wu.CommTool.Common;
+using Wu.CommTool.ViewModels;
+using Wu.CommTool.Views;
 
-namespace Wu.Comm
+namespace Wu.CommTool
 {
     /// <summary>
     /// Interaction logic for App.xaml
