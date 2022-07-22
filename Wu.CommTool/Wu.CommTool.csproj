@@ -6,9 +6,11 @@
     <AssemblyName>Wu通讯调试工具</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\X1.png" />
     <None Remove="Images\XX.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Images\X1.png" />
     <Resource Include="Images\XX.png" />
   </ItemGroup>
   <ItemGroup>
