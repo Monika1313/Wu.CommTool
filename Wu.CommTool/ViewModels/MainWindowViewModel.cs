@@ -98,7 +98,7 @@ namespace Wu.Comm.ViewModels
         void CreateMenuBar()
         {
             MenuBars = new ObservableCollection<MenuBar>();
-            MenuBars.Add(new MenuBar() { Icon = "TransitConnectionVariant", Title = "Com", NameSpace = nameof(ComToolView) });
+            MenuBars.Add(new MenuBar() { Icon = "TransitConnectionVariant", Title = "Modbus Rtu 调试", NameSpace = nameof(ComToolView) });
         }
 
         /// <summary>
