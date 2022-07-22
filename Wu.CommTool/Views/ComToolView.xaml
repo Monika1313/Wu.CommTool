@@ -20,7 +20,6 @@
              mc:Ignorable="d">
     <UserControl.Resources>
 
-
         <Style x:Key="MessageTextBlock" TargetType="TextBlock">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Type}" Value="0">
@@ -66,7 +65,6 @@
             </Style.Triggers>
         </Style>
 
-
         <Style x:Key="MessageTextBox" TargetType="TextBox">
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="#00FFFFFF" />
@@ -88,7 +86,6 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-
 
     </UserControl.Resources>
 
@@ -112,7 +109,14 @@
                                       IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                       ItemsSource="{Binding ComPorts}"
                                       SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Style="{StaticResource FormComboBox}" />
+                                      Style="{StaticResource FormComboBox}">
+                                <!--  添加触发器,支持点击事件  -->
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="DropDownOpened">
+                                        <i:InvokeCommandAction Command="{Binding DataContext.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="GetComPorts" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ComboBox>
                             <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
                                       hc:InfoElement.Title="波特率"
                                       IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
@@ -216,7 +220,7 @@
                         </Button>
 
 
-                        <Button Width="30"
+                        <!--<Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
                                 HorizontalAlignment="Left"
@@ -228,7 +232,7 @@
                             <md:PackIcon Width="24"
                                          Height="24"
                                          Kind="Search" />
-                        </Button>
+                        </Button>-->
                     </DockPanel>
                 </Grid>
 
@@ -242,6 +246,13 @@
                                Text="{Binding ComConfig.Port.Key}" />
                     <TextBlock VerticalAlignment="Center" Text=" : " />
                     <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
+                    <TextBlock Margin="5,0"
+                               VerticalAlignment="Center"
+                               Text="{Binding ComConfig.DataBits}" />
+                    <TextBlock Margin="5,0"
+                               VerticalAlignment="Center"
+                               Text="{Binding ComConfig.StopBits}" />
                     <Border Width="20"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="10,5"
@@ -261,13 +272,13 @@
                     </Border>
 
                     <Border Margin="30,3"
-                            BorderBrush="Blue"
+                            BorderBrush="LightBlue"
                             BorderThickness="1" />
                     <TextBlock VerticalAlignment="Center" Text="Receive: " />
                     <TextBlock VerticalAlignment="Center" Text="{Binding ReceivBytesCount}" />
                     <TextBlock VerticalAlignment="Center" Text=" Bytes" />
                     <Border Margin="30,3"
-                            BorderBrush="Blue"
+                            BorderBrush="LightBlue"
                             BorderThickness="1" />
                     <TextBlock VerticalAlignment="Center" Text="Send: " />
                     <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
@@ -311,7 +322,7 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <Border Margin="3"
-                                            Padding="3"
+                                            Padding="2"
                                             BorderThickness="1"
                                             CornerRadius="4"
                                             Style="{StaticResource MessageBorder}">

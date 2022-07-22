@@ -8,6 +8,10 @@ using System.Windows;
 
 namespace Wu.CommTool.Extensions
 {
+    /// <summary>
+    /// ScrollViewer扩展, 根据内容自动滚动到底部
+    /// 参考 https://blog.csdn.net/jslink_l/article/details/75308349
+    /// </summary>
     public class ScrollViewerExtensions
     {
         public static readonly DependencyProperty AlwaysScrollToEndProperty = DependencyProperty.RegisterAttached("AlwaysScrollToEnd", typeof(bool), typeof(ScrollViewerExtensions), new PropertyMetadata(false, AlwaysScrollToEndChanged));

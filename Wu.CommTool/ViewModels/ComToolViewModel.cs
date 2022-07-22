@@ -341,7 +341,7 @@ namespace Wu.CommTool.ViewModels
                 string str = $"获取串口成功, 共{ComPorts.Count}个。";
                 foreach (var item in ComPorts)
                 {
-                    str += $"\r\n{item.Key}:{item.Value};";
+                    str += $"   {item.Key}: {item.Value};";
                 }
                 ShowMessage(str);
             }
