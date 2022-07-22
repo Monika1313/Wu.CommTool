@@ -4,13 +4,13 @@
              xmlns:cvt="clr-namespace:Wu.CommTool.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+             xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:model="clr-namespace:Wu.CommTool.Models"
-             xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
              xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
@@ -299,7 +299,7 @@
                         BorderBrush="Gray"
                         BorderThickness="1"
                         CornerRadius="5">
-                    <hc:ScrollViewer IsInertiaEnabled="True" ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" >
+                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <!--  页面消息  -->
                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                             <ItemsControl.ItemsPanel>
