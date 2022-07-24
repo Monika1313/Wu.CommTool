@@ -1,13 +1,15 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:model="clr-namespace:Wu.CommTool.Models"
-                    xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
-                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:model="clr-namespace:Wu.CommTool.Models"
+    xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
     <!--  波特率枚举  -->
-    <ObjectDataProvider x:Key="ValueBaudRate"
-                        MethodName="GetValues"
-                        ObjectType="{x:Type sys:Enum}">
+    <ObjectDataProvider
+        x:Key="ValueBaudRate"
+        MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:BaudRate" />
         </ObjectDataProvider.MethodParameters>
@@ -23,18 +25,20 @@
 
 
     <!--  校验位  -->
-    <ObjectDataProvider x:Key="ValueParity"
-                        MethodName="GetValues"
-                        ObjectType="{x:Type sys:Enum}">
+    <ObjectDataProvider
+        x:Key="ValueParity"
+        MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:Parity" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
 
     <!--  停止位  -->
-    <ObjectDataProvider x:Key="ValueStopBits"
-                        MethodName="GetValues"
-                        ObjectType="{x:Type sys:Enum}">
+    <ObjectDataProvider
+        x:Key="ValueStopBits"
+        MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:StopBits" />
         </ObjectDataProvider.MethodParameters>
@@ -42,9 +46,10 @@
 
 
     <!--  CRC校验模式  -->
-    <ObjectDataProvider x:Key="ValueCrcMode"
-                        MethodName="GetValues"
-                        ObjectType="{x:Type sys:Enum}">
+    <ObjectDataProvider
+        x:Key="ValueCrcMode"
+        MethodName="GetValues"
+        ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:CrcMode" />
         </ObjectDataProvider.MethodParameters>

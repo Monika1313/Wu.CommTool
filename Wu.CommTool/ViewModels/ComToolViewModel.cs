@@ -14,26 +14,38 @@ using System.Diagnostics;
 using System.Threading;
 using Wu.Extensions;
 using System.Text.RegularExpressions;
+using MaterialDesignThemes.Wpf;
+using Wu.CommTool.Common;
+using Wu.CommTool.Extensions;
 
 namespace Wu.CommTool.ViewModels
 {
-    public class ComToolViewModel : BindableBase
+    public class ComToolViewModel : NavigationViewModel
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
+        private readonly IDialogHostService dialogHost;
         private SerialPort ComDevice = new SerialPort();
         #endregion
 
         public ComToolViewModel() { }
-        public ComToolViewModel(IContainerProvider provider)
+        public ComToolViewModel(IContainerProvider provider, IDialogHostService dialogHost)
         {
             this.provider = provider;
+            this.dialogHost = dialogHost;
             ExecuteCommand = new(Execute);
 
             ComDevice.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
 
             //更新串口列表
             GetComPorts();
+
+            //配置串口
+            ComDevice.PortName = ComConfig.Port.Key;                              //串口
+            ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+            ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
+            ComDevice.DataBits = ComConfig.DataBits;                              //数据位
+            ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
         }
 
 
@@ -98,12 +110,35 @@ namespace Wu.CommTool.ViewModels
 
 
         #region **************************************** 方法 ****************************************
+
+        /// <summary>
+        /// 执行命令
+        /// </summary>
+        /// <param name="obj"></param>
         public void Execute(string obj)
         {
+            //TODO 执行命令
             switch (obj)
             {
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
+                case "CloseCom": CloseCom(); break;
+                case "AutoSearch":
+                    AutoSearch();
+                    break;
+                case "Test1":
+                    try
+                    {
+
+                        ComDevice.Close();                   //关闭串口
+                        ComConfig.IsOpened = false;          //标记串口已关闭
+                        ShowMessage($"关闭串口{ComDevice.PortName}");
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowMessage(ex.Message, MessageType.Error);
+                    }
+                    break;
                 case "Send": Send(); break;                                          //发送数据
                 case "GetComPorts": GetComPorts(); break;                            //查找Com口
                 case "Clear": Clear(); break;                                        //清空信息
@@ -111,6 +146,38 @@ namespace Wu.CommTool.ViewModels
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// 自动搜索串口设备
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private async void AutoSearch()
+        {
+            try
+            {
+                
+
+                //若串口已打开 提示需要关闭串口
+                if (ComConfig.IsOpened)
+                {
+                    //弹窗确认 使用该功能需要先关闭串口
+                    var dialogResult = await dialogHost.Question("温馨提示", $"使用自动搜索功能将关闭当前串口, 确认是否关闭 {ComConfig.Port.Key} : {ComConfig.Port.Value}?");
+                    //取消
+                    if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
+                        return;
+                    //关闭串口
+                    CloseCom();
+                }
+
+                //打开自动搜索界面
+                //将当前串口配置作为参数
+
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
             }
         }
 
@@ -133,13 +200,13 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //串口未打开
-                if(ComConfig.IsOpened == false)
+                if (ComConfig.IsOpened == false)
                 {
                     ShowMessage("串口未打开", MessageType.Error);
                     return false;
                 }
                 //发送数据不为空
-                if(SendMessage is null || SendMessage.Length.Equals(0))
+                if (SendMessage is null || SendMessage.Length.Equals(0))
                 {
                     ShowMessage("发送的数据不能为空", MessageType.Error);
                     return false;
@@ -288,6 +355,20 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+
+        private void CloseCom()
+        {
+            try
+            {
+                ComDevice.Close();                   //关闭串口
+                ComConfig.IsOpened = false;          //标记串口已关闭
+                ShowMessage($"关闭串口{ComDevice.PortName}");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
+            }
+        }
 
 
         /// <summary>
