@@ -130,10 +130,14 @@ namespace Wu.CommTool.ViewModels
                 case "Test1":
                     try
                     {
-
-                        ComDevice.Close();                   //关闭串口
-                        ComConfig.IsOpened = false;          //标记串口已关闭
-                        ShowMessage($"关闭串口{ComDevice.PortName}");
+                        //ComDevice.PortName = ComConfig.Port.Key;                              //串口
+                        ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+                        ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
+                        ComDevice.DataBits = ComConfig.DataBits;                              //数据位
+                        ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
+                        //ComDevice.Close();                   //关闭串口
+                        //ComConfig.IsOpened = false;          //标记串口已关闭
+                        //ShowMessage($"关闭串口{ComDevice.PortName}");
                     }
                     catch (Exception ex)
                     {
