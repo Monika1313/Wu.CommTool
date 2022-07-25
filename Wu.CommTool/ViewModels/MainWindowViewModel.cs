@@ -88,7 +88,7 @@ namespace Wu.CommTool.ViewModels
 
         public void Congifure()
         {
-            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("ComToolView");//导航至页面
+            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(ModbusRtuView));//导航至页面
         }
 
 
@@ -98,7 +98,7 @@ namespace Wu.CommTool.ViewModels
         void CreateMenuBar()
         {
             MenuBars = new ObservableCollection<MenuBar>();
-            MenuBars.Add(new MenuBar() { Icon = "TransitConnectionVariant", Title = "Modbus Rtu 调试", NameSpace = nameof(ComToolView) });
+            MenuBars.Add(new MenuBar() { Icon = "TransitConnectionVariant", Title = "Modbus Rtu 调试", NameSpace = nameof(ModbusRtuView) });
         }
 
         /// <summary>

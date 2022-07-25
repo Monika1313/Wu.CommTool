@@ -1,7 +1,9 @@
 ﻿using Prism.Ioc;
 using System.Windows;
 using Wu.CommTool.Common;
+using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.ViewModels;
+using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
 
 namespace Wu.CommTool
@@ -22,8 +24,9 @@ namespace Wu.CommTool
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             //注册页面
-            containerRegistry.RegisterForNavigation<ComToolView, ComToolViewModel>();//首页页面
+            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();//首页页面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
+            containerRegistry.RegisterForNavigation<AutoSearchModbusRtuDeviceView, AutoSearchModbusRtuDeviceViewModel>();//消息提示窗口
         }
 
         /// <summary>

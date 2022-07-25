@@ -17,10 +17,13 @@ using System.Text.RegularExpressions;
 using MaterialDesignThemes.Wpf;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
+using Prism.Services.Dialogs;
+using Wu.CommTool.Dialogs.Views;
+using Wu.CommTool.Views;
 
 namespace Wu.CommTool.ViewModels
 {
-    public class ComToolViewModel : NavigationViewModel
+    public class ModbusRtuViewModel : NavigationViewModel
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -28,8 +31,8 @@ namespace Wu.CommTool.ViewModels
         private SerialPort ComDevice = new SerialPort();
         #endregion
 
-        public ComToolViewModel() { }
-        public ComToolViewModel(IContainerProvider provider, IDialogHostService dialogHost)
+        public ModbusRtuViewModel() { }
+        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -123,9 +126,7 @@ namespace Wu.CommTool.ViewModels
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "CloseCom": CloseCom(); break;
-                case "AutoSearch":
-                    AutoSearch();
-                    break;
+                case "AutoSearch": AutoSearch(); break;
                 case "Test1":
                     try
                     {
@@ -149,37 +150,7 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        /// <summary>
-        /// 自动搜索串口设备
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        private async void AutoSearch()
-        {
-            try
-            {
-                
 
-                //若串口已打开 提示需要关闭串口
-                if (ComConfig.IsOpened)
-                {
-                    //弹窗确认 使用该功能需要先关闭串口
-                    var dialogResult = await dialogHost.Question("温馨提示", $"使用自动搜索功能将关闭当前串口, 确认是否关闭 {ComConfig.Port.Key} : {ComConfig.Port.Value}?");
-                    //取消
-                    if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
-                        return;
-                    //关闭串口
-                    CloseCom();
-                }
-
-                //打开自动搜索界面
-                //将当前串口配置作为参数
-
-            }
-            catch (Exception ex)
-            {
-                ShowMessage(ex.Message, MessageType.Error);
-            }
-        }
 
         /// <summary>
         /// 清空消息
@@ -440,6 +411,44 @@ namespace Wu.CommTool.ViewModels
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type));
             }
             catch (Exception ex) { }
+        }
+
+        /// <summary>
+        /// 自动搜索串口设备
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private async void AutoSearch()
+        {
+            try
+            {
+                //若串口已打开 提示需要关闭串口
+                if (ComConfig.IsOpened)
+                {
+                    //弹窗确认 使用该功能需要先关闭串口
+                    var dialogResult = await dialogHost.Question("温馨提示", $"使用自动搜索功能将关闭当前串口, 确认是否关闭 {ComConfig.Port.Key} : {ComConfig.Port.Value}?");
+                    //取消
+                    if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
+                        return;
+                    //关闭串口
+                    CloseCom();
+                }
+
+                //打开自动搜索界面
+                //添加要传递的参数
+                DialogParameters param = new()
+                {
+                    { nameof(ComDevice), ComDevice },
+                    { nameof(ComConfig), ComConfig }
+                };
+                //弹窗
+                var dialogResult2 = await dialogHost.ShowDialog(nameof(AutoSearchModbusRtuDeviceView), param, nameof(ModbusRtuView));
+                
+
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
+            }
         }
         #endregion
     }

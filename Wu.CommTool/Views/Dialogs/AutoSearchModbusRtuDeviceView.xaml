@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="Wu.CommTool.Dialogs.Views.AutoSearchModbusRtuDeviceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ddvm="clr-namespace:Wu.CommTool.ViewModels.DialogViewModels.DialogDesignViewModels"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:Wu.CommTool.Dialogs.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             d:DataContext="{x:Static ddvm:AutoSearchModbusRtuDeviceDesignViewModel.Instance}"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+    <md:DialogHost x:Name="DialogHost"
+                   DialogTheme="Inherit"
+                   Identifier="RepairEditView">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+                <RowDefinition Height="auto" />
+            </Grid.RowDefinitions>
+
+            <!--  标题  -->
+            <DockPanel LastChildFill="False">
+                <TextBlock Grid.Column="0"
+                           Padding="20,10"
+                           HorizontalAlignment="Left"
+                           DockPanel.Dock="Left"
+                           FontSize="20"
+                           FontWeight="Bold"
+                           Text="自动搜索 Modbus Rtu 设备" />
+
+                <!--  右上角关闭按钮  -->
+                <!--<Button x:Name="btnClose"
+                        Margin="10,0"
+                        Command="{Binding CancelCommand}"
+                        Content="✕"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />-->
+            </DockPanel>
+
+            <!--  底部按钮  -->
+            <DockPanel Grid.Row="2"
+                       Margin="10"
+                       DockPanel.Dock="Bottom"
+                       LastChildFill="False">
+                <Button Margin="10,0"
+                        Command="{Binding SaveCommand}"
+                        Content="确定"
+                        Cursor="Hand"
+                        DockPanel.Dock="Right" />
+                <Button Margin="10,0"
+                        Command="{Binding CancelCommand}"
+                        Content="取消"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+            </DockPanel>
+
+            <!--  内容  -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </Grid>
+    </md:DialogHost>
+</UserControl>

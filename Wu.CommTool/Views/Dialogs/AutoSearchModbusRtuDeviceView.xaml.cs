@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Wu.CommTool.Views
+namespace Wu.CommTool.Dialogs.Views
 {
     /// <summary>
-    /// ComToolView.xaml 的交互逻辑
+    /// AutoSearchModbusRtuDeviceView.xaml 的交互逻辑
     /// </summary>
-    public partial class ComToolView : UserControl
+    public partial class AutoSearchModbusRtuDeviceView : UserControl
     {
-        public ComToolView()
+        public AutoSearchModbusRtuDeviceView()
         {
             InitializeComponent();
         }
