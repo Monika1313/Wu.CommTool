@@ -130,7 +130,7 @@
                                     CommandParameter="GetComPorts"
                                     DockPanel.Dock="Left"
                                     Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                    ToolTip="MaterialDesignFloatingActionMiniButton">
+                                    ToolTip="查找串口设备">
                                     <md:PackIcon
                                         Width="24"
                                         Height="24"
