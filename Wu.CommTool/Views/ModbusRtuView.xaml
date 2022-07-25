@@ -19,7 +19,6 @@
              d:DesignWidth="800"
              mc:Ignorable="d">
     <UserControl.Resources>
-
         <Style x:Key="MessageTextBlock" TargetType="TextBlock">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding Type}" Value="0">
