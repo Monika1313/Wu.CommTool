@@ -28,7 +28,7 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        private SerialPort SerialPort = new SerialPort();
+        private SerialPort SerialPort = new();
         #endregion
 
         public ModbusRtuViewModel() { }
@@ -186,11 +186,12 @@ namespace Wu.CommTool.ViewModels
                     ShowMessage("发送的数据不能为空", MessageType.Error);
                     return false;
                 }
+
                 //验证数据字符必须符合16进制
-                Regex regex = new Regex(@"^[0-9 a-e A-E -]*$");
+                Regex regex = new(@"^[0-9 a-f A-F -]*$");
                 if (!regex.IsMatch(SendMessage))
                 {
-                    ShowMessage("数据字符仅限 0123456789 ABCDE", MessageType.Error);
+                    ShowMessage("数据字符仅限 0123456789 ABCDEF", MessageType.Error);
                     return false;
                 }
 
@@ -318,7 +319,6 @@ namespace Wu.CommTool.ViewModels
                         ShowMessage(ex.Message, MessageType.Error);
                     }
                 }
-
             }
             catch (Exception ex)
             {
@@ -344,7 +344,6 @@ namespace Wu.CommTool.ViewModels
                 ShowMessage(ex.Message, MessageType.Error);
             }
         }
-
 
         /// <summary>
         /// 查询数据

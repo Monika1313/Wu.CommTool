@@ -18,74 +18,7 @@
              d:DesignHeight="600"
              d:DesignWidth="800"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <Style x:Key="MessageTextBlock" TargetType="TextBlock">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Type}" Value="0">
-                    <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="1">
-                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="2">
-                    <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="3">
-                    <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="4">
-                    <Setter Property="Foreground" Value="#d5ca14" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="MessageBorder" TargetType="Border">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Type}" Value="0">
-                    <Setter Property="Background" Value="{StaticResource Blue_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="1">
-                    <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="2">
-                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="3">
-                    <Setter Property="Background" Value="{StaticResource Red_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="4">
-                    <Setter Property="Background" Value="#fdffe5" />
-                    <Setter Property="BorderBrush" Value="#f6ff91" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-        <Style x:Key="MessageTextBox" TargetType="TextBox">
-            <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Background" Value="#00FFFFFF" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Type}" Value="0">
-                    <Setter Property="Foreground" Value="#096dd9" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="1">
-                    <Setter Property="Foreground" Value="#389E0D" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="2">
-                    <Setter Property="Foreground" Value="#faae19" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="3">
-                    <Setter Property="Foreground" Value="#cf1322" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="4">
-                    <Setter Property="Foreground" Value="#d5ca14" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
+    <UserControl.Resources />
 
     <md:DialogHost Identifier="ModbusRtuView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}">
@@ -317,10 +250,10 @@
                                Text="{Binding ComConfig.Port.Key}" />
                     <TextBlock VerticalAlignment="Center" Text=" : " />
                     <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
                     <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
-                    <TextBlock Margin="5,0"
-                               VerticalAlignment="Center"
-                               Text="{Binding ComConfig.DataBits}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
                     <TextBlock Margin="5,0"
                                VerticalAlignment="Center"
                                Text="{Binding ComConfig.StopBits}" />
