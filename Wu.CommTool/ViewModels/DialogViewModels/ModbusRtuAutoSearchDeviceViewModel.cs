@@ -76,13 +76,13 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// 选中的波特率
         /// </summary>
         public IList<BaudRate> SelectedBaudRates { get => _SelectedBaudRates; set => SetProperty(ref _SelectedBaudRates, value); }
-        private IList<BaudRate> _SelectedBaudRates;
+        private IList<BaudRate> _SelectedBaudRates = new List<BaudRate>();
 
         /// <summary>
         /// 选中的校验方式
         /// </summary>
         public IList<Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
-        private IList<Parity> _SelectedParitys;
+        private IList<Parity> _SelectedParitys = new List<Parity>();
 
         /// <summary>
         /// 串口配置
@@ -224,11 +224,24 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                 //TODO 自动搜索ModbusRtu设备
                 //设置串口
                 //修改串口设置
+                if(SelectedBaudRates.Count.Equals(0))
+                {
+                    ShowMessage("未选择要搜索的波特率", MessageType.Error);
+                    return;
+                }
+                if (SelectedParitys.Count.Equals(0))
+                {
+                    ShowMessage("未选择要搜索的校验位", MessageType.Error);
+                    return;
+                }
 
                 //打开串口
                 OperatePort();
                 if (ComConfig.IsOpened == false)
+                {
+                    ShowMessage("未打开串口, 无法搜索");
                     return;
+                }
                 //发送数据
 
                 //遍历选项
@@ -309,7 +322,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     }
                     catch (Exception ex)
                     {
-                        ////ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
+                        ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
                         return;
                     }
                     //IsDrawersOpen.IsLeftDrawerOpen = false;
