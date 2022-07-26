@@ -18,7 +18,7 @@ using Parity = Wu.CommTool.Models.Parity;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels
 {
-    public class AutoSearchModbusRtuDeviceViewModel : NavigationViewModel, IDialogHostAware
+    public class ModbusRtuAutoSearchDeviceViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -27,8 +27,8 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         public string DialogHostName { get; set; }
         #endregion
 
-        public AutoSearchModbusRtuDeviceViewModel() { }
-        public AutoSearchModbusRtuDeviceViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public ModbusRtuAutoSearchDeviceViewModel() { }
+        public ModbusRtuAutoSearchDeviceViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -146,18 +146,16 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         public async void OnDialogOpend(IDialogParameters parameters)
         {
-            ComConfig = parameters.GetValue<ComConfig>("ComConfig");
-            SerialPort = parameters.GetValue<SerialPort>("SerialPort");
-            ComConfig.BaudRate = BaudRate._56000;
-            SerialPort.BaudRate = (int)(BaudRate)BaudRate._300;
-            if (parameters != null && parameters.ContainsKey("Value"))
+            if (parameters != null && parameters.ContainsKey("ComConfig") && parameters.ContainsKey("SerialPort"))
             {
-               
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if (getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
+                ComConfig = parameters.GetValue<ComConfig>("ComConfig");
+                SerialPort = parameters.GetValue<SerialPort>("SerialPort");
+                ComConfig.BaudRate = BaudRate._56000;
+                SerialPort.BaudRate = (int)(BaudRate)BaudRate._300;
+            }
+            else
+            {
+                throw new Exception("未提供页面所需的参数");
             }
         }
 

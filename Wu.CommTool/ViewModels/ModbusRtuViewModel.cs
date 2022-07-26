@@ -445,7 +445,7 @@ namespace Wu.CommTool.ViewModels
                     { nameof(ComConfig), ComConfig }
                 };
                 //弹窗
-                var dialogResult2 = await dialogHost.ShowDialog(nameof(AutoSearchModbusRtuDeviceView), param, nameof(ModbusRtuView));
+                var dialogResult2 = await dialogHost.ShowDialog(nameof(ModbusRtuAutoSearchDeviceView), param, nameof(ModbusRtuView));
                 
 
             }

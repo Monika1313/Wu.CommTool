@@ -25,7 +25,7 @@ namespace Wu.CommTool
 
             //注册页面
             containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();//首页
-            containerRegistry.RegisterForNavigation<AutoSearchModbusRtuDeviceView, AutoSearchModbusRtuDeviceViewModel>();//消息提示窗口
+            containerRegistry.RegisterForNavigation<ModbusRtuAutoSearchDeviceView, ModbusRtuAutoSearchDeviceViewModel>();//消息提示窗口
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();//ModbusRtu
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();//Mqtt
