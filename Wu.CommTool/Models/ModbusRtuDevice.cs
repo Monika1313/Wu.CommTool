@@ -5,7 +5,6 @@ using Prism.Regions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,15 +12,15 @@ using System.Threading.Tasks;
 namespace Wu.CommTool.Models
 {
     /// <summary>
-    /// 串口配置
+    /// ModbusRtu设备
     /// </summary>
-    public class ComConfig : BindableBase
+    public class ModbusRtuDevice : BindableBase
     {
         /// <summary>
-        /// Com口
+        /// 从站地址
         /// </summary>
-        public KeyValuePair<string, string> Port { get => _Port; set => SetProperty(ref _Port, value); }
-        private KeyValuePair<string, string> _Port;
+        public int Address { get => _Address; set => SetProperty(ref _Address, value); }
+        private int _Address;
 
         /// <summary>
         /// 波特率
@@ -30,7 +29,7 @@ namespace Wu.CommTool.Models
         private BaudRate _BaudRate = BaudRate._9600;
 
         /// <summary>
-        /// 校验
+        /// 校验位
         /// </summary>
         public Parity Parity { get => _Parity; set => SetProperty(ref _Parity, value); }
         private Parity _Parity = Parity.None;
@@ -39,18 +38,12 @@ namespace Wu.CommTool.Models
         /// 数据位
         /// </summary>
         public int DataBits { get => _DataBits; set => SetProperty(ref _DataBits, value); }
-        private int _DataBits =8;
+        private int _DataBits = 8;
 
         /// <summary>
         /// 停止位
         /// </summary>
         public StopBits StopBits { get => _StopBits; set => SetProperty(ref _StopBits, value); }
         private StopBits _StopBits = StopBits.One;
-
-        /// <summary>
-        /// 是否已打开
-        /// </summary>
-        public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
-        private bool _IsOpened =false;
     }
 }

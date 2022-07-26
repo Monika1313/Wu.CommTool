@@ -86,7 +86,9 @@
             <DockPanel Margin="5">
 
                 <!--  左侧配置  -->
-                <StackPanel DockPanel.Dock="Left" Orientation="Vertical">
+                <StackPanel Width="260"
+                            DockPanel.Dock="Left"
+                            Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <ComboBox Width="230"
                                   hc:InfoElement.Placeholder="请选择串口..."
@@ -167,15 +169,84 @@
 
                 </StackPanel>
 
-                <DockPanel MinWidth="50" DockPanel.Dock="Right">
-                    <TextBlock DockPanel.Dock="Top" Text="搜索到的设备" />
-                    <Border Margin="5"
-                            BorderBrush="#e0e0e0"
-                            BorderThickness="1"
-                            CornerRadius="5">
-                        <ItemsControl />
-                    </Border>
-                </DockPanel>
+
+                <Border MinWidth="100"
+                        Margin="5"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="5"
+                        DockPanel.Dock="Right">
+                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                        <!--  页面消息  -->
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock Margin="5"
+                                       HorizontalAlignment="Center"
+                                       Text="搜索到的设备" />
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuDevices}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="3"
+                                                Padding="2"
+                                                Background="{StaticResource Blue_Background}"
+                                                BorderBrush="{StaticResource Blue_BorderBrush}"
+                                                BorderThickness="1"
+                                                CornerRadius="4">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBox Margin="3"
+                                                         VerticalAlignment="Center"
+                                                         hc:InfoElement.Title="地址: "
+                                                         hc:InfoElement.TitleWidth="50"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding Address}" />
+
+                                                <TextBox Margin="3"
+                                                         VerticalAlignment="Center"
+                                                         hc:InfoElement.Title="波特率: "
+                                                         hc:InfoElement.TitleWidth="50"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding BaudRate}" />
+
+                                                <TextBox Margin="3"
+                                                         VerticalAlignment="Center"
+                                                         hc:InfoElement.Title="校验: "
+                                                         hc:InfoElement.TitleWidth="50"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding Parity}" />
+
+                                                <TextBox Margin="3"
+                                                         VerticalAlignment="Center"
+                                                         hc:InfoElement.Title="数据位: "
+                                                         hc:InfoElement.TitleWidth="50"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding DataBits}" />
+
+                                                <TextBox Margin="3"
+                                                         VerticalAlignment="Center"
+                                                         hc:InfoElement.Title="停止位: "
+                                                         hc:InfoElement.TitleWidth="50"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding StopBits}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                    </hc:ScrollViewer>
+                </Border>
+
                 <Border Margin="5"
                         BorderBrush="Gray"
                         BorderThickness="1"

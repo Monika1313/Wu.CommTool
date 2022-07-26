@@ -271,10 +271,11 @@ namespace Wu.CommTool.ViewModels
             byte[] buf = new byte[n];
             SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
             ReceivBytesCount += buf.Length;         //统计发送的数据总数
-            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
                 ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
-            }));
+            });
         }
 
 

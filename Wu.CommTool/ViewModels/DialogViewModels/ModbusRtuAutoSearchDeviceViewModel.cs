@@ -15,6 +15,7 @@ using System.Management;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using Wu.CommTool.Common;
 using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Extensions;
@@ -112,6 +113,18 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         public bool IsSearch { get => _IsSearch; set => SetProperty(ref _IsSearch, value); }
         private bool _IsSearch = false;
+
+        /// <summary>
+        /// ModbusRtu设备
+        /// </summary>
+        public ObservableCollection<ModbusRtuDevice> ModbusRtuDevices { get => _ModbusRtuDevices; set => SetProperty(ref _ModbusRtuDevices, value); }
+        private ObservableCollection<ModbusRtuDevice> _ModbusRtuDevices = new();
+
+        /// <summary>
+        /// 当前设备
+        /// </summary>
+        public ModbusRtuDevice CurrentDevice { get => _CurrentDevice; set => SetProperty(ref _CurrentDevice, value); }
+        private ModbusRtuDevice _CurrentDevice;
         #endregion
 
 
@@ -228,8 +241,19 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                         //搜索
                         ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}" );
 
+                       
                         for (int i = 0; i <= 255; i++)
                         {
+                            //当前搜索的设备
+                            CurrentDevice = new()
+                            {
+                                Address = i,
+                                BaudRate = baud,
+                                Parity = parity,
+                                DataBits = ComConfig.DataBits,
+                                StopBits = ComConfig.StopBits
+                            };
+
                             //修改设置
                             SerialPort.BaudRate = (int)baud;
                             SerialPort.Parity = (System.IO.Ports.Parity)parity;
@@ -426,6 +450,11 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
 
             //todo 验证接收的数据是否校验正确
             //验证通过的添加至搜索到的设备列表
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ModbusRtuDevices.Add(CurrentDevice);
+                
+            }));
 
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -489,7 +518,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                         var data = list.ToArray();
                         //SendBytesCount += data.Length;//统计发送数据总数
                         SerialPort.Write(data, 0, data.Length);//发送数据
-                        //ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
                         return true;
                     }
                     catch (Exception ex)
