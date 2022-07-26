@@ -22,4 +22,5 @@
     <PackageReference Include="Wu" Version="1.0.5" />
     <PackageReference Include="Wu.Wpf" Version="1.0.0" />
   </ItemGroup>
+  <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 </Project>

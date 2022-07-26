@@ -24,9 +24,11 @@ namespace Wu.CommTool
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             //注册页面
-            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();//首页页面
-            containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
+            containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();//首页
             containerRegistry.RegisterForNavigation<AutoSearchModbusRtuDeviceView, AutoSearchModbusRtuDeviceViewModel>();//消息提示窗口
+            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();//ModbusRtu
+            containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
+            containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();//Mqtt
         }
 
         /// <summary>

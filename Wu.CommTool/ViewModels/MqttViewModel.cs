@@ -5,30 +5,22 @@ using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
-using System.Linq;
 using Wu.CommTool.Common;
-using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Extensions;
-using Wu.CommTool.Models;
-using Parity = Wu.CommTool.Models.Parity;
 
-namespace Wu.CommTool.ViewModels.DialogViewModels
+namespace Wu.CommTool.ViewModels
 {
-    public class AutoSearchModbusRtuDeviceViewModel : NavigationViewModel, IDialogHostAware
+    public class MqttViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        private SerialPort SerialPort = new SerialPort();
         public string DialogHostName { get; set; }
         #endregion
 
-        public AutoSearchModbusRtuDeviceViewModel() { }
-        public AutoSearchModbusRtuDeviceViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public MqttViewModel() { }
+        public MqttViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -36,23 +28,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-            BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
-            ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
-        }
-
-        private void ParitySelectionChanged(object obj)
-        {
-            IList items = (IList)obj;
-            var collection = items.Cast<Parity>();
-            SelectedParitys = collection.ToList();
-        }
-
-        private void BaudRateSelectionChanged(object obj)
-        {
-            System.Collections.IList items = (System.Collections.IList)obj;
-            var collection = items.Cast<BaudRate>();
-            SelectedBaudRates = collection.ToList();
-
         }
 
         #region **************************************** 属性 ****************************************
@@ -61,31 +36,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
-
-        /// <summary>
-        /// 选中的波特率
-        /// </summary>
-        public IList<BaudRate> SelectedBaudRates { get => _SelectedBaudRates; set => SetProperty(ref _SelectedBaudRates, value); }
-        private IList<BaudRate> _SelectedBaudRates;
-
-        /// <summary>
-        /// 选中的校验方式
-        /// </summary>
-        public IList<Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
-        private IList<Parity> _SelectedParitys;
-
-        /// <summary>
-        /// 页面消息
-        /// </summary>
-        public string ViewMessage { get => _ViewMessage; set => SetProperty(ref _ViewMessage, value); }
-        private string _ViewMessage;
-
-
-        /// <summary>
-        /// 串口配置
-        /// </summary>
-        public ComConfig ComConfig { get => _ComConfig; set => SetProperty(ref _ComConfig, value); }
-        private ComConfig _ComConfig;
         #endregion
 
 
@@ -97,16 +47,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-        /// <summary>
-        /// 波特率选框选项改变
-        /// </summary>
-        public DelegateCommand<object> BaudRateSelectionChangedCommand { get; private set; }
-
-        /// <summary>
-        /// definity
-        /// </summary>
-        public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
         #endregion
 
 
@@ -116,20 +56,9 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
-                case "AutoSearch": AutoSearch(); break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
             }
-        }
-
-        /// <summary>
-        /// 自动搜索ModbusRtu设备
-        /// </summary>
-        private void AutoSearch()
-        {
-            //TODO 自动搜索ModbusRtu设备
-            
-
         }
 
         /// <summary>
@@ -146,15 +75,11 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         public async void OnDialogOpend(IDialogParameters parameters)
         {
-            ComConfig = parameters.GetValue<ComConfig>("ComConfig");
-            SerialPort = parameters.GetValue<SerialPort>("SerialPort");
-            ComConfig.BaudRate = BaudRate._56000;
-            SerialPort.BaudRate = (int)(BaudRate)BaudRate._300;
             if (parameters != null && parameters.ContainsKey("Value"))
             {
-               
+                //var oldDto = parameters.GetValue<Dto>("Value");
                 //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if (getResult != null && getResult.Status)
+                //if(getResult != null && getResult.Status)
                 //{
                 //    CurrentDto = getResult.Result;
                 //}
@@ -170,10 +95,8 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             if (!DialogHost.IsDialogOpen(DialogHostName))
                 return;
             //添加返回的参数
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
+            DialogParameters param = new DialogParameters();
+            param.Add("Value", CurrentDto);
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
@@ -195,12 +118,11 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         {
             try
             {
-                //DialogParameters param = new()
-                //{
-                //    { "Value", CurrentDto }
-                //};
-                //var dialogResult = await dialogHost.ShowDialog(nameof(AutoSearchModbusRtuDeviceView), param, nameof(AutoSearchModbusRtuDeviceView));
-
+                DialogParameters param = new()
+                {
+                    { "Value", CurrentDto }
+                };
+                //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
             }
             catch (Exception ex)
             {

@@ -28,7 +28,7 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        private SerialPort ComDevice = new SerialPort();
+        private SerialPort SerialPort = new SerialPort();
         #endregion
 
         public ModbusRtuViewModel() { }
@@ -38,17 +38,17 @@ namespace Wu.CommTool.ViewModels
             this.dialogHost = dialogHost;
             ExecuteCommand = new(Execute);
 
-            ComDevice.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
+            SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
 
             //更新串口列表
             GetComPorts();
 
             //配置串口
-            ComDevice.PortName = ComConfig.Port.Key;                              //串口
-            ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
-            ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
-            ComDevice.DataBits = ComConfig.DataBits;                              //数据位
-            ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
+            //ComDevice.PortName = ComConfig.Port.Key;                              //串口
+            //ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+            //ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
+            //ComDevice.DataBits = ComConfig.DataBits;                              //数据位
+            //ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
         }
 
 
@@ -126,15 +126,15 @@ namespace Wu.CommTool.ViewModels
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "CloseCom": CloseCom(); break;
-                case "AutoSearch": AutoSearch(); break;
+                case "AutoSearch": OpenAutoSearchView(); break;
                 case "Test1":
                     try
                     {
                         //ComDevice.PortName = ComConfig.Port.Key;                              //串口
-                        ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
-                        ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
-                        ComDevice.DataBits = ComConfig.DataBits;                              //数据位
-                        ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
+                        SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+                        SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
+                        SerialPort.DataBits = ComConfig.DataBits;                              //数据位
+                        SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
                         //ComDevice.Close();                   //关闭串口
                         //ComConfig.IsOpened = false;          //标记串口已关闭
                         //ShowMessage($"关闭串口{ComDevice.PortName}");
@@ -204,7 +204,7 @@ namespace Wu.CommTool.ViewModels
                     throw new Exception($"数据转换16进制失败，发送数据位数必须为偶数(16进制一个字节2位数)。");
                 }
 
-                if (ComDevice.IsOpen)
+                if (SerialPort.IsOpen)
                 {
                     try
                     {
@@ -232,7 +232,7 @@ namespace Wu.CommTool.ViewModels
                         list.AddRange(crc);
                         var data = list.ToArray();
                         SendBytesCount += data.Length;//统计发送数据总数
-                        ComDevice.Write(data, 0, data.Length);//发送数据
+                        SerialPort.Write(data, 0, data.Length);//发送数据
                         ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
                         return true;
                     }
@@ -266,9 +266,9 @@ namespace Wu.CommTool.ViewModels
         {
             //TODO 接收数据
             Thread.Sleep(100);       //延时读取数据 等待数据接收完成
-            int n = ComDevice.BytesToRead;          //获取接收的数据总数
+            int n = SerialPort.BytesToRead;          //获取接收的数据总数
             byte[] buf = new byte[n];
-            ComDevice.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
+            SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
             ReceivBytesCount += buf.Length;         //统计发送的数据总数
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -284,19 +284,19 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                if (ComDevice.IsOpen == false)
+                if (SerialPort.IsOpen == false)
                 {
                     //配置串口
-                    ComDevice.PortName = ComConfig.Port.Key;                              //串口
-                    ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
-                    ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
-                    ComDevice.DataBits = ComConfig.DataBits;                              //数据位
-                    ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
+                    SerialPort.PortName = ComConfig.Port.Key;                              //串口
+                    SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+                    SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
+                    SerialPort.DataBits = ComConfig.DataBits;                              //数据位
+                    SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
                     try
                     {
-                        ComDevice.Open();               //打开串口
+                        SerialPort.Open();               //打开串口
                         ComConfig.IsOpened = true;      //标记串口已打开
-                        ShowMessage($"打开串口 {ComDevice.PortName} : {ComConfig.Port.Value}");
+                        ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}");
                     }
                     catch (Exception ex)
                     {
@@ -309,9 +309,9 @@ namespace Wu.CommTool.ViewModels
                 {
                     try
                     {
-                        ComDevice.Close();                   //关闭串口
+                        SerialPort.Close();                   //关闭串口
                         ComConfig.IsOpened = false;          //标记串口已关闭
-                        ShowMessage($"关闭串口{ComDevice.PortName}");
+                        ShowMessage($"关闭串口{SerialPort.PortName}");
                     }
                     catch (Exception ex)
                     {
@@ -335,9 +335,9 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                ComDevice.Close();                   //关闭串口
+                SerialPort.Close();                   //关闭串口
                 ComConfig.IsOpened = false;          //标记串口已关闭
-                ShowMessage($"关闭串口{ComDevice.PortName}");
+                ShowMessage($"关闭串口{SerialPort.PortName}");
             }
             catch (Exception ex)
             {
@@ -421,7 +421,7 @@ namespace Wu.CommTool.ViewModels
         /// 自动搜索串口设备
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
-        private async void AutoSearch()
+        private async void OpenAutoSearchView()
         {
             try
             {
@@ -441,7 +441,7 @@ namespace Wu.CommTool.ViewModels
                 //添加要传递的参数
                 DialogParameters param = new()
                 {
-                    { nameof(ComDevice), ComDevice },
+                    { nameof(SerialPort), SerialPort },
                     { nameof(ComConfig), ComConfig }
                 };
                 //弹窗
