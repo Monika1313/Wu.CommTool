@@ -24,13 +24,13 @@
                                FontSize="18"
                                Text="Modbus服务器配置" />
                     <ctl:WuIpBox Margin="5"
-                                 Ip="{Binding MqttServerConfig.ServerIp}"
+                                 Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  IpTitle="IP"
                                  TitleWidth="45" />
                     <TextBox hc:TitleElement.Title="Port"
                              hc:TitleElement.TitleWidth="45"
                              Style="{StaticResource FormTextBox}"
-                             Text="{Binding MqttServerConfig.ServerPort}" />
+                             Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                     <!--  服务器开关  -->
                     <StackPanel HorizontalAlignment="Center"
@@ -169,9 +169,9 @@
                             Background="Red"
                             CornerRadius="10" />
                     <TextBlock VerticalAlignment="Center" Text="IP：" />
-                    <TextBlock />
-                    <TextBlock VerticalAlignment="Center" Text="Port：" />
-                    <TextBlock />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerIp}" />
+                    <TextBlock VerticalAlignment="Center" Text="   Port：" />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerPort}" />
                 </DockPanel>
                 <Border Margin="5,0"
                         BorderBrush="Gray"
