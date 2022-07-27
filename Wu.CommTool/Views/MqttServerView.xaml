@@ -153,12 +153,12 @@
                                 ToolTip="清空消息" />
 
 
-                        <Button Width="30"
+                        <!--<Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="4"
                                 Content="{md:PackIcon Kind=Cog}"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />
+                                Style="{StaticResource Blue_CircleButton}" />-->
                     </DockPanel>
                 </Grid>
 
