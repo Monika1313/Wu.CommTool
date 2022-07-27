@@ -17,7 +17,7 @@
     <SolidColorBrush x:Key="Red_Background">#fff1f0</SolidColorBrush>
 
     <SolidColorBrush x:Key="Yellow_Foreground">#faad14</SolidColorBrush>
-    <SolidColorBrush x:Key="Yellow_BorderBrush">#f6ff91</SolidColorBrush>
+    <SolidColorBrush x:Key="Yellow_BorderBrush">#ffe58f</SolidColorBrush>
     <SolidColorBrush x:Key="Yellow_Background">#fdffe5</SolidColorBrush>
 
     <!--  导航菜单按钮样式  -->

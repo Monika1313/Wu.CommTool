@@ -102,6 +102,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public int SendBytesCount { get => _SendBytesCount; set => SetProperty(ref _SendBytesCount, value); }
         private int _SendBytesCount = 0;
+
+        /// <summary>
+        /// 暂停界面更新接收的数据
+        /// </summary>
+        public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
+        private bool _IsPause = false;
         #endregion
 
 
@@ -126,24 +132,8 @@ namespace Wu.CommTool.ViewModels
             {
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
+                case "Pause": Pause(); break;
                 case "AutoSearch": OpenAutoSearchView(); break;
-                case "Test1":
-                    try
-                    {
-                        //ComDevice.PortName = ComConfig.Port.Key;                              //串口
-                        SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
-                        SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
-                        SerialPort.DataBits = ComConfig.DataBits;                              //数据位
-                        SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
-                        //ComDevice.Close();                   //关闭串口
-                        //ComConfig.IsOpened = false;          //标记串口已关闭
-                        //ShowMessage($"关闭串口{ComDevice.PortName}");
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowMessage(ex.Message, MessageType.Error);
-                    }
-                    break;
                 case "Send": Send(); break;                                          //发送数据
                 case "GetComPorts": GetComPorts(); break;                            //查找Com口
                 case "Clear": Clear(); break;                                        //清空信息
@@ -151,8 +141,20 @@ namespace Wu.CommTool.ViewModels
                 case "OperatePort": OperatePort(); break;                                //打开串口
                 case "CloseCom": CloseCom(); break;                                //关闭串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
-                default:
-                    break;
+                default: break;
+            }
+        }
+
+        private void Pause()
+        {
+            IsPause = !IsPause;
+            if (IsPause)
+            {
+                ShowMessage("暂停更新接收的数据");
+            }
+            else
+            {
+                ShowMessage("恢复更新接收的数据");
             }
         }
 
@@ -191,7 +193,7 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception ex)
             {
-                ShowMessage(ex.Message,MessageType.Error);
+                ShowMessage(ex.Message, MessageType.Error);
             }
         }
 
@@ -319,10 +321,10 @@ namespace Wu.CommTool.ViewModels
                 SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
                 ReceivBytesCount += buf.Length;          //统计发送的数据总数
 
-                //System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                //{
-                //    ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
-                //});
+                //若暂停更新接收数据 则不显示
+                if (IsPause)
+                    return;
+
                 ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
 
             }
