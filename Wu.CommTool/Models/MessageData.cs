@@ -38,6 +38,6 @@ namespace Wu.CommTool.Models
         /// 消息内容
         /// </summary>
         public string Content { get => _Content; set => SetProperty(ref _Content, value); }
-        private string _Content;
+        private string _Content = string.Empty;
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
+using Wu.CommTool.Models;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -36,6 +37,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// 页面消息
+        /// </summary>
+        public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
+        private ObservableCollection<MessageData> _Messages = new();
         #endregion
 
 

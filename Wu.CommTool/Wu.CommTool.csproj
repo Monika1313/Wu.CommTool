@@ -4,6 +4,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
     <AssemblyName>Wu通讯调试工具</AssemblyName>
+    <UseWindowsForms>True</UseWindowsForms>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Images\X1.png" />

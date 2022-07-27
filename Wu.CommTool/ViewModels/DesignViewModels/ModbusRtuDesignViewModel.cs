@@ -2,7 +2,7 @@
 {
     public class ModbusRtuDesignViewModel : ModbusRtuViewModel
     {
-        private static ModbusRtuDesignViewModel _Instance;
+        private static ModbusRtuDesignViewModel _Instance = new();
         public static ModbusRtuDesignViewModel Instance => _Instance ??= new();
         public ModbusRtuDesignViewModel()
         {
