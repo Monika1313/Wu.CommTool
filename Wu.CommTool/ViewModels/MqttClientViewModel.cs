@@ -17,7 +17,7 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        public string DialogHostName { get; set; }
+        public string DialogHostName { get; set; } = "MqttClientView";
         #endregion
 
         public MqttClientViewModel() { }
@@ -43,6 +43,18 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
         private ObservableCollection<MessageData> _Messages = new();
+
+        /// <summary>
+        /// 暂停更新接收的数据
+        /// </summary>
+        public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
+        private bool _IsPause = false;
+
+        /// <summary>
+        /// IsDrawersOpen
+        /// </summary>
+        public IsDrawersOpen IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
+        private IsDrawersOpen _IsDrawersOpen = new();
         #endregion
 
 

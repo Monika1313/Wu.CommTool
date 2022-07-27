@@ -33,99 +33,27 @@
                                 Margin="5"
                                 HorizontalAlignment="Center"
                                 FontSize="24"
-                                Text="串口设置" />
-                            <StackPanel Orientation="Horizontal">
-                                <ComboBox
-                                    Width="230"
-                                    hc:InfoElement.Placeholder="请选择串口..."
-                                    hc:InfoElement.Title="串口"
-                                    IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                    ItemsSource="{Binding ComPorts}"
-                                    SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    Style="{StaticResource FormComboBox}">
-                                    <!--  添加触发器,支持点击事件  -->
-                                    <!--<i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="DropDownOpened">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="GetComPorts" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>-->
-                                </ComboBox>
-                                <Button
-                                    Width="30"
-                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="GetComPorts"
-                                    Content="{md:PackIcon Kind=Search}"
-                                    DockPanel.Dock="Left"
-                                    Style="{StaticResource Blue_CircleButton}"
-                                    ToolTip="查找串口设备" />
-                            </StackPanel>
-                            <ComboBox
-                                hc:InfoElement.Placeholder="请选择波特率..."
-                                hc:InfoElement.Title="波特率"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
-                                SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource FormComboBox}" />
+                                Text="Mqtt客户端配置" />
 
-                            <ComboBox
-                                hc:InfoElement.Placeholder="请选择校验位..."
-                                hc:InfoElement.Title="校验位"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                ItemsSource="{Binding Source={StaticResource ValueParity}}"
-                                SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource FormComboBox}" />
+                            <TextBlock
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                FontSize="16"
+                                Text="连接的服务器" />
+                            <TextBox hc:TitleElement.Title="服务器IP" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="服务器端口" Style="{StaticResource FormTextBox}" />
 
-                            <ComboBox
-                                hc:InfoElement.Placeholder="请选择数据位..."
-                                hc:InfoElement.Title="数据位"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                ItemsSource="{StaticResource DataBits}"
-                                SelectedItem="{Binding ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource FormComboBox}" />
-                            <ComboBox
-                                hc:InfoElement.Placeholder="请选择停止位..."
-                                hc:InfoElement.Title="停止位"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
-                                SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                Style="{StaticResource FormComboBox}" />
+                            <TextBlock
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                FontSize="16"
+                                Text="客户端配置" />
+                            <TextBox hc:TitleElement.Title="客户端ID" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="用户名" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="密码" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="订阅主题" Style="{StaticResource FormTextBox}" />
 
 
-                            <!--<hc:TransitioningContentControl>
-                                <hc:AutoCompleteTextBox Width="200"
-                                                        Margin="0"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        DisplayMemberPath="Name"
-                                                        ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}" />
-                            </hc:TransitioningContentControl>-->
-
-                            <!--<Button MinHeight="30"
-                                    Margin="30,5"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="OperatePort">
-                                <Button.Style>
-                                    <Style BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" TargetType="Button">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="true">
-                                                <Setter Property="Content" Value="关闭串口" />
-                                                <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
-                                                <Setter Property="Background" Value="{StaticResource Red_Background}" />
-                                                <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="false">
-                                                <Setter Property="Content" Value="打开串口" />
-                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>-->
 
                             <StackPanel
                                 HorizontalAlignment="Center"
@@ -159,7 +87,7 @@
             <!--  主体内容  -->
             <DockPanel>
                 <Grid DockPanel.Dock="Top">
-                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus Rtu" />
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Mqtt客户端" />
                     <DockPanel LastChildFill="False">
                         <!--  配置Com按钮  -->
                         <Button
@@ -337,7 +265,7 @@
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                         <ComboBox
                             MinWidth="190"
-                            hc:InfoElement.Placeholder="请选择校验模式..."
+                            hc:InfoElement.Placeholder="请选择发送格式"
                             hc:InfoElement.Title="自动校验模式: "
                             hc:InfoElement.TitleWidth="90"
                             ItemsSource="{Binding Source={StaticResource ValueCrcMode}}"

@@ -163,7 +163,7 @@
             <!--  主体内容  -->
             <DockPanel>
                 <Grid DockPanel.Dock="Top">
-                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus Rtu" />
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Mqtt服务器" />
                     <DockPanel LastChildFill="False">
                         <!--  配置Com按钮  -->
                         <Button
