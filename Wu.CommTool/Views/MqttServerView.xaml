@@ -9,6 +9,7 @@
              xmlns:local="clr-namespace:Wu.CommTool.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
              d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
              d:DesignHeight="450"
              d:DesignWidth="800"
@@ -32,29 +33,25 @@
                              Text="{Binding MqttServerConfig.ServerPort}" />
 
                     <!--  服务器开关  -->
-                    <Button MinHeight="30"
-                            Margin="30,5"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="OpenServer">
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" TargetType="Button">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding MqttServerConfig.IsOpened}" Value="true">
-                                        <Setter Property="Content" Value="关闭服务器" />
-                                        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
-                                        <Setter Property="Background" Value="{StaticResource Red_Background}" />
-                                        <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding MqttServerConfig.IsOpened}" Value="false">
-                                        <Setter Property="Content" Value="打开服务器" />
-                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Orientation="Horizontal">
+                        <Button Margin="20"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenMqttServer"
+                                Content="打开"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                Style="{StaticResource GreenButton}" />
+
+                        <Button Width="60"
+                                Margin="20"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="CloseMqttServer"
+                                Content="关闭"
+                                DockPanel.Dock="Left"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened}"
+                                Style="{StaticResource RedButton}" />
+                    </StackPanel>
                 </StackPanel>
             </md:DrawerHost.LeftDrawerContent>
             <DockPanel>
@@ -67,17 +64,100 @@
                                 Margin="4"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="OpenLeftDrawer"
+                                Content="{md:PackIcon Kind=Cog}"
                                 DockPanel.Dock="Left"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                            <md:PackIcon Kind="Cog" />
+                                Style="{StaticResource Blue_CircleButton}" />
+
+                        <!--  打开串口  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Background="{StaticResource Green_Background}"
+                                BorderBrush="{StaticResource Green_BorderBrush}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenCom"
+                                Content="{md:PackIcon Kind=Play}"
+                                Cursor="Hand"
+                                Foreground="{StaticResource Green_Foreground}"
+                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                ToolTip="开启页面更新" />
+
+                        <!--  关闭串口  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="CloseCom"
+                                Content="{md:PackIcon Kind=Stop}"
+                                Cursor="Hand"
+                                IsEnabled="{Binding ComConfig.IsOpened}"
+                                Style="{StaticResource Red_CircleButton}"
+                                ToolTip="暂停更新接收的数据" />
+
+                        <!--  暂停界面更新  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Pause"
+                                Cursor="Hand"
+                                ToolTip="暂停界面更新">
+                            <md:PackIcon Width="24" Height="24">
+                                <md:PackIcon.Style>
+                                    <Style TargetType="md:PackIcon">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                                <Setter Property="Kind" Value="PlayPause" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                                <Setter Property="Kind" Value="Pause" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </md:PackIcon.Style>
+                            </md:PackIcon>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                            <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Red_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
                         </Button>
+
+                        <!--  清空消息按钮  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Clear"
+                                Content="{md:PackIcon Kind=Delete}"
+                                Style="{StaticResource Red_CircleButton}"
+                                ToolTip="清空消息" />
+
+
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="4"
+                                Content="{md:PackIcon Kind=Cog}"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                            <md:PackIcon Kind="Cog" />
-                        </Button>
+                                Style="{StaticResource Blue_CircleButton}" />
                     </DockPanel>
                 </Grid>
 

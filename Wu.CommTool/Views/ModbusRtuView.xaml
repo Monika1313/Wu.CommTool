@@ -18,31 +18,7 @@
              d:DesignHeight="600"
              d:DesignWidth="800"
              mc:Ignorable="d">
-    <UserControl.Resources>
-        <Style x:Key="Red_CircleButton"
-               BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-               TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
-            <Setter Property="Background" Value="{StaticResource Red_Background}" />
-            <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-        </Style>
-
-        <Style x:Key="Yellow_CircleButton"
-               BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-               TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-        </Style>
-
-        <Style x:Key="Blue_CircleButton"
-               BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-               TargetType="Button">
-            <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
-            <Setter Property="Background" Value="{StaticResource Blue_Background}" />
-            <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
-        </Style>
-    </UserControl.Resources>
+    <UserControl.Resources />
 
     <md:DialogHost Identifier="ModbusRtuView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}">
@@ -80,13 +56,10 @@
                                         HorizontalAlignment="Left"
                                         Command="{Binding ExecuteCommand}"
                                         CommandParameter="GetComPorts"
+                                        Content="{md:PackIcon Kind=Search}"
                                         DockPanel.Dock="Left"
-                                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                        ToolTip="查找串口设备">
-                                    <md:PackIcon Width="24"
-                                                 Height="24"
-                                                 Kind="Search" />
-                                </Button>
+                                        Style="{StaticResource Blue_CircleButton}"
+                                        ToolTip="查找串口设备" />
                             </StackPanel>
                             <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
                                       hc:InfoElement.Title="波特率"
@@ -125,7 +98,7 @@
                                                         ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}" />
                             </hc:TransitioningContentControl>-->
 
-                            <Button MinHeight="30"
+                            <!--<Button MinHeight="30"
                                     Margin="30,5"
                                     Command="{Binding ExecuteCommand}"
                                     CommandParameter="OperatePort">
@@ -147,8 +120,27 @@
                                         </Style.Triggers>
                                     </Style>
                                 </Button.Style>
-                            </Button>
+                            </Button>-->
 
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Orientation="Horizontal">
+                                <Button Margin="20"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="OpenCom"
+                                        Content="打开"
+                                        IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                        Style="{StaticResource GreenButton}" />
+
+                                <Button Width="60"
+                                        Margin="20"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="CloseCom"
+                                        Content="关闭"
+                                        DockPanel.Dock="Left"
+                                        IsEnabled="{Binding ComConfig.IsOpened}"
+                                        Style="{StaticResource RedButton}" />
+                            </StackPanel>
                         </StackPanel>
                     </Border>
                     <Grid Height="100" DockPanel.Dock="Top" />
@@ -168,26 +160,10 @@
                                 HorizontalAlignment="Left"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="ConfigCom"
+                                Content="{md:PackIcon Kind=Cog}"
                                 Cursor="Hand"
                                 Style="{StaticResource Blue_CircleButton}"
-                                ToolTip="配置串口">
-                            <md:PackIcon Width="24"
-                                         Height="24"
-                                         Kind="COG" />
-                        </Button>
-
-                        <!--  暂停界面消息更新  -->
-                        <!--<Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="50,0,0,0"
-                                HorizontalAlignment="Left"
-                                Command="{Binding ExecuteCommand}"
-                                CommandParameter="Pause"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}">
-                            <md:PackIcon Width="24"
-                                         Height="24"
-                                         Kind="TestTube" />
-                        </Button>-->
+                                ToolTip="配置串口" />
 
                         <!--  打开串口  -->
                         <Button Width="30"
@@ -198,15 +174,12 @@
                                 BorderBrush="{StaticResource Green_BorderBrush}"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="OpenCom"
+                                Content="{md:PackIcon Kind=Play}"
                                 Cursor="Hand"
                                 Foreground="{StaticResource Green_Foreground}"
                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                ToolTip="开启页面更新">
-                            <md:PackIcon Width="24"
-                                         Height="24"
-                                         Kind="Play" />
-                        </Button>
+                                ToolTip="开启页面更新" />
 
                         <!--  关闭串口  -->
                         <Button Width="30"
@@ -215,14 +188,11 @@
                                 HorizontalAlignment="Left"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="CloseCom"
+                                Content="{md:PackIcon Kind=Stop}"
                                 Cursor="Hand"
                                 IsEnabled="{Binding ComConfig.IsOpened}"
                                 Style="{StaticResource Red_CircleButton}"
-                                ToolTip="暂停更新接收的数据">
-                            <md:PackIcon Width="24"
-                                         Height="24"
-                                         Kind="Stop" />
-                        </Button>
+                                ToolTip="暂停更新接收的数据" />
 
                         <!--  暂停界面更新  -->
                         <Button Width="30"
@@ -267,12 +237,6 @@
                             </Button.Style>
                         </Button>
 
-
-
-
-
-
-
                         <!--  清空消息按钮  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -280,25 +244,9 @@
                                 HorizontalAlignment="Left"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="Clear"
+                                Content="{md:PackIcon Kind=Delete}"
                                 Style="{StaticResource Red_CircleButton}"
-                                ToolTip="清空消息">
-                            <md:PackIcon Width="24"
-                                         Height="24"
-                                         Kind="DeleteOffOutline" />
-                            <!--  "{StaticResource MaterialDesignFloatingActionMiniButton}"  -->
-                            <!--<Button.Style>
-                                <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
-                                    <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
-                                    <Setter Property="Background" Value="{StaticResource Red_Background}" />
-                                    <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-                            -->
-                            <!--<Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />-->
-                            <!--
-                                </Style>
-                            </Button.Style>-->
-                        </Button>
+                                ToolTip="清空消息" />
 
                         <!--  自动搜索ModbusRtu设备  -->
                         <Button Width="30"
@@ -306,14 +254,11 @@
                                 Margin="4"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="AutoSearch"
+                                Content="{md:PackIcon Kind=Search}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                ToolTip="自动搜索ModbusRtu设备">
-                            <md:PackIcon Width="24"
-                                         Height="24"
-                                         Kind="Search" />
-                        </Button>
+                                Style="{StaticResource Blue_CircleButton}"
+                                ToolTip="自动搜索ModbusRtu设备" />
                     </DockPanel>
                 </Grid>
 

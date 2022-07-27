@@ -20,6 +20,74 @@
     <SolidColorBrush x:Key="Yellow_BorderBrush">#ffe58f</SolidColorBrush>
     <SolidColorBrush x:Key="Yellow_Background">#fdffe5</SolidColorBrush>
 
+
+
+    <!--  按钮  -->
+    <Style x:Key="GreenButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="Green_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="RedButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Red_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="Red_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Red_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="YellowButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="Yellow_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="BlueButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+    </Style>
+
+    <Style x:Key="Blue_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
+        <Setter Property="Background" Value="{StaticResource Blue_Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
+    </Style>
+
+
     <!--  导航菜单按钮样式  -->
     <Style x:Key="MenuBarsListBoxItem" TargetType="ListBoxItem">
         <Setter Property="MinHeight" Value="40" />
@@ -88,7 +156,7 @@
         <Setter Property="FontWeight" Value="Bold" />
     </Style>
 
-    <!--  Icon  -->
+    <!--  PackIcon  -->
     <Style TargetType="md:PackIcon">
         <Setter Property="Width" Value="24" />
         <Setter Property="Height" Value="24" />

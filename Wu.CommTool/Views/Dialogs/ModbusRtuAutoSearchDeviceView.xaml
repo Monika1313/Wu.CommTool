@@ -12,10 +12,9 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:model="clr-namespace:Wu.CommTool.Models"
              xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
-             MinHeight="300"
+             MinWidth="900"
+             MinHeight="500"
              d:DataContext="{x:Static ddvm:ModbusRtuAutoSearchDeviceDesignViewModel.Instance}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
              mc:Ignorable="d">
     <md:DialogHost x:Name="DialogHost"
                    DialogTheme="Inherit"
@@ -144,7 +143,7 @@
                                           IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                           ItemsSource="{Binding Source={StaticResource ValueBaudRate}}"
                                           ShowSelectAllButton="True"
-                                          Style="{StaticResource CheckComboBoxExtend}">
+                                          Style="{StaticResource FormCheckComboBox}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding BaudRateSelectionChangedCommand}" CommandParameter="{Binding SelectedItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=hc:CheckComboBox}}" />
@@ -162,7 +161,7 @@
                                           IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                           ItemsSource="{Binding Source={StaticResource ValueParity}}"
                                           ShowSelectAllButton="True"
-                                          Style="{StaticResource CheckComboBoxExtend}">
+                                          Style="{StaticResource FormCheckComboBox}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding ParitySelectionChangedCommand}" CommandParameter="{Binding SelectedItems, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=hc:CheckComboBox}}" />
@@ -173,7 +172,7 @@
                 </ScrollViewer>
 
 
-                <Border Margin="5"
+                <Border Margin="5,0"
                         BorderBrush="Gray"
                         BorderThickness="1"
                         CornerRadius="5"
@@ -235,54 +234,95 @@
 
                     </hc:ScrollViewer>
                 </Border>
+                <DockPanel>
+                    <Border Height="30"
+                            Margin="4,4,4,0"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            DockPanel.Dock="Bottom"
+                            Visibility="{Binding IsSearchStoped, Converter={wucvt:Bool2VisibilityCollapsed}}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Margin="5,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource Green_Foreground}"
+                                       Text="正在搜索...    " />
 
-                <Border Margin="5"
-                        BorderBrush="Gray"
-                        BorderThickness="1"
-                        CornerRadius="5">
-                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                        <!--  页面消息  -->
-                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
+                            <TextBlock VerticalAlignment="Center" Text="波特率:" />
+                            <TextBlock Margin="5,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource Green_Foreground}"
+                                       Text="{Binding CurrentDevice.BaudRate}" />
+                            <TextBlock VerticalAlignment="Center" Text="校验位:" />
+                            <TextBlock Margin="5,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource Green_Foreground}"
+                                       Text="{Binding CurrentDevice.Parity}" />
+                            <TextBlock VerticalAlignment="Center" Text="数据位: " />
+                            <TextBlock Margin="5,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource Green_Foreground}"
+                                       Text="{Binding CurrentDevice.DataBits}" />
+                            <TextBlock VerticalAlignment="Center" Text="停止位: " />
+                            <TextBlock Margin="5,0,10,0"
+                                       VerticalAlignment="Center"
+                                       Foreground="{StaticResource Green_Foreground}"
+                                       Text="{Binding CurrentDevice.StopBits}" />
+                            <TextBlock VerticalAlignment="Center" Text=" 地址:" />
+                            <TextBlock VerticalAlignment="Center"
+                                       d:Text="1"
+                                       Foreground="{StaticResource Green_Foreground}"
+                                       Text="{Binding CurrentDevice.Address}" />
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="4,0"
+                            BorderBrush="Gray"
+                            BorderThickness="1"
+                            CornerRadius="4">
+                        <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                            <!--  页面消息  -->
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
 
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Margin="3"
-                                            Padding="2"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Style="{StaticResource MessageBorder}">
-                                        <WrapPanel Orientation="Horizontal">
-                                            <TextBlock Margin="3"
-                                                       VerticalAlignment="Center"
-                                                       Style="{StaticResource MessageTextBlock}"
-                                                       Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
-                                            <TextBlock Margin="5,0"
-                                                       VerticalAlignment="Center"
-                                                       Style="{StaticResource MessageTextBlock}"
-                                                       Text="{Binding Type}" />
-                                            <!--<TextBlock Margin="5"
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="3"
+                                                Padding="2"
+                                                BorderThickness="1"
+                                                CornerRadius="4"
+                                                Style="{StaticResource MessageBorder}">
+                                            <WrapPanel Orientation="Horizontal">
+                                                <TextBlock Margin="3"
+                                                           VerticalAlignment="Center"
+                                                           Style="{StaticResource MessageTextBlock}"
+                                                           Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+                                                <TextBlock Margin="5,0"
+                                                           VerticalAlignment="Center"
+                                                           Style="{StaticResource MessageTextBlock}"
+                                                           Text="{Binding Type}" />
+                                                <!--<TextBlock Margin="5"
                                                        VerticalAlignment="Center"
                                                        Style="{StaticResource MessageTextBlock}"
                                                        Text="{Binding Content}" />-->
-                                            <TextBox VerticalAlignment="Center"
-                                                     FontSize="12"
-                                                     FontWeight="Bold"
-                                                     IsReadOnly="True"
-                                                     Style="{StaticResource MessageTextBox}"
-                                                     Text="{Binding Content}"
-                                                     TextWrapping="Wrap" />
-                                        </WrapPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </hc:ScrollViewer>
-                </Border>
+                                                <TextBox VerticalAlignment="Center"
+                                                         FontSize="12"
+                                                         FontWeight="Bold"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource MessageTextBox}"
+                                                         Text="{Binding Content}"
+                                                         TextWrapping="Wrap" />
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </hc:ScrollViewer>
+                    </Border>
+                </DockPanel>
 
             </DockPanel>
         </DockPanel>

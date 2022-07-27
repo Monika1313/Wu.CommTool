@@ -111,8 +111,8 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// <summary>
         /// 搜索标志位
         /// </summary>
-        public bool IsSearch { get => _IsSearch; set => SetProperty(ref _IsSearch, value); }
-        private bool _IsSearch = false;
+        public bool IsSearchStoped { get => _IsSearchStoped; set => SetProperty(ref _IsSearchStoped, value); }
+        private bool _IsSearchStoped = true;
 
         /// <summary>
         /// ModbusRtu设备
@@ -124,7 +124,13 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// 当前设备
         /// </summary>
         public ModbusRtuDevice CurrentDevice { get => _CurrentDevice; set => SetProperty(ref _CurrentDevice, value); }
-        private ModbusRtuDevice _CurrentDevice;
+        private ModbusRtuDevice _CurrentDevice = new();
+
+        /// <summary>
+        /// 当前搜索的地址
+        /// </summary>
+        public int CurrentSearchDevice { get => _CurrentSearchDevice; set => SetProperty(ref _CurrentSearchDevice, value); }
+        private int _CurrentSearchDevice = 1;
         #endregion
 
 
@@ -257,6 +263,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     ShowMessage("未打开串口, 无法搜索");
                     return;
                 }
+                IsSearchStoped = false;
                 //清空搜索到的设备列表
                 ModbusRtuDevices.Clear();
 
@@ -269,7 +276,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     {
                         //搜索
                         ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
-
 
                         for (int i = 0; i <= 255; i++)
                         {
@@ -298,7 +304,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     if (ComConfig.IsOpened == false)
                         break;
                 }
-
                 if (ComConfig.IsOpened)
                 {
                     ShowMessage("搜索完成");
@@ -312,6 +317,10 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             catch (Exception ex)
             {
 
+            }
+            finally
+            {
+                IsSearchStoped = true;
             }
         }
 

@@ -9,6 +9,7 @@
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 
 
@@ -19,6 +20,7 @@
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 
     <!--  表单ComboBox  -->
@@ -28,5 +30,13 @@
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <!--  hc:CheckComboBox  -->
+    <Style x:Key="FormCheckComboBox"
+           BasedOn="{StaticResource CheckComboBoxExtend}"
+           TargetType="hc:CheckComboBox">
+        <Setter Property="Background" Value="Transparent" />
     </Style>
 </ResourceDictionary>

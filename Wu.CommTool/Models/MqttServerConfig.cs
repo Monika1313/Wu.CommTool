@@ -23,7 +23,7 @@ namespace Wu.CommTool.Models
         /// 端口
         /// </summary>
         public int ServerPort { get => _ServerPort; set => SetProperty(ref _ServerPort, value); }
-        private int _ServerPort = 1883;
+        private int _ServerPort = 1884;
 
         /// <summary>
         /// 是否开启

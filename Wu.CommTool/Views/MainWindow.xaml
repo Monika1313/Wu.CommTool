@@ -8,7 +8,10 @@
         xmlns:prism="http://prismlibrary.com/"
         Width="1000"
         Height="700"
-        prism:ViewModelLocator.AutoWireViewModel="True">
+        MinWidth="1000"
+        MinHeight="700"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        WindowStartupLocation="CenterScreen">
     <WindowChrome.WindowChrome>
         <WindowChrome />
     </WindowChrome.WindowChrome>

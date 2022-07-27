@@ -1,14 +1,17 @@
 ﻿using MaterialDesignThemes.Wpf;
+using MQTTnet.Server;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+//using MQTTnet.Server.Model;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -18,6 +21,9 @@ namespace Wu.CommTool.ViewModels
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
         public string DialogHostName { get; set; }
+        private MqttServer server;                                 //Mqtt服务器
+        //private List<MqttUser> users = new List<MqttUser>();     //用户列表
+
         #endregion
 
         public MqttServerViewModel() { }
@@ -55,6 +61,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public MqttServerConfig MqttServerConfig { get => _MqttServerConfig; set => SetProperty(ref _MqttServerConfig, value); }
         private MqttServerConfig _MqttServerConfig =new();
+
+        /// <summary>
+        /// IsPause
+        /// </summary>
+        public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
+        private bool _IsPause;
         #endregion
 
 
