@@ -29,6 +29,7 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();//ModbusRtu
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();//Mqtt
+            containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();//MqttServer
         }
 
         /// <summary>

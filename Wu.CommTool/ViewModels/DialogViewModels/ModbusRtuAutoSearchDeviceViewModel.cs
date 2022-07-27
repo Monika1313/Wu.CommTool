@@ -242,7 +242,8 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     ShowMessage("未打开串口, 无法搜索");
                     return;
                 }
-                //发送数据
+                //清空搜索到的设备列表
+                ModbusRtuDevices.Clear();
 
                 //遍历选项
 
@@ -252,7 +253,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     foreach (var parity in SelectedParitys)
                     {
                         //搜索
-                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}" );
+                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}" );
 
                        
                         for (int i = 0; i <= 255; i++)
@@ -286,6 +287,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                 if (ComConfig.IsOpened)
                 {
                     ShowMessage("搜索完成");
+                    OperatePort();
                 }
                 else
                 {

@@ -91,15 +91,15 @@ namespace Wu.CommTool.ViewModels
             this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(ModbusRtuView));//导航至页面
         }
 
-
         /// <summary>
         /// 创建主菜单
         /// </summary>
         void CreateMenuBar()
         {
             MenuBars = new ObservableCollection<MenuBar>();
-            MenuBars.Add(new MenuBar() { Icon = "Bug", Title = "Modbus Rtu 调试", NameSpace = nameof(ModbusRtuView) });
-            MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt 调试", NameSpace = nameof(MqttView) });
+            MenuBars.Add(new MenuBar() { Icon = "Bug", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) });
+            //MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt", NameSpace = nameof(MqttView) });
+            MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "MqttServer", NameSpace = nameof(MqttServerView) });
         }
 
         /// <summary>
@@ -115,6 +115,5 @@ namespace Wu.CommTool.ViewModels
                 journal = back.Context.NavigationService.Journal;
             });
         }
-
     }
 }

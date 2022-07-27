@@ -20,6 +20,7 @@ using Wu.CommTool.Extensions;
 using Prism.Services.Dialogs;
 using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Views;
+using System.Windows;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -265,17 +266,33 @@ namespace Wu.CommTool.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
-            //TODO 接收数据
-            Thread.Sleep(100);       //延时读取数据 等待数据接收完成
-            int n = SerialPort.BytesToRead;          //获取接收的数据总数
-            byte[] buf = new byte[n];
-            SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
-            ReceivBytesCount += buf.Length;         //统计发送的数据总数
-
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            try
             {
+                //TODO 接收数据
+                Thread.Sleep(100);       //延时读取数据 等待数据接收完成
+                if (!SerialPort.IsOpen)
+                {
+                    return;
+                }
+                int n = SerialPort.BytesToRead;          //获取接收的数据总数
+                byte[] buf = new byte[n];
+                SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
+                ReceivBytesCount += buf.Length;          //统计发送的数据总数
+
+                //System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                //{
+                //    ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
+                //});
                 ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
-            });
+
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    ShowMessage(ex.Message, MessageType.Receive);
+                });
+            }
         }
 
 
@@ -412,7 +429,22 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                //判断是UI线程还是子线程 若是子线程需要用委托
+                var UiThreadId = Application.Current.Dispatcher.Thread.ManagedThreadId;       //UI线程ID
+                var currentThreadId = Thread.CurrentThread.ManagedThreadId;                   //当前线程
+                //当前线程为主线程 直接更新数据
+                if (currentThreadId == UiThreadId)
+                {
+                    Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                }
+                else
+                {
+                    //子线程无法更新在UI线程的内容   委托主线程更新
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    });
+                }
             }
             catch (Exception ex) { }
         }
@@ -446,7 +478,7 @@ namespace Wu.CommTool.ViewModels
                 };
                 //弹窗
                 var dialogResult2 = await dialogHost.ShowDialog(nameof(ModbusRtuAutoSearchDeviceView), param, nameof(ModbusRtuView));
-                
+
 
             }
             catch (Exception ex)

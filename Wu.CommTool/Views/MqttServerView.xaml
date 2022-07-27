@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="Wu.CommTool.Views.MqttServerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:ctl="clr-namespace:Wu.CommTool.Controls"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+             xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:local="clr-namespace:Wu.CommTool.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+    <md:DialogHost Identifier="MqttServerView">
+        <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}">
+            <!--  左侧抽屉  -->
+            <md:DrawerHost.LeftDrawerContent>
+                <StackPanel Width="240" Orientation="Vertical">
+                    <TextBlock Margin="10"
+                               HorizontalAlignment="Center"
+                               FontSize="18"
+                               Text="Modbus服务器配置" />
+                    <ctl:WuIpBox Margin="5"
+                                 Ip="{Binding MqttServerConfig.ServerIp}"
+                                 IpTitle="IP"
+                                 TitleWidth="45" />
+                    <TextBox hc:TitleElement.Title="Port"
+                             hc:TitleElement.TitleWidth="45"
+                             Style="{StaticResource FormTextBox}"
+                             Text="{Binding MqttServerConfig.ServerPort}" />
+
+                    <!--  服务器开关  -->
+                    <Button MinHeight="30"
+                            Margin="30,5"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="OpenServer">
+                        <Button.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" TargetType="Button">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding MqttServerConfig.IsOpened}" Value="true">
+                                        <Setter Property="Content" Value="关闭服务器" />
+                                        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+                                        <Setter Property="Background" Value="{StaticResource Red_Background}" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding MqttServerConfig.IsOpened}" Value="false">
+                                        <Setter Property="Content" Value="打开服务器" />
+                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </md:DrawerHost.LeftDrawerContent>
+            <DockPanel>
+                <Grid DockPanel.Dock="Top">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Mqtt服务器" />
+                    <DockPanel LastChildFill="False">
+                        <!--  配置Modbus服务器按钮  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenLeftDrawer"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}">
+                            <md:PackIcon Kind="Cog" />
+                        </Button>
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}">
+                            <md:PackIcon Kind="Cog" />
+                        </Button>
+                    </DockPanel>
+                </Grid>
+
+                <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+                    <Border Width="20"
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="4"
+                            Background="Red"
+                            CornerRadius="10" />
+                    <TextBlock VerticalAlignment="Center" Text="IP：" />
+                    <TextBlock />
+                    <TextBlock VerticalAlignment="Center" Text="Port：" />
+                    <TextBlock />
+                </DockPanel>
+                <Border Margin="5,0"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="5">
+                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                        <!--  页面消息  -->
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="3"
+                                            Padding="2"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Style="{StaticResource MessageBorder}">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock Margin="3"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm}}" />
+                                            <TextBlock Margin="5,0"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Type}" />
+                                            <!--<TextBlock Margin="5"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Content}" />-->
+                                            <TextBox VerticalAlignment="Center"
+                                                     FontSize="12"
+                                                     FontWeight="Bold"
+                                                     IsReadOnly="True"
+                                                     Style="{StaticResource MessageTextBox}"
+                                                     Text="{Binding Content}"
+                                                     TextWrapping="Wrap" />
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
+                </Border>
+            </DockPanel>
+        </md:DrawerHost>
+    </md:DialogHost>
+</UserControl>

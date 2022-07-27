@@ -211,7 +211,7 @@
                         <!--  自动搜索ModbusRtu设备  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="5"
+                                Margin="4"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="AutoSearch"
                                 Cursor="Hand"
@@ -244,19 +244,6 @@
                             Background="AliceBlue"
                             DockPanel.Dock="Bottom"
                             Orientation="Horizontal">
-                    <TextBlock Margin="10,0,0,0"
-                               VerticalAlignment="Center"
-                               FontWeight="Bold"
-                               Text="{Binding ComConfig.Port.Key}" />
-                    <TextBlock VerticalAlignment="Center" Text=" : " />
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
-                    <TextBlock VerticalAlignment="Center" Text="  " />
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
-                    <TextBlock VerticalAlignment="Center" Text="  " />
-                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
-                    <TextBlock Margin="5,0"
-                               VerticalAlignment="Center"
-                               Text="{Binding ComConfig.StopBits}" />
                     <Border Width="20"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="10,5"
@@ -274,6 +261,20 @@
                             </Style>
                         </Border.Style>
                     </Border>
+                    <TextBlock Margin="0"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               Text="{Binding ComConfig.Port.Key}" />
+                    <TextBlock VerticalAlignment="Center" Text=" : " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
+                    <TextBlock Margin="5,0"
+                               VerticalAlignment="Center"
+                               Text="{Binding ComConfig.StopBits}" />
+
 
                     <Border Margin="30,3"
                             BorderBrush="LightBlue"
@@ -310,7 +311,7 @@
                              TextWrapping="Wrap" />
                 </DockPanel>
 
-                <Border Margin="5"
+                <Border Margin="5,0"
                         BorderBrush="Gray"
                         BorderThickness="1"
                         CornerRadius="5">
