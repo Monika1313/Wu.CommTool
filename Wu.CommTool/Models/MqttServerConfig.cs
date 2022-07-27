@@ -29,6 +29,6 @@ namespace Wu.CommTool.Models
         /// 是否开启
         /// </summary>
         public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
-        private bool _IsOpened;
+        private bool _IsOpened = false;
     }
 }

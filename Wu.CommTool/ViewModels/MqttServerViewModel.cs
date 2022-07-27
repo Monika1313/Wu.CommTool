@@ -1,5 +1,8 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using HandyControl.Controls;
+using MaterialDesignThemes.Wpf;
+using MQTTnet;
 using MQTTnet.Server;
+using MqttnetServer.Model;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -8,10 +11,14 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
-//using MQTTnet.Server.Model;
+
 
 namespace Wu.CommTool.ViewModels
 {
@@ -21,8 +28,8 @@ namespace Wu.CommTool.ViewModels
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
         public string DialogHostName { get; set; }
-        private MqttServer server;                                 //Mqtt服务器
-        //private List<MqttUser> users = new List<MqttUser>();     //用户列表
+        private IMqttServer server;                                 //Mqtt服务器
+        private List<MqttUser> users = new List<MqttUser>();     //用户列表
 
         #endregion
 
@@ -87,7 +94,9 @@ namespace Wu.CommTool.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
-                case "OpenServer": OpenServer(); break;                              //打开服务器
+                case "Clear": Clear(); break;
+                case "OpenMqttServer": OpenMqttServer(); break;                              //打开服务器
+                case "CloseMqttServer": CloseMqttServer(); break;                              //打开服务器
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
@@ -95,11 +104,108 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
-        /// 打开服务器
+        /// 清空页面消息
         /// </summary>
-        private void OpenServer()
+        private void Clear()
         {
-            //TODO
+            try
+            {
+                Messages.Clear();
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
+            }
+        }
+
+        /// <summary>
+        /// 关闭Mqtt服务器
+        /// </summary>
+        private async void CloseMqttServer()
+        {
+            try
+            {
+                //关闭服务器
+                await server.StopAsync();
+                MqttServerConfig.IsOpened = false;
+                ShowMessage($"Mqtt服务器关闭");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
+            }
+        }
+
+        /// <summary>
+        /// 打开Mqtt服务器
+        /// </summary>
+        private async void OpenMqttServer()
+        {
+            //TODO 打开服务器
+            try
+            {
+                //Mqtt服务器设置
+                var optionBuilder = new MqttServerOptionsBuilder()
+                    .WithClientId("server")                                                     //设置服务端发布消息时使用的ClientId
+                    .WithDefaultEndpointBoundIPAddress(IPAddress.Parse(MqttServerConfig.ServerIp))    //使用指定的Ip地址
+                    .WithDefaultEndpointPort(MqttServerConfig.ServerPort)                             //使用指定的端口号
+                    .WithConnectionValidator(LoginVerify)                                              //客户端登录验证事件
+                    .WithSubscriptionInterceptor(ClientSubscription)                                  //客户端订阅事件
+                    .WithApplicationMessageInterceptor(ServerReceived);                               //接收数据处理方法
+
+                //创建服务器
+                server = new MqttFactory().CreateMqttServer();
+               
+                //客户端断开连接处理
+                server.UseClientDisconnectedHandler(c =>
+                {
+                    var user = users.FirstOrDefault(t => t.ClientId == c.ClientId);
+                    if (user != null)
+                    {
+                        users.Remove(user);
+                        ShowMessage($"订阅者：“{user.UserName}”  客户端：“{c.ClientId}” 已断开连接!");
+                    }
+                });
+
+                //开启服务器
+                await server.StartAsync(optionBuilder.Build());
+
+                MqttServerConfig.IsOpened = true;
+                ShowMessage("服务器开启成功");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message,MessageType.Error);
+            }
+
+        }
+
+        /// <summary>
+        /// 接收到消息事件
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ServerReceived(MqttApplicationMessageInterceptorContext obj)
+        {
+            
+        }
+
+        /// <summary>
+        /// 客户端发布消息
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ClientSubscription(MqttSubscriptionInterceptorContext obj)
+        {
+            
+        }
+
+        /// <summary>
+        /// 登录验证
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void LoginVerify(MqttConnectionValidatorContext obj)
+        {
             
         }
 
@@ -109,7 +215,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Search();
+            
         }
 
         /// <summary>

@@ -135,7 +135,7 @@
 
                         <!--  波特率  -->
                         <hc:CheckComboBox MaxWidth="380"
-                                          Margin="0,16,0,0"
+                                          Margin="4"
                                           hc:InfoElement.Necessary="True"
                                           hc:InfoElement.Placeholder="请选择要搜索的波特率"
                                           hc:InfoElement.Title="波特率"
@@ -153,7 +153,7 @@
 
                         <!--  校验方式  -->
                         <hc:CheckComboBox MaxWidth="380"
-                                          Margin="0,16,0,0"
+                                          Margin="4"
                                           hc:InfoElement.Necessary="True"
                                           hc:InfoElement.Placeholder="请选择要搜索的校验方式"
                                           hc:InfoElement.Title="校验方式"

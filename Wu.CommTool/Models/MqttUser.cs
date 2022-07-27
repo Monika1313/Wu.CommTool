@@ -1,22 +1,30 @@
-﻿using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
+﻿using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MqttnetServer.Model
 {
+    /// <summary>
+    /// Mqtt客户端用户
+    /// </summary>
     public class MqttUser : BindableBase
     {
-        public string clientId { get; set; }
-        public string userName { get; set; }
-        public string passWord { get; set; }
+        /// <summary>
+        /// 客户端ID
+        /// </summary>
+        public string ClientId { get => _ClientId; set => SetProperty(ref _ClientId, value); }
+        private string _ClientId;
 
+        /// <summary>
+        /// 用户名
+        /// </summary>
+        public string UserName { get => _UserName; set => SetProperty(ref _UserName, value); }
+        private string _UserName;
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string PassWord { get => _PassWord; set => SetProperty(ref _PassWord, value); }
+        private string _PassWord;
 
         /// <summary>
         /// 登录时间
@@ -25,7 +33,7 @@ namespace MqttnetServer.Model
         private DateTime _LoginTime;
 
         /// <summary>
-        /// definity
+        /// 最后一次消息时间
         /// </summary>
         public DateTime LastDataTime { get => _LastDataTime; set => SetProperty(ref _LastDataTime, value); }
         private DateTime _LastDataTime;

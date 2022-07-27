@@ -48,6 +48,7 @@
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="CloseMqttServer"
                                 Content="关闭"
+                                Cursor="Hand"
                                 DockPanel.Dock="Left"
                                 IsEnabled="{Binding MqttServerConfig.IsOpened}"
                                 Style="{StaticResource RedButton}" />
@@ -68,7 +69,7 @@
                                 DockPanel.Dock="Left"
                                 Style="{StaticResource Blue_CircleButton}" />
 
-                        <!--  打开串口  -->
+                        <!--  打开Mqtt服务器  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
@@ -76,24 +77,24 @@
                                 Background="{StaticResource Green_Background}"
                                 BorderBrush="{StaticResource Green_BorderBrush}"
                                 Command="{Binding ExecuteCommand}"
-                                CommandParameter="OpenCom"
+                                CommandParameter="OpenMqttServer"
                                 Content="{md:PackIcon Kind=Play}"
                                 Cursor="Hand"
                                 Foreground="{StaticResource Green_Foreground}"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                                 ToolTip="开启页面更新" />
 
-                        <!--  关闭串口  -->
+                        <!--  关闭Mqtt服务器  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
                                 HorizontalAlignment="Left"
                                 Command="{Binding ExecuteCommand}"
-                                CommandParameter="CloseCom"
+                                CommandParameter="CloseMqttServer"
                                 Content="{md:PackIcon Kind=Stop}"
                                 Cursor="Hand"
-                                IsEnabled="{Binding ComConfig.IsOpened}"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened}"
                                 Style="{StaticResource Red_CircleButton}"
                                 ToolTip="暂停更新接收的数据" />
 
