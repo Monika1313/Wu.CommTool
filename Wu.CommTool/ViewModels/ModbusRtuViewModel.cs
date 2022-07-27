@@ -126,7 +126,6 @@ namespace Wu.CommTool.ViewModels
             {
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
-                case "CloseCom": CloseCom(); break;
                 case "AutoSearch": OpenAutoSearchView(); break;
                 case "Test1":
                     try
@@ -148,10 +147,51 @@ namespace Wu.CommTool.ViewModels
                 case "Send": Send(); break;                                          //发送数据
                 case "GetComPorts": GetComPorts(); break;                            //查找Com口
                 case "Clear": Clear(); break;                                        //清空信息
-                case "OpenCom": OperatePort(); break;                                //打开串口
+                case "OpenCom": OpenCom(); break;                                //打开串口
+                case "OperatePort": OperatePort(); break;                                //打开串口
+                case "CloseCom": CloseCom(); break;                                //关闭串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
                 default:
                     break;
+            }
+        }
+
+        /// <summary>
+        /// 打开串口
+        /// </summary>
+        private void OpenCom()
+        {
+            try
+            {
+                //判断串口是否已打开
+                if (ComConfig.IsOpened)
+                {
+                    ShowMessage("当前串口已打开, 无法重复开启");
+                    return;
+                }
+
+                //配置串口
+                SerialPort.PortName = ComConfig.Port.Key;                              //串口
+                SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+                SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
+                SerialPort.DataBits = ComConfig.DataBits;                              //数据位
+                SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
+                try
+                {
+                    SerialPort.Open();               //打开串口
+                    ComConfig.IsOpened = true;      //标记串口已打开
+                    ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}");
+                }
+                catch (Exception ex)
+                {
+                    ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
+                    return;
+                }
+                IsDrawersOpen.IsLeftDrawerOpen = false;        //关闭左侧抽屉
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message,MessageType.Error);
             }
         }
 
@@ -349,10 +389,16 @@ namespace Wu.CommTool.ViewModels
         }
 
 
+
         private void CloseCom()
         {
             try
             {
+                //若串口未开启则返回
+                if (!ComConfig.IsOpened)
+                {
+                    return;
+                }
                 SerialPort.Close();                   //关闭串口
                 ComConfig.IsOpened = false;          //标记串口已关闭
                 ShowMessage($"关闭串口{SerialPort.PortName}");
@@ -431,7 +477,7 @@ namespace Wu.CommTool.ViewModels
             {
                 //判断是UI线程还是子线程 若是子线程需要用委托
                 var UiThreadId = Application.Current.Dispatcher.Thread.ManagedThreadId;       //UI线程ID
-                var currentThreadId = Thread.CurrentThread.ManagedThreadId;                   //当前线程
+                var currentThreadId = Environment.CurrentManagedThreadId;                     //当前线程
                 //当前线程为主线程 直接更新数据
                 if (currentThreadId == UiThreadId)
                 {
@@ -446,7 +492,7 @@ namespace Wu.CommTool.ViewModels
                     });
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
         }
 
         /// <summary>

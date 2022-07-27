@@ -208,9 +208,24 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         {
             try
             {
-                Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                //判断是UI线程还是子线程 若是子线程需要用委托
+                var UiThreadId = System.Windows.Application.Current.Dispatcher.Thread.ManagedThreadId;       //UI线程ID
+                var currentThreadId = Environment.CurrentManagedThreadId;                     //当前线程
+                //当前线程为主线程 直接更新数据
+                if (currentThreadId == UiThreadId)
+                {
+                    Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                }
+                else
+                {
+                    //子线程无法更新在UI线程的内容   委托主线程更新
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    });
+                }
             }
-            catch (Exception ex) { }
+            catch (Exception) { }
         }
 
 
@@ -224,7 +239,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                 //TODO 自动搜索ModbusRtu设备
                 //设置串口
                 //修改串口设置
-                if(SelectedBaudRates.Count.Equals(0))
+                if (SelectedBaudRates.Count.Equals(0))
                 {
                     ShowMessage("未选择要搜索的波特率", MessageType.Error);
                     return;
@@ -253,9 +268,9 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     foreach (var parity in SelectedParitys)
                     {
                         //搜索
-                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}" );
+                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
 
-                       
+
                         for (int i = 0; i <= 255; i++)
                         {
                             //当前搜索的设备
@@ -468,13 +483,9 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 ModbusRtuDevices.Add(CurrentDevice);
-                
             }));
 
-            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
-            }));
+            ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
         }
 
         /// <summary>
