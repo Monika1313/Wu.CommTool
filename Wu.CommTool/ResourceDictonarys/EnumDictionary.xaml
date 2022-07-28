@@ -4,6 +4,13 @@
                     xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
+
+
+    <!--  ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:QosLevel}}}"  -->
+    <!--  使用以上方法绑定枚举 以下内容弃用  -->
+
+
+
     <!--  波特率枚举  -->
     <ObjectDataProvider x:Key="ValueBaudRate"
                         MethodName="GetValues"
@@ -49,5 +56,7 @@
             <x:Type TypeName="model:CrcMode" />
         </ObjectDataProvider.MethodParameters>
     </ObjectDataProvider>
+
+
 
 </ResourceDictionary>

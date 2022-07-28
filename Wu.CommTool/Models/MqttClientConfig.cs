@@ -29,8 +29,8 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 密码
         /// </summary>
-        public string PassWord { get => _PassWord; set => SetProperty(ref _PassWord, value); }
-        private string _PassWord = "Password";
+        public string Password { get => _Password; set => SetProperty(ref _Password, value); }
+        private string _Password = "Password";
 
         /// <summary>
         /// 订阅的主题
@@ -43,6 +43,12 @@ namespace Wu.CommTool.Models
         /// </summary>
         public string PublishTopic { get => _PublishTopic; set => SetProperty(ref _PublishTopic, value); }
         private string _PublishTopic = string.Empty;
+
+        /// <summary>
+        /// 消息质量等级
+        /// </summary>
+        public QosLevel QosLevel { get => _QosLevel; set => SetProperty(ref _QosLevel, value); }
+        private QosLevel _QosLevel = QosLevel.AtMostOnce;
 
         /// <summary>
         /// IP

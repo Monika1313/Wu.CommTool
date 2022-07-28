@@ -277,7 +277,12 @@ namespace Wu.CommTool.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void ClientSubscription(MqttSubscriptionInterceptorContext obj)
         {
-
+            //客户端订阅事件
+            if (obj == null) 
+                return;
+            //允许订阅
+            obj.AcceptSubscription = true;
+            ShowMessage($"客户端：“{obj.ClientId}” 订阅主题：“{obj.TopicFilter.Topic}”");
         }
 
 
