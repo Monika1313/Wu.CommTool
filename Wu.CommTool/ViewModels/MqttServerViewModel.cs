@@ -153,6 +153,11 @@ namespace Wu.CommTool.ViewModels
             //TODO 打开服务器
             try
             {
+                //if (string.IsNullOrWhiteSpace(MqttServerConfig.ServerIp) || MqttServerConfig.ServerPort<=0)
+                //{
+                //    ShowErrorMessage("xxx");
+                //    return;
+                //}
                 //Mqtt服务器设置
                 var optionBuilder = new MqttServerOptionsBuilder()
                     .WithClientId("server")                                                     //设置服务端发布消息时使用的ClientId
