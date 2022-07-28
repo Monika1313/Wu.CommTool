@@ -1,4 +1,5 @@
-﻿using HandyControl.Controls;
+﻿using DryIoc;
+using HandyControl.Controls;
 using MaterialDesignThemes.Wpf;
 using MQTTnet;
 using MQTTnet.Server;
@@ -15,7 +16,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
@@ -28,9 +28,9 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        public string DialogHostName { get; set; }
+        public string DialogHostName { get; set; } = "MqttServerView";
         private IMqttServer server;                                 //Mqtt服务器
-        private List<MqttUser> Users = new List<MqttUser>();     //用户列表
+        //private List<MqttUser> Users = new List<MqttUser>();     //用户列表
 
         #endregion
 
@@ -43,9 +43,6 @@ namespace Wu.CommTool.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-
-            ShowMessage("本地调试使用IP:127.0.0.1");
-            ShowMessage("局域网调试需要防火墙设置开放响应的端口");
         }
 
         #region **************************************** 属性 ****************************************
@@ -71,13 +68,20 @@ namespace Wu.CommTool.ViewModels
         /// Mqtt服务器配置
         /// </summary>
         public MqttServerConfig MqttServerConfig { get => _MqttServerConfig; set => SetProperty(ref _MqttServerConfig, value); }
-        private MqttServerConfig _MqttServerConfig =new();
+        private MqttServerConfig _MqttServerConfig = new();
 
         /// <summary>
         /// IsPause
         /// </summary>
         public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
         private bool _IsPause;
+
+
+        /// <summary>
+        /// MqttUsers
+        /// </summary>
+        public ObservableCollection<MqttUser> MqttUsers { get => _MqttUsers; set => SetProperty(ref _MqttUsers, value); }
+        private ObservableCollection<MqttUser> _MqttUsers = new();
         #endregion
 
 
@@ -102,6 +106,7 @@ namespace Wu.CommTool.ViewModels
                 case "OpenMqttServer": OpenMqttServer(); break;                              //打开服务器
                 case "CloseMqttServer": CloseMqttServer(); break;                              //打开服务器
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
             }
@@ -159,15 +164,25 @@ namespace Wu.CommTool.ViewModels
 
                 //创建服务器
                 server = new MqttFactory().CreateMqttServer();
-               
+
                 //客户端断开连接处理
                 server.UseClientDisconnectedHandler(c =>
                 {
-                    var user = Users.FirstOrDefault(t => t.ClientId == c.ClientId);
-                    if (user != null)
+                    try
                     {
-                        Users.Remove(user);
-                        ShowMessage($"订阅者：“{user.UserName}”  客户端：“{c.ClientId}” 已断开连接!");
+                        var user = MqttUsers.FirstOrDefault(t => t.ClientId == c.ClientId);
+                        if (user != null)
+                        {
+                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                MqttUsers.Remove(user);
+                            });
+                            ShowMessage($"订阅者：“{user.UserName}”  客户端：“{c.ClientId}” 已断开连接!");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessage($"客户端断开连接事件处理异常:{ex.Message}");
                     }
                 });
 
@@ -179,9 +194,47 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception ex)
             {
-                ShowMessage(ex.Message,MessageType.Error);
+                ShowMessage(ex.Message, MessageType.Error);
             }
+        }
 
+
+        /// <summary>
+        /// 客户端登录验证
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void LoginVerify(MqttConnectionValidatorContext obj)
+        {
+            try
+            {
+                //登录验证器
+                bool flag = (obj.Username != "" && obj.Password != "");                         //验证账号密码
+                if (!flag)                                                                      //验证失败
+                {
+                    obj.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.BadUserNameOrPassword;
+                    return;
+                }
+                obj.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.Success;                //验证成功
+
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    //添加该用户
+                    MqttUsers.Add(new MqttUser()
+                    {
+                        ClientId = obj.ClientId,
+                        UserName = obj.Username,
+                        PassWord = obj.Password,
+                        LoginTime = DateTime.Now,
+                        LastDataTime = DateTime.Now
+                    });
+                });
+                ShowMessage($"用户名：“{obj.Username}”  客户端ID：“{obj.ClientId}” 已连接!");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage($"客户端验证登录事件异常:{ex.Message}");
+            }
         }
 
         /// <summary>
@@ -190,7 +243,31 @@ namespace Wu.CommTool.ViewModels
         /// <param name="obj"></param>
         private void ServerReceived(MqttApplicationMessageInterceptorContext obj)
         {
-            
+            if (obj == null) return;
+            try
+            {
+                obj.AcceptPublish = true;
+
+                //更新用户最新接收消息的时间
+                var user = MqttUsers.FirstOrDefault(x => x.ClientId.Equals(obj.ClientId));
+                if (user is not null)
+                    user.LastDataTime = DateTime.Now;
+                //接收的数据以字节显示
+                //ShowMessage($"客户端：“{obj.ClientId}” 发布主题：“{obj.ApplicationMessage.Topic}”\r\n内容：\r\n“{(obj.ApplicationMessage?.Payload == null ? null : BitConverter.ToString(obj.ApplicationMessage.Payload))}”");
+                //接收的数据以UTF8解码
+                ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload))}", MessageType.Receive);
+
+
+                //var npsmd = MqttAnalyse.Analyse_PumpStationMqttData(c.ApplicationMessage.Payload);        //将接收的数据解析
+                //npsmd.Ip = $"{c.ClientId}";                                                               //IP使用客户端ID
+                //YT_PsMDService.Insert(npsmd);                                                             //将解析的数据录入数据库
+
+                //接收的数据自动根据订阅发送给客户端 无需编程
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
         }
 
         /// <summary>
@@ -200,34 +277,9 @@ namespace Wu.CommTool.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void ClientSubscription(MqttSubscriptionInterceptorContext obj)
         {
-            
+
         }
 
-        /// <summary>
-        /// 登录验证
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void LoginVerify(MqttConnectionValidatorContext obj)
-        {
-            //登录验证器
-            bool flag = (obj.Username != "" && obj.Password != "");             //验证账号密码
-            if (!flag)                                                                    //验证失败
-            {
-                obj.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.BadUserNameOrPassword;
-                return;
-            }
-            obj.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.Success;                //验证成功
-            Users.Add(new MqttUser()                                                      //添加该用户
-            {
-                ClientId = obj.ClientId,
-                UserName = obj.Username,
-                PassWord = obj.Password,
-                LoginTime = DateTime.Now,
-                LastDataTime = DateTime.Now
-            });
-            ShowMessage($"用户名：“{obj.Username}”  客户端ID：“{obj.ClientId}” 已连接!");
-        }
 
         /// <summary>
         /// 导航至该页面触发
@@ -235,7 +287,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+
         }
 
         /// <summary>
@@ -318,17 +370,23 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+
+
+        protected void ShowErrorMessage(string message, MessageType messageType = MessageType.Error) => ShowMessage(message, messageType);
+        protected void ShowReceiveMessage(string message, MessageType messageType = MessageType.Receive) => ShowMessage(message, messageType);
+        protected void ShowSendMessage(string message, MessageType messageType = MessageType.Send) => ShowMessage(message, messageType);
+
         /// <summary>
         /// 界面显示数据
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        private void ShowMessage(string message, MessageType type = MessageType.Info)
+        protected void ShowMessage(string message, MessageType type = MessageType.Info)
         {
             try
             {
                 //判断是UI线程还是子线程 若是子线程需要用委托
-                var UiThreadId = Application.Current.Dispatcher.Thread.ManagedThreadId;       //UI线程ID
+                var UiThreadId = System.Windows.Application.Current.Dispatcher.Thread.ManagedThreadId;       //UI线程ID
                 var currentThreadId = Environment.CurrentManagedThreadId;                     //当前线程
                 //当前线程为主线程 直接更新数据
                 if (currentThreadId == UiThreadId)
@@ -352,17 +410,17 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public void Pub()
         {
-            Users.ForEach(arg =>
+            //该方法发布至所有客户端
+            foreach (var user in MqttUsers)
             {
                 server.PublishAsync(new MqttApplicationMessage()
                 {
-
-                    Topic = arg.ClientId,                                                               //发布消息时使用的客户端ID
+                    Topic = user.ClientId,                                                              //发布消息时使用的客户端ID
                     QualityOfServiceLevel = MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce,     //消息质量
                     Retain = false,
-                    Payload = Encoding.UTF8.GetBytes("发布的消息")                                      //内容
+                    Payload = Encoding.UTF8.GetBytes("发布的消息")                                    //内容
                 });
-            });
+            }
         }
         #endregion
     }

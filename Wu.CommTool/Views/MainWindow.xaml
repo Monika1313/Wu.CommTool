@@ -20,7 +20,7 @@
                    DialogTheme="Inherit"
                    Identifier="Root">
         <md:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-            <!--  左侧菜单栏  -->
+            <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
                 <DockPanel MinWidth="170">
                     <StackPanel DockPanel.Dock="Top">
@@ -59,6 +59,7 @@
                     </ListBox>
                 </DockPanel>
             </md:DrawerHost.LeftDrawerContent>
+            <!--  右侧抽屉  -->
 
             <Grid>
                 <Grid.RowDefinitions>

@@ -446,10 +446,21 @@ namespace Wu.CommTool.ViewModels
                 {
                     if (hardInfo.Properties["Name"].Value != null)
                     {
+                        //获取名称
                         string deviceName = hardInfo.Properties["Name"].Value.ToString();
+                        //从名称中截取串口
+
+                        List<String> dList = new List<String>();
+                        foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
+                        {
+                            String x = mch.Value.Trim();
+                            dList.Add(x);
+                        }
+
                         int startIndex = deviceName.IndexOf("(");
-                        int endIndex = deviceName.IndexOf(")");
-                        string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
+                        //int endIndex = deviceName.IndexOf(")");
+                        //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
+                        string key = dList[0];
                         string name = deviceName.Substring(0, startIndex - 1);
                         //添加进列表
                         ComPorts.Add(new KeyValuePair<string, string>(key, name));
@@ -468,12 +479,16 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+        protected void ShowErrorMessage(string message, MessageType messageType = MessageType.Error) => ShowMessage(message, messageType);
+        protected void ShowReceiveMessage(string message, MessageType messageType = MessageType.Receive) => ShowMessage(message, messageType);
+        protected void ShowSendMessage(string message, MessageType messageType = MessageType.Send) => ShowMessage(message, messageType);
+
         /// <summary>
         /// 界面显示数据
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        private void ShowMessage(string message, MessageType type = MessageType.Info)
+        protected void ShowMessage(string message, MessageType type = MessageType.Info)
         {
             try
             {

@@ -17,13 +17,13 @@ namespace Wu.CommTool.Models
         /// IP
         /// </summary>
         public string ServerIp { get => _ServerIp; set => SetProperty(ref _ServerIp, value); }
-        private string _ServerIp = "127.0.0.1";
+        private string _ServerIp = "192.168.2.211";
 
         /// <summary>
         /// 端口
         /// </summary>
         public int ServerPort { get => _ServerPort; set => SetProperty(ref _ServerPort, value); }
-        private int _ServerPort = 1884;
+        private int _ServerPort = 1883;
 
         /// <summary>
         /// 是否开启

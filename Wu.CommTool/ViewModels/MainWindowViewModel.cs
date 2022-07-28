@@ -89,6 +89,7 @@ namespace Wu.CommTool.ViewModels
         public void Congifure()
         {
             this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(ModbusRtuView));//导航至页面
+            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(MqttServerView));//导航至页面
         }
 
         /// <summary>
