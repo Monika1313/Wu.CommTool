@@ -42,14 +42,7 @@
                                           IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                           ItemsSource="{Binding ComPorts}"
                                           SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource FormComboBox}">
-                                    <!--  添加触发器,支持点击事件  -->
-                                    <!--<i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="DropDownOpened">
-                                        <i:InvokeCommandAction Command="{Binding DataContext.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" CommandParameter="GetComPorts" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>-->
-                                </ComboBox>
+                                          Style="{StaticResource FormComboBox}" />
                                 <Button Width="30"
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="5"
@@ -87,40 +80,6 @@
                                       ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
                                       SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}" />
-
-
-                            <!--<hc:TransitioningContentControl>
-                                <hc:AutoCompleteTextBox Width="200"
-                                                        Margin="0"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        DisplayMemberPath="Name"
-                                                        ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}" />
-                            </hc:TransitioningContentControl>-->
-
-                            <!--<Button MinHeight="30"
-                                    Margin="30,5"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="OperatePort">
-                                <Button.Style>
-                                    <Style BasedOn="{StaticResource MaterialDesignFlatMidBgButton}" TargetType="Button">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="true">
-                                                <Setter Property="Content" Value="关闭串口" />
-                                                <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
-                                                <Setter Property="Background" Value="{StaticResource Red_Background}" />
-                                                <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="false">
-                                                <Setter Property="Content" Value="打开串口" />
-                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Button.Style>
-                            </Button>-->
 
                             <StackPanel HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
@@ -179,7 +138,7 @@
                                 Foreground="{StaticResource Green_Foreground}"
                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                ToolTip="开启页面更新" />
+                                ToolTip="打开串口" />
 
                         <!--  关闭串口  -->
                         <Button Width="30"
@@ -192,7 +151,7 @@
                                 Cursor="Hand"
                                 IsEnabled="{Binding ComConfig.IsOpened}"
                                 Style="{StaticResource Red_CircleButton}"
-                                ToolTip="暂停更新接收的数据" />
+                                ToolTip="关闭串口" />
 
                         <!--  暂停界面更新  -->
                         <Button Width="30"

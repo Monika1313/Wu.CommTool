@@ -61,6 +61,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public MqttClientConfig MqttClientConfig { get => _MqttClientConfig; set => SetProperty(ref _MqttClientConfig, value); }
         private MqttClientConfig _MqttClientConfig = new();
+
+        /// <summary>
+        /// 发送的消息
+        /// </summary>
+        public string SendMessage { get => _SendMessage; set => SetProperty(ref _SendMessage, value); }
+        private string _SendMessage = string.Empty;
         #endregion
 
 
@@ -81,11 +87,29 @@ namespace Wu.CommTool.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
+                case "Open": OpenMqttClient();  break;
+                case "Close":  CloseMqttClient(); break;
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
             }
+        }
+
+        /// <summary>
+        /// 关闭Mqtt客户端
+        /// </summary>
+        private void CloseMqttClient()
+        {
+            
+        }
+
+        /// <summary>
+        /// 打开Mqtt客户端
+        /// </summary>
+        private void OpenMqttClient()
+        {
+            
         }
 
         /// <summary>

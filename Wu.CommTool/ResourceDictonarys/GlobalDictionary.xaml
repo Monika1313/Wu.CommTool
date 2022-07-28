@@ -167,7 +167,7 @@
 
     <!--  Border圆角基本样式  -->
     <Style x:Key="CircleBorder" TargetType="Border">
-        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderBrush" Value="#e0e0e0" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="MinHeight" Value="10" />
         <Setter Property="MinWidth" Value="10" />

@@ -18,19 +18,19 @@ namespace Wu.CommTool.Models
         /// 客户端ID
         /// </summary>
         public string ClientId { get => _ClientId; set => SetProperty(ref _ClientId, value); }
-        private string _ClientId = string.Empty;
+        private string _ClientId = "ClientId";
 
         /// <summary>
         /// 用户名
         /// </summary>
         public string UserName { get => _UserName; set => SetProperty(ref _UserName, value); }
-        private string _UserName = string.Empty;
+        private string _UserName = "UserName";
 
         /// <summary>
         /// 密码
         /// </summary>
         public string PassWord { get => _PassWord; set => SetProperty(ref _PassWord, value); }
-        private string _PassWord = string.Empty;
+        private string _PassWord = "Password";
 
         /// <summary>
         /// 订阅的主题
@@ -43,6 +43,7 @@ namespace Wu.CommTool.Models
         /// </summary>
         public string PublishTopic { get => _PublishTopic; set => SetProperty(ref _PublishTopic, value); }
         private string _PublishTopic = string.Empty;
+
         /// <summary>
         /// IP
         /// </summary>
