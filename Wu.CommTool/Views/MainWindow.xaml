@@ -8,83 +8,98 @@
         xmlns:prism="http://prismlibrary.com/"
         Width="1000"
         Height="700"
-        MinWidth="1000"
-        MinHeight="700"
         prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <Style x:Key="MainWindowGrid" TargetType="{x:Type Grid}">
+            <Setter Property="Margin" Value="0" />
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                    <Setter Property="Margin" Value="8" />
+                    <!--<Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />-->
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+
     <WindowChrome.WindowChrome>
-        <WindowChrome />
+        <WindowChrome CaptionHeight="50"
+                      CornerRadius="0"
+                      GlassFrameThickness="0"
+                      NonClientFrameEdges="None"
+                      ResizeBorderThickness="5"
+                      UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
-    <md:DialogHost x:Name="DialogHost"
-                   DialogTheme="Inherit"
-                   Identifier="Root">
-        <md:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-            <!--  左侧抽屉  -->
-            <md:DrawerHost.LeftDrawerContent>
-                <DockPanel MinWidth="170">
-                    <StackPanel DockPanel.Dock="Top">
-                        <Image Width="50"
-                               Height="50"
-                               Margin="0,20,0,5"
-                               Source="/Images/XX.png">
-                            <Image.Clip>
-                                <EllipseGeometry Center="25,25"
-                                                 RadiusX="25"
-                                                 RadiusY="25" />
-                            </Image.Clip>
-                        </Image>
-                        <TextBlock Margin="0,10"
-                                   HorizontalAlignment="Center"
-                                   Text="Wu" />
-                    </StackPanel>
-                    <ListBox x:Name="menuBar"
-                             ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
-                             ItemsSource="{Binding MenuBars}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="SelectionChanged">
-                                <i:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Background="Transparent" Orientation="Horizontal">
-                                    <md:PackIcon Margin="20,0" Kind="{Binding Icon}" />
-                                    <TextBlock Margin="0,0,20,0"
-                                               VerticalAlignment="Center"
-                                               Text="{Binding Title}" />
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
-                </DockPanel>
-            </md:DrawerHost.LeftDrawerContent>
-            <!--  右侧抽屉  -->
+    <Grid Style="{StaticResource MainWindowGrid}">
+        <md:DialogHost x:Name="DialogHost"
+                       DialogTheme="Inherit"
+                       Identifier="Root">
+            <md:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
+                <!--  左侧抽屉  -->
+                <md:DrawerHost.LeftDrawerContent>
+                    <DockPanel MinWidth="170">
+                        <StackPanel DockPanel.Dock="Top">
+                            <Image Width="50"
+                                   Height="50"
+                                   Margin="0,20,0,5"
+                                   Source="/Images/XX.png">
+                                <Image.Clip>
+                                    <EllipseGeometry Center="25,25"
+                                                     RadiusX="25"
+                                                     RadiusY="25" />
+                                </Image.Clip>
+                            </Image>
+                            <TextBlock Margin="0,10"
+                                       HorizontalAlignment="Center"
+                                       Text="Wu" />
+                        </StackPanel>
+                        <ListBox x:Name="menuBar"
+                                 ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
+                                 ItemsSource="{Binding MenuBars}">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="SelectionChanged">
+                                    <i:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Background="Transparent" Orientation="Horizontal">
+                                        <md:PackIcon Margin="20,0" Kind="{Binding Icon}" />
+                                        <TextBlock Margin="0,0,20,0"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Title}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </md:DrawerHost.LeftDrawerContent>
+                <!--  右侧抽屉  -->
 
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <md:Snackbar x:Name="Snackbar"
+                                 Panel.ZIndex="1"
+                                 MessageQueue="{md:MessageQueue}" />
+                    <md:ColorZone x:Name="ColorZone"
+                                  Padding="10"
+                                  md:ShadowAssist.ShadowDepth="Depth2"
+                                  DockPanel.Dock="Top"
+                                  Mode="PrimaryMid">
+                        <Grid>
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="22"
+                                       Text="Wu" />
 
-                <md:Snackbar x:Name="Snackbar"
-                             Panel.ZIndex="1"
-                             MessageQueue="{md:MessageQueue}" />
-                <md:ColorZone x:Name="ColorZone"
-                              Padding="10"
-                              md:ShadowAssist.ShadowDepth="Depth2"
-                              DockPanel.Dock="Top"
-                              Mode="PrimaryMid">
-                    <Grid>
-                        <TextBlock HorizontalAlignment="Center"
-                                   VerticalAlignment="Center"
-                                   FontSize="22"
-                                   Text="Wu" />
+                            <DockPanel LastChildFill="False">
+                                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
 
-                        <DockPanel LastChildFill="False">
-                            <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-
-                                <!--<md:PopupBox>
+                                    <!--<md:PopupBox>
                                     <md:PopupBox.ToggleContent>
                                         <Image
                                             Width="25"
@@ -102,7 +117,7 @@
                                 </md:PopupBox>-->
 
 
-                                <!--
+                                    <!--
                                     <StackPanel>
                                         <Button CommandParameter="用户中心" Content="用户中心" />
                                         <Button Command="{Binding LogOutCommand}"
@@ -111,26 +126,27 @@
                                     </StackPanel>
                                 </md:PopupBox>-->
 
-                                <Button x:Name="btnMin"
-                                        Content="—"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
-                                <Button x:Name="btnMax"
-                                        Content="☐"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
-                                <Button x:Name="btnClose"
-                                        Content="✕"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
-                            </StackPanel>
+                                    <Button x:Name="btnMin"
+                                            Content="—"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                    <Button x:Name="btnMax"
+                                            Content="☐"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                    <Button x:Name="btnClose"
+                                            Content="✕"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                </StackPanel>
 
-                            <ToggleButton x:Name="MenuToggleButton"
-                                          DockPanel.Dock="Left"
-                                          IsChecked="False"
-                                          Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
-                        </DockPanel>
-                    </Grid>
-                </md:ColorZone>
-                <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
-            </Grid>
-        </md:DrawerHost>
-    </md:DialogHost>
+                                <ToggleButton x:Name="MenuToggleButton"
+                                              DockPanel.Dock="Left"
+                                              IsChecked="False"
+                                              Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                            </DockPanel>
+                        </Grid>
+                    </md:ColorZone>
+                    <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
+                </Grid>
+            </md:DrawerHost>
+        </md:DialogHost>
+    </Grid>
 </Window>
