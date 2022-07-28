@@ -63,7 +63,7 @@
                                HorizontalAlignment="Center"
                                DockPanel.Dock="Top"
                                FontSize="20"
-                               Text="在线客户端" />
+                               Text="客户端管理" />
                     <Grid>
                         <Border Margin="4"
                                 BorderBrush="Gray"
@@ -215,7 +215,7 @@
                                 ToolTip="清空消息" />
 
 
-                        <!--  连接的用户  -->
+                        <!--  客户端管理  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="4"
@@ -224,7 +224,7 @@
                                 Content="{md:PackIcon Kind=UserGroup}"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}"
-                                ToolTip="连接的用户" />
+                                ToolTip="客户端管理" />
                     </DockPanel>
                 </Grid>
 
