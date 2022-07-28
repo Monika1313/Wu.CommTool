@@ -11,20 +11,20 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>
+        <!--  最大化时增加边距, 避免由于WindowChrome导致的页面显示不全  -->
         <Style x:Key="MainWindowGrid" TargetType="{x:Type Grid}">
             <Setter Property="Margin" Value="0" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
                     <Setter Property="Margin" Value="8" />
-                    <!--<Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />-->
+                    <Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="50"
-                      CornerRadius="0"
+        <WindowChrome CornerRadius="0"
                       GlassFrameThickness="0"
                       NonClientFrameEdges="None"
                       ResizeBorderThickness="5"
