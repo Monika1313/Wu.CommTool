@@ -51,7 +51,6 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 var xx = MqttClientConfig.SubscribeTopics.Remove(obj.ToString());
-
             }
             catch (Exception ex)
             {
@@ -267,9 +266,9 @@ namespace Wu.CommTool.ViewModels
                     .UseDisconnectedHandler(DisConnected)                  //连接断开事件
                     .UseApplicationMessageReceivedHandler(ReceiveMessage); //接收消息事件
 
+                ShowMessage("连接中...");
                 await client.ConnectAsync(options);                //启动连接
                 MqttClientConfig.IsOpened = true;
-                ShowMessage("Mqtt客户端开启");
             }
             catch (Exception ex)
             {

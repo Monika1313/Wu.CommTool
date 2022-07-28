@@ -39,6 +39,12 @@ namespace Wu.CommTool.Models
         private ObservableCollection<string> _SubscribeTopics = new();
 
         /// <summary>
+        /// 成功订阅的主题
+        /// </summary>
+        public ObservableCollection<string> SubscribeSucceeds { get => _SubscribeSucceeds; set => SetProperty(ref _SubscribeSucceeds, value); }
+        private ObservableCollection<string> _SubscribeSucceeds = new();
+
+        /// <summary>
         /// 发布的主题
         /// </summary>
         public string PublishTopic { get => _PublishTopic; set => SetProperty(ref _PublishTopic, value); }

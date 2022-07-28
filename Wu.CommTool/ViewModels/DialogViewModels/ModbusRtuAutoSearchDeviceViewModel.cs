@@ -269,7 +269,6 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                 OperatePort();
                 if (ComConfig.IsOpened == false)
                 {
-                    ShowMessage("未打开串口, 无法搜索");
                     return;
                 }
                 IsSearchStoped = false;
