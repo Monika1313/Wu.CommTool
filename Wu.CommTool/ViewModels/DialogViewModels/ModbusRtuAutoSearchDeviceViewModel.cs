@@ -333,6 +333,27 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             }
         }
 
+        /// <summary>
+        /// 关闭串口
+        /// </summary>
+        private void CloseCom()
+        {
+            try
+            {
+                //若串口未开启则返回
+                if (!ComConfig.IsOpened)
+                {
+                    return;
+                }
+                SerialPort.Close();                   //关闭串口
+                ComConfig.IsOpened = false;          //标记串口已关闭
+                ShowMessage($"关闭串口{SerialPort.PortName}");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
+            }
+        }
 
         /// <summary>
         /// 打开串口
@@ -420,6 +441,9 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         private void Save()
         {
+            //确保串口关闭
+            CloseCom();
+
             if (!DialogHost.IsDialogOpen(DialogHostName))
                 return;
             //添加返回的参数
@@ -436,6 +460,8 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         private void Cancel()
         {
+            //确保串口关闭
+            CloseCom();
             //若窗口处于打开状态则关闭
             if (DialogHost.IsDialogOpen(DialogHostName))
                 DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));

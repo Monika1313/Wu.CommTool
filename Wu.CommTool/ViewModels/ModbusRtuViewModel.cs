@@ -391,7 +391,9 @@ namespace Wu.CommTool.ViewModels
         }
 
 
-
+        /// <summary>
+        /// 关闭串口
+        /// </summary>
         private void CloseCom()
         {
             try
