@@ -13,7 +13,7 @@
              xmlns:model="clr-namespace:Wu.CommTool.Models"
              xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
              d:DataContext="{x:Static dvm:MqttClientDesignViewModel.Instance}"
-             d:DesignHeight="450"
+             d:DesignHeight="600"
              d:DesignWidth="800"
              mc:Ignorable="d">
     <md:DialogHost Identifier="ModbusRtuView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
@@ -50,33 +50,38 @@
                                        Text="客户端配置" />
                             <TextBox hc:InfoElement.Placeholder="请输入客户端ID..."
                                      hc:TitleElement.Title="客户端ID"
-                                     Style="{StaticResource FormTextBox}" />
+                                     Style="{StaticResource FormTextBox}"
+                                     Text="{Binding MqttClientConfig.ClientId}" />
                             <TextBox hc:InfoElement.Placeholder="请输入客户端ID..."
                                      hc:TitleElement.Title="用户名"
-                                     Style="{StaticResource FormTextBox}" />
+                                     Style="{StaticResource FormTextBox}"
+                                     Text="{Binding MqttClientConfig.UserName}" />
 
+                            <PasswordBox ext:PasswordExtensions.Password="{Binding MqttClientConfig.PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         hc:InfoElement.Placeholder="请输入密码..."
+                                         hc:TitleElement.Title="密码"
+                                         Cursor="IBeam"
+                                         DockPanel.Dock="Top"
+                                         Style="{StaticResource FormPasswordBox}">
+                                <i:Interaction.Behaviors>
+                                    <ext:PasswordBehavior />
+                                </i:Interaction.Behaviors>
+                            </PasswordBox>
 
-                            <StackPanel Orientation="Horizontal">
-                                <PasswordBox ext:PasswordExtensions.Password="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                             hc:InfoElement.Placeholder="请输入密码..."
-                                             hc:TitleElement.Title="密码"
-                                             Cursor="IBeam"
-                                             DockPanel.Dock="Top"
-                                             Style="{StaticResource FormPasswordBox}">
-                                    <i:Interaction.Behaviors>
-                                        <ext:PasswordBehavior />
-                                    </i:Interaction.Behaviors>
-                                    <PasswordBox.InputBindings>
-                                        <KeyBinding Key="Enter"
-                                                    Command="{Binding ExecuteCommand}"
-                                                    CommandParameter="Login" />
-                                    </PasswordBox.InputBindings>
-                                </PasswordBox>
-                            </StackPanel>
-
-
-
-                            <TextBox hc:TitleElement.Title="订阅主题" Style="{StaticResource FormTextBox}" />
+                            <TextBlock Margin="5"
+                                       HorizontalAlignment="Center"
+                                       FontSize="16"
+                                       Text="订阅主题" />
+                            <Border MinHeight="30" Style="{StaticResource CircleBorder}">
+                                <ItemsControl />
+                            </Border>
+                            <DockPanel>
+                                <Button Margin="4"
+                                        Content="添加"
+                                        DockPanel.Dock="Right" />
+                                <TextBox Margin="4" />
+                            </DockPanel>
+                            <!--<TextBox hc:TitleElement.Title="订阅主题" Style="{StaticResource FormTextBox}" />-->
 
 
 

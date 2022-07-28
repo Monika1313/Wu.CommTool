@@ -164,4 +164,14 @@
 
     <!--  ScrollBar  -->
     <Style BasedOn="{StaticResource ScrollBarBaseStyle}" TargetType="ScrollBar" />
+
+    <!--  Border圆角基本样式  -->
+    <Style x:Key="CircleBorder" TargetType="Border">
+        <Setter Property="BorderBrush" Value="Gray" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="MinHeight" Value="10" />
+        <Setter Property="MinWidth" Value="10" />
+        <Setter Property="Margin" Value="4" />
+        <Setter Property="CornerRadius" Value="4" />
+    </Style>
 </ResourceDictionary>

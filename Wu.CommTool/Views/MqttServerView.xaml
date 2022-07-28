@@ -68,7 +68,7 @@
                             BorderThickness="1"
                             CornerRadius="4">
                         <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                            <ItemsControl MinHeight="580"
+                            <ItemsControl MinHeight="588"
                                           Background="Transparent"
                                           ItemsSource="{Binding MqttUsers}">
                                 <ItemsControl.ItemsPanel>

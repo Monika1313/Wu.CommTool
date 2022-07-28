@@ -55,6 +55,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public IsDrawersOpen IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
         private IsDrawersOpen _IsDrawersOpen = new();
+
+        /// <summary>
+        /// MqttClientConfig
+        /// </summary>
+        public MqttClientConfig MqttClientConfig { get => _MqttClientConfig; set => SetProperty(ref _MqttClientConfig, value); }
+        private MqttClientConfig _MqttClientConfig = new();
         #endregion
 
 
