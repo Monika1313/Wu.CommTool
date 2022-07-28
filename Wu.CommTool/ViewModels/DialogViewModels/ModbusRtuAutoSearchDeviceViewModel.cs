@@ -183,9 +183,18 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                     if (hardInfo.Properties["Name"].Value != null)
                     {
                         string deviceName = hardInfo.Properties["Name"].Value.ToString();
+                        //从名称中截取串口
+                        List<String> dList = new List<String>();
+                        foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
+                        {
+                            String x = mch.Value.Trim();
+                            dList.Add(x);
+                        }
+
                         int startIndex = deviceName.IndexOf("(");
-                        int endIndex = deviceName.IndexOf(")");
-                        string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
+                        //int endIndex = deviceName.IndexOf(")");
+                        //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
+                        string key = dList[0];
                         string name = deviceName.Substring(0, startIndex - 1);
                         //添加进列表
                         ComPorts.Add(new KeyValuePair<string, string>(key, name));

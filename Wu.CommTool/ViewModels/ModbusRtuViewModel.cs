@@ -449,7 +449,6 @@ namespace Wu.CommTool.ViewModels
                         //获取名称
                         string deviceName = hardInfo.Properties["Name"].Value.ToString();
                         //从名称中截取串口
-
                         List<String> dList = new List<String>();
                         foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
                         {
