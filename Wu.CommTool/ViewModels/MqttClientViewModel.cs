@@ -75,6 +75,8 @@ namespace Wu.CommTool.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
+                case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
             }

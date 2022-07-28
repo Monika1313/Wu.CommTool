@@ -39,4 +39,14 @@
            TargetType="hc:CheckComboBox">
         <Setter Property="Background" Value="Transparent" />
     </Style>
+
+    <!--  表单密码框  -->
+    <Style x:Key="FormPasswordBox"
+           BasedOn="{StaticResource PasswordBoxExtend}"
+           TargetType="PasswordBox">
+        <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
+        <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
 </ResourceDictionary>
