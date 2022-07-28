@@ -16,8 +16,8 @@
             <Setter Property="Margin" Value="0" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                    <!--<Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />-->
                     <Setter Property="Margin" Value="8" />
-                    <Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
