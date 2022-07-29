@@ -413,7 +413,7 @@
                                  Style="{StaticResource FormTextBox}"
                                  Text="{Binding MqttClientConfig.PublishTopic}" />
                     </DockPanel>
-                    <TextBox Margin="4"
+                    <TextBox Margin="4,0,4,4"
                              VerticalContentAlignment="Top"
                              hc:InfoElement.Placeholder="请输入要发送的内容..."
                              Style="{StaticResource TextBoxExtend}"

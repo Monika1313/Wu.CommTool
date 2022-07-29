@@ -25,9 +25,7 @@ namespace Wu.CommTool.Converters
                         {
                             throw new ArgumentException("Type must bu for an Enum");
                         }
-
                     }
-
                     _enumType = value;
                 }
             }

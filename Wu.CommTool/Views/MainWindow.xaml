@@ -8,6 +8,8 @@
         xmlns:prism="http://prismlibrary.com/"
         Width="1000"
         Height="700"
+        MinWidth="1000"
+        MinHeight="700"
         prism:ViewModelLocator.AutoWireViewModel="True"
         WindowStartupLocation="CenterScreen">
     <Window.Resources>

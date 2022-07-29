@@ -387,6 +387,11 @@ namespace Wu.CommTool.ViewModels
                 {
                     return;
                 }
+                if (client is null || client.IsConnected == false)
+                {
+                    ShowErrorMessage("未连接服务器");
+                    return;
+                }
 
                 var result = await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());       //订阅服务端消息
                 //根据结果判断
