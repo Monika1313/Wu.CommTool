@@ -1,8 +1,8 @@
 # Wu.CommTool
 目前支持  
 1 ModbusRtu调试  
-2 Mqtt服务器调试
-
+2 Mqtt服务器调试  
+3 Mqtt客户端调试
 
 Modbus Rtu 调试界面
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X1.png)
