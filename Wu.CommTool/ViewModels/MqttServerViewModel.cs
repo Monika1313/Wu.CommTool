@@ -165,6 +165,7 @@ namespace Wu.CommTool.ViewModels
                     .WithDefaultEndpointPort(MqttServerConfig.ServerPort)                             //使用指定的端口号
                     .WithConnectionValidator(LoginVerify)                                              //客户端登录验证事件
                     .WithSubscriptionInterceptor(ClientSubscription)                                  //客户端订阅事件
+                                                                                                      //.WithUnsubscriptionInterceptor(ClientUnsubscription)
                     .WithApplicationMessageInterceptor(ServerReceived);                               //接收数据处理方法
 
                 //创建服务器
@@ -191,6 +192,9 @@ namespace Wu.CommTool.ViewModels
                     }
                 });
 
+                //客户端取消订阅主题
+                server.ClientUnsubscribedTopicHandler = new MqttServerClientUnsubscribedTopicHandlerDelegate(ClientUnsubscribedTopicHandler);
+
                 //开启服务器
                 await server.StartAsync(optionBuilder.Build());
 
@@ -201,6 +205,16 @@ namespace Wu.CommTool.ViewModels
             {
                 ShowMessage(ex.Message, MessageType.Error);
             }
+        }
+
+
+        /// <summary>
+        /// 客户端取消订阅主题
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClientUnsubscribedTopicHandler(MqttServerClientUnsubscribedTopicEventArgs obj)
+        {
+            ShowMessage($"客户端：“{obj.ClientId}” 取消订阅主题：“{obj.TopicFilter}”");
         }
 
 
@@ -261,7 +275,6 @@ namespace Wu.CommTool.ViewModels
                 //ShowMessage($"客户端：“{obj.ClientId}” 发布主题：“{obj.ApplicationMessage.Topic}”\r\n内容：\r\n“{(obj.ApplicationMessage?.Payload == null ? null : BitConverter.ToString(obj.ApplicationMessage.Payload))}”");
                 //接收的数据以UTF8解码
                 ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload))}", MessageType.Receive);
-
 
                 //var npsmd = MqttAnalyse.Analyse_PumpStationMqttData(c.ApplicationMessage.Payload);        //将接收的数据解析
                 //npsmd.Ip = $"{c.ClientId}";                                                               //IP使用客户端ID

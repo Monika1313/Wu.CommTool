@@ -12,6 +12,8 @@
             MqttClientConfig.SubscribeTopics.Add("Topic3");
             MqttClientConfig.SubscribeTopics.Add("Topic4");
             MqttClientConfig.SubscribeTopics.Add("Topic5");
+            IsDrawersOpen.IsRightDrawerOpen = true;
+            MqttClientConfig.SubscribeSucceeds.Add("Topic1");
         }
     }
 }

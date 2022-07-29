@@ -40,12 +40,17 @@ namespace Wu.CommTool.ViewModels
             this.dialogHost = dialogHost;
 
             ExecuteCommand = new(Execute);
-            DeSubTopicCommand = new DelegateCommand<string>(DeSubTopic);
+            SubTopicCommand = new DelegateCommand<string>(SubTopic);
+            UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
         }
 
-        private void DeSubTopic(string obj)
+        /// <summary>
+        /// 减少主题
+        /// </summary>
+        /// <param name="obj"></param>
+        private void SubTopic(string obj)
         {
             //TODO
             try
@@ -116,7 +121,12 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 取消订阅主题
         /// </summary>
-        public DelegateCommand<string> DeSubTopicCommand { get; private set; }
+        public DelegateCommand<string> SubTopicCommand { get; private set; }
+
+        /// <summary>
+        /// 取消订阅主题
+        /// </summary>
+        public DelegateCommand<string> UnsubscribeTopicCommand { get; private set; }
         #endregion
 
 
@@ -130,7 +140,8 @@ namespace Wu.CommTool.ViewModels
                 case "Close": CloseMqttClient(); break;
                 case "Clear": Clear(); break;
                 case "Publish": Publish(); break;
-                case "AddSubTopic": AddSubTopic(); break;                               //添加订阅的主题
+                case "AddTopic": AddTopic(); break;                               //添加订阅的主题
+                case "SubscribeTopic": SubscribeTopic(NewSubTopic); break;                               //添加订阅的主题
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
@@ -141,7 +152,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 添加订阅的主题
         /// </summary>
-        private void AddSubTopic()
+        private void AddTopic()
         {
             try
             {
@@ -191,28 +202,31 @@ namespace Wu.CommTool.ViewModels
                 //根据选择的消息质量进行设置
                 var mqttAMB = new MqttApplicationMessageBuilder();
 
-                //switch (switch_on)
-                //{
-                //    default:
-                //}
+                //根据设置的消息质量发布消息
+                switch (MqttClientConfig.QosLevel)
+                {
+                    case QosLevel.AtLeastOnce:
+                        mqttAMB.WithAtLeastOnceQoS();
+                        break;
+                    case QosLevel.AtMostOnce:
+                        mqttAMB.WithAtMostOnceQoS();
+                        break;
+                    case QosLevel.ExactlyOnce:
+                        mqttAMB.WithExactlyOnceQoS();
+                        break;
+                    default:
+                        break;
+                }
 
                 var mam = mqttAMB.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
                 .WithPayload(SendMessage)
                 //.WithExactlyOnceQoS()
-                .WithAtLeastOnceQoS()
+                //.WithAtLeastOnceQoS()
                 .WithRetainFlag()
                 .Build();
 
-
-                //var msg = new MqttApplicationMessageBuilder()
-                //.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
-                //.WithPayload(SendMessage)
-                ////.WithExactlyOnceQoS()
-                //.WithAtLeastOnceQoS()
-                //.WithRetainFlag()
-                //.Build();
-
-                await client.PublishAsync(mam, CancellationToken.None);
+                //发布
+                var result =await client.PublishAsync(mam, CancellationToken.None);
                 ShowSendMessage($"发送消息:{SendMessage}");
             }
             catch (Exception ex)
@@ -285,9 +299,7 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-
                 ShowReceiveMessage(Encoding.UTF8.GetString(arg.ApplicationMessage.Payload));
-
                 //switch (SelectedDeCodeMode.Id)
                 //{
                 //    case 2:
@@ -299,8 +311,6 @@ namespace Wu.CommTool.ViewModels
                 //        //接收的数据以字节显示
                 //        break;
                 //}
-
-
             }
             catch (Exception)
             {
@@ -326,8 +336,12 @@ namespace Wu.CommTool.ViewModels
                     ShowErrorMessage(arg.Exception.Message.ToString());
                     ShowErrorMessage("已断开连接");
                 });
-
             }
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                //清除订阅成功的主题
+                MqttClientConfig.SubscribeSucceeds.Clear();
+            });
         }
 
         /// <summary>
@@ -347,8 +361,9 @@ namespace Wu.CommTool.ViewModels
                 //订阅主题
                 foreach (var x in MqttClientConfig.SubscribeTopics)
                 {
-                    await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(x).Build());       //订阅服务端消息
-                    ShowMessage($"已订阅主题: {x}");
+                    //await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(x).Build());       //订阅服务端消息
+                    //ShowMessage($"已订阅主题: {x}");
+                    await SubscribeTopic(x);
                 }
             }
             catch (Exception ex)
@@ -356,6 +371,63 @@ namespace Wu.CommTool.ViewModels
                 ShowErrorMessage($"订阅失败: {ex.Message}");//连接成功 
             }
         }
+
+
+
+        /// <summary>
+        /// 订阅主题
+        /// </summary>
+        /// <returns></returns>
+        private async Task SubscribeTopic(string topic)
+        {
+            try
+            {
+                //若已订阅则返回
+                if (MqttClientConfig.SubscribeSucceeds.Contains(topic))
+                {
+                    return;
+                }
+
+                var result = await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());       //订阅服务端消息
+                //根据结果判断
+                ShowMessage($"已订阅主题: {topic}");
+                //订阅成功 添加进订阅成功的列表
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MqttClientConfig.SubscribeSucceeds.Add(topic);
+                });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 取消订阅订阅主题
+        /// </summary>
+        /// <returns></returns>
+        private async void UnsubscribeTopic(string topic)
+        {
+            try
+            {
+                //取消订阅主题
+                var result = await client.UnsubscribeAsync(topic);       
+                //根据结果判断
+                ShowMessage($"已取消订阅主题: {topic}");
+                //取消订阅成功 从订阅成功的列表移除
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MqttClientConfig.SubscribeSucceeds.Remove(topic);
+                });
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+
 
 
 
