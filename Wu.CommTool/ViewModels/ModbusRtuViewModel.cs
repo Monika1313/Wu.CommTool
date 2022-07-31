@@ -44,12 +44,7 @@ namespace Wu.CommTool.ViewModels
             //更新串口列表
             GetComPorts();
 
-            //配置串口
-            //ComDevice.PortName = ComConfig.Port.Key;                              //串口
-            //ComDevice.BaudRate = (int)ComConfig.BaudRate;                         //波特率
-            //ComDevice.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
-            //ComDevice.DataBits = ComConfig.DataBits;                              //数据位
-            //ComDevice.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
+            
         }
 
 
@@ -108,6 +103,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
         private bool _IsPause = false;
+
+        /// <summary>
+        /// ModbusRtuDatas
+        /// </summary>
+        public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
+        private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
         #endregion
 
 
@@ -133,6 +134,7 @@ namespace Wu.CommTool.ViewModels
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "Pause": Pause(); break;
+                case "AreaData": AreaData(); break;                                    //周期读取区域数据
                 case "AutoSearch": OpenAutoSearchView(); break;
                 case "Send": Send(); break;                                          //发送数据
                 case "GetComPorts": GetComPorts(); break;                            //查找Com口
@@ -142,6 +144,18 @@ namespace Wu.CommTool.ViewModels
                 case "CloseCom": CloseCom(); break;                                //关闭串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
                 default: break;
+            }
+        }
+
+        /// <summary>
+        /// 周期读取区域数据
+        /// </summary>
+        private void AreaData()
+        {
+            ModbusRtuDatas.Clear();
+            for (int i = 0; i < 100; i++)
+            {
+                ModbusRtuDatas.Add(new ModbusRtuData() { Addr = i });
             }
         }
 

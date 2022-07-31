@@ -121,6 +121,7 @@
 
             <!--  主体内容  -->
             <DockPanel>
+                <!--  头部区域  -->
                 <Grid DockPanel.Dock="Top">
                     <TextBlock Style="{StaticResource TitleTextBlock}" Text="ModbusRtu" />
                     <DockPanel LastChildFill="False">
@@ -236,9 +237,23 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource Blue_CircleButton}"
                             ToolTip="自动搜索ModbusRtu设备" />
+
+                        <!--  自动采集区域数据  -->
+                        <!--<Button
+                            Width="30"
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="4"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="AreaData"
+                            Content="{md:PackIcon Kind=TableSync}"
+                            Cursor="Hand"
+                            DockPanel.Dock="Right"
+                            Style="{StaticResource Blue_CircleButton}"
+                            ToolTip="自动采集区域数据" />-->
                     </DockPanel>
                 </Grid>
 
+                <!--  底部区域  -->
                 <StackPanel
                     Height="30"
                     Background="AliceBlue"
@@ -278,7 +293,6 @@
                         VerticalAlignment="Center"
                         Text="{Binding ComConfig.StopBits}" />
 
-
                     <Border
                         Margin="30,3"
                         BorderBrush="LightBlue"
@@ -295,7 +309,7 @@
                     <TextBlock VerticalAlignment="Center" Text=" Bytes" />
                 </StackPanel>
 
-
+                <!--  发送区域  -->
                 <DockPanel Height="100" DockPanel.Dock="Bottom">
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                         <ComboBox
@@ -321,56 +335,87 @@
                         TextWrapping="Wrap" />
                 </DockPanel>
 
+                <!--  数据  -->
+                <!--<Border
+                    Margin="5,0"
+                    BorderBrush="Gray"
+                    BorderThickness="1"
+                    CornerRadius="5"
+                    DockPanel.Dock="Right"
+                    Visibility="{Binding ModbusRtuDatas.Count, Converter={wucvt:Zero2Collapsed}}">
+                    <DataGrid
+                        x:Name="dataGrid"
+                        AutoGenerateColumns="False"
+                        CanUserSortColumns="False"
+                        FrozenColumnCount="4"
+                        IsReadOnly="True"
+                        ItemsSource="{Binding ModbusRtuDatas}">
+                        <DataGrid.RowHeaderTemplate>
+                            <DataTemplate>
+                                <Grid Width="40">
+                                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGrid.RowHeaderTemplate>
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="名称" />
+                            <DataGridTextColumn Binding="{Binding Type}" Header="类型" />
+                            <DataGridTextColumn Binding="{Binding Addr}" Header="地址" />
+                            <DataGridTextColumn Binding="{Binding Addr, StringFormat=0x{0:X}}" Header="地址16#" />
+                            <DataGridTextColumn Binding="{Binding OriginValue}" Header="源值" />
+                            <DataGridTextColumn Binding="{Binding Value}" Header="值" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Border>-->
+                <!--  页面消息  -->
                 <Border
                     Margin="5,0"
                     BorderBrush="Gray"
                     BorderThickness="1"
-                    CornerRadius="5">
-                    <Grid>
-                        <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                            <!--  页面消息  -->
-                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
-
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border
-                                            Margin="3"
-                                            Padding="2"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Style="{StaticResource MessageBorder}">
-                                            <WrapPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    Margin="3"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                                <TextBlock
-                                                    Margin="5,0"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Type}" />
-                                                <TextBox
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    IsReadOnly="True"
-                                                    Style="{StaticResource MessageTextBox}"
-                                                    Text="{Binding Content}"
-                                                    TextWrapping="Wrap" />
-                                            </WrapPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </hc:ScrollViewer>
-                    </Grid>
+                    CornerRadius="5"
+                    DockPanel.Dock="Left">
+                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="3"
+                                        Padding="2"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Style="{StaticResource MessageBorder}">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="3"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Type}" />
+                                            <TextBox
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                IsReadOnly="True"
+                                                Style="{StaticResource MessageTextBox}"
+                                                Text="{Binding Content}"
+                                                TextWrapping="Wrap" />
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
                 </Border>
+
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>
