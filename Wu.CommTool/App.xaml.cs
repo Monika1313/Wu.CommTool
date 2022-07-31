@@ -31,6 +31,8 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();//Mqtt
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();//MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();//MqttClient
+
+            containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();//关于
         }
 
         /// <summary>
