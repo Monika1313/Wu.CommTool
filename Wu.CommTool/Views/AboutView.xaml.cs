@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,19 @@ namespace Wu.CommTool.Views
         public AboutView()
         {
             InitializeComponent();
+        }
+
+        private void Hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Hyperlink link = sender as Hyperlink;
+                System.Diagnostics.Process.Start("explorer.exe",link.NavigateUri.AbsoluteUri);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
     }
 }
