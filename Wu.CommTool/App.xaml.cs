@@ -1,4 +1,5 @@
 ﻿using Prism.Ioc;
+using System;
 using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Dialogs.Views;
@@ -31,7 +32,6 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();//Mqtt
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();//MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();//MqttClient
-
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();//关于
         }
 
@@ -44,6 +44,10 @@ namespace Wu.CommTool
             var service = App.Current.MainWindow.DataContext as IConfigureService;
             if (service != null)
                 service.Congifure();
+
+            //设置该软件的工作目录为当前软件目录
+            System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
             base.OnInitialized();   
         }
     }
