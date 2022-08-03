@@ -454,9 +454,6 @@ namespace Wu.CommTool.ViewModels
 
                 //ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
                 ShowMessage(BitConverter.ToString(list.ToArray()).Replace('-', ' '), MessageType.Receive);
-
-
-
             }
             catch (Exception ex)
             {
