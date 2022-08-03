@@ -411,28 +411,49 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                //TODO 接收数据
-                Thread.Sleep(60);       //延时读取数据 等待数据接收完成
+                #region OLD 该方法需要等待一定的时间接收完数据, 由于长数据与短数据接收时间不同,会导致多条断数据数据被合并为一条或一条长数据被分成多条, 该方法并不实用
+                //Thread.Sleep(60);       //延时读取数据 等待数据接收完成
+                //if (!SerialPort.IsOpen)
+                //{
+                //    return;
+                //}
+
+                //int n = SerialPort.BytesToRead;          //获取接收的数据总数
+                //byte[] buf = new byte[n];
+                //SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
+                //ReceivBytesCount += buf.Length;          //统计发送的数据总数 
+                #endregion
+
+
+                #region 接收数据
+                //若串口未开启则返回
                 if (!SerialPort.IsOpen)
                 {
                     return;
                 }
-                int n = SerialPort.BytesToRead;          //获取接收的数据总数
-                byte[] buf = new byte[n];
-                SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
-                ReceivBytesCount += buf.Length;          //统计发送的数据总数
+
+                //接收的数据缓存
+                List<byte> list = new();
+                //Thread.Sleep(10);     //若数据接收不完整 尝试添加等待接收一定量的数据
+                //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
+                while (SerialPort.BytesToRead > 0)
+                {
+                    list.Add((byte)SerialPort.ReadByte());
+                }
+                #endregion
 
                 //若自动读取开启则解析接收的数据
                 if (AutoReadConfig.IsOpened)
                 {
-                    Analyse();
+                    Analyse(list);
                 }
 
                 //若暂停更新接收数据 则不显示
                 if (IsPause)
                     return;
 
-                ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
+                //ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
+                ShowMessage(BitConverter.ToString(list.ToArray()).Replace('-', ' '), MessageType.Receive);
 
 
 
@@ -449,9 +470,13 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 解析接收的数据
         /// </summary>
-        private void Analyse()
+        private void Analyse(List<byte> list)
         {
             //TODO 解析数据
+
+            //对接收的数据进行CRC校验 若校验失败则直接返回
+            //
+
         }
 
 
@@ -529,7 +554,7 @@ namespace Wu.CommTool.ViewModels
                 SerialPort.Close();                   //关闭串口
                 ComConfig.IsOpened = false;          //标记串口已关闭
                 ShowMessage($"关闭串口{SerialPort.PortName}");
-                
+
             }
             catch (Exception ex)
             {
