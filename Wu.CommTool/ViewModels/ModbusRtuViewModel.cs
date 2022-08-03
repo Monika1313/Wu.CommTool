@@ -140,6 +140,7 @@ namespace Wu.CommTool.ViewModels
                 case "GetComPorts": GetComPorts(); break;                            //查找Com口
                 case "Clear": Clear(); break;                                        //清空信息
                 case "OpenCom": OpenCom(); break;                                //打开串口
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen=true; break;                                //打开串口
                 case "OperatePort": OperatePort(); break;                                //打开串口
                 case "CloseCom": CloseCom(); break;                                //关闭串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉

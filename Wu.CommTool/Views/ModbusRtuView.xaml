@@ -274,16 +274,16 @@
                                 ToolTip="自动搜索ModbusRtu设备" />
 
                         <!--  自动采集区域数据  -->
-                        <!--<Button Width="30"
+                        <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="4"
                                 Command="{Binding ExecuteCommand}"
-                                CommandParameter="AreaData"
+                                CommandParameter="OpenRightDrawer"
                                 Content="{md:PackIcon Kind=TableSync}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}"
-                                ToolTip="自动采集区域数据" />-->
+                                ToolTip="自动采集区域数据" />
                     </DockPanel>
                 </Grid>
 
