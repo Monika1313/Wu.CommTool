@@ -21,6 +21,7 @@ using Prism.Services.Dialogs;
 using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Views;
 using System.Windows;
+using System.Timers;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -29,7 +30,8 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        private SerialPort SerialPort = new();
+        private SerialPort SerialPort = new();                 //串口
+        protected System.Timers.Timer timer = new();  //定时器 定时读取数据
         #endregion
 
         public ModbusRtuViewModel() { }
@@ -109,6 +111,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
         private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
+
+        /// <summary>
+        /// 自动读取配置
+        /// </summary>
+        public AutoReadConfig AutoReadConfig { get => _AutoReadConfig; set => SetProperty(ref _AutoReadConfig, value); }
+        private AutoReadConfig _AutoReadConfig = new();
         #endregion
 
 
@@ -128,23 +136,91 @@ namespace Wu.CommTool.ViewModels
         /// <param name="obj"></param>
         public void Execute(string obj)
         {
-            //TODO 执行命令
             switch (obj)
             {
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "Pause": Pause(); break;
-                case "AreaData": AreaData(); break;                                    //周期读取区域数据
+                case "AreaData": AreaData(); break;                                      //周期读取区域数据
                 case "AutoSearch": OpenAutoSearchView(); break;
-                case "Send": Send(); break;                                          //发送数据
-                case "GetComPorts": GetComPorts(); break;                            //查找Com口
-                case "Clear": Clear(); break;                                        //清空信息
-                case "OpenCom": OpenCom(); break;                                //打开串口
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen=true; break;                                //打开串口
-                case "OperatePort": OperatePort(); break;                                //打开串口
-                case "CloseCom": CloseCom(); break;                                //关闭串口
-                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
+                case "Send": Send(); break;                                              //发送数据
+                case "GetComPorts": GetComPorts(); break;                                //查找Com口
+                case "Clear": Clear(); break;                                            //清空信息
+                case "OpenCom": OpenCom(); break;                                        //打开串口
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen=true; break;     //打开右侧抽屉
+                case "OperatePort": OperatePort(); break;                                //打开或关闭串口
+                case "CloseCom": CloseCom(); break;                                      //关闭串口
+                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;          //打开左侧抽屉
+                case "OpenAutoRead": OpenAutoRead(); break;                              //打开自动读取数据
+                case "CloseAutoRead": CloseAutoRead(); break;                            //关闭自动读取数据
                 default: break;
+            }
+        }
+
+        /// <summary>
+        /// 关闭自动读取数据
+        /// </summary>
+        private void CloseAutoRead()
+        {
+            try
+            {
+                timer.Stop();
+                AutoReadConfig.IsOpened = false;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 打开自动读取数据
+        /// </summary>
+        private async void OpenAutoRead()
+        {
+            try
+            {
+                //若串口未打开 则开启串口
+                if (!ComConfig.IsOpened)
+                {
+                    OpenCom();
+                }
+
+                timer = new()
+                {
+                    Interval = AutoReadConfig.Period,   //这里设置的间隔时间单位ms
+                    AutoReset = true                   //设置一直执行
+                };
+                timer.Elapsed += TimerElapsed;
+                timer.Start();
+                AutoReadConfig.IsOpened = true;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 定时器事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TimerElapsed(object? sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                timer.Stop();
+                SendMessage = AutoReadConfig.DataFrame.Substring(0, AutoReadConfig.DataFrame.Length - 4);
+                Send();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+            finally
+            {
+                timer.Start();
             }
         }
 
@@ -160,6 +236,9 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+        /// <summary>
+        /// 暂停更新接收的数据
+        /// </summary>
         private void Pause()
         {
             IsPause = !IsPause;
@@ -326,7 +405,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //TODO 接收数据
-                Thread.Sleep(100);       //延时读取数据 等待数据接收完成
+                Thread.Sleep(60);       //延时读取数据 等待数据接收完成
                 if (!SerialPort.IsOpen)
                 {
                     return;
@@ -421,6 +500,7 @@ namespace Wu.CommTool.ViewModels
                 SerialPort.Close();                   //关闭串口
                 ComConfig.IsOpened = false;          //标记串口已关闭
                 ShowMessage($"关闭串口{SerialPort.PortName}");
+                CloseAutoRead();      //停止自动读取
             }
             catch (Exception ex)
             {
