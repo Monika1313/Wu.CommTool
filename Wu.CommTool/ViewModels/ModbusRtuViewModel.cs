@@ -415,11 +415,19 @@ namespace Wu.CommTool.ViewModels
                 SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
                 ReceivBytesCount += buf.Length;          //统计发送的数据总数
 
+                //若自动读取开启则解析接收的数据
+                if (AutoReadConfig.IsOpened)
+                {
+                    Analyse();
+                }
+
                 //若暂停更新接收数据 则不显示
                 if (IsPause)
                     return;
 
                 ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
+
+               
 
             }
             catch (Exception ex)
@@ -429,6 +437,14 @@ namespace Wu.CommTool.ViewModels
                     ShowMessage(ex.Message, MessageType.Receive);
                 });
             }
+        }
+
+        /// <summary>
+        /// 解析接收的数据
+        /// </summary>
+        private void Analyse()
+        {
+            //TODO 解析数据
         }
 
 
