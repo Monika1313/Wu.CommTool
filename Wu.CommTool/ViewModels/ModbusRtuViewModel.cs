@@ -46,7 +46,7 @@ namespace Wu.CommTool.ViewModels
             //更新串口列表
             GetComPorts();
 
-            
+
         }
 
 
@@ -147,7 +147,7 @@ namespace Wu.CommTool.ViewModels
                 case "GetComPorts": GetComPorts(); break;                                //查找Com口
                 case "Clear": Clear(); break;                                            //清空信息
                 case "OpenCom": OpenCom(); break;                                        //打开串口
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen=true; break;     //打开右侧抽屉
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;     //打开右侧抽屉
                 case "OperatePort": OperatePort(); break;                                //打开或关闭串口
                 case "CloseCom": CloseCom(); break;                                      //关闭串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;          //打开左侧抽屉
@@ -166,6 +166,7 @@ namespace Wu.CommTool.ViewModels
             {
                 timer.Stop();
                 AutoReadConfig.IsOpened = false;
+                ShowMessage("关闭自动读取数据...");
             }
             catch (Exception ex)
             {
@@ -185,6 +186,11 @@ namespace Wu.CommTool.ViewModels
                 {
                     OpenCom();
                 }
+                //若开启失败则返回
+                if (!ComConfig.IsOpened)
+                {
+                    return;
+                }
 
                 timer = new()
                 {
@@ -194,6 +200,7 @@ namespace Wu.CommTool.ViewModels
                 timer.Elapsed += TimerElapsed;
                 timer.Start();
                 AutoReadConfig.IsOpened = true;
+                ShowMessage("开启自动读取数据...");
             }
             catch (Exception ex)
             {
@@ -427,7 +434,7 @@ namespace Wu.CommTool.ViewModels
 
                 ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
 
-               
+
 
             }
             catch (Exception ex)
@@ -513,10 +520,16 @@ namespace Wu.CommTool.ViewModels
                 {
                     return;
                 }
+                //停止自动读取
+                if (AutoReadConfig.IsOpened)
+                {
+                    CloseAutoRead();
+                }
+
                 SerialPort.Close();                   //关闭串口
                 ComConfig.IsOpened = false;          //标记串口已关闭
                 ShowMessage($"关闭串口{SerialPort.PortName}");
-                CloseAutoRead();      //停止自动读取
+                
             }
             catch (Exception ex)
             {
