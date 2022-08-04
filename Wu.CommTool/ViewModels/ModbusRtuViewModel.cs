@@ -143,16 +143,13 @@ namespace Wu.CommTool.ViewModels
                 case "Pause": Pause(); break;
                 case "AreaData": AreaData(); break;                                      //周期读取区域数据
                 case "AutoSearch": OpenAutoSearchView(); break;
-                case "Send": Send(); break;                                              //发送数据
-                case "GetComPorts": GetComPorts(); break;                                //查找Com口
-                case "Clear": Clear(); break;                                            //清空信息
-                case "OpenCom": OpenCom(); break;                                        //打开串口
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;     //打开右侧抽屉
-                case "OperatePort": OperatePort(); break;                                //打开或关闭串口
-                case "CloseCom": CloseCom(); break;                                      //关闭串口
-                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;          //打开左侧抽屉
-                case "OpenAutoRead": OpenAutoRead(); break;                              //打开自动读取数据
-                case "CloseAutoRead": CloseAutoRead(); break;                            //关闭自动读取数据
+                case "Send": Send(); break;                                          //发送数据
+                case "GetComPorts": GetComPorts(); break;                            //查找Com口
+                case "Clear": Clear(); break;                                        //清空信息
+                case "OpenCom": OpenCom(); break;                                //打开串口
+                case "OperatePort": OperatePort(); break;                                //打开串口
+                case "CloseCom": CloseCom(); break;                                //关闭串口
+                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
                 default: break;
             }
         }

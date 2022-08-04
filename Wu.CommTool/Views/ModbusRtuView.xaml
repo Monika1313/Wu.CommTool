@@ -135,54 +135,36 @@
                                 FontSize="24"
                                 Text="自动采集数据设置" />
 
-                            <TextBox
-                                hc:TitleElement.Title="从站ID:"
-                                Style="{StaticResource FormTextBox}"
-                                Text="{Binding AutoReadConfig.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                hc:TitleElement.Title="功能码:"
-                                IsReadOnly="True"
-                                Style="{StaticResource FormTextBox}"
-                                Text="{Binding AutoReadConfig.Function, StringFormat={}{0:00}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                hc:TitleElement.Title="起始地址:"
-                                Style="{StaticResource FormTextBox}"
-                                Text="{Binding AutoReadConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                hc:TitleElement.Title="读取数量:"
-                                Style="{StaticResource FormTextBox}"
-                                Text="{Binding AutoReadConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                            <TextBox
-                                hc:TitleElement.Title="周期 [ms]:"
-                                Style="{StaticResource FormTextBox}"
-                                Text="{Binding AutoReadConfig.Period}" />
-                            <TextBox
-                                hc:TitleElement.Title="数据帧:"
-                                IsReadOnly="True"
-                                Style="{StaticResource FormTextBox}"
-                                Text="{Binding AutoReadConfig.DataFrame, Mode=OneWay}" />
+                            <TextBox hc:TitleElement.Title="从站ID:" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="功能码:"
+                                     IsReadOnly="True"
+                                     Style="{StaticResource FormTextBox}"
+                                     Text="03" />
+                            <TextBox hc:TitleElement.Title="起始地址:" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="读取数量:" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="周期:" Style="{StaticResource FormTextBox}" />
+                            <TextBox hc:TitleElement.Title="数据帧:"
+                                     Style="{StaticResource FormTextBox}"
+                                     Text="01 03 00 00 " />
 
-                            <StackPanel
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Top"
-                                Orientation="Horizontal">
-                                <Button
-                                    Margin="20"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="OpenAutoRead"
-                                    Content="打开"
-                                    IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                    Style="{StaticResource GreenButton}" />
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Orientation="Horizontal">
+                                <Button Margin="20"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="OpenCom"
+                                        Content="打开"
+                                        IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                        Style="{StaticResource GreenButton}" />
 
-                                <Button
-                                    Width="60"
-                                    Margin="20"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="CloseAutoRead"
-                                    Content="关闭"
-                                    DockPanel.Dock="Left"
-                                    IsEnabled="{Binding AutoReadConfig.IsOpened}"
-                                    Style="{StaticResource RedButton}" />
+                                <Button Width="60"
+                                        Margin="20"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="CloseCom"
+                                        Content="关闭"
+                                        DockPanel.Dock="Left"
+                                        IsEnabled="{Binding ComConfig.IsOpened}"
+                                        Style="{StaticResource RedButton}" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -312,17 +294,16 @@
                             ToolTip="自动搜索ModbusRtu设备" />
 
                         <!--  自动采集区域数据  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="4"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="OpenRightDrawer"
-                            Content="{md:PackIcon Kind=TableSync}"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource Blue_CircleButton}"
-                            ToolTip="自动采集区域数据" />
+                        <!--<Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="AreaData"
+                                Content="{md:PackIcon Kind=TableSync}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}"
+                                ToolTip="自动采集区域数据" />-->
                     </DockPanel>
                 </Grid>
 
