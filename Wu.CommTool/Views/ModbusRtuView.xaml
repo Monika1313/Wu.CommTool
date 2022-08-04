@@ -130,6 +130,7 @@
                             <TextBox hc:TitleElement.Title="读取数量:" Style="{StaticResource FormTextBox}" />
                             <TextBox hc:TitleElement.Title="周期:" Style="{StaticResource FormTextBox}" />
                             <TextBox hc:TitleElement.Title="数据帧:"
+                                     IsReadOnly="True"
                                      Style="{StaticResource FormTextBox}"
                                      Text="01 03 00 00 " />
 
@@ -138,7 +139,7 @@
                                         Orientation="Horizontal">
                                 <Button Margin="20"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="OpenCom"
+                                        CommandParameter=""
                                         Content="打开"
                                         IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                         Style="{StaticResource GreenButton}" />
@@ -146,7 +147,7 @@
                                 <Button Width="60"
                                         Margin="20"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="CloseCom"
+                                        CommandParameter=""
                                         Content="关闭"
                                         DockPanel.Dock="Left"
                                         IsEnabled="{Binding ComConfig.IsOpened}"
@@ -274,16 +275,16 @@
                                 ToolTip="自动搜索ModbusRtu设备" />
 
                         <!--  自动采集区域数据  -->
-                        <!--<Button Width="30"
+                        <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="4"
                                 Command="{Binding ExecuteCommand}"
-                                CommandParameter="AreaData"
+                                CommandParameter="OpenRightDrawer"
                                 Content="{md:PackIcon Kind=TableSync}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}"
-                                ToolTip="自动采集区域数据" />-->
+                                ToolTip="自动采集区域数据" />
                     </DockPanel>
                 </Grid>
 

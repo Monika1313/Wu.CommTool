@@ -142,7 +142,8 @@ namespace Wu.CommTool.ViewModels
                 case "OpenCom": OpenCom(); break;                                //打开串口
                 case "OperatePort": OperatePort(); break;                                //打开串口
                 case "CloseCom": CloseCom(); break;                                //关闭串口
-                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;      //打开配置抽屉
+                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;        //打开左侧抽屉
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break; //打开右侧抽屉
                 default: break;
             }
         }
