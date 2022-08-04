@@ -139,6 +139,7 @@ namespace Wu.CommTool.ViewModels
                 case "Open": OpenMqttClient(); break;
                 case "Close": CloseMqttClient(); break;
                 case "Clear": Clear(); break;
+                case "Pause": Pause(); break;
                 case "Publish": Publish(); break;
                 case "AddTopic": AddTopic(); break;                               //添加订阅的主题
                 case "SubscribeTopic": SubscribeTopic(NewSubTopic); break;                               //添加订阅的主题
@@ -146,6 +147,22 @@ namespace Wu.CommTool.ViewModels
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
+            }
+        }
+
+        /// <summary>
+        /// 暂停更新接收的数据
+        /// </summary>
+        private void Pause()
+        {
+            IsPause = !IsPause;
+            if (IsPause)
+            {
+                ShowMessage("暂停更新接收的数据");
+            }
+            else
+            {
+                ShowMessage("恢复更新接收的数据");
             }
         }
 

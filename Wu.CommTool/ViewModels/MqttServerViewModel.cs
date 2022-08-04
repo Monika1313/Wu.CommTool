@@ -103,12 +103,29 @@ namespace Wu.CommTool.ViewModels
             {
                 case "Search": Search(); break;
                 case "Clear": Clear(); break;
+                case "Pause": Pause(); break;
                 case "OpenMqttServer": OpenMqttServer(); break;                              //打开服务器
                 case "CloseMqttServer": CloseMqttServer(); break;                              //打开服务器
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
+            }
+        }
+
+        /// <summary>
+        /// 暂停更新接收的数据
+        /// </summary>
+        private void Pause()
+        {
+            IsPause = !IsPause;
+            if (IsPause)
+            {
+                ShowMessage("暂停更新接收的数据");
+            }
+            else
+            {
+                ShowMessage("恢复更新接收的数据");
             }
         }
 
