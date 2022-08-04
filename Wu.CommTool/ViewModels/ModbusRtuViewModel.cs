@@ -117,6 +117,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public AutoReadConfig AutoReadConfig { get => _AutoReadConfig; set => SetProperty(ref _AutoReadConfig, value); }
         private AutoReadConfig _AutoReadConfig = new();
+
+        /// <summary>
+        /// TransitionerIndex
+        /// </summary>
+        public int TransitionerIndex { get => _TransitionerIndex; set => SetProperty(ref _TransitionerIndex, value); }
+        private int _TransitionerIndex = 0;
         #endregion
 
 
@@ -167,6 +173,7 @@ namespace Wu.CommTool.ViewModels
                 timer.Stop();
                 AutoReadConfig.IsOpened = false;
                 ShowMessage("关闭自动读取数据...");
+                TransitionerIndex = 0;
             }
             catch (Exception ex)
             {
@@ -201,6 +208,19 @@ namespace Wu.CommTool.ViewModels
                 timer.Start();
                 AutoReadConfig.IsOpened = true;
                 ShowMessage("开启自动读取数据...");
+                TransitionerIndex = 1;
+                IsDrawersOpen.IsRightDrawerOpen = false;
+
+                //生成列表
+                ModbusRtuDatas.Clear();
+                for (int i = AutoReadConfig.StartAddr; i < AutoReadConfig.Quantity + AutoReadConfig.StartAddr; i++)
+                {
+                    ModbusRtuDatas.Add(new ModbusRtuData()
+                    {
+                        Addr = i,
+                        Type = 1
+                    }); ;
+                }
             }
             catch (Exception ex)
             {
@@ -472,7 +492,29 @@ namespace Wu.CommTool.ViewModels
             //TODO 解析数据
 
             //对接收的数据进行CRC校验 若校验失败则直接返回
-            //
+            //目前仅支持03功能码
+
+            //判断字节数为奇数还是偶数
+            //偶数为主站请求
+            if(list.Count % 2 == 0)
+                return;
+            //奇数为响应
+            //验证校验码
+            var crc = Wu.Utils.Crc.Crc16Modbus(list.ToArray()); //带校验码校验 结果应为 00 00
+            //校验失败则返回
+            if (crc[0] != 0 || crc[1] != 0)
+                return;
+            //crc校验成功
+            //验证数据是否为请求的数据
+            if (list[0] != AutoReadConfig.SlaveId || list[1] != AutoReadConfig.Function && list[2] != AutoReadConfig.Quantity)
+                return;//非请求的数据
+
+            //将读取的数据写入
+            for (int i = 3; i < list.Count; i++)
+            {
+                ModbusRtuDatas[i-3].OriginValue = list[i];
+            }
+
 
         }
 
