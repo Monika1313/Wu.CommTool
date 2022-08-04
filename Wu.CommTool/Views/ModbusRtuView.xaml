@@ -480,10 +480,10 @@
                                                             Header="类型"
                                                             IsReadOnly="True" />
                                         <DataGridTextColumn Binding="{Binding Addr, StringFormat={}{0:00}}"
-                                                            Header="地址"
+                                                            Header="地址Dec"
                                                             IsReadOnly="True" />
                                         <DataGridTextColumn Binding="{Binding Addr, StringFormat=0x{0:X2}}"
-                                                            Header="地址16#"
+                                                            Header="地址Hex"
                                                             IsReadOnly="True" />
                                         <!--<DataGridTextColumn Binding="{Binding OriginValue}"
                                                             Header="源值"
@@ -529,8 +529,6 @@
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
-
-
 
                                         <DataGridTextColumn Binding="{Binding Value}"
                                                             Header="值"
