@@ -129,7 +129,7 @@
                                      IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                      IsReadOnly="True"
                                      Style="{StaticResource FormTextBox}"
-                                     Text="{Binding AutoReadConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                     Text="{Binding AutoReadConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:00}}" />
                             <TextBox hc:TitleElement.Title="起始地址:"
                                      IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                      Style="{StaticResource FormTextBox}"
@@ -485,9 +485,53 @@
                                         <DataGridTextColumn Binding="{Binding Addr, StringFormat=0x{0:X2}}"
                                                             Header="地址16#"
                                                             IsReadOnly="True" />
-                                        <DataGridTextColumn Binding="{Binding OriginValue}"
+                                        <!--<DataGridTextColumn Binding="{Binding OriginValue}"
                                                             Header="源值"
-                                                            IsReadOnly="True" />
+                                                            IsReadOnly="True" />-->
+
+                                        <DataGridTemplateColumn Header="源值">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Padding="8,4"
+                                                            Background="{StaticResource Green_Background}"
+                                                            BorderBrush="{StaticResource Green_BorderBrush}"
+                                                            BorderThickness="1"
+                                                            CornerRadius="4">
+                                                        <!--<Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Operation}" Value="1">
+                                                                        <Setter Property="Background" Value="#f6ffed" />
+                                                                        <Setter Property="BorderBrush" Value="#b7eb8f" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding Operation}" Value="2">
+                                                                        <Setter Property="Background" Value="#e6f7ff" />
+                                                                        <Setter Property="BorderBrush" Value="#91d5ff" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>-->
+                                                        <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding OriginValue}">
+                                                            <!--<TextBlock.Style>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding OriginValue}" Value="1">
+                                                                            <Setter Property="Foreground" Value="#389E0D" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding OriginValue}" Value="2">
+                                                                            <Setter Property="Foreground" Value="#096dd9" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </TextBlock.Style>-->
+                                                        </TextBlock>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+
+
                                         <DataGridTextColumn Binding="{Binding Value}"
                                                             Header="值"
                                                             IsReadOnly="True" />

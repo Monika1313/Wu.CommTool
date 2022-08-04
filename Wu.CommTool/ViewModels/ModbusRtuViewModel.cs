@@ -32,6 +32,7 @@ namespace Wu.CommTool.ViewModels
         private readonly IDialogHostService dialogHost;
         private SerialPort SerialPort = new();                 //串口
         protected System.Timers.Timer timer = new();  //定时器 定时读取数据
+        //private object locker = new(); //线程锁
         #endregion
 
         public ModbusRtuViewModel() { }
@@ -217,8 +218,7 @@ namespace Wu.CommTool.ViewModels
                 {
                     ModbusRtuDatas.Add(new ModbusRtuData()
                     {
-                        Addr = i,
-                        Type = 1
+                        Addr = i
                     }); ;
                 }
             }
@@ -427,7 +427,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        private async void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
@@ -454,11 +454,15 @@ namespace Wu.CommTool.ViewModels
 
                 //接收的数据缓存
                 List<byte> list = new();
-                //Thread.Sleep(10);     //若数据接收不完整 尝试添加等待接收一定量的数据
+                //Thread.Sleep(40);     //若数据接收不完整 尝试添加等待接收一定量的数据
                 //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
-                while (SerialPort.BytesToRead > 0)
+
+                if (ComConfig.IsOpened == false)
+                    return;
+                while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
                 {
                     list.Add((byte)SerialPort.ReadByte());
+                    Thread.Sleep(1);
                 }
                 #endregion
 
@@ -477,10 +481,7 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception ex)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    ShowMessage(ex.Message, MessageType.Receive);
-                });
+                ShowMessage(ex.Message, MessageType.Receive);
             }
         }
 
@@ -496,7 +497,7 @@ namespace Wu.CommTool.ViewModels
 
             //判断字节数为奇数还是偶数
             //偶数为主站请求
-            if(list.Count % 2 == 0)
+            if (list.Count % 2 == 0)
                 return;
             //奇数为响应
             //验证校验码
@@ -508,14 +509,12 @@ namespace Wu.CommTool.ViewModels
             //验证数据是否为请求的数据
             if (list[0] != AutoReadConfig.SlaveId || list[1] != AutoReadConfig.Function && list[2] != AutoReadConfig.Quantity)
                 return;//非请求的数据
-
+            var byteArr = list.ToArray();
             //将读取的数据写入
-            for (int i = 3; i < list.Count; i++)
+            for (int i = 0; i < AutoReadConfig.Quantity; i++)
             {
-                ModbusRtuDatas[i-3].OriginValue = list[i];
+                ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
             }
-
-
         }
 
 
@@ -590,8 +589,10 @@ namespace Wu.CommTool.ViewModels
                     CloseAutoRead();
                 }
 
-                SerialPort.Close();                   //关闭串口
                 ComConfig.IsOpened = false;          //标记串口已关闭
+                                                     //SerialPort.DataReceived -= ReceiveMessage;
+                SerialPort.Close();                   //关闭串口 
+
                 ShowMessage($"关闭串口{SerialPort.PortName}");
 
             }
@@ -692,7 +693,7 @@ namespace Wu.CommTool.ViewModels
                 else
                 {
                     //子线程无法更新在UI线程的内容   委托主线程更新
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    System.Windows.Application.Current.Dispatcher.BeginInvoke(() =>
                     {
                         Messages.Add(new MessageData($"{message}", DateTime.Now, type));
                     });
