@@ -291,6 +291,12 @@ namespace Wu.CommTool.ViewModels
                 //接收的数据以字节显示
                 //ShowMessage($"客户端：“{obj.ClientId}” 发布主题：“{obj.ApplicationMessage.Topic}”\r\n内容：\r\n“{(obj.ApplicationMessage?.Payload == null ? null : BitConverter.ToString(obj.ApplicationMessage.Payload))}”");
                 //接收的数据以UTF8解码
+
+                //若暂停更新接收数据 则不显示
+                if (IsPause)
+                    return;
+
+
                 ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload))}", MessageType.Receive);
 
                 //var npsmd = MqttAnalyse.Analyse_PumpStationMqttData(c.ApplicationMessage.Payload);        //将接收的数据解析
