@@ -239,6 +239,51 @@
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}"
                                 ToolTip="客户端管理" />
+
+
+                        <!--  接收数据Json格式化  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="20,5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Format"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                ToolTip="Json格式化显示">
+                            <md:PackIcon Width="24" Height="24">
+                                <md:PackIcon.Style>
+                                    <Style TargetType="md:PackIcon">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Format}" Value="1">
+                                                <Setter Property="Kind" Value="CodeString" />
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding Format}" Value="0">
+                                                <Setter Property="Kind" Value="CodeJson" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </md:PackIcon.Style>
+                            </md:PackIcon>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Format}" Value="1">
+                                            <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                        </DataTrigger>
+
+                                        <DataTrigger Binding="{Binding Format}" Value="0">
+                                            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
                     </DockPanel>
                 </Grid>
 

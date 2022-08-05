@@ -4,6 +4,7 @@ using MaterialDesignThemes.Wpf;
 using MQTTnet;
 using MQTTnet.Server;
 using MqttnetServer.Model;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -82,6 +83,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public ObservableCollection<MqttUser> MqttUsers { get => _MqttUsers; set => SetProperty(ref _MqttUsers, value); }
         private ObservableCollection<MqttUser> _MqttUsers = new();
+
+        /// <summary>
+        /// 字符串格式化
+        /// </summary>
+        public int Format { get => _Format; set => SetProperty(ref _Format, value); }
+        private int _Format = 0;
         #endregion
 
 
@@ -109,6 +116,18 @@ namespace Wu.CommTool.ViewModels
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
+                case "Format":
+                    if (Format == 0)
+                    {
+                        Format = 1;
+                        ShowMessage("接收数据以Json格式化");
+                    }
+                    else
+                    {
+                        Format = 0;
+                        ShowMessage("接收数据以字符串显示");
+                    }
+                    break;
                 default: break;
             }
         }
@@ -296,8 +315,25 @@ namespace Wu.CommTool.ViewModels
                 if (IsPause)
                     return;
 
+                if (Format == 0)
+                {
+                    ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload))}", MessageType.Receive);
+                }
+                else
+                {
+                    //Newtonsoft.Json.JsonConvert.SerializeObject(Encoding.UTF8.GetString(obj.ApplicationMessage.Payload));
 
-                ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload))}", MessageType.Receive);
+                    ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n" +
+                        $"{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload).ToJsonString())}", MessageType.Receive);
+
+                    //string str = JsonConvert.SerializeObject(Encoding.UTF8.GetString(obj.ApplicationMessage.Payload));
+                    //ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n" +
+                    //    $"{(obj.ApplicationMessage?.Payload == null ? null : str)}", MessageType.Receive);
+
+
+                }
+
+
 
                 //var npsmd = MqttAnalyse.Analyse_PumpStationMqttData(c.ApplicationMessage.Payload);        //将接收的数据解析
                 //npsmd.Ip = $"{c.ClientId}";                                                               //IP使用客户端ID
@@ -319,7 +355,7 @@ namespace Wu.CommTool.ViewModels
         private void ClientSubscription(MqttSubscriptionInterceptorContext obj)
         {
             //客户端订阅事件
-            if (obj == null) 
+            if (obj == null)
                 return;
             //允许订阅
             obj.AcceptSubscription = true;

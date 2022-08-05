@@ -643,7 +643,7 @@ namespace Wu.CommTool.ViewModels
                         List<String> dList = new List<String>();
                         foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
                         {
-                            String x = mch.Value.Trim();
+                            string x = mch.Value.Trim();
                             dList.Add(x);
                         }
 
