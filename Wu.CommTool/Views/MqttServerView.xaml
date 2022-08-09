@@ -249,8 +249,7 @@
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="Format"
                                 Cursor="Hand"
-                                DockPanel.Dock="Right"
-                                ToolTip="Json格式化显示">
+                                DockPanel.Dock="Right">
                             <md:PackIcon Width="24" Height="24">
                                 <md:PackIcon.Style>
                                     <Style TargetType="md:PackIcon">
@@ -270,12 +269,14 @@
                                 <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Format}" Value="1">
+                                            <Setter Property="ToolTip" Value="Json格式化显示" />
                                             <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                                             <Setter Property="Background" Value="{StaticResource Green_Background}" />
                                             <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                         </DataTrigger>
 
                                         <DataTrigger Binding="{Binding Format}" Value="0">
+                                            <Setter Property="ToolTip" Value="字符串显示" />
                                             <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
                                             <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
                                             <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />

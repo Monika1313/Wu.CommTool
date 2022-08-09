@@ -44,6 +44,9 @@ namespace Wu.CommTool.ViewModels
             UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+
+
+            MqttClientConfig.SubscribeTopics.Add("+/#");//默认订阅所有主题
         }
 
         /// <summary>
@@ -105,6 +108,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public string NewSubTopic { get => _NewSubTopic; set => SetProperty(ref _NewSubTopic, value); }
         private string _NewSubTopic = string.Empty;
+
+        /// <summary>
+        /// 主动关闭客户端标志
+        /// </summary>
+        public bool ManualStopFlag { get => _ManualStopFlag; set => SetProperty(ref _ManualStopFlag, value); }
+        private bool _ManualStopFlag;
         #endregion
 
 
@@ -244,7 +253,7 @@ namespace Wu.CommTool.ViewModels
 
                 //发布
                 var result =await client.PublishAsync(mam, CancellationToken.None);
-                ShowSendMessage($"发送消息:{SendMessage}");
+                ShowSendMessage($"主题:{MqttClientConfig.PublishTopic}  消息:{SendMessage}");
             }
             catch (Exception ex)
             {
@@ -267,6 +276,7 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
+                ManualStopFlag = true;//主动关闭客户端
                 await client.DisconnectAsync();          //断开连接
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
@@ -316,7 +326,7 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                ShowReceiveMessage(Encoding.UTF8.GetString(arg.ApplicationMessage.Payload));
+                ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}");
                 //switch (SelectedDeCodeMode.Id)
                 //{
                 //    case 2:
@@ -351,11 +361,16 @@ namespace Wu.CommTool.ViewModels
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     ShowErrorMessage(arg.Exception.Message.ToString());
-                    ShowErrorMessage("已断开连接");
+                    //ShowErrorMessage("已断开连接");
                 });
             }
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
+                //非主动离线则显示故障消息
+                if (!ManualStopFlag)
+                    ShowErrorMessage("已断开连接");
+                ManualStopFlag = false;                         //复位主动离线标志
+                MqttClientConfig.IsOpened = false;              //修改连接状态
                 //清除订阅成功的主题
                 MqttClientConfig.SubscribeSucceeds.Clear();
             });

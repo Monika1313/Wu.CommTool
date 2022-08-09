@@ -1,91 +1,80 @@
-﻿<UserControl
-    x:Class="Wu.CommTool.Views.MqttClientView"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cvt="clr-namespace:Wu.CommTool.Converters"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
-    xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:local="clr-namespace:Wu.CommTool.Views"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:model="clr-namespace:Wu.CommTool.Models"
-    xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
-    d:DataContext="{x:Static dvm:MqttClientDesignViewModel.Instance}"
-    d:DesignHeight="800"
-    d:DesignWidth="1000"
-    mc:Ignorable="d">
+﻿<UserControl x:Class="Wu.CommTool.Views.MqttClientView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:cvt="clr-namespace:Wu.CommTool.Converters"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+             xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:Wu.CommTool.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:model="clr-namespace:Wu.CommTool.Models"
+             xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
+             d:DataContext="{x:Static dvm:MqttClientDesignViewModel.Instance}"
+             d:DesignHeight="800"
+             d:DesignWidth="1000"
+             mc:Ignorable="d">
     <md:DialogHost Identifier="ModbusRtuView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
-                <ScrollViewer>
+                <ScrollViewer VerticalScrollBarVisibility="Hidden">
                     <DockPanel Width="300" Background="#f5f5f5">
-                        <Border
-                            Margin="5"
-                            Background="White"
-                            BorderThickness="1"
-                            CornerRadius="5"
-                            DockPanel.Dock="Top">
+                        <Border Margin="5"
+                                Background="White"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                DockPanel.Dock="Top">
                             <StackPanel Orientation="Vertical">
-                                <TextBlock
-                                    Margin="5"
-                                    HorizontalAlignment="Center"
-                                    FontSize="24"
-                                    Text="Mqtt客户端配置" />
+                                <TextBlock Margin="5"
+                                           HorizontalAlignment="Center"
+                                           FontSize="24"
+                                           Text="Mqtt客户端配置" />
 
-                                <TextBlock
-                                    Margin="5"
-                                    HorizontalAlignment="Center"
-                                    FontSize="16"
-                                    Text="连接的服务器" />
-                                <TextBox
-                                    hc:InfoElement.Placeholder="请输入服务器IP或域名..."
-                                    hc:TitleElement.Title="服务器IP"
-                                    Style="{StaticResource FormTextBox}"
-                                    Text="{Binding MqttClientConfig.ServerIp}" />
-                                <TextBox
-                                    hc:InfoElement.Placeholder="请输入服务器端口..."
-                                    hc:TitleElement.Title="服务器端口"
-                                    Style="{StaticResource FormTextBox}"
-                                    Text="{Binding MqttClientConfig.ServerPort}" />
+                                <TextBlock Margin="5"
+                                           HorizontalAlignment="Center"
+                                           FontSize="16"
+                                           Text="连接的服务器" />
+                                <TextBox hc:InfoElement.Placeholder="请输入服务器IP或域名..."
+                                         hc:TitleElement.Title="服务器IP"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding MqttClientConfig.ServerIp}" />
+                                <TextBox hc:InfoElement.Placeholder="请输入服务器端口..."
+                                         hc:TitleElement.Title="服务器端口"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding MqttClientConfig.ServerPort}" />
 
 
-                                <TextBlock
-                                    Margin="5"
-                                    HorizontalAlignment="Center"
-                                    FontSize="16"
-                                    Text="客户端配置" />
-                                <TextBox
-                                    hc:InfoElement.Placeholder="请输入客户端ID..."
-                                    hc:TitleElement.Title="客户端ID"
-                                    Style="{StaticResource FormTextBox}"
-                                    Text="{Binding MqttClientConfig.ClientId}" />
-                                <TextBox
-                                    hc:InfoElement.Placeholder="请输入客户端ID..."
-                                    hc:TitleElement.Title="用户名"
-                                    Style="{StaticResource FormTextBox}"
-                                    Text="{Binding MqttClientConfig.UserName}" />
+                                <TextBlock Margin="5"
+                                           HorizontalAlignment="Center"
+                                           FontSize="16"
+                                           Text="客户端配置" />
+                                <TextBox hc:InfoElement.Placeholder="请输入客户端ID..."
+                                         hc:TitleElement.Title="客户端ID"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding MqttClientConfig.ClientId}" />
+                                <TextBox hc:InfoElement.Placeholder="请输入客户端ID..."
+                                         hc:TitleElement.Title="用户名"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding MqttClientConfig.UserName}" />
 
-                                <PasswordBox
-                                    ext:PasswordExtensions.Password="{Binding MqttClientConfig.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    hc:InfoElement.Placeholder="请输入密码..."
-                                    hc:TitleElement.Title="密码"
-                                    Cursor="IBeam"
-                                    DockPanel.Dock="Top"
-                                    Style="{StaticResource FormPasswordBox}">
+                                <PasswordBox ext:PasswordExtensions.Password="{Binding MqttClientConfig.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             hc:InfoElement.Placeholder="请输入密码..."
+                                             hc:TitleElement.Title="密码"
+                                             Cursor="IBeam"
+                                             DockPanel.Dock="Top"
+                                             Style="{StaticResource FormPasswordBox}">
                                     <i:Interaction.Behaviors>
                                         <ext:PasswordBehavior />
                                     </i:Interaction.Behaviors>
                                 </PasswordBox>
 
-                                <TextBlock
-                                    Margin="5"
-                                    HorizontalAlignment="Center"
-                                    FontSize="16"
-                                    Text="订阅主题" />
+                                <TextBlock Margin="5"
+                                           HorizontalAlignment="Center"
+                                           FontSize="16"
+                                           Text="订阅主题" />
                                 <Border MinHeight="30" Style="{StaticResource CircleBorder}">
                                     <Grid>
                                         <StackPanel Orientation="Vertical">
@@ -97,26 +86,23 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border
-                                                            Background="{StaticResource Green_Background}"
-                                                            BorderBrush="{StaticResource Green_BorderBrush}"
-                                                            Style="{StaticResource CircleBorder}">
+                                                        <Border Background="{StaticResource Green_Background}"
+                                                                BorderBrush="{StaticResource Green_BorderBrush}"
+                                                                Style="{StaticResource CircleBorder}">
                                                             <DockPanel>
-                                                                <Button
-                                                                    Width="20"
-                                                                    Height="20"
-                                                                    Margin="4"
-                                                                    Command="{Binding DataContext.SubTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
-                                                                    CommandParameter="{Binding}"
-                                                                    Content="×"
-                                                                    DockPanel.Dock="Right"
-                                                                    Style="{StaticResource Red_CircleButton}" />
-                                                                <TextBox
-                                                                    Margin="4"
-                                                                    Foreground="{StaticResource Green_Foreground}"
-                                                                    IsReadOnly="False"
-                                                                    Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                    TextWrapping="Wrap" />
+                                                                <Button Width="20"
+                                                                        Height="20"
+                                                                        Margin="4"
+                                                                        Command="{Binding DataContext.SubTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Content="×"
+                                                                        DockPanel.Dock="Right"
+                                                                        Style="{StaticResource Red_CircleButton}" />
+                                                                <TextBox Margin="4"
+                                                                         Foreground="{StaticResource Green_Foreground}"
+                                                                         IsReadOnly="False"
+                                                                         Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                         TextWrapping="Wrap" />
                                                             </DockPanel>
                                                         </Border>
                                                     </DataTemplate>
@@ -126,44 +112,39 @@
                                     </Grid>
                                 </Border>
                                 <DockPanel>
-                                    <Button
-                                        Margin="4"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="AddTopic"
-                                        Content="添加"
-                                        DockPanel.Dock="Right" />
-                                    <TextBox
-                                        Margin="4"
-                                        hc:InfoElement.Placeholder="请输入要添加的订阅主题..."
-                                        Style="{StaticResource TextBoxExtend}"
-                                        Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        TextWrapping="Wrap" />
+                                    <Button Margin="4"
+                                            Command="{Binding ExecuteCommand}"
+                                            CommandParameter="AddTopic"
+                                            Content="添加"
+                                            DockPanel.Dock="Right" />
+                                    <TextBox Margin="4"
+                                             hc:InfoElement.Placeholder="请输入要添加的订阅主题..."
+                                             Style="{StaticResource TextBoxExtend}"
+                                             Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                             TextWrapping="Wrap" />
                                 </DockPanel>
                                 <!--<TextBox hc:TitleElement.Title="订阅主题" Style="{StaticResource FormTextBox}" />-->
 
 
 
-                                <StackPanel
-                                    HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    Orientation="Horizontal">
-                                    <Button
-                                        Margin="20"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="Open"
-                                        Content="打开"
-                                        IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                        Style="{StaticResource GreenButton}" />
+                                <StackPanel HorizontalAlignment="Center"
+                                            VerticalAlignment="Top"
+                                            Orientation="Horizontal">
+                                    <Button Margin="20"
+                                            Command="{Binding ExecuteCommand}"
+                                            CommandParameter="Open"
+                                            Content="打开"
+                                            IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            Style="{StaticResource GreenButton}" />
 
-                                    <Button
-                                        Width="60"
-                                        Margin="20"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="Close"
-                                        Content="关闭"
-                                        DockPanel.Dock="Left"
-                                        IsEnabled="{Binding MqttClientConfig.IsOpened}"
-                                        Style="{StaticResource RedButton}" />
+                                    <Button Width="60"
+                                            Margin="20"
+                                            Command="{Binding ExecuteCommand}"
+                                            CommandParameter="Close"
+                                            Content="关闭"
+                                            DockPanel.Dock="Left"
+                                            IsEnabled="{Binding MqttClientConfig.IsOpened}"
+                                            Style="{StaticResource RedButton}" />
                                 </StackPanel>
 
                                 <!--<hc:TagContainer MaxWidth="400"
@@ -191,30 +172,26 @@
             <!--  右侧抽屉  -->
             <md:DrawerHost.RightDrawerContent>
                 <StackPanel Width="240" Orientation="Vertical">
-                    <TextBlock
-                        Margin="4"
-                        HorizontalAlignment="Center"
-                        FontSize="20"
-                        Text="订阅管理" />
+                    <TextBlock Margin="4"
+                               HorizontalAlignment="Center"
+                               FontSize="20"
+                               Text="订阅管理" />
                     <Border MinHeight="30" Style="{StaticResource CircleBorder}">
                         <Grid>
                             <DockPanel>
                                 <Grid DockPanel.Dock="Top">
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        Margin="5"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Visibility="{Binding MqttClientConfig.SubscribeSucceeds.Count, Converter={cvt:MoreThanZero2Collapsed}}">
-                                        <Image
-                                            Width="240"
-                                            Height="240"
-                                            Source="/Images/GKD.png" />
-                                        <TextBlock
-                                            Margin="0,10"
-                                            HorizontalAlignment="Center"
-                                            FontSize="18"
-                                            Text="未订阅主题..." />
+                                    <StackPanel Grid.Column="1"
+                                                Margin="5"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Visibility="{Binding MqttClientConfig.SubscribeSucceeds.Count, Converter={cvt:MoreThanZero2Collapsed}}">
+                                        <Image Width="240"
+                                               Height="240"
+                                               Source="/Images/GKD.png" />
+                                        <TextBlock Margin="0,10"
+                                                   HorizontalAlignment="Center"
+                                                   FontSize="18"
+                                                   Text="未订阅主题..." />
                                     </StackPanel>
                                     <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding MqttClientConfig.SubscribeSucceeds}">
@@ -225,26 +202,23 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border
-                                                        Background="{StaticResource Green_Background}"
-                                                        BorderBrush="{StaticResource Green_BorderBrush}"
-                                                        Style="{StaticResource CircleBorder}">
+                                                    <Border Background="{StaticResource Green_Background}"
+                                                            BorderBrush="{StaticResource Green_BorderBrush}"
+                                                            Style="{StaticResource CircleBorder}">
                                                         <DockPanel>
-                                                            <Button
-                                                                Width="20"
-                                                                Height="20"
-                                                                Margin="4"
-                                                                Command="{Binding DataContext.UnsubscribeTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
-                                                                CommandParameter="{Binding}"
-                                                                Content="×"
-                                                                DockPanel.Dock="Right"
-                                                                Style="{StaticResource Red_CircleButton}" />
-                                                            <TextBox
-                                                                Margin="4"
-                                                                Foreground="{StaticResource Green_Foreground}"
-                                                                IsReadOnly="False"
-                                                                Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                                TextWrapping="Wrap" />
+                                                            <Button Width="20"
+                                                                    Height="20"
+                                                                    Margin="4"
+                                                                    Command="{Binding DataContext.UnsubscribeTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
+                                                                    CommandParameter="{Binding}"
+                                                                    Content="×"
+                                                                    DockPanel.Dock="Right"
+                                                                    Style="{StaticResource Red_CircleButton}" />
+                                                            <TextBox Margin="4"
+                                                                     Foreground="{StaticResource Green_Foreground}"
+                                                                     IsReadOnly="False"
+                                                                     Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                     TextWrapping="Wrap" />
                                                         </DockPanel>
                                                     </Border>
                                                 </DataTemplate>
@@ -252,19 +226,17 @@
                                         </ItemsControl>
                                     </StackPanel>
                                 </Grid>
-                                <Button
-                                    Margin="4"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="SubscribeTopic"
-                                    Content="订阅"
-                                    DockPanel.Dock="Right" />
-                                <TextBox
-                                    x:Name="Topic"
-                                    Margin="4"
-                                    hc:InfoElement.Placeholder="请输入要订阅的主题..."
-                                    Style="{StaticResource TextBoxExtend}"
-                                    Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                    TextWrapping="Wrap" />
+                                <Button Margin="4"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="SubscribeTopic"
+                                        Content="订阅"
+                                        DockPanel.Dock="Right" />
+                                <TextBox x:Name="Topic"
+                                         Margin="4"
+                                         hc:InfoElement.Placeholder="请输入要订阅的主题..."
+                                         Style="{StaticResource TextBoxExtend}"
+                                         Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         TextWrapping="Wrap" />
                             </DockPanel>
                         </Grid>
                     </Border>
@@ -278,59 +250,55 @@
                     <TextBlock Style="{StaticResource TitleTextBlock}" Text="Mqtt客户端" />
                     <DockPanel LastChildFill="False">
                         <!--  配置Mqtt客户端  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="OpenLeftDrawer"
-                            Content="{md:PackIcon Kind=Cog}"
-                            Cursor="Hand"
-                            Style="{StaticResource Blue_CircleButton}"
-                            ToolTip="配置Mqtt客户端" />
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenLeftDrawer"
+                                Content="{md:PackIcon Kind=Cog}"
+                                Cursor="Hand"
+                                Style="{StaticResource Blue_CircleButton}"
+                                ToolTip="配置Mqtt客户端" />
 
                         <!--  打开Mqtt客户端  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            Background="{StaticResource Green_Background}"
-                            BorderBrush="{StaticResource Green_BorderBrush}"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Open"
-                            Content="{md:PackIcon Kind=Play}"
-                            Cursor="Hand"
-                            Foreground="{StaticResource Green_Foreground}"
-                            IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                            Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                            ToolTip="打开Mqtt客户端" />
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Background="{StaticResource Green_Background}"
+                                BorderBrush="{StaticResource Green_BorderBrush}"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Open"
+                                Content="{md:PackIcon Kind=Play}"
+                                Cursor="Hand"
+                                Foreground="{StaticResource Green_Foreground}"
+                                IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                                ToolTip="打开Mqtt客户端" />
 
                         <!--  关闭Mqtt客户端  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Close"
-                            Content="{md:PackIcon Kind=Stop}"
-                            Cursor="Hand"
-                            IsEnabled="{Binding MqttClientConfig.IsOpened}"
-                            Style="{StaticResource Red_CircleButton}"
-                            ToolTip="关闭Mqtt客户端" />
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Close"
+                                Content="{md:PackIcon Kind=Stop}"
+                                Cursor="Hand"
+                                IsEnabled="{Binding MqttClientConfig.IsOpened}"
+                                Style="{StaticResource Red_CircleButton}"
+                                ToolTip="关闭Mqtt客户端" />
 
                         <!--  暂停界面更新  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Pause"
-                            Cursor="Hand"
-                            ToolTip="暂停界面更新">
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Pause"
+                                Cursor="Hand"
+                                ToolTip="暂停界面更新">
                             <md:PackIcon Width="24" Height="24">
                                 <md:PackIcon.Style>
                                     <Style TargetType="md:PackIcon">
@@ -366,42 +334,38 @@
                         </Button>
 
                         <!--  清空消息按钮  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Clear"
-                            Content="{md:PackIcon Kind=Delete}"
-                            Style="{StaticResource Red_CircleButton}"
-                            ToolTip="清空消息" />
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Clear"
+                                Content="{md:PackIcon Kind=Delete}"
+                                Style="{StaticResource Red_CircleButton}"
+                                ToolTip="清空消息" />
 
                         <!--  订阅主题管理  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="4"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="OpenRightDrawer"
-                            Content="{md:PackIcon Kind=PlaylistEdit}"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource Blue_CircleButton}"
-                            ToolTip="订阅主题管理" />
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenRightDrawer"
+                                Content="{md:PackIcon Kind=PlaylistEdit}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}"
+                                ToolTip="订阅主题管理" />
                     </DockPanel>
                 </Grid>
 
-                <StackPanel
-                    Height="30"
-                    Background="AliceBlue"
-                    DockPanel.Dock="Bottom"
-                    Orientation="Horizontal">
-                    <Border
-                        Width="20"
-                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                        Margin="10,5"
-                        CornerRadius="10">
+                <StackPanel Height="30"
+                            Background="AliceBlue"
+                            DockPanel.Dock="Bottom"
+                            Orientation="Horizontal">
+                    <Border Width="20"
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="10,5"
+                            CornerRadius="10">
                         <Border.Style>
                             <Style TargetType="Border">
                                 <Style.Triggers>
@@ -416,57 +380,52 @@
                         </Border.Style>
                     </Border>
 
-                    <TextBlock
-                        Margin="0"
-                        VerticalAlignment="Center"
-                        FontWeight="Bold"
-                        Text="{Binding MqttClientConfig.ClientId}" />
+                    <TextBlock Margin="0"
+                               VerticalAlignment="Center"
+                               FontWeight="Bold"
+                               Text="{Binding MqttClientConfig.ClientId}" />
                 </StackPanel>
 
 
                 <DockPanel MinHeight="150" DockPanel.Dock="Bottom">
                     <DockPanel DockPanel.Dock="Top">
-                        <Button
-                            Margin="4"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Publish"
-                            Content="发布"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right" />
+                        <Button Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Publish"
+                                Content="发布"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right" />
 
-                        <ComboBox
-                            MinWidth="120"
-                            Margin="5"
-                            hc:InfoElement.Placeholder="消息质量"
-                            hc:TitleElement.Title="消息质量："
-                            hc:TitleElement.TitleWidth="70"
-                            DockPanel.Dock="Right"
-                            ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:QosLevel}}}"
-                            SelectedItem="{Binding MqttClientConfig.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                            Style="{StaticResource FormComboBox}" />
+                        <ComboBox MinWidth="120"
+                                  Margin="5"
+                                  hc:InfoElement.Placeholder="消息质量"
+                                  hc:TitleElement.Title="消息质量："
+                                  hc:TitleElement.TitleWidth="70"
+                                  DockPanel.Dock="Right"
+                                  ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:QosLevel}}}"
+                                  SelectedItem="{Binding MqttClientConfig.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  Style="{StaticResource FormComboBox}" />
 
-                        <TextBox
-                            hc:InfoElement.Placeholder="请输入发送的消息主题..."
-                            hc:TitleElement.Title="发布主题"
-                            hc:TitleElement.TitleWidth="60"
-                            DockPanel.Dock="Left"
-                            Style="{StaticResource FormTextBox}"
-                            Text="{Binding MqttClientConfig.PublishTopic}" />
+                        <TextBox hc:InfoElement.Placeholder="请输入发送的消息主题..."
+                                 hc:TitleElement.Title="发布主题"
+                                 hc:TitleElement.TitleWidth="60"
+                                 DockPanel.Dock="Left"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="{Binding MqttClientConfig.PublishTopic}" />
                     </DockPanel>
-                    <TextBox
-                        Margin="4,0,4,4"
-                        VerticalContentAlignment="Top"
-                        hc:InfoElement.Placeholder="请输入要发送的内容..."
-                        Style="{StaticResource TextBoxExtend}"
-                        Text="{Binding SendMessage}"
-                        TextWrapping="Wrap" />
+                    <TextBox Margin="4,0,4,4"
+                             VerticalContentAlignment="Top"
+                             hc:InfoElement.Placeholder="请输入要发送的内容..."
+                             AcceptsReturn="True"
+                             Style="{StaticResource TextBoxExtend}"
+                             Text="{Binding SendMessage}"
+                             TextWrapping="Wrap" />
                 </DockPanel>
 
-                <Border
-                    Margin="4,0"
-                    BorderBrush="Gray"
-                    BorderThickness="1"
-                    CornerRadius="5">
+                <Border Margin="4,0"
+                        BorderBrush="Gray"
+                        BorderThickness="1"
+                        CornerRadius="5">
                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <!--  页面消息  -->
                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
@@ -478,31 +437,27 @@
 
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border
-                                        Margin="3"
-                                        Padding="2"
-                                        BorderThickness="1"
-                                        CornerRadius="4"
-                                        Style="{StaticResource MessageBorder}">
+                                    <Border Margin="3"
+                                            Padding="2"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Style="{StaticResource MessageBorder}">
                                         <WrapPanel Orientation="Horizontal">
-                                            <TextBlock
-                                                Margin="3"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MessageTextBlock}"
-                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                            <TextBlock
-                                                Margin="5,0"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MessageTextBlock}"
-                                                Text="{Binding Type}" />
-                                            <TextBox
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                IsReadOnly="True"
-                                                Style="{StaticResource MessageTextBox}"
-                                                Text="{Binding Content}"
-                                                TextWrapping="Wrap" />
+                                            <TextBlock Margin="3"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                            <TextBlock Margin="5,0"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Type}" />
+                                            <TextBox VerticalAlignment="Center"
+                                                     FontSize="12"
+                                                     FontWeight="Bold"
+                                                     IsReadOnly="True"
+                                                     Style="{StaticResource MessageTextBox}"
+                                                     Text="{Binding Content}"
+                                                     TextWrapping="Wrap" />
                                         </WrapPanel>
                                     </Border>
                                 </DataTemplate>

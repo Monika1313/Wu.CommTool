@@ -173,6 +173,7 @@ namespace Wu.CommTool.ViewModels
                 //关闭服务器
                 await server.StopAsync();
                 MqttServerConfig.IsOpened = false;
+                MqttUsers.Clear();//清除已登录的用户列表
                 ShowMessage($"Mqtt服务器关闭");
             }
             catch (Exception ex)
@@ -332,14 +333,6 @@ namespace Wu.CommTool.ViewModels
 
 
                 }
-
-
-
-                //var npsmd = MqttAnalyse.Analyse_PumpStationMqttData(c.ApplicationMessage.Payload);        //将接收的数据解析
-                //npsmd.Ip = $"{c.ClientId}";                                                               //IP使用客户端ID
-                //YT_PsMDService.Insert(npsmd);                                                             //将解析的数据录入数据库
-
-                //接收的数据自动根据订阅发送给客户端 无需编程
             }
             catch (Exception ex)
             {

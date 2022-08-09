@@ -731,8 +731,6 @@ namespace Wu.CommTool.ViewModels
                 };
                 //弹窗
                 var dialogResult2 = await dialogHost.ShowDialog(nameof(ModbusRtuAutoSearchDeviceView), param, nameof(ModbusRtuView));
-
-
             }
             catch (Exception ex)
             {
