@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Newtonsoft.Json;
+using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -41,6 +42,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 成功订阅的主题
         /// </summary>
+        [JsonIgnore]
         public ObservableCollection<string> SubscribeSucceeds { get => _SubscribeSucceeds; set => SetProperty(ref _SubscribeSucceeds, value); }
         private ObservableCollection<string> _SubscribeSucceeds = new();
 
@@ -71,6 +73,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 是否开启
         /// </summary>
+        [JsonIgnore]
         public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
         private bool _IsOpened = false;
     }
