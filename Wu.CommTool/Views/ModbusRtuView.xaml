@@ -116,10 +116,31 @@
                             CornerRadius="5"
                             DockPanel.Dock="Top">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Margin="5"
-                                       HorizontalAlignment="Center"
-                                       FontSize="24"
-                                       Text="自动采集数据设置" />
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5"
+                                           HorizontalAlignment="Center"
+                                           FontSize="24"
+                                           Text="自动采集数据设置" />
+                                <!--  导出配置文件  -->
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        Content="{md:PackIcon Kind=Upload}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Blue_CircleButton}"
+                                        ToolTip="导出配置文件" />
+                                <!--  导入配置文件  -->
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        Content="{md:PackIcon Kind=Download}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Blue_CircleButton}"
+                                        ToolTip="导入配置文件" />
+                            </StackPanel>
+
 
                             <TextBox hc:TitleElement.Title="从站ID:"
                                      IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"

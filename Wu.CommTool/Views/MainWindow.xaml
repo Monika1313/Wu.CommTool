@@ -129,13 +129,16 @@
                                 </md:PopupBox>-->
 
                                     <Button x:Name="btnMin"
-                                            Content="—"
+                                            Content="{md:PackIcon Kind=WindowMinimize,
+                                                                  Size=20}"
                                             Style="{StaticResource MaterialDesignFlatMidBgButton}" />
                                     <Button x:Name="btnMax"
-                                            Content="☐"
+                                            Content="{md:PackIcon Kind=WindowMaximize,
+                                                                  Size=20}"
                                             Style="{StaticResource MaterialDesignFlatMidBgButton}" />
                                     <Button x:Name="btnClose"
-                                            Content="✕"
+                                            Content="{md:PackIcon Kind=WindowClose,
+                                                                  Size=20}"
                                             Style="{StaticResource MaterialDesignFlatMidBgButton}" />
                                 </StackPanel>
 
