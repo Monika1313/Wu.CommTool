@@ -7,3 +7,5 @@ ModbusRtu
 MqttClient
 增加发送数据格式选择(json ascii等)
 掉线事件未处理
+
+增加配置文件读写  可加载配置文件

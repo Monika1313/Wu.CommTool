@@ -52,10 +52,7 @@ namespace Wu.CommTool.Extensions
         public static void Resgiter(this IEventAggregator aggregator,Action<UpdateModel> action)
         {
             aggregator.GetEvent<UpdateLoadingEvent>().Subscribe(action);
-
         }
-
-
 
         /// <summary>
         /// 注册提示消息事件

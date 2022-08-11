@@ -10,8 +10,6 @@ namespace Wu.CommTool.Extensions
 {
     public static class CommonExtensions
     {
-
-
         /// <summary>
         /// 字符串json格式化
         /// </summary>

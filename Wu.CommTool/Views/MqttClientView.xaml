@@ -27,12 +27,31 @@
                                 BorderThickness="1"
                                 CornerRadius="5"
                                 DockPanel.Dock="Top">
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Margin="5"
-                                           HorizontalAlignment="Center"
-                                           FontSize="24"
-                                           Text="Mqtt客户端配置" />
-
+                            <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="5"
+                                               HorizontalAlignment="Center"
+                                               FontSize="24"
+                                               Text="Mqtt客户端配置" />
+                                    <!--  导出配置文件  -->
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            Content="{md:PackIcon Kind=Upload}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}"
+                                            ToolTip="导出配置文件" />
+                                    <!--  导入配置文件  -->
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            Content="{md:PackIcon Kind=Download}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}"
+                                            ToolTip="导入配置文件" />
+                                </StackPanel>
                                 <TextBlock Margin="5"
                                            HorizontalAlignment="Center"
                                            FontSize="16"
@@ -413,7 +432,8 @@
                                  Style="{StaticResource FormTextBox}"
                                  Text="{Binding MqttClientConfig.PublishTopic}" />
                     </DockPanel>
-                    <TextBox Margin="4,0,4,4"
+                    <TextBox MaxHeight="300"
+                             Margin="4,0,4,4"
                              VerticalContentAlignment="Top"
                              hc:InfoElement.Placeholder="请输入要发送的内容..."
                              AcceptsReturn="True"
