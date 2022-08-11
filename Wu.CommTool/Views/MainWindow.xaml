@@ -130,15 +130,15 @@
 
                                     <Button x:Name="btnMin"
                                             Content="{md:PackIcon Kind=WindowMinimize,
-                                                                  Size=20}"
-                                            Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                                                  Size=18}"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}" Cursor="Hand" />
                                     <Button x:Name="btnMax"
                                             Content="{md:PackIcon Kind=WindowMaximize,
-                                                                  Size=20}"
+                                                                  Size=18}"
                                             Style="{StaticResource MaterialDesignFlatMidBgButton}" />
                                     <Button x:Name="btnClose"
                                             Content="{md:PackIcon Kind=WindowClose,
-                                                                  Size=20}"
+                                                                  Size=18}"
                                             Style="{StaticResource MaterialDesignFlatMidBgButton}" />
                                 </StackPanel>
 
