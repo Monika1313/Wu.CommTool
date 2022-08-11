@@ -451,6 +451,7 @@ namespace Wu.CommTool.ViewModels
         protected void ShowReceiveMessage(string message, MessageType messageType = MessageType.Receive) => ShowMessage(message, messageType);
         protected void ShowSendMessage(string message, MessageType messageType = MessageType.Send) => ShowMessage(message, messageType);
 
+
         /// <summary>
         /// 界面显示数据
         /// </summary>
@@ -460,22 +461,11 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                //判断是UI线程还是子线程 若是子线程需要用委托
-                var UiThreadId = System.Windows.Application.Current.Dispatcher.Thread.ManagedThreadId;       //UI线程ID
-                var currentThreadId = Environment.CurrentManagedThreadId;                     //当前线程
-                //当前线程为主线程 直接更新数据
-                if (currentThreadId == UiThreadId)
+                void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
                 }
-                else
-                {
-                    //子线程无法更新在UI线程的内容   委托主线程更新
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        Messages.Add(new MessageData($"{message}", DateTime.Now, type));
-                    });
-                }
+                Wu.Wpf.Common.Utils.ExecuteFun(action);
             }
             catch (Exception) { }
         }
