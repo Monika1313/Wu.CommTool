@@ -85,8 +85,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
 
-
-        public void Congifure()
+        public void Configure()
         {
             this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(ModbusRtuView));//导航至页面
             //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(MqttServerView));//导航至页面
@@ -102,7 +101,7 @@ namespace Wu.CommTool.ViewModels
             //MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt", NameSpace = nameof(MqttView) });
             MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "MqttServer", NameSpace = nameof(MqttServerView) });
             MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "MqttClient", NameSpace = nameof(MqttClientView) });
-            MenuBars.Add(new MenuBar() { Icon = "Bug", Title = "关于", NameSpace = nameof(AboutView) });
+            MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) });
         }
 
         /// <summary>

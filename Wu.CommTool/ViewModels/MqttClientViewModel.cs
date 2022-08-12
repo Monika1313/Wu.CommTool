@@ -597,6 +597,10 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    while (Messages.Count > 100)
+                    {
+                        Messages.RemoveAt(0);
+                    }
                 }
                 Wu.Wpf.Common.Utils.ExecuteFun(action);
             }

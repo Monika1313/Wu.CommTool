@@ -43,7 +43,7 @@ namespace Wu.CommTool
             //初始化窗口
             var service = App.Current.MainWindow.DataContext as IConfigureService;
             if (service != null)
-                service.Congifure();
+                service.Configure();
 
             //设置该软件的工作目录为当前软件目录
             System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);

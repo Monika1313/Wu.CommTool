@@ -57,7 +57,20 @@ namespace Wu.CommTool.ViewModels
             {
                 case "Search": Search(); break;
                 case "OpenDialogView": OpenDialogView(); break;
+                case "ShowGitHub": ShowGitHub(); break;
                 default: break;
+            }
+        }
+
+        private void ShowGitHub()
+        {
+            try
+            {
+                System.Diagnostics.Process.Start("explorer.exe",@"https://github.com/Monika1313/Wu.CommTool");
+            }
+            catch (Exception)
+            {
+
             }
         }
 
