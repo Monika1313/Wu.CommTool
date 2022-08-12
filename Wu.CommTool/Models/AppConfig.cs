@@ -18,8 +18,17 @@ namespace Wu.CommTool.Models
         public static int WinHeight { get; set; }
 
         /// <summary>
-        /// 全屏
+        /// 最大化
         /// </summary>
-        public static bool IsFullScream { get; set; }
+        public static bool IsMaximized { get; set; }
+
+        /// <summary>
+        /// 初始页面
+        /// </summary>
+        public static string DefaultView { get; set; } = "ModbusRtuView";
+
+
+
+
     }
 }

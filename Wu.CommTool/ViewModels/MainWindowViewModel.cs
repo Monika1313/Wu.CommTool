@@ -51,6 +51,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
         private ObservableCollection<MenuBar> _MenuBars;
+
+        /// <summary>
+        /// 是否最大化
+        /// </summary>
+        public bool IsMaximized { get => _IsMaximized; set => SetProperty(ref _IsMaximized, value); }
+        private bool _IsMaximized = false;
         #endregion
 
         #region 命令

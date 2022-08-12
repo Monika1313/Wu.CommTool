@@ -23,6 +23,9 @@ using Wu.CommTool.Views;
 using System.Windows;
 using System.Timers;
 using System.Linq;
+using Newtonsoft.Json;
+using System.IO;
+using Microsoft.Win32;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -729,6 +732,74 @@ namespace Wu.CommTool.ViewModels
             catch (Exception ex)
             {
                 ShowMessage(ex.Message, MessageType.Error);
+            }
+        }
+
+
+        /// <summary>
+        /// 导出配置文件
+        /// </summary>
+        private void ExportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    Title = "请选择导出配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonMqttClientConfig)|*.jsonMqttClientConfig",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    FileName = "MqttClientConfig",                                           //默认文件名
+                    DefaultExt = "jsonMqttClientConfig",                                     //默认扩展名
+                    InitialDirectory = dict,                //指定初始的目录
+                    OverwritePrompt = true,                                                  //文件已存在警告
+                    AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                };
+                if (sfd.ShowDialog() != true)
+                    return;
+                //将当前的配置序列化为json字符串
+                var content = JsonConvert.SerializeObject(AutoReadConfig);
+                //保存文件
+                Common.Utils.WriteJsonFile(sfd.FileName, content);
+                System.Windows.MessageBox.Show("导出完成");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        private void ImportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                //选中配置文件
+                OpenFileDialog dlg = new()
+                {
+                    Title = "请选择导入配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonMqttClientConfig)|*.jsonMqttClientConfig",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    InitialDirectory = dict
+                };
+
+                if (dlg.ShowDialog() != true)
+                    return;
+                var xx = Common.Utils.ReadJsonFile(dlg.FileName);
+                AutoReadConfig = JsonConvert.DeserializeObject<AutoReadConfig>(xx)!;
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
         #endregion
