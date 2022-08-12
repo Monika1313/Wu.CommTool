@@ -21,7 +21,7 @@ namespace Wu.CommTool.Converters
             {
                 if (null != value)
                 {
-                    FieldInfo fi = value.GetType().GetField(value.ToString());
+                    FieldInfo fi = value.GetType().GetField(value.ToString()!)!;
 
                     if (null != fi)
                     {

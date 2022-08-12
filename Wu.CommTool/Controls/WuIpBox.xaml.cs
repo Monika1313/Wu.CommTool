@@ -349,12 +349,12 @@ namespace Wu.CommTool.Controls
         /// <param name="isSelectAll">是否全选</param>
         private void SetTbxFocus(TextBox curretTbx, bool isBack, bool isSelectAll)
         {
-            List<TextBox> TbxIPList = new List<TextBox>();
+            List<TextBox> TbxIPList = new();
             foreach (UIElement item in gridIPAddress.Children)
             {
                 if (item.GetType() == typeof(TextBox))
                 {
-                    TbxIPList.Add(item as TextBox);
+                    TbxIPList.Add((TextBox)item);
                 }
             }
             TextBox nextTbx = null;

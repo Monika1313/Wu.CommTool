@@ -9,11 +9,17 @@
     <ApplicationIcon>Images\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Configs\appConfig.json" />
     <None Remove="Images\GKD.png" />
     <None Remove="Images\KU.png" />
     <None Remove="Images\Kun.png" />
     <None Remove="Images\X1.png" />
     <None Remove="Images\XX.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Configs\appConfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\GKD.png" />
@@ -32,6 +38,10 @@
     <PackageReference Include="System.Management" Version="6.0.0" />
     <PackageReference Include="Wu" Version="1.0.5" />
     <PackageReference Include="Wu.Wpf" Version="1.0.3" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configs\ModbusRtuConfig\" />
+    <Folder Include="Configs\MqttClientConfig\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 </Project>

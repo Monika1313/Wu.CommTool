@@ -25,14 +25,14 @@ namespace Wu.CommTool
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             //注册页面
-            containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();//首页
-            containerRegistry.RegisterForNavigation<ModbusRtuAutoSearchDeviceView, ModbusRtuAutoSearchDeviceViewModel>();//消息提示窗口
-            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();//ModbusRtu
-            containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
-            containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();//Mqtt
-            containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();//MqttServer
-            containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();//MqttClient
-            containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();//关于
+            containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();                                           //首页
+            containerRegistry.RegisterForNavigation<ModbusRtuAutoSearchDeviceView, ModbusRtuAutoSearchDeviceViewModel>();   //消息提示窗口
+            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
+            containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
+            containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();                                             //Mqtt
+            containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
+            containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
+            containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();                                           //关于
         }
 
         /// <summary>
@@ -41,8 +41,10 @@ namespace Wu.CommTool
         protected override void OnInitialized()
         {
             //初始化窗口
-            var service = App.Current.MainWindow.DataContext as IConfigureService;
-            if (service != null)
+            //var service = App.Current.MainWindow.DataContext as IConfigureService;
+            //if (service != null)
+            //    service.Configure();
+            if (App.Current.MainWindow.DataContext is IConfigureService service)
                 service.Configure();
 
             //设置该软件的工作目录为当前软件目录

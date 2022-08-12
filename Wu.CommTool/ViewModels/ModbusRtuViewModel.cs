@@ -22,6 +22,7 @@ using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Views;
 using System.Windows;
 using System.Timers;
+using System.Linq;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -158,8 +159,8 @@ namespace Wu.CommTool.ViewModels
                 case "CloseCom": CloseCom(); break;                                     //关闭串口
                 case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;         //打开配置抽屉
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;  //打开右侧抽屉
-                case "OpenAutoRead": OpenAutoRead(); break;  //打开自动读取
-                case "CloseAutoRead": CloseAutoRead(); break;  //关闭自动读取
+                case "OpenAutoRead": OpenAutoRead(); break;                             //打开自动读取
+                case "CloseAutoRead": CloseAutoRead(); break;                           //关闭自动读取
                 default: break;
             }
         }
@@ -638,10 +639,10 @@ namespace Wu.CommTool.ViewModels
                     if (hardInfo.Properties["Name"].Value != null)
                     {
                         //获取名称
-                        string deviceName = hardInfo.Properties["Name"].Value.ToString();
+                        string deviceName = hardInfo.Properties["Name"].Value.ToString()!;
                         //从名称中截取串口
-                        List<String> dList = new List<String>();
-                        foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
+                        List<string> dList = new();
+                        foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
                         {
                             string x = mch.Value.Trim();
                             dList.Add(x);
@@ -669,9 +670,9 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        protected void ShowErrorMessage(string message, MessageType messageType = MessageType.Error) => ShowMessage(message, messageType);
-        protected void ShowReceiveMessage(string message, MessageType messageType = MessageType.Receive) => ShowMessage(message, messageType);
-        protected void ShowSendMessage(string message, MessageType messageType = MessageType.Send) => ShowMessage(message, messageType);
+        protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+        protected void ShowReceiveMessage(string message) => ShowMessage(message, MessageType.Receive);
+        protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
 
         /// <summary>
         /// 界面显示数据

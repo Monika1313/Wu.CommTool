@@ -56,7 +56,7 @@ namespace Wu.CommTool.Extensions
         /// <param name="e"></param>
         private void AssociatedObject_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            PasswordBox passwordBox = sender as PasswordBox;
+            PasswordBox passwordBox = (PasswordBox)sender;
             string password = PasswordExtensions.GetPassword(passwordBox);
 
             if (passwordBox != null && passwordBox.Password != password)

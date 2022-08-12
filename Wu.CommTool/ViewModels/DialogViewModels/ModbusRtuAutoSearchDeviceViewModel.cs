@@ -175,42 +175,40 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             //清空列表
             ComPorts.Clear();
             //查找Com口
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'"))
+            using ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
+            var hardInfos = searcher.Get();
+            foreach (var hardInfo in hardInfos)
             {
-                var hardInfos = searcher.Get();
-                foreach (var hardInfo in hardInfos)
+                if (hardInfo.Properties["Name"].Value != null)
                 {
-                    if (hardInfo.Properties["Name"].Value != null)
+                    string deviceName = hardInfo.Properties["Name"].Value.ToString()!;
+                    //从名称中截取串口
+                    List<String> dList = new List<String>();
+                    foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
                     {
-                        string deviceName = hardInfo.Properties["Name"].Value.ToString();
-                        //从名称中截取串口
-                        List<String> dList = new List<String>();
-                        foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}"))
-                        {
-                            String x = mch.Value.Trim();
-                            dList.Add(x);
-                        }
-
-                        int startIndex = deviceName.IndexOf("(");
-                        //int endIndex = deviceName.IndexOf(")");
-                        //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
-                        string key = dList[0];
-                        string name = deviceName.Substring(0, startIndex - 1);
-                        //添加进列表
-                        ComPorts.Add(new KeyValuePair<string, string>(key, name));
+                        String x = mch.Value.Trim();
+                        dList.Add(x);
                     }
+
+                    int startIndex = deviceName.IndexOf("(");
+                    //int endIndex = deviceName.IndexOf(")");
+                    //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
+                    string key = dList[0];
+                    string name = deviceName.Substring(0, startIndex - 1);
+                    //添加进列表
+                    ComPorts.Add(new KeyValuePair<string, string>(key, name));
                 }
-                if (ComPorts.Count != 0)
-                {
-                    ComConfig.Port = ComPorts[0];
-                }
-                string str = $"获取串口成功, 共{ComPorts.Count}个。";
-                foreach (var item in ComPorts)
-                {
-                    str += $"   {item.Key}: {item.Value};";
-                }
-                ShowMessage(str);
             }
+            if (ComPorts.Count != 0)
+            {
+                ComConfig.Port = ComPorts[0];
+            }
+            string str = $"获取串口成功, 共{ComPorts.Count}个。";
+            foreach (var item in ComPorts)
+            {
+                str += $"   {item.Key}: {item.Value};";
+            }
+            ShowMessage(str);
         }
 
 

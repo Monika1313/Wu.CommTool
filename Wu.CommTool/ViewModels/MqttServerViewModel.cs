@@ -447,9 +447,9 @@ namespace Wu.CommTool.ViewModels
 
 
 
-        protected void ShowErrorMessage(string message, MessageType messageType = MessageType.Error) => ShowMessage(message, messageType);
-        protected void ShowReceiveMessage(string message, MessageType messageType = MessageType.Receive) => ShowMessage(message, messageType);
-        protected void ShowSendMessage(string message, MessageType messageType = MessageType.Send) => ShowMessage(message, messageType);
+        protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+        protected void ShowReceiveMessage(string message) => ShowMessage(message, MessageType.Receive);
+        protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
 
 
         /// <summary>
