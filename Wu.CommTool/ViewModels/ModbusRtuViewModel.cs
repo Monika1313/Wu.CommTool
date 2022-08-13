@@ -164,9 +164,13 @@ namespace Wu.CommTool.ViewModels
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;  //打开右侧抽屉
                 case "OpenAutoRead": OpenAutoRead(); break;                             //打开自动读取
                 case "CloseAutoRead": CloseAutoRead(); break;                           //关闭自动读取
+                case "ImportConfig": ImportConfig(); break;
+                case "ExportConfig": ExportConfig(); break;
                 default: break;
             }
         }
+
+
 
         /// <summary>
         /// 关闭自动读取数据
@@ -744,15 +748,15 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //配置文件目录
-                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
                 Wu.Utils.IOUtil.Exists(dict);
                 SaveFileDialog sfd = new SaveFileDialog()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonMqttClientConfig)|*.jsonMqttClientConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonModbusRtuConfig)|*.jsonModbusRtuConfig",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
                     FileName = "MqttClientConfig",                                           //默认文件名
-                    DefaultExt = "jsonMqttClientConfig",                                     //默认扩展名
+                    DefaultExt = "jsonModbusRtuConfig",                                     //默认扩展名
                     InitialDirectory = dict,                //指定初始的目录
                     OverwritePrompt = true,                                                  //文件已存在警告
                     AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
@@ -781,13 +785,13 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //配置文件目录
-                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
                 Wu.Utils.IOUtil.Exists(dict);
                 //选中配置文件
                 OpenFileDialog dlg = new()
                 {
                     Title = "请选择导入配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonMqttClientConfig)|*.jsonMqttClientConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonModbusRtuConfig)|*.jsonModbusRtuConfig",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
                     InitialDirectory = dict
                 };

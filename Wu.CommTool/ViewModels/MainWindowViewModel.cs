@@ -93,7 +93,7 @@ namespace Wu.CommTool.ViewModels
 
         public void Configure()
         {
-            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(ModbusRtuView));//导航至页面
+            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
             //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(MqttServerView));//导航至页面
         }
 
@@ -118,6 +118,11 @@ namespace Wu.CommTool.ViewModels
         {
             if (obj == null || string.IsNullOrWhiteSpace(obj.NameSpace))
                 return;
+            try
+            {
+                App.AppConfig.DefaultView = obj.NameSpace;
+            }
+            catch { }
             regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(obj.NameSpace, back =>
             {
                 journal = back.Context.NavigationService.Journal;

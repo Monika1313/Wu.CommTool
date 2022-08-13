@@ -17,6 +17,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
@@ -330,8 +331,6 @@ namespace Wu.CommTool.ViewModels
                     //string str = JsonConvert.SerializeObject(Encoding.UTF8.GetString(obj.ApplicationMessage.Payload));
                     //ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n" +
                     //    $"{(obj.ApplicationMessage?.Payload == null ? null : str)}", MessageType.Receive);
-
-
                 }
             }
             catch (Exception ex)
@@ -347,12 +346,31 @@ namespace Wu.CommTool.ViewModels
         /// <exception cref="NotImplementedException"></exception>
         private void ClientSubscription(MqttSubscriptionInterceptorContext obj)
         {
-            //客户端订阅事件
-            if (obj == null)
-                return;
-            //允许订阅
-            obj.AcceptSubscription = true;
-            ShowMessage($"客户端：“{obj.ClientId}” 订阅主题：“{obj.TopicFilter.Topic}”");
+            try
+            {
+                //客户端订阅事件
+                if (obj == null)
+                    return;
+                //查找客户端列表
+                var x = MqttUsers.FirstOrDefault(x => x.ClientId.Equals(obj.ClientId));
+                if (x != null)
+                {
+                    Application.Current.Dispatcher.BeginInvoke((Action)delegate
+                    {
+                        //添加该主题
+                        x.SubTopics.Add(obj.TopicFilter.Topic);
+                    });
+                }
+
+                //允许订阅
+                obj.AcceptSubscription = true;
+
+                ShowMessage($"客户端：“{obj.ClientId}” 订阅主题：“{obj.TopicFilter.Topic}”");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
         }
 
 
@@ -464,7 +482,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
-                    while(Messages.Count>100)
+                    while (Messages.Count > 100)
                     {
                         Messages.RemoveAt(0);
                     }

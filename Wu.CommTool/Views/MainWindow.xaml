@@ -37,7 +37,7 @@
             UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
-    <Grid IsHitTestVisible="True" Style="{StaticResource MainWindowGrid}">
+    <Grid Style="{StaticResource MainWindowGrid}">
         <md:DialogHost
             x:Name="DialogHost"
             DialogTheme="Inherit"
@@ -98,7 +98,7 @@
                         x:Name="Snackbar"
                         Panel.ZIndex="1"
                         MessageQueue="{md:MessageQueue}" />
-                    <md:ColorZone IsHitTestVisible="True"
+                    <md:ColorZone
                         x:Name="ColorZone"
                         Padding="10"
                         md:ShadowAssist.ShadowDepth="Depth2"

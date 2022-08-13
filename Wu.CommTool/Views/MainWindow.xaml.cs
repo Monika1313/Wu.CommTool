@@ -54,6 +54,8 @@ namespace Wu.CommTool.Views
                     //获取屏幕的大小 包含工作区域和任务栏
                     //SystemParameters.PrimaryScreenWidth
                     //SystemParameters.PrimaryScreenHeight
+
+                    App.AppConfig.IsMaximized = this.WindowState.Equals(WindowState.Maximized);
                     //将当前的配置序列化为json字符串
                     var content = JsonConvert.SerializeObject(App.AppConfig);
                     //保存文件
@@ -77,12 +79,10 @@ namespace Wu.CommTool.Views
                 if (this.WindowState == WindowState.Maximized)
                 {
                     this.WindowState = WindowState.Normal;
-                    App.AppConfig.IsMaximized = false;
                 }
                 else
                 {
                     this.WindowState = WindowState.Maximized;
-                    App.AppConfig.IsMaximized = true;
                 }
             };
 

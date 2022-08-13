@@ -1,5 +1,6 @@
 ﻿using Prism.Mvvm;
 using System;
+using System.Collections.ObjectModel;
 
 namespace MqttnetServer.Model
 {
@@ -37,5 +38,11 @@ namespace MqttnetServer.Model
         /// </summary>
         public DateTime LastDataTime { get => _LastDataTime; set => SetProperty(ref _LastDataTime, value); }
         private DateTime _LastDataTime;
+
+        /// <summary>
+        /// 订阅的主题
+        /// </summary>
+        public ObservableCollection<string> SubTopics { get => _SubTopics; set => SetProperty(ref _SubTopics, value); }
+        private ObservableCollection<string> _SubTopics = new();
     }
 }
