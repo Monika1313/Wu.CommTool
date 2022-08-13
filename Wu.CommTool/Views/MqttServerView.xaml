@@ -159,7 +159,7 @@
                                                                                     Width="20"
                                                                                     Height="20"
                                                                                     Margin="4"
-                                                                                    Command="{Binding DataContext.CancleClientSubTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                                                    Command="{Binding DataContext.UnsubscribeTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                                                                     CommandParameter="{Binding .}"
                                                                                     Content="×"
                                                                                     DockPanel.Dock="Right"

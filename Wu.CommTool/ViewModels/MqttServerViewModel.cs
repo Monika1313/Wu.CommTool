@@ -46,18 +46,35 @@ namespace Wu.CommTool.ViewModels
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             TestCommand = new DelegateCommand<object>(Test);
-            CancleClientSubTopicCommand = new DelegateCommand<MqttSubedTopic>(CancleClientSubTopic);
+            UnsubscribeTopicCommand = new DelegateCommand<MqttSubedTopic>(UnsubscribeTopic);
         }
 
         /// <summary>
         /// 取消客户端订阅
         /// </summary>
         /// <param name="obj"></param>
-        private void CancleClientSubTopic(MqttSubedTopic obj)
+        private void UnsubscribeTopic(MqttSubedTopic obj)
         {
             try
             {
                 server.UnsubscribeAsync(obj.Parent.ClientId, obj.Topic);
+                obj.Parent.MqttSubedTopics.Remove(obj);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 取消客户端订阅
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ClientDisConnect(object obj)
+        {
+            try
+            {
+               
             }
             catch (Exception ex)
             {
@@ -134,7 +151,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// definity
         /// </summary>
-        public DelegateCommand<MqttSubedTopic> CancleClientSubTopicCommand { get; private set; }
+        public DelegateCommand<MqttSubedTopic> UnsubscribeTopicCommand { get; private set; }
 
         #endregion
 

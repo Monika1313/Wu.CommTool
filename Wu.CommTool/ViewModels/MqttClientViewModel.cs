@@ -370,9 +370,9 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 var options = new MqttClientOptionsBuilder()
-                    .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)
-                    .WithClientId(MqttClientConfig.ClientId)
-                    .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password).Build();
+                    .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
+                    .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
+                    .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password).Build();         //账号
 
                 client = new MqttFactory().CreateMqttClient()
                     .UseConnectedHandler(Connected)                        //连接成功事件
