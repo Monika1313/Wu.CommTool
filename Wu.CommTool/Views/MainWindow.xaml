@@ -114,32 +114,29 @@
                             <DockPanel LastChildFill="False">
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
 
-                                    <!--<md:PopupBox>
-                                    <md:PopupBox.ToggleContent>
-                                        <Image
-                                            Width="25"
-                                            Height="25"
-                                            Source="/Images/XX.png"
-                                            Stretch="Fill">
-                                            <Image.Clip>
-                                                <EllipseGeometry
-                                                    Center="12.5,12.5"
-                                                    RadiusX="12.5"
-                                                    RadiusY="12.5" />
-                                            </Image.Clip>
-                                        </Image>
-                                    </md:PopupBox.ToggleContent>
-                                </md:PopupBox>-->
-
-
-                                    <!--
-                                    <StackPanel>
-                                        <Button CommandParameter="用户中心" Content="用户中心" />
-                                        <Button Command="{Binding LogOutCommand}"
+                                    <!--<md:PopupBox StaysOpen="True">
+                                        <md:PopupBox.ToggleContent>
+                                            <Image
+                                                Width="25"
+                                                Height="25"
+                                                Source="/Images/XX.png"
+                                                Stretch="Fill">
+                                                <Image.Clip>
+                                                    <EllipseGeometry
+                                                        Center="12.5,12.5"
+                                                        RadiusX="12.5"
+                                                        RadiusY="12.5" />
+                                                </Image.Clip>
+                                            </Image>
+                                        </md:PopupBox.ToggleContent>
+                                        <StackPanel>
+                                            <Button CommandParameter="用户中心" Content="用户中心" />
+                                            <Button
+                                                Command="{Binding LogOutCommand}"
                                                 CommandParameter="注销当前账号"
                                                 Content="注销" />
-                                    </StackPanel>
-                                </md:PopupBox>-->
+                                        </StackPanel>
+                                    </md:PopupBox>-->
 
                                     <Button
                                         x:Name="btnMin"

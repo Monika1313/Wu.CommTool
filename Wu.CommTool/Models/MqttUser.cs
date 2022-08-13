@@ -1,6 +1,7 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Models;
 
 namespace MqttnetServer.Model
 {
@@ -42,7 +43,7 @@ namespace MqttnetServer.Model
         /// <summary>
         /// 订阅的主题
         /// </summary>
-        public ObservableCollection<string> SubTopics { get => _SubTopics; set => SetProperty(ref _SubTopics, value); }
-        private ObservableCollection<string> _SubTopics = new();
+        public ObservableCollection<MqttSubedTopic> MqttSubedTopics { get => _MqttSubedTopics; set => SetProperty(ref _MqttSubedTopics, value); }
+        private ObservableCollection<MqttSubedTopic> _MqttSubedTopics = new();
     }
 }

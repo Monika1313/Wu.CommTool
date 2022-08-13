@@ -55,7 +55,22 @@ namespace Wu.CommTool.Views
                     //SystemParameters.PrimaryScreenWidth
                     //SystemParameters.PrimaryScreenHeight
 
+                    //若已经最大化, 使用最大化前的大小
+                    if (!this.WindowState.Equals(WindowState.Normal))
+                    {
+                        //获取最大化或最小化前的窗口大小
+                        Rect xxx = this.RestoreBounds;
+                        App.AppConfig.WinWidth = xxx.Width;
+                        App.AppConfig.WinHeight = xxx.Width;
+                    }
+                    else
+                    {
+                        App.AppConfig.WinWidth = this.Width > SystemParameters.WorkArea.Size.Width ? SystemParameters.WorkArea.Size.Width : this.Width;
+                        App.AppConfig.WinHeight = this.Height > SystemParameters.WorkArea.Size.Height ? SystemParameters.WorkArea.Size.Height : this.Height;
+                    }
+                    //是否最大化
                     App.AppConfig.IsMaximized = this.WindowState.Equals(WindowState.Maximized);
+
                     //将当前的配置序列化为json字符串
                     var content = JsonConvert.SerializeObject(App.AppConfig);
                     //保存文件
@@ -77,13 +92,9 @@ namespace Wu.CommTool.Views
             ColorZone.MouseDoubleClick += (s, e) =>
             {
                 if (this.WindowState == WindowState.Maximized)
-                {
                     this.WindowState = WindowState.Normal;
-                }
                 else
-                {
                     this.WindowState = WindowState.Maximized;
-                }
             };
 
             menuBar.SelectionChanged += (s, e) =>
@@ -98,11 +109,11 @@ namespace Wu.CommTool.Views
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
-            if (App.AppConfig is not null && this.WindowState != WindowState.Maximized && this.WindowState != WindowState.Minimized)
-            {
-                App.AppConfig.WinWidth = this.Width > SystemParameters.WorkArea.Size.Width ? SystemParameters.WorkArea.Size.Width : this.Width;
-                App.AppConfig.WinHeight = this.Height > SystemParameters.WorkArea.Size.Height ? SystemParameters.WorkArea.Size.Height : this.Height;
-            }
+            //if (App.AppConfig is not null && this.WindowState != WindowState.Maximized && this.WindowState != WindowState.Minimized)
+            //{
+            //    App.AppConfig.WinWidth = this.Width > SystemParameters.WorkArea.Size.Width ? SystemParameters.WorkArea.Size.Width : this.Width;
+            //    App.AppConfig.WinHeight = this.Height > SystemParameters.WorkArea.Size.Height ? SystemParameters.WorkArea.Size.Height : this.Height;
+            //}
             base.OnRenderSizeChanged(sizeInfo);
         }
 

@@ -133,29 +133,51 @@
                                                         <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding LastDataTime, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
                                                     </StackPanel>
 
-                                                    <ItemsControl Background="Transparent" ItemsSource="{Binding SubTopics}">
-                                                        <ItemsControl.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <StackPanel Orientation="Vertical" />
-                                                            </ItemsPanelTemplate>
-                                                        </ItemsControl.ItemsPanel>
+                                                    <md:PopupBox Padding="3" StaysOpen="True">
+                                                        <md:PopupBox.ToggleContent>
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Text="订阅管理: " />
+                                                                <TextBlock Text="{Binding MqttSubedTopics.Count}" />
+                                                            </StackPanel>
+                                                        </md:PopupBox.ToggleContent>
+                                                        <StackPanel>
+                                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MqttSubedTopics}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <StackPanel Orientation="Vertical" />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
 
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate>
-                                                                <Border
-                                                                    Margin="3"
-                                                                    Padding="4"
-                                                                    Background="{StaticResource Green_Background}"
-                                                                    BorderBrush="{StaticResource Green_BorderBrush}"
-                                                                    BorderThickness="1"
-                                                                    CornerRadius="4">
-                                                                    <StackPanel Orientation="Vertical">
-                                                                        <TextBox Text="{Binding .}" IsReadOnly="True" TextWrapping="Wrap" />
-                                                                    </StackPanel>
-                                                                </Border>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Border
+                                                                            Background="{StaticResource Green_Background}"
+                                                                            BorderBrush="{StaticResource Green_BorderBrush}"
+                                                                            Style="{StaticResource CircleBorder}">
+                                                                            <DockPanel>
+                                                                                <Button
+                                                                                    Width="20"
+                                                                                    Height="20"
+                                                                                    Margin="4"
+                                                                                    Command="{Binding DataContext.CancleClientSubTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                                                    CommandParameter="{Binding .}"
+                                                                                    Content="×"
+                                                                                    DockPanel.Dock="Right"
+                                                                                    Style="{StaticResource Red_CircleButton}" />
+                                                                                <!--  CommandParameter="{Binding RelativeSource={RelativeSource Mode=self}}"  -->
+                                                                                <TextBox
+                                                                                    Margin="4"
+                                                                                    Foreground="{StaticResource Green_Foreground}"
+                                                                                    IsReadOnly="False"
+                                                                                    Text="{Binding Topic}"
+                                                                                    TextWrapping="Wrap" />
+                                                                            </DockPanel>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </StackPanel>
+                                                    </md:PopupBox>
                                                 </StackPanel>
                                             </Border>
                                         </DataTemplate>

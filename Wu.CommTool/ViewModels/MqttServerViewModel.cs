@@ -45,6 +45,29 @@ namespace Wu.CommTool.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            TestCommand = new DelegateCommand<object>(Test);
+            CancleClientSubTopicCommand = new DelegateCommand<MqttSubedTopic>(CancleClientSubTopic);
+        }
+
+        /// <summary>
+        /// 取消客户端订阅
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CancleClientSubTopic(MqttSubedTopic obj)
+        {
+            try
+            {
+                server.UnsubscribeAsync(obj.Parent.ClientId, obj.Topic);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        private void Test(object obj)
+        {
+
         }
 
         #region **************************************** 属性 ****************************************
@@ -101,6 +124,18 @@ namespace Wu.CommTool.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// definity
+        /// </summary>
+        public DelegateCommand<object> TestCommand { get; private set; }
+
+
+        /// <summary>
+        /// definity
+        /// </summary>
+        public DelegateCommand<MqttSubedTopic> CancleClientSubTopicCommand { get; private set; }
+
         #endregion
 
 
@@ -252,7 +287,14 @@ namespace Wu.CommTool.ViewModels
         /// <param name="obj"></param>
         private void ClientUnsubscribedTopicHandler(MqttServerClientUnsubscribedTopicEventArgs obj)
         {
-            ShowMessage($"客户端：“{obj.ClientId}” 取消订阅主题：“{obj.TopicFilter}”");
+            try
+            {
+                ShowMessage($"客户端：“{obj.ClientId}” 取消订阅主题：“{obj.TopicFilter}”");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
         }
 
 
@@ -340,7 +382,7 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
-        /// 客户端发布消息
+        /// 客户端订阅消息
         /// </summary>
         /// <param name="obj"></param>
         /// <exception cref="NotImplementedException"></exception>
@@ -358,7 +400,7 @@ namespace Wu.CommTool.ViewModels
                     Application.Current.Dispatcher.BeginInvoke((Action)delegate
                     {
                         //添加该主题
-                        x.SubTopics.Add(obj.TopicFilter.Topic);
+                        x.MqttSubedTopics.Add(new MqttSubedTopic { Parent = x, Topic = obj.TopicFilter.Topic });
                     });
                 }
 
@@ -495,7 +537,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 发布消息
         /// </summary>
-        public void Pub()
+        public void PublishMessage()
         {
             //该方法发布至所有客户端
             foreach (var user in MqttUsers)

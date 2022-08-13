@@ -62,7 +62,7 @@ namespace Wu.CommTool.Models
         /// IP
         /// </summary>
         public string ServerIp { get => _ServerIp; set => SetProperty(ref _ServerIp, value); }
-        private string _ServerIp = "192.168.2.211";
+        private string _ServerIp = "192.168.1.10";
 
         /// <summary>
         /// 端口
