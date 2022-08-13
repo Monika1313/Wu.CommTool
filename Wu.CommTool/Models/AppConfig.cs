@@ -9,23 +9,24 @@ namespace Wu.CommTool.Models
     /// <summary>
     /// 应用配置
     /// </summary>
-    public static class AppConfig
+    [Serializable]
+    public class AppConfig
     {
         /// <summary>
         /// 窗口尺寸
         /// </summary>
-        public static int WinWidth { get; set; }
-        public static int WinHeight { get; set; }
+        public double WinWidth { get; set; }
+        public double WinHeight { get; set; }
 
         /// <summary>
         /// 最大化
         /// </summary>
-        public static bool IsMaximized { get; set; }
+        public bool IsMaximized { get; set; }
 
         /// <summary>
         /// 初始页面
         /// </summary>
-        public static string DefaultView { get; set; } = "ModbusRtuView";
+        public string DefaultView { get; set; } = "ModbusRtuView";
 
 
 

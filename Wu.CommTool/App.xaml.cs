@@ -1,8 +1,11 @@
-﻿using Prism.Ioc;
+﻿using Newtonsoft.Json;
+using Prism.Ioc;
 using System;
+using System.IO;
 using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Dialogs.Views;
+using Wu.CommTool.Models;
 using Wu.CommTool.ViewModels;
 using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
@@ -14,6 +17,14 @@ namespace Wu.CommTool
     /// </summary>
     public partial class App
     {
+        public static AppConfig AppConfig { get; set; } = new()
+        {
+            WinHeight = 700,
+            WinWidth = 1000,
+            IsMaximized = false
+        };
+        public static string Dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
+
         protected override Window CreateShell()
         {
             return Container.Resolve<MainWindow>();
@@ -40,17 +51,31 @@ namespace Wu.CommTool
         /// </summary>
         protected override void OnInitialized()
         {
+            //读取配置文件
+            try
+            {
+                string configStr = Common.Utils.ReadJsonFile(Path.Combine(Dict, "AppConfig.jsonAppConfig"));
+                if (!string.IsNullOrWhiteSpace(configStr))
+                {
+                    AppConfig = JsonConvert.DeserializeObject<AppConfig>(configStr)!;
+                }
+            }
+            catch (Exception)
+            { }
             //初始化窗口
             //var service = App.Current.MainWindow.DataContext as IConfigureService;
             //if (service != null)
             //    service.Configure();
             if (App.Current.MainWindow.DataContext is IConfigureService service)
                 service.Configure();
-
+            App.Current.MainWindow.Width = AppConfig!.WinWidth;
+            App.Current.MainWindow.Height = AppConfig.WinHeight;
+            if (App.AppConfig.IsMaximized)
+                App.Current.MainWindow.WindowState = WindowState.Maximized;
             //设置该软件的工作目录为当前软件目录
             System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
 
-            base.OnInitialized();   
+            base.OnInitialized();
         }
     }
 }
