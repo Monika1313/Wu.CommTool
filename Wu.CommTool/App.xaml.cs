@@ -17,13 +17,31 @@ namespace Wu.CommTool
     /// </summary>
     public partial class App
     {
-        public static AppConfig AppConfig { get; set; } = new()
+        public static AppConfig AppConfig { get; set; } = new();
+        public static string ConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
+
+
+        protected override void OnStartup(StartupEventArgs e)
         {
-            WinHeight = 700,
-            WinWidth = 1000,
-            IsMaximized = false
-        };
-        public static string Dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
+            //设置该软件的工作目录为当前软件目录
+            Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
+
+            //读取配置文件
+            try
+            {
+                string configStr = Common.Utils.ReadJsonFile(Path.Combine(ConfigDict, "AppConfig.jsonAppConfig"));
+                if (!string.IsNullOrWhiteSpace(configStr))
+                {
+                    AppConfig = JsonConvert.DeserializeObject<AppConfig>(configStr)!;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Info("读取App配置文件失败", ex);
+            }
+
+            base.OnStartup(e);
+        }
 
         protected override Window CreateShell()
         {
@@ -51,31 +69,17 @@ namespace Wu.CommTool
         /// </summary>
         protected override void OnInitialized()
         {
-            //读取配置文件
-            try
-            {
-                string configStr = Common.Utils.ReadJsonFile(Path.Combine(Dict, "AppConfig.jsonAppConfig"));
-                if (!string.IsNullOrWhiteSpace(configStr))
-                {
-                    AppConfig = JsonConvert.DeserializeObject<AppConfig>(configStr)!;
-                }
-            }
-            catch (Exception)
-            { }
             //初始化窗口
-            //var service = App.Current.MainWindow.DataContext as IConfigureService;
-            //if (service != null)
-            //    service.Configure();
-            if (App.Current.MainWindow.DataContext is IConfigureService service)
+            if (Current.MainWindow.DataContext is IConfigureService service)
                 service.Configure();
-            App.Current.MainWindow.Width = AppConfig!.WinWidth;
-            App.Current.MainWindow.Height = AppConfig.WinHeight;
-            if (App.AppConfig.IsMaximized)
-                App.Current.MainWindow.WindowState = WindowState.Maximized;
-            //设置该软件的工作目录为当前软件目录
-            System.IO.Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-
+            Current.MainWindow.Width = AppConfig!.WinWidth;
+            Current.MainWindow.Height = AppConfig.WinHeight;
+            if (AppConfig.IsMaximized)
+                Current.MainWindow.WindowState = WindowState.Maximized;
+            
             base.OnInitialized();
         }
+
+       
     }
 }

@@ -15,13 +15,13 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 窗口尺寸
         /// </summary>
-        public double WinWidth { get; set; }
-        public double WinHeight { get; set; }
+        public double WinWidth { get; set; } = 1000;
+        public double WinHeight { get; set; } = 700;
 
         /// <summary>
         /// 最大化
         /// </summary>
-        public bool IsMaximized { get; set; }
+        public bool IsMaximized { get; set; } = false;
 
         /// <summary>
         /// 初始页面
