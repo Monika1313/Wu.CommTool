@@ -56,7 +56,7 @@ namespace Wu.CommTool.Views
                     //SystemParameters.PrimaryScreenHeight
 
                     //若已经最大化, 使用最大化前的大小
-                    if (!this.WindowState.Equals(WindowState.Normal))
+                    if (!WindowState.Equals(WindowState.Normal))
                     {
                         //获取最大化或最小化前的窗口大小
                         Rect xxx = this.RestoreBounds;

@@ -273,7 +273,7 @@ namespace Wu.CommTool.ViewModels
                             {
                                 MqttUsers.Remove(user);
                             });
-                            ShowMessage($"订阅者：“{user.UserName}”  客户端：“{c.ClientId}” 已断开连接!");
+                            ShowMessage($"用户名：“{user.UserName}”  客户端ID：“{c.ClientId}” 已断开连接!");
                         }
                     }
                     catch (Exception ex)
