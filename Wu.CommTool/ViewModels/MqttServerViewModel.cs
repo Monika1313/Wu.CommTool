@@ -1,6 +1,7 @@
 ﻿using DryIoc;
 using HandyControl.Controls;
 using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using MQTTnet;
 using MQTTnet.Server;
 using MqttnetServer.Model;
@@ -47,6 +48,22 @@ namespace Wu.CommTool.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             TestCommand = new DelegateCommand<object>(Test);
             UnsubscribeTopicCommand = new DelegateCommand<MqttSubedTopic>(UnsubscribeTopic);
+
+            //从默认配置文件中读取配置
+            try
+            {
+                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig");
+                var xx = Common.Utils.ReadJsonFile(p);
+                var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
+                if (x == null)
+                    return;
+                MqttServerConfig = x;
+                ShowMessage("读取配置成功");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("配置文件读取失败");
+            }
         }
 
         /// <summary>
@@ -169,6 +186,8 @@ namespace Wu.CommTool.ViewModels
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
+                case "ImportConfig": ImportConfig(); break;
+                case "ExportConfig": ExportConfig(); break;
                 case "Format":
                     if (Format == 0)
                     {
@@ -184,6 +203,77 @@ namespace Wu.CommTool.ViewModels
                 default: break;
             }
         }
+
+
+        /// <summary>
+        /// 导出配置文件
+        /// </summary>
+        private void ExportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    Title = "请选择导出配置文件...",                                          //对话框标题
+                    Filter = "json files(*.jsonMqttServerConfig)|*.jsonMqttServerConfig",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    FileName = "MqttServerConfig",                                           //默认文件名
+                    DefaultExt = "jsonMqttServerConfig",                                     //默认扩展名
+                    InitialDirectory = dict,                //指定初始的目录
+                    OverwritePrompt = true,                                                  //文件已存在警告
+                    AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                };
+                if (sfd.ShowDialog() != true)
+                    return;
+                //将当前的配置序列化为json字符串
+                var content = JsonConvert.SerializeObject(MqttServerConfig);
+                //保存文件
+                Common.Utils.WriteJsonFile(sfd.FileName, content);
+                ShowMessage("配置导出成功");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+
+
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        private void ImportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                //选中配置文件
+                OpenFileDialog dlg = new()
+                {
+                    Title = "请选择导入配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonMqttServerConfig)|*.jsonMqttServerConfig",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    InitialDirectory = dict
+                };
+
+                if (dlg.ShowDialog() != true)
+                    return;
+                var xx = Common.Utils.ReadJsonFile(dlg.FileName);
+                var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
+                MqttServerConfig = x;
+                ShowMessage("配置导入成功");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// 暂停更新接收的数据

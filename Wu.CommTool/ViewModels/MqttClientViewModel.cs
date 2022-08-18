@@ -49,6 +49,22 @@ namespace Wu.CommTool.ViewModels
 
 
             MqttClientConfig.SubscribeTopics.Add("+/#");//默认订阅所有主题
+
+            //从默认配置文件中读取配置
+            try
+            {
+                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig");
+                var xx = Common.Utils.ReadJsonFile(p);
+                var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx);
+                if (x == null)
+                    return;
+                MqttClientConfig = x;
+                ShowMessage("读取配置成功");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("配置文件读取失败");
+            }
         }
 
         /// <summary>

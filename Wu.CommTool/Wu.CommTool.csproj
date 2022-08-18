@@ -36,7 +36,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configs\ModbusRtuConfig\" />
-    <Folder Include="Configs\MqttClientConfig\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 </Project>

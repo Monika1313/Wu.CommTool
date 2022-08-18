@@ -20,10 +20,34 @@
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
                 <StackPanel Width="240" Orientation="Vertical">
-                    <TextBlock Margin="10"
-                               HorizontalAlignment="Center"
-                               FontSize="18"
-                               Text="服务器配置" />
+                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                        <TextBlock Margin="10"
+                                   HorizontalAlignment="Center"
+                                   FontSize="18"
+                                   Text="服务器配置" />
+                        <!--  导出配置文件  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ExportConfig"
+                                Content="{md:PackIcon Kind=Upload}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}"
+                                ToolTip="导出配置文件" />
+                        <!--  导入配置文件  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ImportConfig"
+                                Content="{md:PackIcon Kind=Download}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}"
+                                ToolTip="导入配置文件" />
+                    </StackPanel>
                     <ctl:WuIpBox Margin="5"
                                  Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                  IpTitle="IP"

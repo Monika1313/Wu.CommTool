@@ -15,6 +15,7 @@ namespace Wu.CommTool.ViewModels.DesignViewModels
             ShowSendMessage("这是一条发送的信息");
 
             IsDrawersOpen.IsRightDrawerOpen = true;
+            IsDrawersOpen.IsLeftDrawerOpen = true;
             MqttUsers.Add(new MqttUser());
         }
     }
