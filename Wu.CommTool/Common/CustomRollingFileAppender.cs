@@ -12,25 +12,28 @@ namespace Wu.CommTool.Common
     /// </summary>
     public class CustomRollingFileAppender : RollingFileAppender
     {
-
         /// <summary>
         /// 删除模式
         /// </summary>
         public enum DeleteMode
         {
-            LastWriteTime = 0,
-            CreationTime = 1,
-            LastAccessTime = 2,
+            LastWriteTime = 0,           //最后写入时间
+            CreationTime = 1,            //创建时间
+            LastAccessTime = 2,          //最后修改时间
         }
+
         public int MaximumFileCount { get; set; }
+
         /// <summary>
         /// 自动删除N天之前的日志
         /// </summary>
         public int OutDateDays { get; set; }
+
         /// <summary>
         /// 选择删除时的匹配条件
         /// </summary>
         public DeleteMode DeleteStyle { get; set; }
+
         public override void ActivateOptions()
         {
             base.ActivateOptions();
@@ -38,6 +41,7 @@ namespace Wu.CommTool.Common
             DeleteLogFilesForOverCount();
 
         }
+
         /// <summary>
         /// 删除当前日志所在目录下的文件
         /// </summary>
@@ -45,7 +49,7 @@ namespace Wu.CommTool.Common
         {
             try
             {
-                string strBasepath = System.IO.Path.GetDirectoryName(File);
+                string strBasepath = Path.GetDirectoryName(File);
                 foreach (string file in Directory.GetFiles(strBasepath))
                 {
                     DeleteLogFiles(file, DeleteStyle);
@@ -53,6 +57,7 @@ namespace Wu.CommTool.Common
             }
             catch { }
         }
+
         /// <summary>
         /// 删除超过指定数量的日志
         /// </summary>
@@ -60,7 +65,7 @@ namespace Wu.CommTool.Common
         {
             try
             {
-                string strBasepath = System.IO.Path.GetDirectoryName(File);
+                string strBasepath = Path.GetDirectoryName(File);
                 int a = MaxSizeRollBackups;
                 int b = MaximumFileCount;
                 int n = a > b ? a : b;
