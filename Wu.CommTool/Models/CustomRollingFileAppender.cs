@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using log4net.Appender;
 
-namespace Wu.CommTool.Common
+namespace Wu.CommTool.Models
 {
     /// <summary>
     /// Log4net 自定义RollingFileAppender
@@ -132,7 +132,7 @@ namespace Wu.CommTool.Common
                 if (string.IsNullOrWhiteSpace(file)) return;
                 if (System.IO.File.Exists(file) == false) return;
 
-                System.IO.FileInfo fi = new FileInfo(file);
+                FileInfo fi = new FileInfo(file);
                 if (mode == DeleteMode.CreationTime && fi.CreationTime < DateTime.Now.AddDays(-odd))
                 {
                     System.IO.File.Delete(file);
