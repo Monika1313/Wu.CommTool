@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using log4net;
+using Newtonsoft.Json;
 using Prism.Ioc;
 using System;
 using System.IO;
@@ -19,13 +20,16 @@ namespace Wu.CommTool
     {
         public static AppConfig AppConfig { get; set; } = new();
         public static string ConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
-
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         protected override void OnStartup(StartupEventArgs e)
         {
             //设置该软件的工作目录为当前软件目录
             Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-
+            var xx = Directory.GetCurrentDirectory();
+            //指定log4net的配置文件
+            log4net.Config.XmlConfigurator.Configure(new FileInfo(Directory.GetCurrentDirectory() + "/Configs/Log4netConfig/log4net.config"));
+            log.Info("App启动中...");
             //读取配置文件
             try
             {
@@ -37,7 +41,7 @@ namespace Wu.CommTool
             }
             catch (Exception ex)
             {
-                Log.Info("读取App配置文件失败", ex);
+                log.Info("读取App配置文件失败", ex);
             }
 
             base.OnStartup(e);

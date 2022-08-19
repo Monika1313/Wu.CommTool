@@ -1,21 +1,19 @@
-﻿<UserControl
-    x:Class="Wu.CommTool.Controls.WuIpBox"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:local="clr-namespace:Wu.CommTool.Controls"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:vr="clr-namespace:Wu.CommTool.Controls.ValidationRules"
-    x:Name="self"
-    d:DesignHeight="30"
-    d:DesignWidth="240"
-    mc:Ignorable="d">
+﻿<UserControl x:Class="Wu.CommTool.Controls.WuIpBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:local="clr-namespace:Wu.CommTool.Controls"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vr="clr-namespace:Wu.CommTool.Controls.ValidationRules"
+             x:Name="self"
+             d:DesignHeight="30"
+             d:DesignWidth="240"
+             mc:Ignorable="d">
     <UserControl.Resources>
-        <Style
-            x:Key="IpPartTextBoxStyle"
-            BasedOn="{StaticResource TextBoxBaseStyle}"
-            TargetType="{x:Type TextBox}">
+        <Style x:Key="IpPartTextBoxStyle"
+               BasedOn="{StaticResource TextBoxBaseStyle}"
+               TargetType="{x:Type TextBox}">
             <!--<Setter Property="Validation.ErrorTemplate">
                 <Setter.Value>
                     <ControlTemplate>
@@ -50,11 +48,10 @@
 
 
     <DockPanel>
-        <TextBlock
-            Width="{Binding ElementName=self, Path=TitleWidth}"
-            VerticalAlignment="Center"
-            DockPanel.Dock="Left"
-            Text="{Binding ElementName=self, Path=IpTitle}" />
+        <TextBlock Width="{Binding ElementName=self, Path=TitleWidth}"
+                   VerticalAlignment="Center"
+                   DockPanel.Dock="Left"
+                   Text="{Binding ElementName=self, Path=IpTitle}" />
         <Grid x:Name="gridIPAddress" DockPanel.Dock="Right">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
@@ -67,13 +64,12 @@
             </Grid.ColumnDefinitions>
 
 
-            <TextBox
-                x:Name="ipPart1TextBox"
-                Grid.Column="0"
-                PreviewKeyDown="TextBox_PreviewKeyDown"
-                PreviewKeyUp="TextBox_PreviewKeyUp"
-                Style="{StaticResource IpPartTextBoxStyle}"
-                Text="{Binding ElementName=self, Path=IpPart1, UpdateSourceTrigger=PropertyChanged}">
+            <TextBox x:Name="ipPart1TextBox"
+                     Grid.Column="0"
+                     PreviewKeyDown="TextBox_PreviewKeyDown"
+                     PreviewKeyUp="TextBox_PreviewKeyUp"
+                     Style="{StaticResource IpPartTextBoxStyle}"
+                     Text="{Binding ElementName=self, Path=IpPart1, UpdateSourceTrigger=PropertyChanged}">
                 <!--<TextBox.Text>
                     <Binding
                         ElementName="self"
@@ -108,22 +104,19 @@
             </TextBox>-->
 
 
-            <TextBlock
-                Grid.Column="1"
-                Margin="2"
-                VerticalAlignment="Bottom"
-                Text="." />
-            <TextBox
-                x:Name="ipPart2TextBox"
-                Grid.Column="2"
-                PreviewKeyDown="TextBox_PreviewKeyDown"
-                PreviewKeyUp="TextBox_PreviewKeyUp"
-                Style="{StaticResource IpPartTextBoxStyle}">
+            <TextBlock Grid.Column="1"
+                       Margin="2"
+                       VerticalAlignment="Bottom"
+                       Text="." />
+            <TextBox x:Name="ipPart2TextBox"
+                     Grid.Column="2"
+                     PreviewKeyDown="TextBox_PreviewKeyDown"
+                     PreviewKeyUp="TextBox_PreviewKeyUp"
+                     Style="{StaticResource IpPartTextBoxStyle}">
                 <TextBox.Text>
-                    <Binding
-                        ElementName="self"
-                        Path="IpPart2"
-                        UpdateSourceTrigger="PropertyChanged">
+                    <Binding ElementName="self"
+                             Path="IpPart2"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <!--<vr:IPRangeValidationRule Max="255" Min="0" />-->
                         </Binding.ValidationRules>
@@ -131,46 +124,40 @@
                 </TextBox.Text>
             </TextBox>
 
-            <TextBlock
-                Grid.Column="3"
-                Margin="2"
-                VerticalAlignment="Bottom"
-                Text="." />
+            <TextBlock Grid.Column="3"
+                       Margin="2"
+                       VerticalAlignment="Bottom"
+                       Text="." />
             <!--<TextBox Grid.Column="4" Text="{Binding ElementName=self, Path=IpPartList[0]}" />-->
-            <TextBox
-                x:Name="ipPart3TextBox"
-                Grid.Column="4"
-                PreviewKeyDown="TextBox_PreviewKeyDown"
-                PreviewKeyUp="TextBox_PreviewKeyUp"
-                Style="{StaticResource IpPartTextBoxStyle}">
+            <TextBox x:Name="ipPart3TextBox"
+                     Grid.Column="4"
+                     PreviewKeyDown="TextBox_PreviewKeyDown"
+                     PreviewKeyUp="TextBox_PreviewKeyUp"
+                     Style="{StaticResource IpPartTextBoxStyle}">
                 <TextBox.Text>
-                    <Binding
-                        ElementName="self"
-                        Path="IpPart3"
-                        UpdateSourceTrigger="PropertyChanged">
+                    <Binding ElementName="self"
+                             Path="IpPart3"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <vr:IPRangeValidationRule Max="255" Min="0" />
                         </Binding.ValidationRules>
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <TextBlock
-                Grid.Column="5"
-                Margin="2"
-                VerticalAlignment="Bottom"
-                Text="." />
+            <TextBlock Grid.Column="5"
+                       Margin="2"
+                       VerticalAlignment="Bottom"
+                       Text="." />
             <!--<TextBox Grid.Column="6" Text="{Binding ElementName=self, Path=Ip4}" />-->
-            <TextBox
-                x:Name="ipPart4TextBox"
-                Grid.Column="6"
-                PreviewKeyDown="TextBox_PreviewKeyDown"
-                PreviewKeyUp="TextBox_PreviewKeyUp"
-                Style="{StaticResource IpPartTextBoxStyle}">
+            <TextBox x:Name="ipPart4TextBox"
+                     Grid.Column="6"
+                     PreviewKeyDown="TextBox_PreviewKeyDown"
+                     PreviewKeyUp="TextBox_PreviewKeyUp"
+                     Style="{StaticResource IpPartTextBoxStyle}">
                 <TextBox.Text>
-                    <Binding
-                        ElementName="self"
-                        Path="IpPart4"
-                        UpdateSourceTrigger="PropertyChanged">
+                    <Binding ElementName="self"
+                             Path="IpPart4"
+                             UpdateSourceTrigger="PropertyChanged">
                         <Binding.ValidationRules>
                             <vr:IPRangeValidationRule Max="255" Min="0" />
                         </Binding.ValidationRules>

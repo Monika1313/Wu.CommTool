@@ -1,5 +1,6 @@
 ﻿using DryIoc;
 using HandyControl.Controls;
+using log4net;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;
@@ -31,6 +32,7 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public string DialogHostName { get; set; } = "MqttServerView";
         private IMqttServer server;                                 //Mqtt服务器
         //private List<MqttUser> Users = new List<MqttUser>();     //用户列表
@@ -631,6 +633,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    log.Info(message);
                     while (Messages.Count > 100)
                     {
                         Messages.RemoveAt(0);

@@ -23,6 +23,7 @@ using Wu.FzWater.Mqtt;
 using System.Threading;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using log4net;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -31,6 +32,8 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private IMqttClient client;
         public string DialogHostName { get; set; } = "MqttClientView";
         #endregion
@@ -572,6 +575,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    log.Info(message);
                     while (Messages.Count > 100)
                     {
                         Messages.RemoveAt(0);

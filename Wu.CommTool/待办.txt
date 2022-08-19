@@ -10,6 +10,7 @@ MqttServer
 
 MqttClient
 添加发送数据格式选择(json ascii等)
+添加接收数据格式选择  16进制/json
 
 
 

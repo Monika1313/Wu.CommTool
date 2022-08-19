@@ -38,6 +38,9 @@
     <Folder Include="Configs\ModbusRtuConfig\" />
   </ItemGroup>
   <ItemGroup>
+    <None Update="Configs\Log4netConfig\log4net.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
