@@ -1,25 +1,10 @@
-﻿using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Wu.CommTool.Controls
 {
@@ -32,6 +17,7 @@ namespace Wu.CommTool.Controls
         {
             InitializeComponent();
             this.SizeChanged += WuIpBox_SizeChanged;
+            //黏贴触发事件
             DataObject.AddPastingHandler(ipPart1TextBox, OnPaste);
             DataObject.AddPastingHandler(ipPart2TextBox, OnPaste);
             DataObject.AddPastingHandler(ipPart3TextBox, OnPaste);
@@ -40,6 +26,11 @@ namespace Wu.CommTool.Controls
         }
 
 
+        /// <summary>
+        /// 黏贴事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
             var isText = e.SourceDataObject.GetDataPresent(DataFormats.UnicodeText, true);
@@ -64,10 +55,7 @@ namespace Wu.CommTool.Controls
             }
         }
 
-
-
-
-
+        #region 控件尺寸修改时触发
         private void WuIpBox_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             Refresh();
@@ -78,29 +66,12 @@ namespace Wu.CommTool.Controls
         /// </summary>
         private void Refresh()
         {
-
         }
+        #endregion
 
 
 
-
-
-
-
-
-        //[Category("Wu")]
-        //[Description("IpPart1")]
-        //public int IpPart1
-        //{
-        //    get { return (int)GetValue(IpPart1Property); }
-        //    set { SetValue(IpPart1Property, value); }
-        //}
-        //public static readonly DependencyProperty IpPart1Property =
-        //            DependencyProperty.Register("IpPart1", typeof(int), typeof(WuIpBox),
-        //                new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-        //                    new PropertyChangedCallback(OnIpPartChanged)));
-
-
+        #region 依赖属性
         [Category("Wu")]
         [Description("IpPart1")]
         public string IpPart1
@@ -178,6 +149,17 @@ namespace Wu.CommTool.Controls
                     DependencyProperty.Register("TitleWidth", typeof(int), typeof(WuIpBox), new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
 
+        [Category("Wu")]
+        [Description("标题")]
+        public string IpTitle
+        {
+            get { return (string)GetValue(IpTitleProperty); }
+            set { SetValue(IpTitleProperty, value); }
+        }
+        public static readonly DependencyProperty IpTitleProperty =
+                    DependencyProperty.Register("IpTitle", typeof(string), typeof(WuIpBox), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
+
+        #endregion
 
 
         /// <summary>
@@ -217,52 +199,6 @@ namespace Wu.CommTool.Controls
             }
         }
 
-
-        //[Category("Wu")]
-        //[Description("IpPart2")]
-        //public int IpPart2
-        //{
-        //    get { return (int)GetValue(IpPart2Property); }
-        //    set { SetValue(IpPart2Property, value); }
-        //}
-        //public static readonly DependencyProperty IpPart2Property =
-        //            DependencyProperty.Register("IpPart2", typeof(int), typeof(WuIpBox), new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-        //                new PropertyChangedCallback(OnIpPartChanged)));
-
-
-        //[Category("Wu")]
-        //[Description("IpPart3")]
-        //public int IpPart3
-        //{
-        //    get { return (int)GetValue(IpPart3Property); }
-        //    set { SetValue(IpPart3Property, value); }
-        //}
-        //public static readonly DependencyProperty IpPart3Property =
-        //            DependencyProperty.Register("IpPart3", typeof(int), typeof(WuIpBox), new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-        //                new PropertyChangedCallback(OnIpPartChanged)));
-
-
-        //[Category("Wu")]
-        //[Description("IpPart4")]
-        //public int IpPart4
-        //{
-        //    get { return (int)GetValue(IpPart4Property); }
-        //    set { SetValue(IpPart4Property, value); }
-        //}
-        //public static readonly DependencyProperty IpPart4Property =
-        //            DependencyProperty.Register("IpPart4", typeof(int), typeof(WuIpBox), new FrameworkPropertyMetadata(default(int), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender,
-        //                new PropertyChangedCallback(OnIpPartChanged)));
-
-
-        [Category("Wu")]
-        [Description("标题")]
-        public string IpTitle
-        {
-            get { return (string)GetValue(IpTitleProperty); }
-            set { SetValue(IpTitleProperty, value); }
-        }
-        public static readonly DependencyProperty IpTitleProperty =
-                    DependencyProperty.Register("IpTitle", typeof(string), typeof(WuIpBox), new FrameworkPropertyMetadata(default(string), FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
 
         private void TextBox_PreviewKeyDown(object sender, KeyEventArgs e)
