@@ -61,6 +61,11 @@ namespace Wu.CommTool.ViewModels
 
         #region 命令
         /// <summary>
+        /// definity
+        /// </summary>
+        public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
         /// 导航命令
         /// </summary>
         public DelegateCommand<MenuBar> NavigateCommand { get; private set; }
@@ -86,10 +91,7 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        /// <summary>
-        /// definity
-        /// </summary>
-        public DelegateCommand<string> ExecuteCommand { get; private set; }
+       
 
         public void Configure()
         {
