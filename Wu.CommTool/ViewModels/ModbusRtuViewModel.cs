@@ -96,7 +96,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 接收的数据总数
         /// </summary>
-        public int ReceivBytesCount { get => _ReceiveBytesCount; set => SetProperty(ref _ReceiveBytesCount, value); }
+        public int ReceiveBytesCount { get => _ReceiveBytesCount; set => SetProperty(ref _ReceiveBytesCount, value); }
         private int _ReceiveBytesCount = 0;
 
         /// <summary>
@@ -333,7 +333,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private void Clear()
         {
-            ReceivBytesCount = 0;
+            ReceiveBytesCount = 0;
             SendBytesCount = 0;
             Messages.Clear();
         }
@@ -479,6 +479,7 @@ namespace Wu.CommTool.ViewModels
                 {
                     Analyse(list);
                 }
+                ReceiveBytesCount+=list.Count;
 
                 //若暂停更新接收数据 则不显示
                 if (IsPause)
