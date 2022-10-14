@@ -13,7 +13,10 @@ MqttServer
 MqttClient
 添加发送数据格式选择(json ascii等)
 添加接收数据格式选择  16进制/json
+已订阅的主题不可编辑
+添加订阅主题后, 编辑需要实现通知后台更新
 
+增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
 
 
 
