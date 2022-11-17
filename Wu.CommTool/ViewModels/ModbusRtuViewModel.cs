@@ -26,6 +26,8 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.IO;
 using Microsoft.Win32;
+using System.Windows.Forms;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -439,7 +441,7 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                #region OLD 该方法需要等待一定的时间接收完数据, 由于长数据与短数据接收时间不同,会导致多条断数据数据被合并为一条或一条长数据被分成多条, 该方法并不实用
+                #region OLD 1 该方法需要等待一定的时间接收完数据, 由于长数据与短数据接收时间不同,会导致多条断数据数据被合并为一条或一条长数据被分成多条, 该方法并不实用
                 //Thread.Sleep(60);       //延时读取数据 等待数据接收完成
                 //if (!SerialPort.IsOpen)
                 //{
@@ -453,24 +455,44 @@ namespace Wu.CommTool.ViewModels
                 #endregion
 
 
-                #region 接收数据
                 //若串口未开启则返回
                 if (!SerialPort.IsOpen)
                 {
                     return;
                 }
 
+                #region 接收数据
                 //接收的数据缓存
                 List<byte> list = new();
-                //Thread.Sleep(40);     //若数据接收不完整 尝试添加等待接收一定量的数据
-                //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
-
                 if (ComConfig.IsOpened == false)
                     return;
+
+                //先发送消息, 并缓存该条消息, 接收期间持续添加接收的数据
+                var msg = new MessageData("", DateTime.Now, MessageType.Receive);
+                if (!IsPause)
+                {
+                    ShowMessage(msg);
+                }
+
+                //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
                 while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
                 {
-                    list.Add((byte)SerialPort.ReadByte());
-                    Thread.Sleep(1);
+                    #region 修改为一次读取多个, 这样可以适当增加休眠的等待时间, 避免由于设备响应速度慢导致一条数据变为多条数据
+                    int dataCount = SerialPort.BytesToRead;          //获取数据量
+                    byte[] tempBuffer = new byte[dataCount];         //声明数组
+                    SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入buf 
+                    list.AddRange(tempBuffer);                       //添加进接收的数据列表
+                    if (!IsPause)
+                    {
+                        Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
+                    }
+                    Thread.Sleep(35);                 //等待数毫秒后确认是否读取完成
+                    #endregion
+
+                    #region old 2 该方法每读一个字节都延时一段时间, 会导致延时较高, 若调低延时则接收数据可能会分成多条
+                    //list.Add((byte)SerialPort.ReadByte());
+                    //Thread.Sleep(2);
+                    #endregion
                 }
                 #endregion
 
@@ -479,14 +501,13 @@ namespace Wu.CommTool.ViewModels
                 {
                     Analyse(list);
                 }
-                ReceiveBytesCount+=list.Count;
+                ReceiveBytesCount += list.Count;
 
                 //若暂停更新接收数据 则不显示
                 if (IsPause)
                     return;
 
-                //ShowMessage(BitConverter.ToString(buf).Replace('-', ' '), MessageType.Receive);
-                ShowMessage(BitConverter.ToString(list.ToArray()).Replace('-', ' '), MessageType.Receive);
+                //ShowMessage(BitConverter.ToString(list.ToArray()).Replace('-', ' '), MessageType.Receive);
             }
             catch (Exception ex)
             {
@@ -705,6 +726,28 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
+        /// 界面显示数据
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="type"></param>
+        protected void ShowMessage(MessageData msg)
+        {
+            try
+            {
+                void action()
+                {
+                    Messages.Add(msg);
+                    while (Messages.Count > 100)
+                    {
+                        Messages.RemoveAt(0);
+                    }
+                }
+                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+            }
+            catch (Exception) { }
+        }
+
+        /// <summary>
         /// 自动搜索串口设备
         /// </summary>
         /// <exception cref="NotImplementedException"></exception>
@@ -751,7 +794,7 @@ namespace Wu.CommTool.ViewModels
                 //配置文件目录
                 string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
                 Wu.Utils.IOUtil.Exists(dict);
-                SaveFileDialog sfd = new SaveFileDialog()
+                Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
                     Filter = "json files(*.jsonModbusRtuConfig)|*.jsonModbusRtuConfig",    //文件格式过滤器
