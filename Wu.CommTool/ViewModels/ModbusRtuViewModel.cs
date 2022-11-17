@@ -457,22 +457,17 @@ namespace Wu.CommTool.ViewModels
 
                 //若串口未开启则返回
                 if (!SerialPort.IsOpen)
-                {
                     return;
-                }
 
                 #region 接收数据
                 //接收的数据缓存
                 List<byte> list = new();
                 if (ComConfig.IsOpened == false)
                     return;
-
                 //先发送消息, 并缓存该条消息, 接收期间持续添加接收的数据
                 var msg = new MessageData("", DateTime.Now, MessageType.Receive);
                 if (!IsPause)
-                {
                     ShowMessage(msg);
-                }
 
                 //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
                 while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
@@ -480,22 +475,20 @@ namespace Wu.CommTool.ViewModels
                     #region 修改为一次读取多个, 这样可以适当增加休眠的等待时间, 避免由于设备响应速度慢导致一条数据变为多条数据
                     int dataCount = SerialPort.BytesToRead;          //获取数据量
                     byte[] tempBuffer = new byte[dataCount];         //声明数组
-                    SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入buf 
+                    SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
                     list.AddRange(tempBuffer);                       //添加进接收的数据列表
                     if (!IsPause)
-                    {
                         Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
-                    }
-                    Thread.Sleep(35);                 //等待数毫秒后确认是否读取完成
-                    #endregion
 
-                    #region old 2 该方法每读一个字节都延时一段时间, 会导致延时较高, 若调低延时则接收数据可能会分成多条
-                    //list.Add((byte)SerialPort.ReadByte());
-                    //Thread.Sleep(2);
+                    Thread.Sleep(35);                 //等待数毫秒后确认是否读取完成
                     #endregion
                 }
                 #endregion
 
+                #region old 2 该方法每读一个字节都延时一段时间, 会导致延时较高, 若调低延时则接收数据可能会分成多条
+                //list.Add((byte)SerialPort.ReadByte());
+                //Thread.Sleep(2);
+                #endregion
                 //若自动读取开启则解析接收的数据
                 if (AutoReadConfig.IsOpened)
                 {
