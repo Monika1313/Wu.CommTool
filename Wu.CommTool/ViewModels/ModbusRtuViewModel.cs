@@ -469,20 +469,65 @@ namespace Wu.CommTool.ViewModels
                 if (!IsPause)
                     ShowMessage(msg);
 
-                //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
-                while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
+                int times = 0;
+                do
                 {
-                    #region 修改为一次读取多个, 这样可以适当增加休眠的等待时间, 避免由于设备响应速度慢导致一条数据变为多条数据
-                    int dataCount = SerialPort.BytesToRead;          //获取数据量
-                    byte[] tempBuffer = new byte[dataCount];         //声明数组
-                    SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
-                    list.AddRange(tempBuffer);                       //添加进接收的数据列表
-                    if (!IsPause)
-                        Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
+                    if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
+                    {
+                        times = 0;
+                        int dataCount = SerialPort.BytesToRead;          //获取数据量
+                        byte[] tempBuffer = new byte[dataCount];         //声明数组
+                        SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
+                        list.AddRange(tempBuffer);                       //添加进接收的数据列表
+                        if (!IsPause)
+                            Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
 
-                    Thread.Sleep(35);                 //等待数毫秒后确认是否读取完成
-                    #endregion
-                }
+                        //限制一次接收的最大数量
+                        if (list.Count > 200)
+                            break;
+                    }
+                    else
+                    {
+                        times++;
+                        Thread.Sleep(1);
+                    }
+
+                    //if (SerialPort.BytesToRead == 0)
+                    //{
+                    //    times++;
+                    //    Thread.Sleep(1);
+                    //}
+                    //else
+                    //    times = 0;
+                    //int dataCount = SerialPort.BytesToRead;          //获取数据量
+                    //byte[] tempBuffer = new byte[dataCount];         //声明数组
+                    //SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
+                    //list.AddRange(tempBuffer);                       //添加进接收的数据列表
+                    //if (!IsPause)
+                    //    Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
+
+                    ////限制一次接收的最大数量
+                    //if (list.Count > 300)
+                    //    break;
+                } while (times >= 35);
+
+
+
+                //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
+                //while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
+                //{
+                //    #region 修改为一次读取多个, 这样可以适当增加休眠的等待时间, 避免由于设备响应速度慢导致一条数据变为多条数据
+                //    int dataCount = SerialPort.BytesToRead;          //获取数据量
+                //    byte[] tempBuffer = new byte[dataCount];         //声明数组
+                //    SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
+                //    list.AddRange(tempBuffer);                       //添加进接收的数据列表
+                //    if (!IsPause)
+                //        Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
+
+                //    Thread.Sleep(35);                 //等待数毫秒后确认是否读取完成
+
+                //    #endregion
+                //}
                 #endregion
 
                 #region old 2 该方法每读一个字节都延时一段时间, 会导致延时较高, 若调低延时则接收数据可能会分成多条
