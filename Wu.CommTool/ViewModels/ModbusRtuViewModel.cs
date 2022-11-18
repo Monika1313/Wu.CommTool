@@ -464,11 +464,10 @@ namespace Wu.CommTool.ViewModels
                 List<byte> list = new();
                 if (ComConfig.IsOpened == false)
                     return;
-                //先发送消息, 并缓存该条消息, 接收期间持续添加接收的数据
+                //界面展示接收消息, 并缓存该条消息, 接收期间持续添加接收的数据
                 var msg = new MessageData("", DateTime.Now, MessageType.Receive);
                 if (!IsPause)
                     ShowMessage(msg);
-
                 int times = 0;
                 do
                 {
@@ -481,8 +480,8 @@ namespace Wu.CommTool.ViewModels
                         list.AddRange(tempBuffer);                       //添加进接收的数据列表
                         if (!IsPause)
                             Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
-                        //限制一次接收的最大数量
-                        if (list.Count > 200)
+                        //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断结束
+                        if (list.Count > 300)
                             break;
                     }
                     else
@@ -490,7 +489,7 @@ namespace Wu.CommTool.ViewModels
                         times++;
                         Thread.Sleep(1);
                     }
-                } while (times >= 35);
+                } while (times < 30);
 
                 #region MyRegion
                 //if (SerialPort.BytesToRead == 0)
@@ -512,7 +511,7 @@ namespace Wu.CommTool.ViewModels
                 //    break; 
                 #endregion
 
-
+                //030300000078
                 //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
                 //while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
                 //{
