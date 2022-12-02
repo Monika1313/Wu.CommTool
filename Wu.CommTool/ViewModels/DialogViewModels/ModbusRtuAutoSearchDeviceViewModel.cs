@@ -48,6 +48,10 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
 
             GetComPorts();
             SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
+
+            //默认选中9600无校验
+            SelectedBaudRates.Add(BaudRate._9600);
+            SelectedParitys.Add(Parity.None);
         }
 
         private void ParitySelectionChanged(object obj)
@@ -57,12 +61,17 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             SelectedParitys = collection.ToList();
         }
 
+        /// <summary>
+        /// 波特率选框修改时
+        /// </summary>
+        /// <param name="obj"></param>
         private void BaudRateSelectionChanged(object obj)
         {
+            //获取选中项列表
             System.Collections.IList items = (System.Collections.IList)obj;
             var collection = items.Cast<BaudRate>();
+            //获取所有选中项
             SelectedBaudRates = collection.ToList();
-
         }
 
         #region **************************************** 属性 ****************************************
