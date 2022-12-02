@@ -23,6 +23,8 @@ MqttClient
 增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
 
 
+ModbusRtu 接收数据需要验证, 否则监控通讯时,数据会合并为一条数据显示,影响查看
+
 
 2022 1117
 ModbusRtu更新接收数据显示
