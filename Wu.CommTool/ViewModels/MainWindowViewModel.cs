@@ -91,7 +91,7 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-       
+
 
         public void Configure()
         {
@@ -109,6 +109,7 @@ namespace Wu.CommTool.ViewModels
             //MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt", NameSpace = nameof(MqttView) });
             MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "Mqtt-Server", NameSpace = nameof(MqttServerView) });
             MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) });
+            MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "转换工具", NameSpace = nameof(ConvertToolView) });
             MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) });
         }
 

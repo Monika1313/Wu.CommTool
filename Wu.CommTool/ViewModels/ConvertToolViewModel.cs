@@ -6,12 +6,12 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
-using Wu.CommTool.Common;
-using Wu.CommTool.Extensions;
+using Wu.Wpf.Common;
+using Wu.Wpf.Extensions;
 
 namespace Wu.CommTool.ViewModels
 {
-    public class MqttViewModel : NavigationViewModel, IDialogHostAware
+    public class ConvertToolViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -19,8 +19,8 @@ namespace Wu.CommTool.ViewModels
         public string DialogHostName { get; set; }
         #endregion
 
-        public MqttViewModel() { }
-        public MqttViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public ConvertToolViewModel() { }
+        public ConvertToolViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -67,7 +67,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Search();
+            
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Wu.CommTool.ViewModels
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
-
+        
         /// <summary>
         /// 取消
         /// </summary>
@@ -138,7 +138,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 UpdateLoading(true);
-
+                
             }
             catch (Exception ex)
             {

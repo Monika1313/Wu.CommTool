@@ -66,6 +66,7 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();                                           //关于
+            containerRegistry.RegisterForNavigation<ConvertToolView, ConvertToolViewModel>();                               //小工具界面
         }
 
         /// <summary>
