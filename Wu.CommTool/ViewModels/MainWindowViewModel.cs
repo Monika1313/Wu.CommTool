@@ -105,10 +105,10 @@ namespace Wu.CommTool.ViewModels
         void CreateMenuBar()
         {
             MenuBars = new ObservableCollection<MenuBar>();
-            MenuBars.Add(new MenuBar() { Icon = "Bug", Title = "ModbusRtu", NameSpace = nameof(ModbusRtuView) });
+            MenuBars.Add(new MenuBar() { Icon = "Bug", Title = "Modbus-Rtu", NameSpace = nameof(ModbusRtuView) });
             //MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt", NameSpace = nameof(MqttView) });
-            MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "MqttServer", NameSpace = nameof(MqttServerView) });
-            MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "MqttClient", NameSpace = nameof(MqttClientView) });
+            MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "Mqtt-Server", NameSpace = nameof(MqttServerView) });
+            MenuBars.Add(new MenuBar() { Icon = "LadyBug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) });
             MenuBars.Add(new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) });
         }
 

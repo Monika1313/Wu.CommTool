@@ -408,6 +408,7 @@ namespace Wu.CommTool.ViewModels
                         var data = list.ToArray();
                         SendBytesCount += data.Length;//统计发送数据总数
                         SerialPort.Write(data, 0, data.Length);//发送数据
+                        SendBytesCount += data.Length;//计算发送的数据量
                         ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
                         return true;
                     }
@@ -538,6 +539,7 @@ namespace Wu.CommTool.ViewModels
                 {
                     Analyse(list);
                 }
+                //计算总接收数据量
                 ReceiveBytesCount += list.Count;
 
                 //若暂停更新接收数据 则不显示
