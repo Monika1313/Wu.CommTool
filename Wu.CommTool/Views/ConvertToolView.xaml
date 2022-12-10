@@ -9,6 +9,10 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <TextBlock Text="转换工具" />
+        <TextBlock
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            FontSize="25"
+            Text="转换工具...待开发......" />
     </Grid>
 </UserControl>

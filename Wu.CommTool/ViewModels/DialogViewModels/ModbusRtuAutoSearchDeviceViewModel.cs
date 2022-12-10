@@ -54,6 +54,10 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             SelectedParitys.Add(Parity.None);
         }
 
+        /// <summary>
+        /// 校验位选框修改时
+        /// </summary>
+        /// <param name="obj"></param>
         private void ParitySelectionChanged(object obj)
         {
             IList items = (IList)obj;
@@ -118,7 +122,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         private string _SendMessage = string.Empty;
 
         /// <summary>
-        /// 搜索标志位
+        /// 搜索停止标志位
         /// </summary>
         public bool IsSearchStoped { get => _IsSearchStoped; set => SetProperty(ref _IsSearchStoped, value); }
         private bool _IsSearchStoped = true;
@@ -158,7 +162,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         public DelegateCommand<object> BaudRateSelectionChangedCommand { get; private set; }
 
         /// <summary>
-        /// definity
+        /// 校验位选框选项修改
         /// </summary>
         public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
         #endregion

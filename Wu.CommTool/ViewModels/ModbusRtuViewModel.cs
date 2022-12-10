@@ -28,6 +28,10 @@ using System.IO;
 using Microsoft.Win32;
 using System.Windows.Forms;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Prism.Regions;
+using ImTools;
+using System.Collections;
+using System.Threading.Tasks;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -47,15 +51,191 @@ namespace Wu.CommTool.ViewModels
             this.provider = provider;
             this.dialogHost = dialogHost;
             ExecuteCommand = new(Execute);
-
+            ModbusRtuFunChangedCommand = new DelegateCommand<MenuBar>(ModbusRtuFunChanged);
             SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
+            BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
+            ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
+
 
             //更新串口列表
             GetComPorts();
 
-
+            //默认选中9600无校验
+            SelectedBaudRates.Add(BaudRate._9600);
+            SelectedParitys.Add(Models.Parity.None);
         }
 
+        /// <summary>
+        /// ModbusRtu功能选择修改
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ModbusRtuFunChanged(MenuBar obj)
+        {
+            try
+            {
+                switch (obj.NameSpace)
+                {
+                    case "0":
+                        ModbusRtuFunIndex = 0;
+                        IsDrawersOpen2.IsLeftDrawerOpen = false;
+                        break;
+                    case "1":
+                        ModbusRtuFunIndex = 1;
+                        IsDrawersOpen2.IsLeftDrawerOpen = false;
+                        break;
+                    case "2":
+                        ModbusRtuFunIndex = 2;
+                        IsDrawersOpen2.IsLeftDrawerOpen = false;
+                        break;
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 校验位选框修改时
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ParitySelectionChanged(object obj)
+        {
+            IList items = (IList)obj;
+            var collection = items.Cast<Wu.CommTool.Models.Parity>();
+            SelectedParitys = collection.ToList();
+        }
+
+        /// <summary>
+        /// 波特率选框修改时
+        /// </summary>
+        /// <param name="obj"></param>
+        private void BaudRateSelectionChanged(object obj)
+        {
+            //获取选中项列表
+            System.Collections.IList items = (System.Collections.IList)obj;
+            var collection = items.Cast<BaudRate>();
+            //获取所有选中项
+            SelectedBaudRates = collection.ToList();
+        }
+
+        /// <summary>
+        /// 自动搜索ModbusRtu设备
+        /// </summary>
+        private async void SearchDevices()
+        {
+            try
+            {
+                //设置串口
+                //修改串口设置
+                if (SelectedBaudRates.Count.Equals(0))
+                {
+                    ShowErrorMessage("未选择要搜索的波特率");
+                    return;
+                }
+                if (SelectedParitys.Count.Equals(0))
+                {
+                    ShowErrorMessage("未选择要搜索的校验位");
+                    return;
+                }
+
+                //打开串口
+                OperatePort();
+                if (ComConfig.IsOpened == false)
+                {
+                    return;
+                }
+
+                SearchDeviceState = 1;//标记状态为搜索设备中
+                //清空搜索到的设备列表
+                ModbusRtuDevices.Clear();
+
+                //遍历选项
+
+                //Flag:
+                foreach (var baud in SelectedBaudRates)
+                {
+                    foreach (var parity in SelectedParitys)
+                    {
+                        //搜索
+                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
+
+                        for (int i = 0; i <= 255; i++)
+                        {
+                            //当前搜索的设备
+                            CurrentDevice = new()
+                            {
+                                Address = i,
+                                BaudRate = baud,
+                                Parity = parity,
+                                DataBits = ComConfig.DataBits,
+                                StopBits = ComConfig.StopBits
+                            };
+
+                            //修改设置
+                            SerialPort.BaudRate = (int)baud;
+                            SerialPort.Parity = (System.IO.Ports.Parity)parity;
+                            SendMessage = $"{i:X2}0300000001";//读取第一个字
+                            if (ComConfig.IsOpened == false)
+                                break;
+                            Send();
+                            await Task.Delay(100);
+                        }
+                        if (ComConfig.IsOpened == false)
+                            break;
+                    }
+                    if (ComConfig.IsOpened == false)
+                        break;
+                }
+                if (ComConfig.IsOpened)
+                {
+                    ShowMessage("搜索完成");
+                    OperatePort();
+                }
+                else
+                {
+                    ShowMessage("停止搜索");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                SearchDeviceState = 2;//标记状态为搜索结束
+            }
+        }
+
+        #region 搜索设备 属性
+        /// <summary>
+        /// 当前搜索的ModbusRtu设备
+        /// </summary>
+        public ModbusRtuDevice CurrentDevice { get => _CurrentDevice; set => SetProperty(ref _CurrentDevice, value); }
+        private ModbusRtuDevice _CurrentDevice = new();
+
+        /// <summary>
+        /// 搜索设备的状态 0=未开始搜索 1=搜索中 2=搜索结束/搜索中止
+        /// </summary>
+        public int SearchDeviceState { get => _SearchDeviceState; set => SetProperty(ref _SearchDeviceState, value); }
+        private int _SearchDeviceState = 0;
+
+
+        /// <summary>
+        /// 搜索到的ModbusRtu设备
+        /// </summary>
+        public ObservableCollection<ModbusRtuDevice> ModbusRtuDevices { get => _ModbusRtuDevices; set => SetProperty(ref _ModbusRtuDevices, value); }
+        private ObservableCollection<ModbusRtuDevice> _ModbusRtuDevices = new();
+
+        /// <summary>
+        /// 选中的波特率
+        /// </summary>
+        public IList<BaudRate> SelectedBaudRates { get => _SelectedBaudRates; set => SetProperty(ref _SelectedBaudRates, value); }
+        private IList<BaudRate> _SelectedBaudRates = new List<BaudRate>();
+
+        ///// <summary>
+        ///// 选中的校验方式
+        ///// </summary>
+        public IList<Wu.CommTool.Models.Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
+        private IList<Wu.CommTool.Models.Parity> _SelectedParitys = new List<Wu.CommTool.Models.Parity>();
+        #endregion
 
 
         #region **************************************** 属性 ****************************************
@@ -64,6 +244,18 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public IsDrawersOpen IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
         private IsDrawersOpen _IsDrawersOpen = new();
+
+        /// <summary>
+        /// 2层抽屉
+        /// </summary>
+        public IsDrawersOpen IsDrawersOpen2 { get => _IsDrawersOpen2; set => SetProperty(ref _IsDrawersOpen2, value); }
+        private IsDrawersOpen _IsDrawersOpen2 = new();
+
+        /// <summary>
+        /// 3层抽屉
+        /// </summary>
+        public IsDrawersOpen IsDrawersOpen3 { get => _IsDrawersOpen3; set => SetProperty(ref _IsDrawersOpen3, value); }
+        private IsDrawersOpen _IsDrawersOpen3 = new();
 
         /// <summary>
         /// Com口配置
@@ -87,7 +279,7 @@ namespace Wu.CommTool.ViewModels
         /// 发送的消息
         /// </summary>
         public string SendMessage { get => _SendMessage; set => SetProperty(ref _SendMessage, value); }
-        private string _SendMessage = string.Empty;
+        private string _SendMessage = "01 03 0000 0001";
 
         /// <summary>
         /// Crc校验模式
@@ -130,6 +322,24 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public int TransitionerIndex { get => _TransitionerIndex; set => SetProperty(ref _TransitionerIndex, value); }
         private int _TransitionerIndex = 0;
+
+        /// <summary>
+        /// ModbusRtu功能菜单
+        /// </summary>
+        public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
+        private ObservableCollection<MenuBar> _MenuBars = new()
+            {
+                new MenuBar() { Icon = "Number1", Title = "自定义数据帧", NameSpace = "0" },
+                new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = "1" },
+                new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = "2" },
+            };
+
+
+        /// <summary>
+        /// ModbusRtu功能选择Index
+        /// </summary>
+        public int ModbusRtuFunIndex { get => _ModbusRtuFunIndex; set => SetProperty(ref _ModbusRtuFunIndex, value); }
+        private int _ModbusRtuFunIndex = 0;
         #endregion
 
 
@@ -138,6 +348,21 @@ namespace Wu.CommTool.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// ModbusRtu功能选择修改
+        /// </summary>
+        public DelegateCommand<MenuBar> ModbusRtuFunChangedCommand { get; private set; }
+
+        /// <summary>
+        /// 波特率选框选项改变
+        /// </summary>
+        public DelegateCommand<object> BaudRateSelectionChangedCommand { get; private set; }
+
+        /// <summary>
+        /// 校验位选框选项修改
+        /// </summary>
+        public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
         #endregion
 
 
@@ -154,18 +379,21 @@ namespace Wu.CommTool.ViewModels
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "Pause": Pause(); break;
-                case "AreaData": AreaData(); break;                                     //周期读取区域数据
-                case "AutoSearch": OpenAutoSearchView(); break;
-                case "Send": Send(); break;                                             //发送数据
-                case "GetComPorts": GetComPorts(); break;                               //查找Com口
-                case "Clear": Clear(); break;                                           //清空信息
-                case "OpenCom": OpenCom(); break;                                       //打开串口
-                case "OperatePort": OperatePort(); break;                               //操作串口
-                case "CloseCom": CloseCom(); break;                                     //关闭串口
-                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;         //打开配置抽屉
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;  //打开右侧抽屉
-                case "OpenAutoRead": OpenAutoRead(); break;                             //打开自动读取
-                case "CloseAutoRead": CloseAutoRead(); break;                           //关闭自动读取
+                case "AreaData": AreaData(); break;                                             //周期读取区域数据
+                case "AutoSearch": OpenAutoSearchView(); break;                                 //打开搜索页面 该功能已启用
+                case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
+                case "Send": Send(); break;                                                     //发送数据
+                case "GetComPorts": GetComPorts(); break;                                       //查找Com口
+                case "Clear": Clear(); break;                                                   //清空信息
+                case "OpenCom": OpenCom(); break;                                               //打开串口
+                case "OperatePort": OperatePort(); break;                                       //操作串口
+                case "CloseCom": CloseCom(); break;                                             //关闭串口
+                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;                 //打开1层左侧抽屉
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;          //打开1层右侧抽屉
+                case "ShowModbusRtuFunSelect": IsDrawersOpen2.IsLeftDrawerOpen = true; break;   //打开2层抽屉的左侧抽屉
+                case "OpenLeftDrawer3": IsDrawersOpen3.IsLeftDrawerOpen = true; break;          //打开3层抽屉的左侧抽屉
+                case "OpenAutoRead": OpenAutoRead(); break;                                     //打开自动读取
+                case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭自动读取
                 case "ImportConfig": ImportConfig(); break;
                 case "ExportConfig": ExportConfig(); break;
                 default: break;
@@ -313,7 +541,7 @@ namespace Wu.CommTool.ViewModels
                 {
                     SerialPort.Open();               //打开串口
                     ComConfig.IsOpened = true;      //标记串口已打开
-                    ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}");
+                    ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
                 }
                 catch (Exception ex)
                 {
@@ -345,19 +573,20 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private bool Send()
         {
-            //TODO 发送数据
             try
             {
-                //串口未打开
+                //串口未打开 打开串口
                 if (ComConfig.IsOpened == false)
                 {
-                    ShowMessage("串口未打开", MessageType.Error);
-                    return false;
+                    ShowErrorMessage("串口未打开");
+                    ShowMessage("尝试打开串口...");
+                    OpenCom();
                 }
-                //发送数据不为空
+
+                //发送数据不能为空
                 if (SendMessage is null || SendMessage.Length.Equals(0))
                 {
-                    ShowMessage("发送的数据不能为空", MessageType.Error);
+                    ShowErrorMessage("发送的数据不能为空");
                     return false;
                 }
 
@@ -365,7 +594,7 @@ namespace Wu.CommTool.ViewModels
                 Regex regex = new(@"^[0-9 a-f A-F -]*$");
                 if (!regex.IsMatch(SendMessage))
                 {
-                    ShowMessage("数据字符仅限 0123456789 ABCDEF", MessageType.Error);
+                    ShowErrorMessage("数据字符仅限 0123456789 ABCDEF");
                     return false;
                 }
 
@@ -376,7 +605,8 @@ namespace Wu.CommTool.ViewModels
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"数据转换16进制失败，发送数据位数必须为偶数(16进制一个字节2位数)。");
+                    ShowErrorMessage($"数据转换16进制失败，发送数据位数量必须为偶数(16进制一个字节2位数)。");
+                    return false; 
                 }
 
                 if (SerialPort.IsOpen)
@@ -414,18 +644,18 @@ namespace Wu.CommTool.ViewModels
                     }
                     catch (Exception ex)
                     {
-                        ShowMessage(ex.Message);
+                        ShowErrorMessage(ex.Message);
                     }
                 }
                 else
                 {
-                    ShowMessage("串口未打开", MessageType.Error);
+                    ShowErrorMessage("串口未打开");
                 }
                 return false;
             }
             catch (Exception ex)
             {
-                ShowMessage(ex.Message, MessageType.Error);
+                ShowErrorMessage(ex.Message);
                 return false;
             }
         }
@@ -534,6 +764,17 @@ namespace Wu.CommTool.ViewModels
                 //list.Add((byte)SerialPort.ReadByte());
                 //Thread.Sleep(2);
                 #endregion
+
+                //TODO 搜索时将验证通过的添加至搜索到的设备列表
+                if (SearchDeviceState != 2)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                    {
+                        ModbusRtuDevices.Add(CurrentDevice);
+                    }));
+                }
+                
+
                 //若自动读取开启则解析接收的数据
                 if (AutoReadConfig.IsOpened)
                 {
@@ -723,11 +964,24 @@ namespace Wu.CommTool.ViewModels
                         string name = deviceName.Substring(0, startIndex - 1);
                         //添加进列表
                         ComPorts.Add(new KeyValuePair<string, string>(key, name));
+
                     }
                 }
                 if (ComPorts.Count != 0)
                 {
-                    ComConfig.Port = ComPorts[0];
+                    //查找第一个USB设备
+                    var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
+                    //搜索结果不为空
+                    if (usbDevice.Key != null)
+                    {
+                        //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
+                        ComConfig.Port = usbDevice;
+                    }
+                    else
+                    {
+                        //没有usb设备则选中第一个
+                        ComConfig.Port = ComPorts[0];
+                    }
                 }
                 string str = $"获取串口成功, 共{ComPorts.Count}个。";
                 foreach (var item in ComPorts)

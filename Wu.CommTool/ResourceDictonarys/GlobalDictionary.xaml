@@ -21,6 +21,37 @@
     <SolidColorBrush x:Key="Yellow_BorderBrush">#ffe58f</SolidColorBrush>
     <SolidColorBrush x:Key="Yellow_Background">#fdffe5</SolidColorBrush>
 
+    <SolidColorBrush x:Key="Lime_Foreground">#7cb37c</SolidColorBrush>
+    <SolidColorBrush x:Key="Lime_BorderBrush">#eaff8f</SolidColorBrush>
+    <SolidColorBrush x:Key="Lime_Background">#fcffe6</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Purple_Foreground">#531dbd</SolidColorBrush>
+    <SolidColorBrush x:Key="Purple_BorderBrush">#d3adf7</SolidColorBrush>
+    <SolidColorBrush x:Key="Purple_Background">#f9f0ff</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Cyan_Foreground">#531dbd</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_BorderBrush">#d3adf7</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_Background">#e6fffb</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Pink_Foreground">#c45ebe</SolidColorBrush>
+    <SolidColorBrush x:Key="Pink_BorderBrush">#ffadd2</SolidColorBrush>
+    <SolidColorBrush x:Key="Pink_Background">#fff0f6</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Volcano_Foreground">#dc6b08</SolidColorBrush>
+    <SolidColorBrush x:Key="Volcano_BorderBrush">#ffd591</SolidColorBrush>
+    <SolidColorBrush x:Key="Volcano_Background">#fff7e6</SolidColorBrush>
+
+    <SolidColorBrush x:Key="GeekBlue_Foreground">#1d39cf</SolidColorBrush>
+    <SolidColorBrush x:Key="GeekBlue_BorderBrush">#adc6ff</SolidColorBrush>
+    <SolidColorBrush x:Key="GeekBlue_Background">#f0f5ff</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Orange_Foreground">#c41d7f</SolidColorBrush>
+    <SolidColorBrush x:Key="Orange_BorderBrush">#ffadd2</SolidColorBrush>
+    <SolidColorBrush x:Key="Orange_Background">#fff7e6</SolidColorBrush>
+
+    <SolidColorBrush x:Key="Gold_Foreground">#d48806</SolidColorBrush>
+    <SolidColorBrush x:Key="Gold_BorderBrush">#ffe58f</SolidColorBrush>
+    <SolidColorBrush x:Key="Gold_Background">#fffbe6</SolidColorBrush>
 
 
     <!--  按钮  -->
@@ -99,6 +130,35 @@
 
     <!--  导航菜单按钮样式  -->
     <Style x:Key="MenuBarsListBoxItem" TargetType="ListBoxItem">
+        <Setter Property="MinHeight" Value="40" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                    <Grid>
+                        <Border x:Name="borderHeader" />
+                        <Border x:Name="border" />
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="borderHeader" Property="BorderThickness" Value="4,0,0,0" />
+                            <Setter TargetName="borderHeader" Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}" />
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                            <Setter TargetName="border" Property="Opacity" Value="0.2" />
+                        </Trigger>
+
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                            <Setter TargetName="border" Property="Opacity" Value="0.2" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  导航菜单按钮样式  -->
+    <Style x:Key="HorizontalMenuBarsListBoxItem" TargetType="ListBoxItem">
         <Setter Property="MinHeight" Value="40" />
         <Setter Property="Template">
             <Setter.Value>
