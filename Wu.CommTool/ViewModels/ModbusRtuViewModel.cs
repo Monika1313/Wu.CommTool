@@ -240,19 +240,19 @@ namespace Wu.CommTool.ViewModels
 
         #region **************************************** 属性 ****************************************
         /// <summary>
-        /// 打开抽屉
+        /// 抽屉1
         /// </summary>
         public IsDrawersOpen IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
         private IsDrawersOpen _IsDrawersOpen = new();
 
         /// <summary>
-        /// 2层抽屉
+        /// 抽屉2
         /// </summary>
         public IsDrawersOpen IsDrawersOpen2 { get => _IsDrawersOpen2; set => SetProperty(ref _IsDrawersOpen2, value); }
         private IsDrawersOpen _IsDrawersOpen2 = new();
 
         /// <summary>
-        /// 3层抽屉
+        /// 抽屉3
         /// </summary>
         public IsDrawersOpen IsDrawersOpen3 { get => _IsDrawersOpen3; set => SetProperty(ref _IsDrawersOpen3, value); }
         private IsDrawersOpen _IsDrawersOpen3 = new();
@@ -316,12 +316,6 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public AutoReadConfig AutoReadConfig { get => _AutoReadConfig; set => SetProperty(ref _AutoReadConfig, value); }
         private AutoReadConfig _AutoReadConfig = new();
-
-        /// <summary>
-        /// TransitionerIndex
-        /// </summary>
-        public int TransitionerIndex { get => _TransitionerIndex; set => SetProperty(ref _TransitionerIndex, value); }
-        private int _TransitionerIndex = 0;
 
         /// <summary>
         /// ModbusRtu功能菜单
@@ -388,14 +382,15 @@ namespace Wu.CommTool.ViewModels
                 case "OpenCom": OpenCom(); break;                                               //打开串口
                 case "OperatePort": OperatePort(); break;                                       //操作串口
                 case "CloseCom": CloseCom(); break;                                             //关闭串口
-                case "ConfigCom": IsDrawersOpen.IsLeftDrawerOpen = true; break;                 //打开1层左侧抽屉
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;          //打开1层右侧抽屉
-                case "ShowModbusRtuFunSelect": IsDrawersOpen2.IsLeftDrawerOpen = true; break;   //打开2层抽屉的左侧抽屉
+                case "ShowModbusRtuFunSelect": IsDrawersOpen.IsLeftDrawerOpen = true; break;    //打开ModbusRtu功能选择左侧抽屉
+                case "ConfigCom": IsDrawersOpen2.IsLeftDrawerOpen = true; break;                //打开ModbusRtu配置左侧抽屉
                 case "OpenLeftDrawer3": IsDrawersOpen3.IsLeftDrawerOpen = true; break;          //打开3层抽屉的左侧抽屉
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;         //打开1层右侧抽屉
                 case "OpenAutoRead": OpenAutoRead(); break;                                     //打开自动读取
                 case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭自动读取
                 case "ImportConfig": ImportConfig(); break;
                 case "ExportConfig": ExportConfig(); break;
+                case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
                 default: break;
             }
         }
@@ -412,7 +407,6 @@ namespace Wu.CommTool.ViewModels
                 timer.Stop();
                 AutoReadConfig.IsOpened = false;
                 ShowMessage("关闭自动读取数据...");
-                TransitionerIndex = 0;
             }
             catch (Exception ex)
             {
@@ -429,25 +423,20 @@ namespace Wu.CommTool.ViewModels
             {
                 //若串口未打开 则开启串口
                 if (!ComConfig.IsOpened)
-                {
                     OpenCom();
-                }
-                //若开启失败则返回
+                //若串口开启失败则返回
                 if (!ComConfig.IsOpened)
-                {
                     return;
-                }
 
                 timer = new()
                 {
                     Interval = AutoReadConfig.Period,   //这里设置的间隔时间单位ms
-                    AutoReset = true                   //设置一直执行
+                    AutoReset = true                    //设置一直执行
                 };
                 timer.Elapsed += TimerElapsed;
                 timer.Start();
                 AutoReadConfig.IsOpened = true;
-                ShowMessage("开启自动读取数据...");
-                TransitionerIndex = 1;
+                ShowMessage("开启数据监控...");
                 IsDrawersOpen.IsRightDrawerOpen = false;
 
                 //生成列表
@@ -801,7 +790,6 @@ namespace Wu.CommTool.ViewModels
         private void Analyse(List<byte> list)
         {
             //TODO 解析数据
-
             //对接收的数据进行CRC校验 若校验失败则直接返回
             //目前仅支持03功能码
 
@@ -820,12 +808,15 @@ namespace Wu.CommTool.ViewModels
             if (list[0] != AutoReadConfig.SlaveId || list[1] != AutoReadConfig.Function && list[2] != AutoReadConfig.Quantity)
                 return;//非请求的数据
             var byteArr = list.ToArray();
+
+            //Todo解析数据
             //将读取的数据写入
             for (int i = 0; i < AutoReadConfig.Quantity; i++)
             {
                 ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
             }
         }
+
 
 
         /// <summary>

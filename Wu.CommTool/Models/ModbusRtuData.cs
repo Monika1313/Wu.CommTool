@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wu.CommTool.Enums;
 
 namespace Wu.CommTool.Models
 {
@@ -31,20 +32,27 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 源数据
         /// </summary>
-        public dynamic OriginValue { get => _OriginValue; set => SetProperty(ref _OriginValue, value); }
-        private dynamic _OriginValue;
+        public dynamic? OriginValue { get => _OriginValue; set => SetProperty(ref _OriginValue, value); }
+        private dynamic? _OriginValue;
 
         /// <summary>
         /// 值
         /// </summary>
-        public dynamic Value { get => _Value; set => SetProperty(ref _Value, value); }
-        private dynamic _Value;
+        public dynamic? Value { get => _Value; set => SetProperty(ref _Value, value); }
+        private dynamic? _Value;
 
         /// <summary>
         /// 数据类型
         /// </summary>
-        public int Type { get => _Type; set => SetProperty(ref _Type, value); }
-        private int _Type;
+        public DataType Type { get => _Type; set => SetProperty(ref _Type, value); }
+        private DataType _Type;
+
+
+        /// <summary>
+        /// 数据更新时间
+        /// </summary>
+        public DateTime? UpdateTime { get => _UpdateTime; set => SetProperty(ref _UpdateTime, value); }
+        private DateTime? _UpdateTime = null;
 
     }
 }
