@@ -54,5 +54,17 @@ namespace Wu.CommTool.Models
         public DateTime? UpdateTime { get => _UpdateTime; set => SetProperty(ref _UpdateTime, value); }
         private DateTime? _UpdateTime = null;
 
+        /// <summary>
+        /// 源字节数组
+        /// </summary>
+        public byte[]? OriginBytes { get => _OriginBytes; set => SetProperty(ref _OriginBytes, value); }
+        private byte[]? _OriginBytes;
+
+        /// <summary>
+        /// 在源字节数组中的位置
+        /// </summary>
+        public int Location { get => _Location; set => SetProperty(ref _Location, value); }
+        private int _Location = 0;
+
     }
 }

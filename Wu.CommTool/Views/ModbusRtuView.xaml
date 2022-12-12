@@ -756,34 +756,54 @@
                                                         <Border
                                                             Margin="3"
                                                             Padding="5"
-                                                            Background="{StaticResource Green_Background}"
                                                             BorderBrush="{StaticResource Green_BorderBrush}"
                                                             BorderThickness="1"
                                                             CornerRadius="4">
+                                                            <Border.Background>
+                                                                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                    <LinearGradientBrush.GradientStops>
+                                                                        <GradientStop Offset="0.5" Color="#B7DCFF" />
+                                                                        <GradientStop Offset="1" Color="#FFA4F6" />
+                                                                        <!--<GradientStop Offset="0.33" Color="#FF5EEF" />
+                                                                        <GradientStop Offset="0.6" Color="#a167f8" />
+                                                                        <GradientStop Offset="1" Color="#456EFF" />-->
+                                                                    </LinearGradientBrush.GradientStops>
+                                                                </LinearGradientBrush>
+                                                            </Border.Background>
                                                             <StackPanel Orientation="Vertical">
+                                                                <StackPanel.Style>
+                                                                    <Style>
+                                                                        <Style.Resources>
+                                                                            <Style TargetType="TextBlock">
+                                                                                <Setter Property="Foreground" Value="Black" />
+                                                                                <Setter Property="Opacity" Value="0.9" />
+                                                                            </Style>
+                                                                        </Style.Resources>
+                                                                    </Style>
+                                                                </StackPanel.Style>
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="地   址：" />
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding Address}" />
+                                                                    <TextBlock Text="地   址：" />
+                                                                    <TextBlock Text="{Binding Address}" />
                                                                 </StackPanel>
 
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="波特率：" />
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding BaudRate}" />
+                                                                    <TextBlock Text="波特率：" />
+                                                                    <TextBlock Text="{Binding BaudRate}" />
                                                                 </StackPanel>
 
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="校   验：" />
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding Parity}" />
+                                                                    <TextBlock Text="校   验：" />
+                                                                    <TextBlock Text="{Binding Parity}" />
                                                                 </StackPanel>
 
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="数据位：" />
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding DataBits}" />
+                                                                    <TextBlock Text="数据位：" />
+                                                                    <TextBlock Text="{Binding DataBits}" />
                                                                 </StackPanel>
 
                                                                 <StackPanel Orientation="Horizontal">
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="停止位：" />
-                                                                    <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding StopBits}" />
+                                                                    <TextBlock Text="停止位：" />
+                                                                    <TextBlock Text="{Binding StopBits}" />
                                                                 </StackPanel>
                                                             </StackPanel>
                                                         </Border>
@@ -1079,6 +1099,17 @@
                         </md:DrawerHost.RightDrawerContent>
                         <!--  主体内容  -->
                         <DockPanel>
+                            <!--<DockPanel.Background>
+                                <LinearGradientBrush>
+                            -->
+                            <!--<GradientStop Offset="0.5" Color="#DDE4FF" />
+                                    <GradientStop Offset="1" Color="#8DA2EE" />-->
+                            <!--
+
+                                    <GradientStop Offset="0.5" Color="#FFADF7" />
+                                    <GradientStop Offset="1" Color="#B1FF96" />
+                                </LinearGradientBrush>
+                            </DockPanel.Background>-->
                             <!--  头部区域  -->
                             <Grid DockPanel.Dock="Top">
                                 <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 数据监控" />
@@ -1276,6 +1307,7 @@
                                     BorderThickness="1"
                                     CornerRadius="5"
                                     DockPanel.Dock="Right">
+
                                     <DataGrid
                                         MinWidth="100"
                                         AutoGenerateColumns="False"
