@@ -14,22 +14,24 @@ namespace Wu.CommTool.Enums
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum DataType : int
     {
-        [Description("字节")]
-        Byte,
+        //[Description("8位无符号整型")]
+        //Byte,
+        //[Description("8位有符号整型")]
+        //Sint,
 
-        [Description("无符号16位整型")]
+        [Description("16位无符号整型")]
         uShort,
-        [Description("有符号16位整型")]
+        [Description("16位有符号整型")]
         Short,
 
-        [Description("无符号32位整型")]
+        [Description("32无符号位整型")]
         uInt,
-        [Description("有符号32位整型")]
+        [Description("32有符号位整型")]
         Int,
 
-        [Description("无符号64位整型")]
+        [Description("64位无符号整型")]
         uLong,
-        [Description("有符号64位整型")]
+        [Description("64位有符号整型")]
         Long,
 
         [Description("32位浮点型")]
@@ -37,9 +39,11 @@ namespace Wu.CommTool.Enums
         [Description("64位浮点型")]
         Double,
 
-        [Description("布尔")]
-        Bool,
+        //[Description("布尔")]
+        //Bool,
         //[Description("字符串")]
         //String
+        //[Description("16位BCD码")]
+        //BCD16
     }
 }

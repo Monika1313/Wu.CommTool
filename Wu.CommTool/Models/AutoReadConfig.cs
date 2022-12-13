@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wu.CommTool.Enums;
 using Wu.Extensions;
 
 namespace Wu.CommTool.Models
@@ -57,7 +58,7 @@ namespace Wu.CommTool.Models
                 RaisePropertyChanged(nameof(DataFrame));
             }
         }
-        private int _StartAddr = 0;
+        private int _StartAddr = 8192;
 
         /// <summary>
         /// 读取数量
@@ -71,13 +72,20 @@ namespace Wu.CommTool.Models
                 RaisePropertyChanged(nameof(DataFrame));
             }
         }
-        private int _Quantity = 120;
+        private int _Quantity = 70;
 
         /// <summary>
         /// 周期
         /// </summary>
         public int Period { get => _Period; set => SetProperty(ref _Period, value); }
         private int _Period = 1000;
+
+
+        /// <summary>
+        /// 字节序设置
+        /// </summary>
+        public ModbusByteOrder ByteOrder { get => _ByteOrder; set => SetProperty(ref _ByteOrder, value); }
+        private ModbusByteOrder _ByteOrder = ModbusByteOrder.ABCD;
 
         /// <summary>
         /// 数据帧

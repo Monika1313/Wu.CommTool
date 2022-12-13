@@ -814,6 +814,11 @@ namespace Wu.CommTool.ViewModels
             for (int i = 0; i < AutoReadConfig.Quantity; i++)
             {
                 ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
+                ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
+                ModbusRtuDatas[i].ModbusByteOrder = AutoReadConfig.ByteOrder; //字节序
+
+                ModbusRtuDatas[i].Location = i*2 +3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+                ModbusRtuDatas[i].UpdateTime = DateTime.Now;    //更新时间
             }
         }
 

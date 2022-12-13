@@ -1009,6 +1009,7 @@
                                             MinWidth="135"
                                             hc:InfoElement.Placeholder="请选择校验位..."
                                             hc:TitleElement.Title="字节序"
+                                            SelectedItem="{Binding AutoReadConfig.ByteOrder}"
                                             ItemsSource="{Binding Source={StaticResource ValueModbusByteOrder}}"
                                             Style="{StaticResource FormComboBox}" />
                                         <TextBox
@@ -1188,7 +1189,6 @@
                                                         <DataTrigger Binding="{Binding IsPause}" Value="true">
                                                             <Setter Property="Kind" Value="PlayPause" />
                                                         </DataTrigger>
-
                                                         <DataTrigger Binding="{Binding IsPause}" Value="false">
                                                             <Setter Property="Kind" Value="Pause" />
                                                         </DataTrigger>
@@ -1314,20 +1314,20 @@
                                         Background="Transparent"
                                         CanUserSortColumns="False"
                                         FrozenColumnCount="4"
-                                        ItemsSource="{Binding ModbusRtuDatas}">
-                                        <DataGrid.RowHeaderTemplate>
+                                        ItemsSource="{Binding ModbusRtuDatas}" RowHeaderWidth="60" hc:DataGridAttach.ShowRowNumber="True">
+                                        <!--<DataGrid.RowHeaderTemplate>
                                             <DataTemplate>
                                                 <Grid Width="40">
                                                     <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
                                                 </Grid>
                                             </DataTemplate>
-                                        </DataGrid.RowHeaderTemplate>
+                                        </DataGrid.RowHeaderTemplate>-->
 
                                         <DataGrid.Columns>
                                             <DataGridTemplateColumn Header="名称">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox MinWidth="120" Text="{Binding Name}" />
+                                                        <TextBox MinWidth="120" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1338,9 +1338,8 @@
                                                         <ComboBox
                                                             MinWidth="135"
                                                             Margin="0"
-                                                            hc:InfoElement.Placeholder="请选择校验位..."
                                                             ItemsSource="{Binding Source={StaticResource ValueDataType}}"
-                                                            SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=Default}" />
+                                                            SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1357,7 +1356,7 @@
                                                             Header="源值"
                                                             IsReadOnly="True" />-->
 
-                                            <DataGridTemplateColumn Header="源值">
+                                            <!--<DataGridTemplateColumn Header="源值">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
                                                         <Border
@@ -1366,46 +1365,46 @@
                                                             BorderBrush="{StaticResource Green_BorderBrush}"
                                                             BorderThickness="1"
                                                             CornerRadius="4">
-                                                            <!--<Border.Style>
-                                                            <Style TargetType="Border">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding Operation}" Value="1">
-                                                                        <Setter Property="Background" Value="#f6ffed" />
-                                                                        <Setter Property="BorderBrush" Value="#b7eb8f" />
-                                                                    </DataTrigger>
-                                                                    <DataTrigger Binding="{Binding Operation}" Value="2">
-                                                                        <Setter Property="Background" Value="#e6f7ff" />
-                                                                        <Setter Property="BorderBrush" Value="#91d5ff" />
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </Border.Style>-->
                                                             <TextBlock Foreground="{StaticResource Green_Foreground}" Text="{Binding OriginValue}">
-                                                                <!--<TextBlock.Style>
-                                                                <Style TargetType="TextBlock">
-                                                                    <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding OriginValue}" Value="1">
-                                                                            <Setter Property="Foreground" Value="#389E0D" />
-                                                                        </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding OriginValue}" Value="2">
-                                                                            <Setter Property="Foreground" Value="#096dd9" />
-                                                                        </DataTrigger>
-                                                                    </Style.Triggers>
-                                                                </Style>
-                                                            </TextBlock.Style>-->
                                                             </TextBlock>
                                                         </Border>
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
+                                            </DataGridTemplateColumn>-->
 
+                                            <DataGridTextColumn
+                                                Binding="{Binding DataHex}"
+                                                Header="原始值Hex(高低)"
+                                                IsReadOnly="True" />
+                                            
+                                            
                                             <DataGridTextColumn
                                                 Binding="{Binding Value}"
                                                 Header="值"
                                                 IsReadOnly="True" />
 
                                             <DataGridTextColumn
-                                                Binding="{Binding UpdateTime}"
+                                                Binding="{Binding Unit}"
+                                                Header="单位" />
+                                            
+                                            <!--<DataGridTemplateColumn Header="单位">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox MinWidth="120" Text="{Binding Unit,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>-->
+
+                                            <DataGridTemplateColumn Header="倍率">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox MinWidth="35" Text="{Binding Rate,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+                                            <DataGridTextColumn
+                                                Binding="{Binding UpdateTime,StringFormat={}{0:HH:mm:ss}}"
                                                 Header="更新时间"
                                                 IsReadOnly="True" />
                                         </DataGrid.Columns>
