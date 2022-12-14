@@ -984,43 +984,43 @@
 
                                             <TextBox
                                             hc:TitleElement.Title="从站ID:"
-                                            IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                             Style="{StaticResource FormTextBox}"
-                                            Text="{Binding AutoReadConfig.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding DataMonitorConfig.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
                                             hc:TitleElement.Title="功能码:"
-                                            IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                             IsReadOnly="True"
                                             Style="{StaticResource FormTextBox}"
-                                            Text="{Binding AutoReadConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:00}}" />
+                                            Text="{Binding DataMonitorConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:00}}" />
                                             <TextBox
                                             hc:TitleElement.Title="起始地址:"
-                                            IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                             Style="{StaticResource FormTextBox}"
-                                            Text="{Binding AutoReadConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding DataMonitorConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
                                             hc:TitleElement.Title="读取数量:"
-                                            IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                             Style="{StaticResource FormTextBox}"
-                                            Text="{Binding AutoReadConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            Text="{Binding DataMonitorConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
                                             hc:TitleElement.Title="周期:"
-                                            IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                             Style="{StaticResource FormTextBox}"
-                                            Text="{Binding AutoReadConfig.Period}" />
+                                            Text="{Binding DataMonitorConfig.Period}" />
                                             <ComboBox
                                                 hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                                                 MinWidth="135"
                                                 hc:InfoElement.Placeholder="请选择校验位..."
                                                 hc:TitleElement.Title="字节序"
-                                                SelectedItem="{Binding AutoReadConfig.ByteOrder}"
+                                                SelectedItem="{Binding DataMonitorConfig.ByteOrder}"
                                                 ItemsSource="{Binding Source={StaticResource ValueModbusByteOrder}}"
                                                 Style="{StaticResource FormComboBox}" />
                                             <TextBox
                                             hc:TitleElement.Title="数据帧:" IsReadOnly="True"
-                                            IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                             Style="{StaticResource FormTextBox}"
-                                            Text="{Binding AutoReadConfig.DataFrame, Mode=OneWay}" />
+                                            Text="{Binding DataMonitorConfig.DataFrame, Mode=OneWay}" />
 
                                             <StackPanel
                                             HorizontalAlignment="Center"
@@ -1031,7 +1031,7 @@
                                                 Command="{Binding ExecuteCommand}"
                                                 CommandParameter="OpenAutoRead"
                                                 Content="打开"
-                                                IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                 Style="{StaticResource GreenButton}" />
 
                                                 <Button
@@ -1041,7 +1041,7 @@
                                                 CommandParameter="CloseAutoRead"
                                                 Content="关闭"
                                                 DockPanel.Dock="Left"
-                                                IsEnabled="{Binding AutoReadConfig.IsOpened}"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened}"
                                                 Style="{StaticResource RedButton}" />
                                             </StackPanel>
                                         </StackPanel>
@@ -1249,7 +1249,7 @@
                                         Content="{md:PackIcon Kind=Play}"
                                         Cursor="Hand"
                                         Foreground="{StaticResource Green_Foreground}"
-                                        IsEnabled="{Binding AutoReadConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                        IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
                                     <!--  关闭数据监控  -->
@@ -1262,7 +1262,7 @@
                                         Command="{Binding ExecuteCommand}"
                                         CommandParameter="CloseAutoRead"
                                         Content="{md:PackIcon Kind=Stop}"
-                                        IsEnabled="{Binding AutoReadConfig.IsOpened}"
+                                        IsEnabled="{Binding DataMonitorConfig.IsOpened}"
                                         Style="{StaticResource Red_CircleButton}" />
 
                                     <!--  暂停界面更新  -->
@@ -1417,7 +1417,7 @@
                                         Background="Transparent"
                                         CanUserSortColumns="False"
                                         FrozenColumnCount="4"
-                                        ItemsSource="{Binding ModbusRtuDatas}" RowHeaderWidth="60" hc:DataGridAttach.ShowRowNumber="True">
+                                        ItemsSource="{Binding DataMonitorConfig.ModbusRtuDatas}" RowHeaderWidth="60" hc:DataGridAttach.ShowRowNumber="True">
                                         <!--<DataGrid.RowHeaderTemplate>
                                             <DataTemplate>
                                                 <Grid Width="40">

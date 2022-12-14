@@ -41,6 +41,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 值
         /// </summary>
+        [JsonIgnore]
         public dynamic? Value { get => _Value; set => SetProperty(ref _Value, value); }
         private dynamic? _Value;
 
@@ -93,9 +94,11 @@ namespace Wu.CommTool.Models
         private int _Location = 0;
 
         //当前值的原始字节数组(已转换字节序)
+        [JsonIgnore]
         public byte[]? DataBytes => GetDataBytes(OriginBytes, Location, ModbusByteOrder, Type);
 
         //高位在前 低位在后
+        [JsonIgnore]
         public string DataHex => DataBytes is null ? "00" : BitConverter.ToString(DataBytes.Reverse().ToArray()).Replace('-', ' ');
 
         public override string ToString() => DataHex;

@@ -333,21 +333,10 @@ namespace Wu.CommTool.ViewModels
         private bool _IsPause = false;
 
         /// <summary>
-        /// ModbusRtuDatas
+        /// 数据监控配置
         /// </summary>
-        public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
-        private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
-
-        /// <summary>
-        /// 自动读取配置
-        /// </summary>
-        public AutoReadConfig AutoReadConfig { get => _AutoReadConfig; set => SetProperty(ref _AutoReadConfig, value); }
-        private AutoReadConfig _AutoReadConfig = new();
-
-
-
-
-
+        public DataMonitorConfig DataMonitorConfig { get => _DataMonitorConfig; set => SetProperty(ref _DataMonitorConfig, value); }
+        private DataMonitorConfig _DataMonitorConfig = new();
 
         /// <summary>
         /// ModbusRtu功能菜单
@@ -405,24 +394,31 @@ namespace Wu.CommTool.ViewModels
                 case "Search": GetDataAsync(); break;
                 case "Add": break;
                 case "Pause": Pause(); break;
+
                 case "AreaData": AreaData(); break;                                             //周期读取区域数据
-                case "AutoSearch": OpenAutoSearchView(); break;                                 //打开搜索页面 该功能已启用
+
+                //case "AutoSearch": OpenAutoSearchView(); break;                                 //打开搜索页面 该功能已启用
+
                 case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                 case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
+
                 case "Send": Send(); break;                                                     //发送数据
                 case "GetComPorts": GetComPorts(); break;                                       //查找Com口
-                case "Clear": Clear(); break;                                                   //清空信息
+                case "Clear": Clear(); break;                                                   //清空页面信息
                 case "OpenCom": OpenCom(); break;                                               //打开串口
-                case "OperatePort": OperatePort(); break;                                       //操作串口
                 case "CloseCom": CloseCom(); break;                                             //关闭串口
+                case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
+
                 case "ShowModbusRtuFunSelect": IsDrawersOpen.IsLeftDrawerOpen = true; break;    //打开ModbusRtu功能选择左侧抽屉
                 case "ConfigCom": IsDrawersOpen2.IsLeftDrawerOpen = true; break;                //打开ModbusRtu配置左侧抽屉
                 case "OpenLeftDrawer3": IsDrawersOpen3.IsLeftDrawerOpen = true; break;          //打开3层抽屉的左侧抽屉
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;         //打开1层右侧抽屉
+                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;          //打开1层右侧抽屉
+
                 case "OpenAutoRead": OpenAutoRead(); break;                                     //打开自动读取
                 case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭自动读取
-                case "ImportConfig": ImportConfig(); break;
-                case "ExportConfig": ExportConfig(); break;
+
+                case "ImportConfig": ImportConfig(); break;                                     //导入数据监控配置
+                case "ExportConfig": ExportConfig(); break;                                     //导出数据监控配置
                 case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
                 default: break;
             }
@@ -442,7 +438,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 timer.Stop();
-                AutoReadConfig.IsOpened = false;
+                DataMonitorConfig.IsOpened = false;
                 CloseCom();
                 ShowMessage("关闭自动读取数据...");
             }
@@ -468,23 +464,27 @@ namespace Wu.CommTool.ViewModels
 
                 timer = new()
                 {
-                    Interval = AutoReadConfig.Period,   //这里设置的间隔时间单位ms
+                    Interval = DataMonitorConfig.Period,   //这里设置的间隔时间单位ms
                     AutoReset = true                    //设置一直执行
                 };
                 timer.Elapsed += TimerElapsed;
                 timer.Start();
-                AutoReadConfig.IsOpened = true;
+                DataMonitorConfig.IsOpened = true;
                 ShowMessage("开启数据监控...");
                 IsDrawersOpen.IsRightDrawerOpen = false;
 
+
                 //生成列表
-                ModbusRtuDatas.Clear();
-                for (int i = AutoReadConfig.StartAddr; i < AutoReadConfig.Quantity + AutoReadConfig.StartAddr; i++)
+                if (DataMonitorConfig.ModbusRtuDatas.Count != DataMonitorConfig.Quantity)
                 {
-                    ModbusRtuDatas.Add(new ModbusRtuData()
+                    DataMonitorConfig.ModbusRtuDatas.Clear();
+                    for (int i = DataMonitorConfig.StartAddr; i < DataMonitorConfig.Quantity + DataMonitorConfig.StartAddr; i++)
                     {
-                        Addr = i
-                    }); ;
+                        DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData()
+                        {
+                            Addr = i
+                        }); ;
+                    }
                 }
             }
             catch (Exception ex)
@@ -503,7 +503,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 timer.Stop();
-                SendMessage = AutoReadConfig.DataFrame.Substring(0, AutoReadConfig.DataFrame.Length - 4);
+                SendMessage = DataMonitorConfig.DataFrame.Substring(0, DataMonitorConfig.DataFrame.Length - 4);
                 Send();
             }
             catch (Exception ex)
@@ -521,10 +521,10 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private void AreaData()
         {
-            ModbusRtuDatas.Clear();
+            DataMonitorConfig.ModbusRtuDatas.Clear();
             for (int i = 0; i < 100; i++)
             {
-                ModbusRtuDatas.Add(new ModbusRtuData() { Addr = i });
+                DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData() { Addr = i });
             }
         }
 
@@ -793,7 +793,7 @@ namespace Wu.CommTool.ViewModels
                 #endregion
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表
-                if (SearchDeviceState != 2)
+                if (SearchDeviceState == 1)
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                     {
@@ -803,7 +803,7 @@ namespace Wu.CommTool.ViewModels
                 
 
                 //若自动读取开启则解析接收的数据
-                if (AutoReadConfig.IsOpened)
+                if (DataMonitorConfig.IsOpened)
                 {
                     Analyse(list);
                 }
@@ -843,20 +843,19 @@ namespace Wu.CommTool.ViewModels
                 return;
             //crc校验成功
             //验证数据是否为请求的数据
-            if (list[0] != AutoReadConfig.SlaveId || list[1] != AutoReadConfig.Function && list[2] != AutoReadConfig.Quantity)
+            if (list[0] != DataMonitorConfig.SlaveId || list[1] != DataMonitorConfig.Function && list[2] != DataMonitorConfig.Quantity)
                 return;//非请求的数据
             var byteArr = list.ToArray();
 
             //Todo解析数据
             //将读取的数据写入
-            for (int i = 0; i < AutoReadConfig.Quantity; i++)
+            for (int i = 0; i < DataMonitorConfig.Quantity; i++)
             {
-                ModbusRtuDatas[i].Location = i*2 +3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
-                ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
-                ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
-                ModbusRtuDatas[i].ModbusByteOrder = AutoReadConfig.ByteOrder; //字节序
-
-                ModbusRtuDatas[i].UpdateTime = DateTime.Now;    //更新时间
+                DataMonitorConfig.ModbusRtuDatas[i].Location = i*2 +3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+                DataMonitorConfig.ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
+                DataMonitorConfig.ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
+                DataMonitorConfig.ModbusRtuDatas[i].ModbusByteOrder = DataMonitorConfig.ByteOrder; //字节序
+                DataMonitorConfig.ModbusRtuDatas[i].UpdateTime = DateTime.Now;    //更新时间
             }
         }
 
@@ -928,7 +927,7 @@ namespace Wu.CommTool.ViewModels
                     return;
                 }
                 //停止自动读取
-                if (AutoReadConfig.IsOpened)
+                if (DataMonitorConfig.IsOpened)
                 {
                     CloseAutoRead();
                 }
@@ -1124,10 +1123,10 @@ namespace Wu.CommTool.ViewModels
                 Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonModbusRtuConfig)|*.jsonModbusRtuConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
                     FileName = "MqttClientConfig",                                           //默认文件名
-                    DefaultExt = "jsonModbusRtuConfig",                                     //默认扩展名
+                    DefaultExt = "jsonDMC",                                     //默认扩展名
                     InitialDirectory = dict,                //指定初始的目录
                     OverwritePrompt = true,                                                  //文件已存在警告
                     AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
@@ -1135,7 +1134,7 @@ namespace Wu.CommTool.ViewModels
                 if (sfd.ShowDialog() != true)
                     return;
                 //将当前的配置序列化为json字符串
-                var content = JsonConvert.SerializeObject(AutoReadConfig);
+                var content = JsonConvert.SerializeObject(DataMonitorConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
                 ShowMessage("导出配置完成");
@@ -1162,7 +1161,7 @@ namespace Wu.CommTool.ViewModels
                 OpenFileDialog dlg = new()
                 {
                     Title = "请选择导入配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonModbusRtuConfig)|*.jsonModbusRtuConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
                     InitialDirectory = dict
                 };
@@ -1170,7 +1169,7 @@ namespace Wu.CommTool.ViewModels
                 if (dlg.ShowDialog() != true)
                     return;
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
-                AutoReadConfig = JsonConvert.DeserializeObject<AutoReadConfig>(xx)!;
+                DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
                 ShowMessage("导入配置完成");
             }
             catch (Exception ex)
