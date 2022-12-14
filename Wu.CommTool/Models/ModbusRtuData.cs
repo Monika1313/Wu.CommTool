@@ -99,7 +99,7 @@ namespace Wu.CommTool.Models
 
         //高位在前 低位在后
         [JsonIgnore]
-        public string DataHex => DataBytes is null ? "00" : BitConverter.ToString(DataBytes.Reverse().ToArray()).Replace('-', ' ');
+        public string DataHex => DataBytes is null ? "" : BitConverter.ToString(DataBytes.Reverse().ToArray()).Replace('-', ' ');
 
         public override string ToString() => DataHex;
 
