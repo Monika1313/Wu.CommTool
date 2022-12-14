@@ -1,4 +1,5 @@
 ﻿using HandyControl.Controls;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -33,6 +34,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 源数据Hex
         /// </summary>
+        [JsonIgnore]
         public dynamic? OriginValue { get => _OriginValue; set => SetProperty(ref _OriginValue, value); }
         private dynamic? _OriginValue;
 
@@ -41,7 +43,6 @@ namespace Wu.CommTool.Models
         /// </summary>
         public dynamic? Value { get => _Value; set => SetProperty(ref _Value, value); }
         private dynamic? _Value;
-        //public dynamic? Value => GetVal(DataBytes, Type);
 
 
         /// <summary>
@@ -53,6 +54,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 数据更新时间
         /// </summary>
+        [JsonIgnore]
         public DateTime? UpdateTime { get => _UpdateTime; set => SetProperty(ref _UpdateTime, value); }
         private DateTime? _UpdateTime = null;
 
@@ -72,6 +74,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 源字节数组
         /// </summary>
+        [JsonIgnore]
         public byte[]? OriginBytes
         {
             get => _OriginBytes; 

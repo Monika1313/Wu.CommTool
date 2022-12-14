@@ -15,9 +15,9 @@ using Wu.Extensions;
 namespace Wu.CommTool.Models
 {
     /// <summary>
-    /// 自动读取数据
+    /// ModbusRtu数据监控配置
     /// </summary>
-    public class AutoReadConfig : BindableBase
+    public class DataMonitorConfig : BindableBase
     {
         /// <summary>
         /// 从站地址
@@ -81,7 +81,6 @@ namespace Wu.CommTool.Models
         public int Period { get => _Period; set => SetProperty(ref _Period, value); }
         private int _Period = 1000;
 
-
         /// <summary>
         /// 字节序设置
         /// </summary>
@@ -89,13 +88,13 @@ namespace Wu.CommTool.Models
         private ModbusByteOrder _ByteOrder = ModbusByteOrder.DCBA;
 
         /// <summary>
-        /// 数据帧
+        /// 发送数据帧
         /// </summary>
         public string DataFrame { get => _DataFrame; }
         private string _DataFrame => GetDataFrame();
 
         /// <summary>
-        /// 获取数据帧
+        /// 获取发送数据帧
         /// </summary>
         /// <returns></returns>
         private string GetDataFrame()
@@ -109,12 +108,17 @@ namespace Wu.CommTool.Models
             return $"{a} {b} {c} {d} {crc[1]:X2}{crc[0]:X2}";
         }
 
-
         /// <summary>
-        /// 是否开启
+        /// 打开状态
         /// </summary>
         [JsonIgnore]
         public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
         private bool _IsOpened = false;
+
+        /// <summary>
+        /// 数据值
+        /// </summary>
+        public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
+        private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
     }
 }

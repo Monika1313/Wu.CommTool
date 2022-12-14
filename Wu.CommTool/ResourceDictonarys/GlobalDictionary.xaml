@@ -29,9 +29,9 @@
     <SolidColorBrush x:Key="Purple_BorderBrush">#d3adf7</SolidColorBrush>
     <SolidColorBrush x:Key="Purple_Background">#f9f0ff</SolidColorBrush>
 
-    <SolidColorBrush x:Key="Cyan_Foreground">#531dbd</SolidColorBrush>
-    <SolidColorBrush x:Key="Cyan_BorderBrush">#d3adf7</SolidColorBrush>
-    <SolidColorBrush x:Key="Cyan_Background">#e6fffb</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_Foreground">#7D97B3</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_BorderBrush">#87E8DE</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_Background">#E6FFFB</SolidColorBrush>
 
     <SolidColorBrush x:Key="Pink_Foreground">#c45ebe</SolidColorBrush>
     <SolidColorBrush x:Key="Pink_BorderBrush">#ffadd2</SolidColorBrush>
@@ -186,8 +186,21 @@
         </Setter>
     </Style>
 
-    <!--  DataGrid  -->
-    <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell" />
+    <!--  DataGrid 单元格  -->
+    <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    </Style>
+
+    <!--  DataGrid 第一列编号  -->
+    <Style  BasedOn="{StaticResource DataGridRowHeaderStyle}" TargetType="DataGridRowHeader">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
+    <!--  DataGrid 列标题  -->
+    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderStyle}">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+    </Style>
+
 
     <!--  Border  -->
     <!--<Style TargetType="Border">

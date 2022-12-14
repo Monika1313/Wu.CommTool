@@ -19,24 +19,24 @@ namespace Wu.CommTool.Enums
         //[Description("8位有符号整型")]
         //Sint,
 
-        [Description("16位无符号整型")]
+        [Description("uShort16位无符号整型")]
         uShort,
-        [Description("16位有符号整型")]
+        [Description("Short16位有符号整型")]
         Short,
 
-        [Description("32无符号位整型")]
+        [Description("uInt32无符号位整型")]
         uInt,
-        [Description("32有符号位整型")]
+        [Description("Int32有符号位整型")]
         Int,
 
-        [Description("64位无符号整型")]
+        [Description("uLong64位无符号整型")]
         uLong,
-        [Description("64位有符号整型")]
+        [Description("Long64位有符号整型")]
         Long,
 
-        [Description("32位浮点型")]
+        [Description("Float32位浮点型")]
         Float,
-        [Description("64位浮点型")]
+        [Description("Double64位浮点型")]
         Double,
 
         //[Description("布尔")]

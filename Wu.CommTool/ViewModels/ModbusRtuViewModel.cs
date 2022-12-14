@@ -117,12 +117,34 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
+        /// 停止搜索设备
+        /// </summary>
+        private void StopSearchDevices()
+        {
+            try
+            {
+                //若串口已打开则关闭
+                if (ComConfig.IsOpened == true)
+                {
+                    OperatePort();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+
+        /// <summary>
         /// 自动搜索ModbusRtu设备
         /// </summary>
         private async void SearchDevices()
         {
             try
             {
+                //TODO 首先关闭其他功能
+
                 //设置串口
                 //修改串口设置
                 if (SelectedBaudRates.Count.Equals(0))
@@ -137,10 +159,9 @@ namespace Wu.CommTool.ViewModels
                 }
 
                 //打开串口
-                OperatePort();
                 if (ComConfig.IsOpened == false)
                 {
-                    return;
+                    OperatePort();
                 }
 
                 SearchDeviceState = 1;//标记状态为搜索设备中
@@ -173,6 +194,7 @@ namespace Wu.CommTool.ViewModels
                             SerialPort.BaudRate = (int)baud;
                             SerialPort.Parity = (System.IO.Ports.Parity)parity;
                             SendMessage = $"{i:X2}0300000001";//读取第一个字
+                            //串口关闭时退出
                             if (ComConfig.IsOpened == false)
                                 break;
                             Send();
@@ -203,6 +225,11 @@ namespace Wu.CommTool.ViewModels
                 SearchDeviceState = 2;//标记状态为搜索结束
             }
         }
+
+
+
+
+
 
         #region 搜索设备 属性
         /// <summary>
@@ -317,6 +344,11 @@ namespace Wu.CommTool.ViewModels
         public AutoReadConfig AutoReadConfig { get => _AutoReadConfig; set => SetProperty(ref _AutoReadConfig, value); }
         private AutoReadConfig _AutoReadConfig = new();
 
+
+
+
+
+
         /// <summary>
         /// ModbusRtu功能菜单
         /// </summary>
@@ -376,6 +408,7 @@ namespace Wu.CommTool.ViewModels
                 case "AreaData": AreaData(); break;                                             //周期读取区域数据
                 case "AutoSearch": OpenAutoSearchView(); break;                                 //打开搜索页面 该功能已启用
                 case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
+                case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
                 case "Send": Send(); break;                                                     //发送数据
                 case "GetComPorts": GetComPorts(); break;                                       //查找Com口
                 case "Clear": Clear(); break;                                                   //清空信息
@@ -395,17 +428,22 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+        
+
 
 
         /// <summary>
         /// 关闭自动读取数据
         /// </summary>
+        /// ++
+        /// +
         private void CloseAutoRead()
         {
             try
             {
                 timer.Stop();
                 AutoReadConfig.IsOpened = false;
+                CloseCom();
                 ShowMessage("关闭自动读取数据...");
             }
             catch (Exception ex)
@@ -813,11 +851,11 @@ namespace Wu.CommTool.ViewModels
             //将读取的数据写入
             for (int i = 0; i < AutoReadConfig.Quantity; i++)
             {
+                ModbusRtuDatas[i].Location = i*2 +3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
                 ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
                 ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
                 ModbusRtuDatas[i].ModbusByteOrder = AutoReadConfig.ByteOrder; //字节序
 
-                ModbusRtuDatas[i].Location = i*2 +3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
                 ModbusRtuDatas[i].UpdateTime = DateTime.Now;    //更新时间
             }
         }
@@ -825,7 +863,7 @@ namespace Wu.CommTool.ViewModels
 
 
         /// <summary>
-        /// 打开串口
+        /// 打开串口 若串口未打开则打开串口 若串口已打开则关闭
         /// </summary>
         private void OperatePort()
         {
@@ -1100,7 +1138,7 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(AutoReadConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                System.Windows.MessageBox.Show("导出完成");
+                ShowMessage("导出配置完成");
             }
             catch (Exception ex)
             {
@@ -1133,6 +1171,7 @@ namespace Wu.CommTool.ViewModels
                     return;
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
                 AutoReadConfig = JsonConvert.DeserializeObject<AutoReadConfig>(xx)!;
+                ShowMessage("导入配置完成");
             }
             catch (Exception ex)
             {
