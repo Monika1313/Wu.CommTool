@@ -1357,7 +1357,7 @@
                                         </Style>
                                     </Border.Style>
 
-                                    <DataGrid
+                                    <DataGrid Style="{StaticResource NumDataGrid}"
                                         MinWidth="100"
                                         AutoGenerateColumns="False"
                                         Background="Transparent"

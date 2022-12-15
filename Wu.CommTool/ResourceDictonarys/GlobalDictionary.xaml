@@ -186,16 +186,35 @@
         </Setter>
     </Style>
 
-    <!--  DataGrid 单元格  -->
-    <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
-        <Setter Property="HorizontalContentAlignment" Value="Center"/>
+    <!-- DataGrid 默认第一列显示选中复选框 -->
+    <Style  TargetType="DataGrid" BasedOn="{StaticResource DataGridBaseStyle}">
+        <Setter Property="RowHeaderWidth" Value="60"/>
+        <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="False"/>
+        <Setter Property="RowHeaderTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <Grid Width="40">
+                        <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                    </Grid>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
+
+    <!-- DataGrid 第一列显示行号  -->
+    <Style x:Key="NumDataGrid"  TargetType="DataGrid" BasedOn="{StaticResource DataGridBaseStyle}">
+        <Setter Property="RowHeaderWidth" Value="60"/>
+        <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="True"/>
+    </Style>
+
+    <!-- DataGrid单元格-->
+    <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell" />
 
     <!--  DataGrid 第一列编号  -->
     <Style  BasedOn="{StaticResource DataGridRowHeaderStyle}" TargetType="DataGridRowHeader">
         <Setter Property="HorizontalAlignment" Value="Center"/>
     </Style>
-
+    
     <!--  DataGrid 列标题  -->
     <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderStyle}">
         <Setter Property="HorizontalAlignment" Value="Center"/>
