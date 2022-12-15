@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using log4net;
+using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -13,6 +14,8 @@ namespace Wu.CommTool.Views
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -78,6 +81,7 @@ namespace Wu.CommTool.Views
                 }
                 catch (Exception ex)
                 {
+                    log.Error(ex.Message);
                 }
                 this.Close();
                 Environment.Exit(0);

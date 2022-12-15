@@ -6,13 +6,12 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
-using Wu.CommTool.Common;
-using Wu.CommTool.Extensions;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels
 {
-    public class AboutViewModel : NavigationViewModel, IDialogHostAware
+    public class JsonToolViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -20,12 +19,11 @@ namespace Wu.CommTool.ViewModels
         public string DialogHostName { get; set; }
         #endregion
 
-        public AboutViewModel() { }
-        public AboutViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public JsonToolViewModel() { }
+        public JsonToolViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
-
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
@@ -41,13 +39,12 @@ namespace Wu.CommTool.ViewModels
 
 
         #region **************************************** 命令 ****************************************
-        public DelegateCommand SaveCommand { get; set; }
-        public DelegateCommand CancelCommand { get; set; }
-
         /// <summary>
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+        public DelegateCommand SaveCommand { get; set; }
+        public DelegateCommand CancelCommand { get; set; }
         #endregion
 
 
@@ -56,32 +53,10 @@ namespace Wu.CommTool.ViewModels
         {
             switch (obj)
             {
-                case "Search": Search(); break;
+                case "Search": break;
                 case "OpenDialogView": OpenDialogView(); break;
-                case "ShowGitHub": ShowGitHub(); break;
                 default: break;
             }
-        }
-
-        private void ShowGitHub()
-        {
-            try
-            {
-                System.Diagnostics.Process.Start("explorer.exe",@"https://github.com/Monika1313/Wu.CommTool");
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// 导航至该页面触发
-        /// </summary>
-        /// <param name="navigationContext"></param>
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            Search();
         }
 
         /// <summary>
@@ -91,7 +66,7 @@ namespace Wu.CommTool.ViewModels
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
-                //var oldDto = parameters.GetValue<Dto>("Value");
+                //var oldDto = parameters.GetValue<EmployeeDto>("Value");
                 //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
                 //if(getResult != null && getResult.Status)
                 //{
@@ -100,6 +75,15 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+        /// <summary>
+        /// 取消
+        /// </summary>
+        private void Cancel()
+        {
+            //若窗口处于打开状态则关闭
+            if (DialogHost.IsDialogOpen(DialogHostName))
+                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+        }
 
         /// <summary>
         /// 保存
@@ -115,19 +99,6 @@ namespace Wu.CommTool.ViewModels
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
 
-        /// <summary>
-        /// 取消
-        /// </summary>
-        private void Cancel()
-        {
-            //若窗口处于打开状态则关闭
-            if (DialogHost.IsDialogOpen(DialogHostName))
-                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
-        }
-
-        /// <summary>
-        /// 弹窗
-        /// </summary>
         private async void OpenDialogView()
         {
             try
@@ -141,26 +112,6 @@ namespace Wu.CommTool.ViewModels
             catch (Exception ex)
             {
 
-            }
-        }
-
-        /// <summary>
-        /// 查询数据
-        /// </summary>
-        private async void Search()
-        {
-            try
-            {
-                UpdateLoading(true);
-
-            }
-            catch (Exception ex)
-            {
-                aggregator.SendMessage($"{ex.Message}", "Main");
-            }
-            finally
-            {
-                UpdateLoading(false);
             }
         }
         #endregion

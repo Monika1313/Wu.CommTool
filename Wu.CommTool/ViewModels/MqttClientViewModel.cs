@@ -24,6 +24,7 @@ using System.Threading;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using log4net;
+using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
 {

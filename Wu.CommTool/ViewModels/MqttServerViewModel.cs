@@ -23,7 +23,7 @@ using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
-
+using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
 {

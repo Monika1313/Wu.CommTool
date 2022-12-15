@@ -21,6 +21,7 @@ using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.Extensions;
+using Wu.ViewModels;
 using Parity = Wu.CommTool.Models.Parity;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels

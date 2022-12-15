@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
+using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
 {

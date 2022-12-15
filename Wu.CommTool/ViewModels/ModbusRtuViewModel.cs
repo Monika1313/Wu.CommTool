@@ -32,6 +32,7 @@ using Prism.Regions;
 using ImTools;
 using System.Collections;
 using System.Threading.Tasks;
+using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
 {
