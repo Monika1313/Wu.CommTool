@@ -571,8 +571,7 @@
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                     ItemsSource="{Binding ComPorts}"
                                                     SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                    Style="{StaticResource FormComboBox}">
-                                                </ComboBox>
+                                                    Style="{StaticResource FormComboBox}" />
                                             </DockPanel>
                                             <ComboBox
                                                 hc:InfoElement.Placeholder="请选择数据位..."
@@ -635,40 +634,40 @@
                                             </hc:CheckComboBox>
 
                                             <StackPanel
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top"
-                                            Orientation="Horizontal">
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Top"
+                                                Orientation="Horizontal">
                                                 <Button
-                                                Margin="20"
-                                                hc:Poptip.Content="搜索"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="SearchDevices"
-                                                Content="搜索">
+                                                    Margin="20"
+                                                    hc:Poptip.Content="搜索"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="SearchDevices"
+                                                    Content="搜索">
                                                     <Button.Style>
-                                                        <Style TargetType="Button" BasedOn="{StaticResource GreenButton}">
-                                                            <Setter Property="IsEnabled" Value="True"/>
+                                                        <Style BasedOn="{StaticResource GreenButton}" TargetType="Button">
+                                                            <Setter Property="IsEnabled" Value="True" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
-                                                                    <Setter Property="IsEnabled" Value="False"/>
+                                                                    <Setter Property="IsEnabled" Value="False" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
                                                     </Button.Style>
                                                 </Button>
                                                 <Button
-                                                Width="60"
-                                                Margin="20"
-                                                hc:Poptip.Content="停止"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="StopSearchDevices"
-                                                Content="停止"
-                                                DockPanel.Dock="Left">
+                                                    Width="60"
+                                                    Margin="20"
+                                                    hc:Poptip.Content="停止"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="StopSearchDevices"
+                                                    Content="停止"
+                                                    DockPanel.Dock="Left">
                                                     <Button.Style>
-                                                        <Style TargetType="Button" BasedOn="{StaticResource RedButton}">
-                                                            <Setter Property="IsEnabled" Value="False"/>
+                                                        <Style BasedOn="{StaticResource RedButton}" TargetType="Button">
+                                                            <Setter Property="IsEnabled" Value="False" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
-                                                                    <Setter Property="IsEnabled" Value="True"/>
+                                                                    <Setter Property="IsEnabled" Value="True" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -944,196 +943,197 @@
                             <ScrollViewer>
                                 <DockPanel Width="300" Background="#f5f5f5">
                                     <Border
-                                    Margin="5"
-                                    Background="White"
-                                    BorderThickness="1"
-                                    CornerRadius="5"
-                                    DockPanel.Dock="Top">
+                                        Margin="5"
+                                        Background="White"
+                                        BorderThickness="1"
+                                        CornerRadius="5"
+                                        DockPanel.Dock="Top">
                                         <StackPanel Orientation="Vertical">
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock
-                                                Margin="5"
-                                                HorizontalAlignment="Center"
-                                                FontSize="24"
-                                                Text="数据监控设置" />
+                                                    Margin="5"
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="24"
+                                                    Text="数据监控设置" />
                                                 <!--  导出配置文件  -->
                                                 <Button
-                                                Width="30"
-                                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                                Margin="4"
-                                                hc:Poptip.Content="导出配置文件"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="ExportConfig"
-                                                Content="{md:PackIcon Kind=Upload}"
-                                                Cursor="Hand"
-                                                DockPanel.Dock="Right"
-                                                Style="{StaticResource Blue_CircleButton}" />
+                                                    Width="30"
+                                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                    Margin="4"
+                                                    hc:Poptip.Content="导出配置文件"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="ExportConfig"
+                                                    Content="{md:PackIcon Kind=Upload}"
+                                                    Cursor="Hand"
+                                                    DockPanel.Dock="Right"
+                                                    Style="{StaticResource Blue_CircleButton}" />
                                                 <!--  导入配置文件  -->
                                                 <Button
-                                                Width="30"
-                                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                                Margin="4"
-                                                hc:Poptip.Content="导入配置文件"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="ImportConfig"
-                                                Content="{md:PackIcon Kind=Download}"
-                                                IsEnabled="{Binding DataMonitorConfig.IsOpened,Converter={wucvt:ReverseBool}}"
-                                                Cursor="Hand"
-                                                DockPanel.Dock="Right"
-                                                Style="{StaticResource Blue_CircleButton}" />
+                                                    Width="30"
+                                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                    Margin="4"
+                                                    hc:Poptip.Content="导入配置文件"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="ImportConfig"
+                                                    Content="{md:PackIcon Kind=Download}"
+                                                    Cursor="Hand"
+                                                    DockPanel.Dock="Right"
+                                                    IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                    Style="{StaticResource Blue_CircleButton}" />
                                             </StackPanel>
 
                                             <TextBox
-                                            hc:TitleElement.Title="从站ID:"
-                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource FormTextBox}"
-                                            Text="{Binding DataMonitorConfig.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                hc:TitleElement.Title="从站ID:"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.SlaveId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
-                                            hc:TitleElement.Title="功能码:"
-                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            IsReadOnly="True"
-                                            Style="{StaticResource FormTextBox}"
-                                            Text="{Binding DataMonitorConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:00}}" />
+                                                hc:TitleElement.Title="功能码:"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                IsReadOnly="True"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:00}}" />
                                             <TextBox
-                                            hc:TitleElement.Title="起始地址:"
-                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource FormTextBox}"
-                                            Text="{Binding DataMonitorConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                hc:TitleElement.Title="起始地址:"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
-                                            hc:TitleElement.Title="读取数量:"
-                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource FormTextBox}"
-                                            Text="{Binding DataMonitorConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                hc:TitleElement.Title="读取数量:"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
-                                            hc:TitleElement.Title="周期:"
-                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource FormTextBox}"
-                                            Text="{Binding DataMonitorConfig.Period}" />
+                                                hc:TitleElement.Title="周期:"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.Period}" />
                                             <ComboBox
-                                                hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                                                 MinWidth="135"
                                                 hc:InfoElement.Placeholder="请选择校验位..."
+                                                hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                                                 hc:TitleElement.Title="字节序"
-                                                SelectedItem="{Binding DataMonitorConfig.ByteOrder}"
                                                 ItemsSource="{Binding Source={StaticResource ValueModbusByteOrder}}"
+                                                SelectedItem="{Binding DataMonitorConfig.ByteOrder}"
                                                 Style="{StaticResource FormComboBox}" />
                                             <TextBox
-                                            hc:TitleElement.Title="数据帧:" IsReadOnly="True"
-                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource FormTextBox}"
-                                            Text="{Binding DataMonitorConfig.DataFrame, Mode=OneWay}" />
+                                                hc:TitleElement.Title="数据帧:"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                IsReadOnly="True"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.DataFrame, Mode=OneWay}" />
 
                                             <StackPanel
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top"
-                                            Orientation="Horizontal">
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Top"
+                                                Orientation="Horizontal">
                                                 <Button
-                                                Margin="20"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="OpenAutoRead"
-                                                Content="打开"
-                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                Style="{StaticResource GreenButton}" />
+                                                    Margin="20"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="OpenAutoRead"
+                                                    Content="打开"
+                                                    IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                    Style="{StaticResource GreenButton}" />
 
                                                 <Button
-                                                Width="60"
-                                                Margin="20"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="CloseAutoRead"
-                                                Content="关闭"
-                                                DockPanel.Dock="Left"
-                                                IsEnabled="{Binding DataMonitorConfig.IsOpened}"
-                                                Style="{StaticResource RedButton}" />
+                                                    Width="60"
+                                                    Margin="20"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="CloseAutoRead"
+                                                    Content="关闭"
+                                                    DockPanel.Dock="Left"
+                                                    IsEnabled="{Binding DataMonitorConfig.IsOpened}"
+                                                    Style="{StaticResource RedButton}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>
                                     <Border
-                                    Margin="5"
-                                    Background="White"
-                                    BorderThickness="1"
-                                    CornerRadius="5"
-                                    DockPanel.Dock="Top">
+                                        Margin="5"
+                                        Background="White"
+                                        BorderThickness="1"
+                                        CornerRadius="5"
+                                        DockPanel.Dock="Top">
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock
-                                            Margin="5"
-                                            HorizontalAlignment="Center"
-                                            FontSize="24"
-                                            Text="串口设置" />
+                                                Margin="5"
+                                                HorizontalAlignment="Center"
+                                                FontSize="24"
+                                                Text="串口设置" />
                                             <StackPanel Orientation="Horizontal">
                                                 <ComboBox
-                                                Width="230"
-                                                hc:InfoElement.Placeholder="请选择串口..."
-                                                hc:InfoElement.Title="串口"
-                                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding ComPorts}"
-                                                SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                Style="{StaticResource FormComboBox}" />
+                                                    Width="230"
+                                                    hc:InfoElement.Placeholder="请选择串口..."
+                                                    hc:InfoElement.Title="串口"
+                                                    IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                    ItemsSource="{Binding ComPorts}"
+                                                    SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    Style="{StaticResource FormComboBox}" />
                                                 <Button
-                                                Width="30"
-                                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                                Margin="5"
-                                                HorizontalAlignment="Left"
-                                                hc:Poptip.Content="查找串口设备"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="GetComPorts"
-                                                Content="{md:PackIcon Kind=Search}"
-                                                DockPanel.Dock="Left"
-                                                Style="{StaticResource Blue_CircleButton}" />
+                                                    Width="30"
+                                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                    Margin="5"
+                                                    HorizontalAlignment="Left"
+                                                    hc:Poptip.Content="查找串口设备"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="GetComPorts"
+                                                    Content="{md:PackIcon Kind=Search}"
+                                                    DockPanel.Dock="Left"
+                                                    Style="{StaticResource Blue_CircleButton}" />
                                             </StackPanel>
                                             <ComboBox
-                                            hc:InfoElement.Placeholder="请选择波特率..."
-                                            hc:InfoElement.Title="波特率"
-                                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
-                                            SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource FormComboBox}" />
+                                                hc:InfoElement.Placeholder="请选择波特率..."
+                                                hc:InfoElement.Title="波特率"
+                                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
+                                                SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource FormComboBox}" />
 
                                             <ComboBox
-                                            hc:InfoElement.Placeholder="请选择校验位..."
-                                            hc:InfoElement.Title="校验位"
-                                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            ItemsSource="{Binding Source={StaticResource ValueParity}}"
-                                            SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource FormComboBox}" />
+                                                hc:InfoElement.Placeholder="请选择校验位..."
+                                                hc:InfoElement.Title="校验位"
+                                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                ItemsSource="{Binding Source={StaticResource ValueParity}}"
+                                                SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource FormComboBox}" />
 
                                             <ComboBox
-                                            hc:InfoElement.Placeholder="请选择数据位..."
-                                            hc:InfoElement.Title="数据位"
-                                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            ItemsSource="{StaticResource DataBits}"
-                                            SelectedItem="{Binding ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource FormComboBox}" />
+                                                hc:InfoElement.Placeholder="请选择数据位..."
+                                                hc:InfoElement.Title="数据位"
+                                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                ItemsSource="{StaticResource DataBits}"
+                                                SelectedItem="{Binding ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource FormComboBox}" />
                                             <ComboBox
-                                            hc:InfoElement.Placeholder="请选择停止位..."
-                                            hc:InfoElement.Title="停止位"
-                                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
-                                            SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            Style="{StaticResource FormComboBox}" />
+                                                hc:InfoElement.Placeholder="请选择停止位..."
+                                                hc:InfoElement.Title="停止位"
+                                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
+                                                SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Style="{StaticResource FormComboBox}" />
 
                                             <StackPanel
-                                            HorizontalAlignment="Center"
-                                            VerticalAlignment="Top"
-                                            Orientation="Horizontal">
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Top"
+                                                Orientation="Horizontal">
                                                 <Button
-                                                Margin="20"
-                                                hc:Poptip.Content="打开串口"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="OpenCom"
-                                                Content="打开"
-                                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                Style="{StaticResource GreenButton}" />
+                                                    Margin="20"
+                                                    hc:Poptip.Content="打开串口"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="OpenCom"
+                                                    Content="打开"
+                                                    IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                    Style="{StaticResource GreenButton}" />
 
                                                 <Button
-                                                Width="60"
-                                                Margin="20"
-                                                hc:Poptip.Content="关闭串口"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="CloseCom"
-                                                Content="关闭"
-                                                DockPanel.Dock="Left"
-                                                IsEnabled="{Binding ComConfig.IsOpened}"
-                                                Style="{StaticResource RedButton}" />
+                                                    Width="60"
+                                                    Margin="20"
+                                                    hc:Poptip.Content="关闭串口"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="CloseCom"
+                                                    Content="关闭"
+                                                    DockPanel.Dock="Left"
+                                                    IsEnabled="{Binding ComConfig.IsOpened}"
+                                                    Style="{StaticResource RedButton}" />
                                             </StackPanel>
                                         </StackPanel>
                                     </Border>
@@ -1357,13 +1357,16 @@
                                         </Style>
                                     </Border.Style>
 
-                                    <DataGrid Style="{StaticResource NumDataGrid}"
+                                    <DataGrid
                                         MinWidth="100"
+                                        hc:DataGridAttach.ShowRowNumber="True"
                                         AutoGenerateColumns="False"
                                         Background="Transparent"
                                         CanUserSortColumns="False"
                                         FrozenColumnCount="4"
-                                        ItemsSource="{Binding DataMonitorConfig.ModbusRtuDatas}" RowHeaderWidth="60" hc:DataGridAttach.ShowRowNumber="True">
+                                        ItemsSource="{Binding DataMonitorConfig.ModbusRtuDatas}"
+                                        RowHeaderWidth="60"
+                                        Style="{StaticResource NumDataGrid}">
                                         <!--<DataGrid.RowHeaderTemplate>
                                             <DataTemplate>
                                                 <Grid Width="40">
@@ -1377,7 +1380,7 @@
                                             <DataGridTemplateColumn Header="名称">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox MinWidth="120" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                                                        <TextBox MinWidth="120" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1385,33 +1388,34 @@
                                             <DataGridTemplateColumn Header="值">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <Border MinWidth="60"
-                                                            Padding="8,4" 
+                                                        <Border
+                                                            MinWidth="60"
+                                                            Padding="8,4"
                                                             BorderThickness="1"
                                                             CornerRadius="4">
                                                             <Border.Style>
                                                                 <Style TargetType="Border">
                                                                     <Style.Triggers>
-                                                                        <DataTrigger Binding="{Binding Name,Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
-                                                                            <Setter Property="Background" Value="{StaticResource Green_Background}"/>
-                                                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}"/>
+                                                                        <DataTrigger Binding="{Binding Name, Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                                                         </DataTrigger>
-                                                                        <DataTrigger Binding="{Binding Name,Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
-                                                                            <Setter Property="Background" Value="{StaticResource Purple_Background}"/>
-                                                                            <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}"/>
+                                                                        <DataTrigger Binding="{Binding Name, Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                                            <Setter Property="Background" Value="{StaticResource Purple_Background}" />
+                                                                            <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
                                                                         </DataTrigger>
                                                                     </Style.Triggers>
                                                                 </Style>
                                                             </Border.Style>
-                                                            <TextBlock Text="{Binding Value}" FontSize="13">
+                                                            <TextBlock FontSize="13" Text="{Binding Value}">
                                                                 <TextBlock.Style>
                                                                     <Style TargetType="TextBlock">
                                                                         <Style.Triggers>
-                                                                            <DataTrigger Binding="{Binding Name,Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
-                                                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}"/>
+                                                                            <DataTrigger Binding="{Binding Name, Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                                                                             </DataTrigger>
-                                                                            <DataTrigger Binding="{Binding Name,Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
-                                                                                <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}"/>
+                                                                            <DataTrigger Binding="{Binding Name, Converter={cvt:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                                                <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
                                                                             </DataTrigger>
                                                                         </Style.Triggers>
                                                                     </Style>
@@ -1426,7 +1430,7 @@
                                             <DataGridTemplateColumn Header="单位">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox MinWidth="40" Text="{Binding Unit,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" />
+                                                        <TextBox MinWidth="40" Text="{Binding Unit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1434,7 +1438,7 @@
                                             <DataGridTemplateColumn Header="倍率">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox MinWidth="40" Text="{Binding Rate,Mode=TwoWay,UpdateSourceTrigger=LostFocus}" />
+                                                        <TextBox MinWidth="40" Text="{Binding Rate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1469,7 +1473,7 @@
 
 
                                             <DataGridTextColumn
-                                                Binding="{Binding UpdateTime,StringFormat={}{0:HH:mm:ss}}"
+                                                Binding="{Binding UpdateTime, StringFormat={}{0:HH:mm:ss}}"
                                                 Header="更新时间"
                                                 IsReadOnly="True" />
                                         </DataGrid.Columns>

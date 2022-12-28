@@ -1,4 +1,6 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -6,8 +8,12 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Wu.CommTool.Common;
+using Wu.CommTool.Models;
+using Wu.CommTool.Models.JsonModels;
 using Wu.ViewModels;
-using Wu.Wpf.Common;
+//using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -35,6 +41,18 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// Json字符串 转换json对象的原始字符串
+        /// </summary>
+        public string JsonString { get => _JsonString; set => SetProperty(ref _JsonString, value); }
+        private string _JsonString = string.Empty;
+
+        /// <summary>
+        /// Json
+        /// </summary>
+        public ObservableCollection<JsonHeaderLogic> JsonHeaderLogics { get => _JsonHeaderLogics; set => SetProperty(ref _JsonHeaderLogics, value); }
+        private ObservableCollection<JsonHeaderLogic> _JsonHeaderLogics = new();
         #endregion
 
 
@@ -54,8 +72,38 @@ namespace Wu.CommTool.ViewModels
             switch (obj)
             {
                 case "Search": break;
+                case "Format": Format(); break;//格式化
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
+            }
+        }
+
+
+        /// <summary>
+        /// 格式化json字符串
+        /// </summary>
+        private void Format()
+        {
+            if (string.IsNullOrWhiteSpace(JsonString))
+                return;
+            try
+            {
+                //json字符串转对象
+                //var xx = JsonConvert.DeserializeObject<object>(JsonString);
+                //var xz = JsonConvert.DeserializeObject<JToken>(JsonString);
+
+                var jobj = JObject.Parse(JsonString);
+                var li = jobj.Children().Select(c=> JsonHeaderLogic.FromJToken(c)).ToList();
+                JsonHeaderLogics.Clear();
+                foreach (var item in li)
+                {
+                    JsonHeaderLogics.Add(item);
+                }
+                //JsonHeaderLogics
+            }
+            catch (Exception ex)
+            {
+
             }
         }
 

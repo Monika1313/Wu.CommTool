@@ -186,10 +186,10 @@
         </Setter>
     </Style>
 
-    <!-- DataGrid 默认第一列显示选中复选框 -->
-    <Style  TargetType="DataGrid" BasedOn="{StaticResource DataGridBaseStyle}">
-        <Setter Property="RowHeaderWidth" Value="60"/>
-        <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="False"/>
+    <!--  DataGrid 默认第一列显示选中复选框  -->
+    <Style BasedOn="{StaticResource DataGridBaseStyle}" TargetType="DataGrid">
+        <Setter Property="RowHeaderWidth" Value="60" />
+        <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="False" />
         <Setter Property="RowHeaderTemplate">
             <Setter.Value>
                 <DataTemplate>
@@ -201,23 +201,26 @@
         </Setter>
     </Style>
 
-    <!-- DataGrid 第一列显示行号  -->
-    <Style x:Key="NumDataGrid"  TargetType="DataGrid" BasedOn="{StaticResource DataGridBaseStyle}">
-        <Setter Property="RowHeaderWidth" Value="60"/>
-        <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="True"/>
+    <!--  DataGrid 第一列显示行号  -->
+    <Style
+        x:Key="NumDataGrid"
+        BasedOn="{StaticResource DataGridBaseStyle}"
+        TargetType="DataGrid">
+        <Setter Property="RowHeaderWidth" Value="60" />
+        <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="True" />
     </Style>
 
-    <!-- DataGrid单元格-->
+    <!--  DataGrid单元格  -->
     <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell" />
 
     <!--  DataGrid 第一列编号  -->
-    <Style  BasedOn="{StaticResource DataGridRowHeaderStyle}" TargetType="DataGridRowHeader">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Style BasedOn="{StaticResource DataGridRowHeaderStyle}" TargetType="DataGridRowHeader">
+        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
-    
+
     <!--  DataGrid 列标题  -->
-    <Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderStyle}">
-        <Setter Property="HorizontalAlignment" Value="Center"/>
+    <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 
 
