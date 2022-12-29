@@ -74,8 +74,9 @@ namespace Wu.CommTool.Models.JsonModels
                         string str = string.Empty;
                         foreach (var item in children)
                         {
-                            str += item.Header + ", ";
+                            str += $"{item.Header}, ";
                         }
+                        str = str.Substring(0,str.Length - 2);
                         header = $"[ {str} ]";
                     }
                     //header = $"[ {children.Count()} ]";

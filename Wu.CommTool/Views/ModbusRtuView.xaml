@@ -1683,16 +1683,7 @@
                                 <TextBlock VerticalAlignment="Center" Text=" Bytes" />
                             </StackPanel>
 
-                            <!--  发送区域  -->
-                            <DockPanel Height="100" DockPanel.Dock="Bottom">
-                                <TextBox
-                                    Margin="4,0,4,4"
-                                    VerticalContentAlignment="Top"
-                                    hc:InfoElement.Placeholder="请输入要发送的内容..."
-                                    Style="{StaticResource TextBoxExtend}"
-                                    Text="{Binding SendMessage}"
-                                    TextWrapping="Wrap" />
-                            </DockPanel>
+
                             <!--  页面消息  -->
                             <Border
                                 Margin="5"
