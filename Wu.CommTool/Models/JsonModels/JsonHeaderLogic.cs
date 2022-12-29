@@ -14,12 +14,6 @@ namespace Wu.CommTool.Models.JsonModels
 {
     public class JsonHeaderLogic : BindableBase
     {
-        //用于对应Json对象类型的格式化字符
-        const string NULL_TEXT = "<null>";
-        const string ARRAY = "[{0}]";
-        const string OBJECT = "{{0}}";
-        const string PROPERTY = "{0}";
-
         //用于界面绑定的属性定义
         /// <summary>
         /// Header
@@ -29,6 +23,7 @@ namespace Wu.CommTool.Models.JsonModels
         public IEnumerable<JsonHeaderLogic> Children { get; private set; }
 
         public JToken Token { get; private set; }
+
 
 
 
@@ -55,7 +50,7 @@ namespace Wu.CommTool.Models.JsonModels
                 var jvalue = (JValue)jtoken;
                 var value = jvalue.Value;
                 if (value == null)
-                    value = NULL_TEXT;
+                    value = "<null>";
                 return new JsonHeaderLogic(jvalue, value.ToString(), null);
             }
             else if (typeof(JContainer).IsAssignableFrom(type))
@@ -65,7 +60,8 @@ namespace Wu.CommTool.Models.JsonModels
                 string header;
 
                 if (typeof(JProperty).IsAssignableFrom(type))
-                    header = String.Format(PROPERTY, ((JProperty)jcontainer).Name);
+                    header = ((JProperty)jcontainer).Name;                   
+                //header = String.Format(PROPERTY, ((JProperty)jcontainer).Name);
                 else if (typeof(JArray).IsAssignableFrom(type))
                     //header = String.Format(ARRAY, children.Count());
                     header = $"[ {children.Count()} ]";

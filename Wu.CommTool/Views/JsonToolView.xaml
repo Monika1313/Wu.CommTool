@@ -7,6 +7,7 @@
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:Wu.CommTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:model="clr-namespace:Wu.CommTool.Models.JsonModels"
     d:DataContext="{x:Static dm:JsonToolDesignViewModel.Instance}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -40,29 +41,33 @@
                 CommandParameter="Format"
                 Content="格式化" />
         </WrapPanel>
+
         <Grid Margin="5">
-            <!--<ItemsControl ItemsSource="{Binding JsonHeaderLogics}">
-                <ItemsControl.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal">
-            -->
-            <!--  显示Header属性  -->
-            <!--
-                            <TextBlock Text="{Binding Header}" />
-            -->
-            <!--  显示JToken的Type属性  -->
-            <!--
-                            <TextBlock
-                                Margin="10,0,0,0"
-                                Foreground="Gray"
-                                Text="{Binding Token.Type}" />
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>-->
+            <Grid.Resources>
+                <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
+                    <TextBlock Text="{Binding Path=Header}" />
+                </HierarchicalDataTemplate>
+            </Grid.Resources>
+
+            <!--<Menu
+                Name="menu1"
+                Margin="10,10,10,10"
+                DockPanel.Dock="Top">
+                <MenuItem Header="XXXXXXXX" ItemsSource="{Binding JsonHeaderLogics}" />
+            </Menu>-->
+
+            <TreeView ItemsSource="{Binding JsonHeaderLogics}" Style="{StaticResource TreeViewBaseStyle}">
+                <TreeView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True" />
+                    </Style>
+                </TreeView.ItemContainerStyle>
+                <!--<TreeViewItem Header="XXXXXXXX" ItemsSource="{Binding JsonHeaderLogics}" />-->
+            </TreeView>
 
 
-            <TreeView Name="treeView" ItemsSource="{Binding JsonHeaderLogics}">
+
+            <!--<TreeView Name="treeView" ItemsSource="{Binding JsonHeaderLogics}">
                 <TreeView.ItemContainerStyle>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="True" />
@@ -71,15 +76,39 @@
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding Children}">
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding Header}" />
-                            <TextBlock
+            -->
+            <!--<TextBlock Text="" />-->
+            <!--
+                            <TextBlock Text="{Binding Header}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+            -->
+            <!--<Style.Triggers>
+                                            <DataTrigger Binding="{Binding Token.Type}" Value="String">
+                                                <Setter Property="Foreground" Value="Purple" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Token.Type}" Value="Property">
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </DataTrigger>
+                                        </Style.Triggers>-->
+            <!--
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+
+            -->
+            <!--<TextBlock Margin="10,0,0,0" Text=":" />-->
+
+            <!--<TextBlock
                                 Margin="10,0,0,0"
                                 Foreground="Gray"
-                                Text="{Binding Token.Type}" />
+                                Text="{Binding Token.Type}" />-->
+            <!--
                         </StackPanel>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
-            </TreeView>
+            </TreeView>-->
+
         </Grid>
     </DockPanel>
 </UserControl>
