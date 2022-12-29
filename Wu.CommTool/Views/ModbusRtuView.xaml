@@ -1685,21 +1685,6 @@
 
                             <!--  发送区域  -->
                             <DockPanel Height="100" DockPanel.Dock="Bottom">
-                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-                                    <ComboBox
-                                        MinWidth="190"
-                                        hc:InfoElement.Placeholder="请选择校验模式..."
-                                        hc:InfoElement.Title="自动校验模式: "
-                                        hc:InfoElement.TitleWidth="90"
-                                        ItemsSource="{Binding Source={StaticResource ValueCrcMode}}"
-                                        SelectedItem="{Binding CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        Style="{StaticResource FormComboBox}" />
-                                    <Button
-                                        Margin="10,0"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="Send"
-                                        Content="发送" />
-                                </StackPanel>
                                 <TextBox
                                     Margin="4,0,4,4"
                                     VerticalContentAlignment="Top"
@@ -1710,7 +1695,7 @@
                             </DockPanel>
                             <!--  页面消息  -->
                             <Border
-                                Margin="5,0"
+                                Margin="5"
                                 BorderBrush="Gray"
                                 BorderThickness="1"
                                 CornerRadius="5"

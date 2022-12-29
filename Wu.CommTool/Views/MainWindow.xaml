@@ -22,7 +22,7 @@
             <Style.Triggers>
                 <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
                     <!--<Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />-->
-                    <Setter Property="Margin" Value="8" />
+                    <Setter Property="Margin" Value="7" />
                 </DataTrigger>
             </Style.Triggers>
         </Style>
@@ -31,7 +31,7 @@
     <WindowChrome.WindowChrome>
         <WindowChrome
             CornerRadius="0"
-            GlassFrameThickness="-1"
+            GlassFrameThickness="1"
             NonClientFrameEdges="None"
             ResizeBorderThickness="5"
             UseAeroCaptionButtons="False" />
