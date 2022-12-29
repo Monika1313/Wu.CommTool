@@ -78,15 +78,19 @@ namespace Wu.CommTool.ViewModels
                 {
                     case "0":
                         ModbusRtuFunIndex = 0;
-                        IsDrawersOpen2.IsLeftDrawerOpen = false;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
                         break;
                     case "1":
                         ModbusRtuFunIndex = 1;
-                        IsDrawersOpen2.IsLeftDrawerOpen = false;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
                         break;
                     case "2":
                         ModbusRtuFunIndex = 2;
-                        IsDrawersOpen2.IsLeftDrawerOpen = false;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
+                        break;
+                    case "3":
+                        ModbusRtuFunIndex = 3;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
                         break;
                 }
             }
@@ -348,6 +352,7 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "Number1", Title = "自定义数据帧", NameSpace = "0" },
                 new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = "1" },
                 new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = "2" },
+                new MenuBar() { Icon = "Number4", Title = "数据读写", NameSpace = "3" },
             };
 
 

@@ -1484,6 +1484,281 @@
                         </DockPanel>
                     </md:DrawerHost>
                 </md:TransitionerSlide>
+
+                <!--  Index 3  -->
+                <md:TransitionerSlide>
+                    <!--  DrawerHost2  -->
+                    <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen2.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen2.IsRightDrawerOpen}">
+                        <!--  主体内容  -->
+                        <DockPanel>
+                            <!--  头部区域  -->
+                            <Grid DockPanel.Dock="Top">
+                                <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 数据读写" />
+                                <DockPanel LastChildFill="False">
+                                    <!--  ModbusRtu 功能选择  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="功能选择"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="ShowModbusRtuFunSelect"
+                                        Content="{md:PackIcon Kind=Apps}"
+                                        Cursor="Hand"
+                                        Style="{StaticResource Blue_CircleButton}" />
+
+                                    <!--  配置Com按钮  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="配置串口"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="ConfigCom"
+                                        Content="{md:PackIcon Kind=Cog}"
+                                        Cursor="Hand"
+                                        Style="{StaticResource Blue_CircleButton}" />
+
+                                    <!--  打开串口  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="打开串口"
+                                        Background="{StaticResource Green_Background}"
+                                        BorderBrush="{StaticResource Green_BorderBrush}"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="OpenCom"
+                                        Content="{md:PackIcon Kind=Play}"
+                                        Cursor="Hand"
+                                        Foreground="{StaticResource Green_Foreground}"
+                                        IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                        Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
+
+                                    <!--  关闭串口  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="关闭串口"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="CloseCom"
+                                        Content="{md:PackIcon Kind=Stop}"
+                                        Cursor="Hand"
+                                        IsEnabled="{Binding ComConfig.IsOpened}"
+                                        Style="{StaticResource Red_CircleButton}" />
+
+                                    <!--  暂停界面更新  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Pause"
+                                        Cursor="Hand">
+                                        <md:PackIcon Width="24" Height="24">
+                                            <md:PackIcon.Style>
+                                                <Style TargetType="md:PackIcon">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                                            <Setter Property="Kind" Value="PlayPause" />
+
+                                                        </DataTrigger>
+
+                                                        <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                                            <Setter Property="Kind" Value="Pause" />
+
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </md:PackIcon.Style>
+                                        </md:PackIcon>
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                        <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                                        <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <!--  清空消息按钮  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="清空消息"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Clear"
+                                        Content="{md:PackIcon Kind=Delete}"
+                                        Style="{StaticResource Red_CircleButton}" />
+
+                                    <!--  自动搜索ModbusRtu设备  -->
+                                    <!--<Button
+                                            Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="自动搜索ModbusRtu设备"
+                                            Command="{Binding ExecuteCommand}"
+                                            CommandParameter="AutoSearch"
+                                            Content="{md:PackIcon Kind=Search}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />-->
+                                </DockPanel>
+                            </Grid>
+
+                            <!--  底部区域  -->
+                            <StackPanel
+                                Height="30"
+                                DockPanel.Dock="Bottom"
+                                Orientation="Horizontal">
+                                <Border
+                                    Width="20"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="10,5"
+                                    CornerRadius="10">
+                                    <Border.Style>
+                                        <Style TargetType="Border">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="True">
+                                                    <Setter Property="Background" Value="LawnGreen" />
+                                                    <Setter Property="hc:Poptip.Content" Value="串口已打开" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding ComConfig.IsOpened}" Value="False">
+                                                    <Setter Property="Background" Value="Red" />
+                                                    <Setter Property="hc:Poptip.Content" Value="串口已关闭" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Border.Style>
+                                </Border>
+                                <TextBlock
+                                    Margin="0"
+                                    VerticalAlignment="Center"
+                                    FontWeight="Bold"
+                                    Text="{Binding ComConfig.Port.Key}" />
+                                <TextBlock VerticalAlignment="Center" Text=" : " />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
+                                <TextBlock VerticalAlignment="Center" Text="  " />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
+                                <TextBlock VerticalAlignment="Center" Text="  " />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
+                                <TextBlock
+                                    Margin="5,0"
+                                    VerticalAlignment="Center"
+                                    Text="{Binding ComConfig.StopBits}" />
+
+                                <Border
+                                    Margin="30,3"
+                                    BorderBrush="LightBlue"
+                                    BorderThickness="1" />
+                                <TextBlock VerticalAlignment="Center" Text="Receive: " />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding ReceiveBytesCount}" />
+                                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                                <Border
+                                    Margin="30,3"
+                                    BorderBrush="LightBlue"
+                                    BorderThickness="1" />
+                                <TextBlock VerticalAlignment="Center" Text="Send: " />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
+                                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                            </StackPanel>
+
+                            <!--  发送区域  -->
+                            <DockPanel Height="100" DockPanel.Dock="Bottom">
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                                    <ComboBox
+                                        MinWidth="190"
+                                        hc:InfoElement.Placeholder="请选择校验模式..."
+                                        hc:InfoElement.Title="自动校验模式: "
+                                        hc:InfoElement.TitleWidth="90"
+                                        ItemsSource="{Binding Source={StaticResource ValueCrcMode}}"
+                                        SelectedItem="{Binding CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                        Style="{StaticResource FormComboBox}" />
+                                    <Button
+                                        Margin="10,0"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Send"
+                                        Content="发送" />
+                                </StackPanel>
+                                <TextBox
+                                    Margin="4,0,4,4"
+                                    VerticalContentAlignment="Top"
+                                    hc:InfoElement.Placeholder="请输入要发送的内容..."
+                                    Style="{StaticResource TextBoxExtend}"
+                                    Text="{Binding SendMessage}"
+                                    TextWrapping="Wrap" />
+                            </DockPanel>
+                            <!--  页面消息  -->
+                            <Border
+                                Margin="5,0"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                DockPanel.Dock="Left">
+                                <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                                    <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border
+                                                    Margin="3"
+                                                    Padding="2"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4"
+                                                    Style="{StaticResource MessageBorder}">
+                                                    <WrapPanel Orientation="Horizontal">
+                                                        <TextBlock
+                                                            Margin="3"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource MessageTextBlock}"
+                                                            Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                        <TextBlock
+                                                            Margin="5,0"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource MessageTextBlock}"
+                                                            Text="{Binding Type}" />
+                                                        <TextBox
+                                                            VerticalAlignment="Center"
+                                                            FontSize="12"
+                                                            FontWeight="Bold"
+                                                            IsReadOnly="True"
+                                                            Style="{StaticResource MessageTextBox}"
+                                                            Text="{Binding Content}"
+                                                            TextWrapping="Wrap" />
+                                                    </WrapPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </hc:ScrollViewer>
+                            </Border>
+                        </DockPanel>
+                    </md:DrawerHost>
+                </md:TransitionerSlide>
             </md:Transitioner>
         </md:DrawerHost>
     </md:DialogHost>

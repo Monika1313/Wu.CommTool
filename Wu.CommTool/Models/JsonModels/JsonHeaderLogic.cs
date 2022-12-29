@@ -9,6 +9,7 @@ using Prism.Ioc;
 using Prism.Regions;
 using Prism.Commands;
 using System.Collections.ObjectModel;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Wu.CommTool.Models.JsonModels
 {
@@ -36,7 +37,6 @@ namespace Wu.CommTool.Models.JsonModels
         }
 
 
-
         //外部的从JToken创建JsonHeaderLogic的方法
         public static JsonHeaderLogic FromJToken(JToken jtoken)
         {
@@ -57,20 +57,42 @@ namespace Wu.CommTool.Models.JsonModels
             {
                 var jcontainer = (JContainer)jtoken;
                 var children = jcontainer.Children().Select(c => FromJToken(c));
-                string header;
+                string header = string.Empty;
+
+                //数组将和并显示
+                bool IsMerge = typeof(JArray).IsAssignableFrom(type)
+                    && children is not null
+                    && (children.First().Token.Type == JTokenType.Float
+                        || children.First().Token.Type == JTokenType.Integer);
 
                 if (typeof(JProperty).IsAssignableFrom(type))
-                    header = ((JProperty)jcontainer).Name;                   
-                //header = String.Format(PROPERTY, ((JProperty)jcontainer).Name);
+                    header = ((JProperty)jcontainer).Name;
                 else if (typeof(JArray).IsAssignableFrom(type))
-                    //header = String.Format(ARRAY, children.Count());
-                    header = $"[ {children.Count()} ]";
+                {
+                    if (IsMerge)
+                    {
+                        string str = string.Empty;
+                        foreach (var item in children)
+                        {
+                            str += item.Header + ", ";
+                        }
+                        header = $"[ {str} ]";
+                    }
+                    //header = $"[ {children.Count()} ]";
+                }
                 else if (typeof(JObject).IsAssignableFrom(type))
-                    //header = String.Format(OBJECT, children.Count());
                     header = $"{{ {children.Count()} }}";
                 else
                     throw new Exception("不支持的JContainer类型");
-                return new JsonHeaderLogic(jcontainer, header, children);
+
+                if (IsMerge)
+                {
+                    return new JsonHeaderLogic(jcontainer, header, null);
+                }
+                else
+                {
+                    return new JsonHeaderLogic(jcontainer, header, children);
+                }
             }
             else
             {

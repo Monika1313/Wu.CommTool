@@ -106,11 +106,11 @@ namespace Wu.CommTool.ViewModels
         {
             MenuBars = new ObservableCollection<MenuBar>
             {
-                new MenuBar() { Icon = "Bug", Title = "Modbus-Rtu", NameSpace = nameof(ModbusRtuView) },
-                new MenuBar() { Icon = "Clyde", Title = "Mqtt-Server", NameSpace = nameof(MqttServerView) },
-                new MenuBar() { Icon = "LadyBug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) },
-                new MenuBar() { Icon = "Clyde", Title = "转换工具", NameSpace = nameof(ConvertToolView) },
-                new MenuBar() { Icon = "LadyBug", Title = "Json查看工具", NameSpace = nameof(JsonToolView) },
+                new MenuBar() { Icon = "LanConnect", Title = "Modbus-Rtu", NameSpace = nameof(ModbusRtuView) },
+                new MenuBar() { Icon = "LadyBug", Title = "Mqtt-Server", NameSpace = nameof(MqttServerView) },
+                new MenuBar() { Icon = "Bug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) },
+                new MenuBar() { Icon = "TOOLS", Title = "转换工具", NameSpace = nameof(ConvertToolView) },
+                new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = nameof(JsonToolView) },
                 new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) }
             };
         }

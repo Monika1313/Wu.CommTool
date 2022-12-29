@@ -45,7 +45,14 @@
         <Grid Margin="5">
             <Grid.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
-                    <TextBlock Text="{Binding Path=Header}" />
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Path=Header}" />
+                        <!--<TextBlock
+                            Margin="10,0,0,0"
+                            Foreground="LightGreen"
+                            Text="{Binding Token.Type}" />-->
+
+                    </StackPanel>
                 </HierarchicalDataTemplate>
             </Grid.Resources>
 
@@ -56,10 +63,43 @@
                 <MenuItem Header="XXXXXXXX" ItemsSource="{Binding JsonHeaderLogics}" />
             </Menu>-->
 
-            <TreeView ItemsSource="{Binding JsonHeaderLogics}" Style="{StaticResource TreeViewBaseStyle}">
+            <TreeView ItemsSource="{Binding JsonHeaderLogics}" Style="{StaticResource TreeView.Small}">
                 <TreeView.ItemContainerStyle>
                     <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="True" />
+                        <Style.Triggers>
+
+                            <DataTrigger Binding="{Binding Token.Type}" Value="Array">
+                                <Setter Property="Foreground" Value="Blue" />
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding Token.Type}" Value="Float">
+                                <Setter Property="Foreground" Value="Purple" />
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding Token.Type}" Value="Integer">
+                                <Setter Property="Foreground" Value="Purple" />
+                            </DataTrigger>
+
+
+                            <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                                <Setter Property="Foreground" Value="Green" />
+                            </DataTrigger>
+
+                            <DataTrigger Binding="{Binding Token.Type}" Value="string">
+                                <Setter Property="Foreground" Value="#007777" />
+                            </DataTrigger>
+
+
+                            <!--<Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="{StaticResource Green_BorderBrush}" />
+                            </Trigger>-->
+
+                            <!--<Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                                <Setter Property="Opacity" Value="0.2" />
+                            </Trigger>-->
+                        </Style.Triggers>
                     </Style>
                 </TreeView.ItemContainerStyle>
                 <!--<TreeViewItem Header="XXXXXXXX" ItemsSource="{Binding JsonHeaderLogics}" />-->
