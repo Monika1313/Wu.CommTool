@@ -8,6 +8,7 @@
     xmlns:local="clr-namespace:Wu.CommTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Wu.CommTool.Models.JsonModels"
+    xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dm:JsonToolDesignViewModel.Instance}"
     d:DesignHeight="450"
     d:DesignWidth="800"
@@ -16,8 +17,7 @@
 
 
         <TextBox
-            MinHeight="100"
-            MaxHeight="200"
+            Height="150"
             Margin="4,0,4,4"
             VerticalContentAlignment="Top"
             hc:InfoElement.Placeholder="请输入Json字符串..."
@@ -46,12 +46,56 @@
             <Grid.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Path=Header}" />
+                        <!--<TextBlock Text="{Binding Path=Header}" />-->
+                        <TextBlock Text="{Binding Header}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                                            <Setter Property="Foreground" Value="Green" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Token.Type}" Value="Array">
+                                            <Setter Property="Foreground" Value="Blue" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <TextBlock Text=" : " Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}" />
+                        <TextBlock Text="{Binding DispValue}" Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}">
+                            <TextBlock.Style>
+                                <Style TargetType="TextBlock">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
+                                            <Setter Property="Foreground" Value="#a31515" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
+                                            <Setter Property="Foreground" Value="Green" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
+                                            <Setter Property="Foreground" Value="Green" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
+                                            <Setter Property="Foreground" Value="Blue" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                                            <Setter Property="Foreground" Value="Blue" />
+                                        </DataTrigger>
+
+
+                                        <!--<Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Foreground" Value="White" />
+                                            <Setter Property="Opacity" Value="0.2" />
+                                        </Trigger>-->
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                        <!--<TextBlock Text="{Binding Token.Value.Type}" />-->
                         <!--<TextBlock
                             Margin="10,0,0,0"
                             Foreground="LightGreen"
                             Text="{Binding Token.Type}" />-->
-
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </Grid.Resources>
@@ -68,37 +112,24 @@
                     <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="True" />
                         <Style.Triggers>
-
-                            <DataTrigger Binding="{Binding Token.Type}" Value="Array">
-                                <Setter Property="Foreground" Value="Blue" />
+                            <!--<DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
+                                <Setter Property="Foreground" Value="#a31515" />
                             </DataTrigger>
-
-                            <DataTrigger Binding="{Binding Token.Type}" Value="Float">
-                                <Setter Property="Foreground" Value="Purple" />
-                            </DataTrigger>
-
-                            <DataTrigger Binding="{Binding Token.Type}" Value="Integer">
-                                <Setter Property="Foreground" Value="Purple" />
-                            </DataTrigger>
-
-
-                            <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
                                 <Setter Property="Foreground" Value="Green" />
                             </DataTrigger>
-
-                            <DataTrigger Binding="{Binding Token.Type}" Value="string">
-                                <Setter Property="Foreground" Value="#007777" />
+                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
+                                <Setter Property="Foreground" Value="Green" />
                             </DataTrigger>
+                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
+                                <Setter Property="Foreground" Value="Blue" />
+                            </DataTrigger>-->
 
-
-                            <!--<Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="{StaticResource Green_BorderBrush}" />
-                            </Trigger>-->
-
-                            <!--<Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
-                                <Setter Property="Opacity" Value="0.2" />
-                            </Trigger>-->
+                            <Trigger Property="IsSelected" Value="True">
+                                <!--<Setter Property="Background" Value="Red" />-->
+                                <Setter Property="Foreground" Value="White" />
+                                <!--<Setter Property="Opacity" Value="0.2" />-->
+                            </Trigger>
                         </Style.Triggers>
                     </Style>
                 </TreeView.ItemContainerStyle>

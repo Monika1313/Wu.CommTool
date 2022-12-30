@@ -92,17 +92,20 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //json字符串转对象
-                //var xx = JsonConvert.DeserializeObject<object>(JsonString);
-                //var xz = JsonConvert.DeserializeObject<JToken>(JsonString);
+                //var jobj = JObject.Parse(JsonString);
+                //var li = jobj.Children().Select(c=> JsonHeaderLogic.FromJToken(c)).ToList();
+                //JsonHeaderLogics.Clear();
+                //foreach (var item in li)
+                //{
+                //    JsonHeaderLogics.Add(item);
+                //}
 
-                var jobj = JObject.Parse(JsonString);
-                var li = jobj.Children().Select(c=> JsonHeaderLogic.FromJToken(c)).ToList();
+
+                //json字符串转JToken
+                var jtoken = JToken.Parse(JsonString);
+                var json = JsonHeaderLogic.FromJToken(jtoken);
                 JsonHeaderLogics.Clear();
-                foreach (var item in li)
-                {
-                    JsonHeaderLogics.Add(item);
-                }
-                //JsonHeaderLogics
+                JsonHeaderLogics.Add(json);
             }
             catch (Exception ex)
             {

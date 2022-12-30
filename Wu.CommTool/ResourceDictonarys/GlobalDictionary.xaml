@@ -169,13 +169,6 @@
                         <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter TargetName="borderHeader" Property="BorderThickness" Value="4,0,0,0" />
-                            <Setter TargetName="borderHeader" Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}" />
-                            <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
-                            <Setter TargetName="border" Property="Opacity" Value="0.2" />
-                        </Trigger>
-
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
                             <Setter TargetName="border" Property="Opacity" Value="0.2" />
