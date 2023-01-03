@@ -400,8 +400,8 @@ namespace Wu.CommTool.ViewModels
                     .UseApplicationMessageReceivedHandler(ReceiveMessage); //接收消息事件
 
                 ShowMessage("连接中...");
+                MqttClientConfig.IsOpened = true;//连接时需要直接至位, 否则重复连接期间重复点击连接将导致异常
                 await client.ConnectAsync(options);                //启动连接
-                MqttClientConfig.IsOpened = true;
             }
             catch (Exception ex)
             {

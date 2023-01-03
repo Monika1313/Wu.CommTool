@@ -10,6 +10,7 @@ using Wu.CommTool.Models;
 using Wu.CommTool.ViewModels;
 using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
+using Wu.CommTool.Views.Dialogs;
 
 namespace Wu.CommTool
 {
@@ -67,7 +68,9 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();                                           //关于
             containerRegistry.RegisterForNavigation<ConvertToolView, ConvertToolViewModel>();                               //小工具界面
-            containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                             //Json工具界面
+            containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
+            //弹窗界面
+            containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面
         }
 
         /// <summary>
