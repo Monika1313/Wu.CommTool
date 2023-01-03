@@ -1,8 +1,6 @@
 ﻿using Prism.Commands;
-using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
-using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;

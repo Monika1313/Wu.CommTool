@@ -1,6 +1,4 @@
-﻿using DryIoc;
-using HandyControl.Controls;
-using log4net;
+﻿using log4net;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;
@@ -9,11 +7,9 @@ using MqttnetServer.Model;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
@@ -93,7 +89,7 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-               
+
             }
             catch (Exception ex)
             {

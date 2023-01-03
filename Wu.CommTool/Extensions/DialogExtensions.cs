@@ -1,12 +1,9 @@
-﻿using Wu.CommTool.Common;
-using Wu.CommTool.Events;
-using Prism.Events;
+﻿using Prism.Events;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Wu.CommTool.Common;
+using Wu.CommTool.Events;
 
 namespace Wu.CommTool.Extensions
 {
@@ -49,7 +46,7 @@ namespace Wu.CommTool.Extensions
         /// </summary>
         /// <param name="aggregator"></param>
         /// <param name="action"></param>
-        public static void Resgiter(this IEventAggregator aggregator,Action<UpdateModel> action)
+        public static void Resgiter(this IEventAggregator aggregator, Action<UpdateModel> action)
         {
             aggregator.GetEvent<UpdateLoadingEvent>().Subscribe(action);
         }
@@ -60,9 +57,9 @@ namespace Wu.CommTool.Extensions
         /// <param name="aggregator"></param>
         /// <param name="action"></param>
         /// <param name="filterName">过滤器名称</param>
-        public static void ResgiterMessage(this IEventAggregator aggregator, Action<MessageModel> action, string filterName="Main")
+        public static void ResgiterMessage(this IEventAggregator aggregator, Action<MessageModel> action, string filterName = "Main")
         {
-            aggregator.GetEvent<MessageEvent>().Subscribe(action, ThreadOption.PublisherThread,true, (m) =>
+            aggregator.GetEvent<MessageEvent>().Subscribe(action, ThreadOption.PublisherThread, true, (m) =>
             {
                 return m.Filter.Equals(filterName);
             });

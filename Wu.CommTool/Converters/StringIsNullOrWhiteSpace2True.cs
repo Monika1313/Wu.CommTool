@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows;
 using Wu.Wpf.Converters;
 
 namespace Wu.CommTool.Converters

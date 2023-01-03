@@ -1,38 +1,29 @@
-﻿using Prism.Commands;
+﻿using ImTools;
+using Newtonsoft.Json;
+using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.IO.Ports;
-using Wu.CommTool.Models;
-using System.Management;
-using HandyControl.Controls;
-using System.Text;
-using System.Windows.Controls;
-using System.Diagnostics;
-using System.Threading;
-using Wu.Extensions;
-using System.Text.RegularExpressions;
-using MaterialDesignThemes.Wpf;
-using Wu.CommTool.Common;
-using Wu.CommTool.Extensions;
-using Prism.Services.Dialogs;
-using Wu.CommTool.Dialogs.Views;
-using Wu.CommTool.Views;
-using System.Windows;
-using System.Timers;
-using System.Linq;
-using Newtonsoft.Json;
 using System.IO;
-using Microsoft.Win32;
-using System.Windows.Forms;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Prism.Regions;
-using ImTools;
-using System.Collections;
+using System.IO.Ports;
+using System.Linq;
+using System.Management;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Timers;
+using Wu.CommTool.Common;
+using Wu.CommTool.Dialogs.Views;
+using Wu.CommTool.Extensions;
+using Wu.CommTool.Models;
+using Wu.CommTool.Views;
+using Wu.Extensions;
 using Wu.ViewModels;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -430,7 +421,7 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        
+
 
 
 
@@ -639,7 +630,7 @@ namespace Wu.CommTool.ViewModels
                 catch (Exception ex)
                 {
                     ShowErrorMessage($"数据转换16进制失败，发送数据位数量必须为偶数(16进制一个字节2位数)。");
-                    return false; 
+                    return false;
                 }
 
                 if (SerialPort.IsOpen)
@@ -806,7 +797,7 @@ namespace Wu.CommTool.ViewModels
                         ModbusRtuDevices.Add(CurrentDevice);
                     }));
                 }
-                
+
 
                 //若自动读取开启则解析接收的数据
                 if (DataMonitorConfig.IsOpened)
@@ -857,7 +848,7 @@ namespace Wu.CommTool.ViewModels
             //将读取的数据写入
             for (int i = 0; i < DataMonitorConfig.Quantity; i++)
             {
-                DataMonitorConfig.ModbusRtuDatas[i].Location = i*2 +3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+                DataMonitorConfig.ModbusRtuDatas[i].Location = i * 2 + 3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
                 DataMonitorConfig.ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
                 DataMonitorConfig.ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
                 DataMonitorConfig.ModbusRtuDatas[i].ModbusByteOrder = DataMonitorConfig.ByteOrder; //字节序

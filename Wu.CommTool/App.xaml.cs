@@ -85,10 +85,10 @@ namespace Wu.CommTool
             Current.MainWindow.Height = AppConfig.WinHeight;
             if (AppConfig.IsMaximized)
                 Current.MainWindow.WindowState = WindowState.Maximized;
-            
+
             base.OnInitialized();
         }
 
-       
+
     }
 }

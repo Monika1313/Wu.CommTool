@@ -1,29 +1,26 @@
-﻿using MaterialDesignThemes.Wpf;
-using MQTTnet.Client.Options;
+﻿using log4net;
+using MaterialDesignThemes.Wpf;
+using Microsoft.Win32;
 using MQTTnet;
+using MQTTnet.Client;
+using MQTTnet.Client.Connecting;
+using MQTTnet.Client.Disconnecting;
+using MQTTnet.Client.Options;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
-using static System.Windows.Forms.AxHost;
-using MQTTnet.Client;
-using System.Threading.Tasks;
-using MQTTnet.Client.Connecting;
-using MQTTnet.Client.Disconnecting;
-using System.Text;
-using Wu.FzWater.Mqtt;
-using System.Threading;
-using Microsoft.Win32;
-using Newtonsoft.Json;
-using log4net;
 using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
@@ -344,7 +341,7 @@ namespace Wu.CommTool.ViewModels
                 .Build();
 
                 //发布
-                var result =await client.PublishAsync(mam, CancellationToken.None);
+                var result = await client.PublishAsync(mam, CancellationToken.None);
                 ShowSendMessage($"主题: {MqttClientConfig.PublishTopic}\r\n{SendMessage}");
             }
             catch (Exception ex)
@@ -541,7 +538,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //取消订阅主题
-                var result = await client.UnsubscribeAsync(topic);       
+                var result = await client.UnsubscribeAsync(topic);
                 //根据结果判断
                 ShowMessage($"已取消订阅主题: {topic}");
                 //取消订阅成功 从订阅成功的列表移除

@@ -1,14 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Mvvm;
-using Prism.Regions;
 using Prism.Services.Dialogs;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wu.CommTool.Common;
 
 namespace Wu.CommTool.ViewModels

@@ -1,13 +1,4 @@
-﻿using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Prism.Mvvm;
 
 namespace Wu.CommTool.Models
 {

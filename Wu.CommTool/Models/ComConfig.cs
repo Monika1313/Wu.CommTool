@@ -1,14 +1,5 @@
-﻿using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
+﻿using Prism.Mvvm;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO.Ports;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wu.CommTool.Models
 {
@@ -39,7 +30,7 @@ namespace Wu.CommTool.Models
         /// 数据位
         /// </summary>
         public int DataBits { get => _DataBits; set => SetProperty(ref _DataBits, value); }
-        private int _DataBits =8;
+        private int _DataBits = 8;
 
         /// <summary>
         /// 停止位
@@ -51,6 +42,6 @@ namespace Wu.CommTool.Models
         /// 是否已打开
         /// </summary>
         public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
-        private bool _IsOpened =false;
+        private bool _IsOpened = false;
     }
 }

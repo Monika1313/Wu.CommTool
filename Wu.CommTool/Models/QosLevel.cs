@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Wu.CommTool.Converters;
 
 namespace Wu.CommTool.Models
@@ -20,6 +15,6 @@ namespace Wu.CommTool.Models
         AtMostOnce = 1,
         [Description("Qos2")]
         ExactlyOnce = 2
-        
+
     }
 }

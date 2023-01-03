@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Wu.CommTool.Extensions
+﻿namespace Wu.CommTool.Extensions
 {
     /// <summary>
     /// Prism区域导航管理

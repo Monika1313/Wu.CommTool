@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Wu.Wpf.Converters;
 
 namespace Wu.CommTool.Enums
@@ -17,7 +12,7 @@ namespace Wu.CommTool.Enums
         [Description("16进制")]
         Hex = 0,
         Json = 1,
-        文本 =2,
+        文本 = 2,
 
     }
 }

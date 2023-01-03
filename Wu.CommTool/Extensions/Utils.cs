@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Wu.CommTool.Extensions
+﻿namespace Wu.CommTool.Extensions
 {
     public static class Utils
     {

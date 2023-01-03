@@ -1,11 +1,9 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 using Wu.Wpf.Extensions;
@@ -68,7 +66,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+
         }
 
         /// <summary>
@@ -101,7 +99,7 @@ namespace Wu.CommTool.ViewModels
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
-        
+
         /// <summary>
         /// 取消
         /// </summary>
@@ -139,7 +137,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 UpdateLoading(true);
-                
+
             }
             catch (Exception ex)
             {

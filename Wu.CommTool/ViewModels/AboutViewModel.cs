@@ -1,11 +1,9 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.ViewModels;
@@ -67,7 +65,7 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                System.Diagnostics.Process.Start("explorer.exe",@"https://github.com/Monika1313/Wu.CommTool");
+                System.Diagnostics.Process.Start("explorer.exe", @"https://github.com/Monika1313/Wu.CommTool");
             }
             catch (Exception)
             {

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Wu.CommTool.Converters;
 
 namespace Wu.CommTool.Models
@@ -15,13 +10,13 @@ namespace Wu.CommTool.Models
     public enum Parity
     {
         [Description("None   无校验")]
-        None = 0,                      
+        None = 0,
         [Description("Odd    奇校验")]
-        Odd = 1,                       
+        Odd = 1,
         [Description("Even   偶校验")]
-        Even = 2,                      
+        Even = 2,
         [Description("Mark   固定1")]
-        Mark = 3,                      
+        Mark = 3,
         [Description("Space  固定0")]
         Space = 4,
     }

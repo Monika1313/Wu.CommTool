@@ -173,7 +173,7 @@ namespace Wu.CommTool.Controls
             {
                 try
                 {
-                    self.Ip = $"{self.IpPart1}.{self.IpPart2 }.{self.IpPart3}.{self.IpPart4}";
+                    self.Ip = $"{self.IpPart1}.{self.IpPart2}.{self.IpPart3}.{self.IpPart4}";
                 }
                 catch (Exception) { }
             }

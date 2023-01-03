@@ -1,15 +1,8 @@
 ﻿using Newtonsoft.Json.Linq;
+using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Prism.Mvvm;
-using Prism.Ioc;
-using Prism.Regions;
-using Prism.Commands;
-using System.Collections.ObjectModel;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Wu.CommTool.Models.JsonModels
 {
@@ -40,9 +33,9 @@ namespace Wu.CommTool.Models.JsonModels
 
         public JToken Token { get; private set; }
 
-        
 
-        
+
+
 
 
         //内部构造函数，使用FromJToken来创建JsonHeaderLogic
@@ -71,7 +64,7 @@ namespace Wu.CommTool.Models.JsonModels
                 else if (jp.Value.Type.Equals(JTokenType.Array))
                 {
                     InLine = true;
-                    DispValue = $"{jp.Value.ToString().Replace("\r\n","")}";
+                    DispValue = $"{jp.Value.ToString().Replace("\r\n", "")}";
                 }
             }
 

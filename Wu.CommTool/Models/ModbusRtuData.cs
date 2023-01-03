@@ -1,15 +1,7 @@
-﻿using HandyControl.Controls;
-using Newtonsoft.Json;
-using Prism.Commands;
-using Prism.Ioc;
+﻿using Newtonsoft.Json;
 using Prism.Mvvm;
-using Prism.Regions;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Wu.CommTool.Enums;
 
 namespace Wu.CommTool.Models
@@ -78,7 +70,7 @@ namespace Wu.CommTool.Models
         [JsonIgnore]
         public byte[]? OriginBytes
         {
-            get => _OriginBytes; 
+            get => _OriginBytes;
             set
             {
                 SetProperty(ref _OriginBytes, value);
@@ -153,9 +145,9 @@ namespace Wu.CommTool.Models
                 case DataType.Long:
                     return BitConverter.ToInt64(databytes) * rate;
                 case DataType.Float:
-                    return Math.Round((BitConverter.ToSingle(databytes) * rate),2);
+                    return Math.Round((BitConverter.ToSingle(databytes) * rate), 2);
                 case DataType.Double:
-                    return Math.Round(BitConverter.ToDouble(databytes) * rate,2);
+                    return Math.Round(BitConverter.ToDouble(databytes) * rate, 2);
                 default:
                     return 0;
             }
@@ -218,7 +210,7 @@ namespace Wu.CommTool.Models
         public static byte[] ByteOrder(byte[] val, ModbusByteOrder byteOrder)
         {
             //若为单字节的则直接返回
-            if (val.Length<=1)
+            if (val.Length <= 1)
             {
                 return val;
             }

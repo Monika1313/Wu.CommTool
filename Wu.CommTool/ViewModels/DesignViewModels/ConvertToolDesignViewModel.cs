@@ -6,7 +6,7 @@
         public static ConvertToolDesignViewModel Instance => _Instance ??= new();
         public ConvertToolDesignViewModel()
         {
-            
+
         }
     }
 }

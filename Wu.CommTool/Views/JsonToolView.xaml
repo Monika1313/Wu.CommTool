@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
     xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
+    xmlns:wuext="clr-namespace:Wu.Wpf.Extensions;assembly=Wu.Wpf"
     xmlns:local="clr-namespace:Wu.CommTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Wu.CommTool.Models.JsonModels"
@@ -16,7 +18,7 @@
     <DockPanel>
 
 
-        <TextBox
+        <TextBox ext:TextBoxExtensions.SelectAllWhenGotFocus="True"
             Height="150"
             Margin="4,0,4,4"
             VerticalContentAlignment="Top"
