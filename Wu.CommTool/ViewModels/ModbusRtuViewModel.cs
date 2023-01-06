@@ -794,6 +794,8 @@ namespace Wu.CommTool.ViewModels
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                     {
+                        CurrentDevice.ReceiveMessage = msg.Content;
+                        CurrentDevice.Address = int.Parse(msg.Content[..2], System.Globalization.NumberStyles.HexNumber);
                         ModbusRtuDevices.Add(CurrentDevice);
                     }));
                 }

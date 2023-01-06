@@ -36,5 +36,11 @@ namespace Wu.CommTool.Models
         /// </summary>
         public StopBits StopBits { get => _StopBits; set => SetProperty(ref _StopBits, value); }
         private StopBits _StopBits = StopBits.One;
+
+        /// <summary>
+        /// 接收的消息
+        /// </summary>
+        public string ReceiveMessage { get => _ReceiveMessage; set => SetProperty(ref _ReceiveMessage, value); }
+        private string _ReceiveMessage = string.Empty;
     }
 }

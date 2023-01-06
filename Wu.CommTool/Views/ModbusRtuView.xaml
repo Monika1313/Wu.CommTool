@@ -735,7 +735,7 @@
                                             </TextBlock.Style>
                                         </TextBlock>
                                     </StackPanel>
-                                    <DockPanel>
+                                    <DockPanel >
                                         <TextBlock
                                             Margin="5"
                                             HorizontalAlignment="Center"
@@ -744,7 +744,6 @@
                                         <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                             <!--  搜索到的设备  -->
                                             <ItemsControl
-                                                MinHeight="100"
                                                 Background="Transparent"
                                                 ItemsSource="{Binding ModbusRtuDevices}">
                                                 <ItemsControl.ItemsPanel>
@@ -806,6 +805,11 @@
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <TextBlock Text="停止位：" />
                                                                     <TextBlock Text="{Binding StopBits}" />
+                                                                </StackPanel>
+
+                                                                <StackPanel Orientation="Horizontal">
+                                                                    <TextBlock Text="消息：" />
+                                                                    <TextBlock Width="130" Text="{Binding ReceiveMessage}" TextWrapping="Wrap" />
                                                                 </StackPanel>
                                                             </StackPanel>
                                                         </Border>
