@@ -5,31 +5,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
     xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
-    xmlns:wuext="clr-namespace:Wu.Wpf.Extensions;assembly=Wu.Wpf"
     xmlns:local="clr-namespace:Wu.CommTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:model="clr-namespace:Wu.CommTool.Models.JsonModels"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
+    xmlns:wuext="clr-namespace:Wu.Wpf.Extensions;assembly=Wu.Wpf"
     d:DataContext="{x:Static dm:JsonToolDesignViewModel.Instance}"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
     <DockPanel>
-
-
-        <TextBox ext:TextBoxExtensions.SelectAllWhenGotFocus="True"
+        <TextBox
             Height="150"
             Margin="4,0,4,4"
             VerticalContentAlignment="Top"
             hc:InfoElement.Placeholder="请输入Json字符串..."
+            wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
             AcceptsReturn="True"
             DockPanel.Dock="Bottom"
             Foreground="#999999"
             Style="{StaticResource TextBoxExtend}"
             Text="{Binding JsonString}"
             TextWrapping="Wrap" />
-
         <WrapPanel DockPanel.Dock="Bottom">
             <!--<ComboBox hc:TitleElement.Title="缩进量" Style="{StaticResource FormComboBox}" />
             <TextBlock
@@ -83,8 +80,6 @@
                                         <DataTrigger Binding="{Binding Token.Type}" Value="Object">
                                             <Setter Property="Foreground" Value="Blue" />
                                         </DataTrigger>
-
-
                                         <!--<Trigger Property="IsMouseOver" Value="True">
                                             <Setter Property="Foreground" Value="White" />
                                             <Setter Property="Opacity" Value="0.2" />

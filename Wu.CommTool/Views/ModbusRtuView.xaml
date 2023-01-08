@@ -735,7 +735,7 @@
                                             </TextBlock.Style>
                                         </TextBlock>
                                     </StackPanel>
-                                    <DockPanel >
+                                    <DockPanel>
                                         <TextBlock
                                             Margin="5"
                                             HorizontalAlignment="Center"
@@ -743,9 +743,7 @@
                                             Text="搜索到的设备" />
                                         <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                             <!--  搜索到的设备  -->
-                                            <ItemsControl
-                                                Background="Transparent"
-                                                ItemsSource="{Binding ModbusRtuDevices}">
+                                            <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuDevices}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel Orientation="Vertical" />
@@ -809,7 +807,10 @@
 
                                                                 <StackPanel Orientation="Horizontal">
                                                                     <TextBlock Text="消息：" />
-                                                                    <TextBlock Width="130" Text="{Binding ReceiveMessage}" TextWrapping="Wrap" />
+                                                                    <TextBlock
+                                                                        Width="130"
+                                                                        Text="{Binding ReceiveMessage}"
+                                                                        TextWrapping="Wrap" />
                                                                 </StackPanel>
                                                             </StackPanel>
                                                         </Border>

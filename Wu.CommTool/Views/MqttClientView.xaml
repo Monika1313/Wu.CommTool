@@ -5,6 +5,7 @@
     xmlns:cvt="clr-namespace:Wu.CommTool.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+    xmlns:enums="clr-namespace:Wu.CommTool.Enums"
     xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -402,6 +403,13 @@
                             Content="{md:PackIcon Kind=Delete}"
                             Style="{StaticResource Red_CircleButton}" />
 
+                        <ComboBox
+                            hc:InfoElement.Title="接收消息格式"
+                            hc:InfoElement.TitleWidth="80"
+                            ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type enums:MqttPayloadType}}}"
+                            SelectedItem="{Binding MqttClientConfig.ReceivePaylodType}"
+                            Style="{StaticResource FormComboBox}" />
+
                         <!--  订阅主题管理  -->
                         <Button
                             Width="30"
@@ -471,6 +479,14 @@
                             SelectedItem="{Binding MqttClientConfig.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource FormComboBox}" />
 
+                        <ComboBox
+                            hc:InfoElement.Title="发送消息格式"
+                            hc:InfoElement.TitleWidth="80"
+                            DockPanel.Dock="Right"
+                            ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type enums:MqttPayloadType}}}"
+                            SelectedItem="{Binding MqttClientConfig.SendPaylodType}"
+                            Style="{StaticResource FormComboBox}" />
+
                         <TextBox
                             hc:InfoElement.Placeholder="请输入发送的消息主题..."
                             hc:TitleElement.Title="发布主题"
@@ -512,6 +528,26 @@
                                         BorderThickness="1"
                                         CornerRadius="4"
                                         Style="{StaticResource MessageBorder}">
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem
+                                                    Command="{Binding DataContext.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="查看Json格式化" />
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
+                                        <!--<MenuItem
+                                                    Command="{Binding OpenJsonDataViewCommand}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource Mode=self}}"
+                                                    DataContext="{Binding RelativeSource={RelativeSource AncestorType={x:Type UserControl}}, Path=DataContext}"
+                                                    Header="查看Json格式化" />-->
+
+                                        <!--<MenuItem
+                                                    Command="{Binding DataContext.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    DataContext="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                    Header="查看Json格式化" />-->
+
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock
                                                 Margin="3"

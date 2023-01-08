@@ -1,4 +1,5 @@
-﻿using log4net;
+﻿using DryIoc;
+using log4net;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;
@@ -9,6 +10,7 @@ using MQTTnet.Client.Options;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
@@ -19,8 +21,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using Wu.CommTool.Common;
+using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+using Wu.CommTool.Views.Dialogs;
 using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
@@ -47,7 +51,7 @@ namespace Wu.CommTool.ViewModels
             UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-
+            OpenJsonDataViewCommand = new DelegateCommand<object>(OpenJsonDataView);
 
             MqttClientConfig.SubscribeTopics.Add("+/#");//默认订阅所有主题
 
@@ -67,6 +71,7 @@ namespace Wu.CommTool.ViewModels
                 ShowErrorMessage("配置文件读取失败");
             }
         }
+
 
         /// <summary>
         /// 减少主题
@@ -155,6 +160,11 @@ namespace Wu.CommTool.ViewModels
         /// 取消订阅主题
         /// </summary>
         public DelegateCommand<string> UnsubscribeTopicCommand { get; private set; }
+
+        /// <summary>
+        /// 打开json格式化界面
+        /// </summary>
+        public DelegateCommand<object> OpenJsonDataViewCommand { get; private set; }
         #endregion
 
 
@@ -314,6 +324,9 @@ namespace Wu.CommTool.ViewModels
                 //        break;
                 //}
 
+
+
+
                 //根据选择的消息质量进行设置
                 var mqttAMB = new MqttApplicationMessageBuilder();
 
@@ -332,11 +345,27 @@ namespace Wu.CommTool.ViewModels
                     default:
                         break;
                 }
+                
+                //todo 发送消息格式
+                switch (MqttClientConfig.SendPaylodType)
+                {
+                    case MqttPayloadType.Plaintext:
+                        mqttAMB.WithPayload(SendMessage);
+                        break;
+                    case MqttPayloadType.Base64:
+                        mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(SendMessage)));
+                        break;
+                    case MqttPayloadType.Json:
+                        mqttAMB.WithPayload(SendMessage.ToJsonString());
+                        break;
+                    case MqttPayloadType.Hex:
+                        mqttAMB.WithPayload(Wu.Extensions.StringExtention.GetBytes(SendMessage.Replace(" ", string.Empty)));
+                        break;
+                }
 
                 var mam = mqttAMB.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
-                .WithPayload(SendMessage)
+                //.WithPayload(SendMessage)
                 //.WithExactlyOnceQoS()
-                //.WithAtLeastOnceQoS()
                 .WithRetainFlag()
                 .Build();
 
@@ -415,18 +444,26 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}");
-                //switch (SelectedDeCodeMode.Id)
-                //{
-                //    case 2:
-                //        str = Encoding.UTF8.GetString(c.ApplicationMessage.Payload) + "\r\n";
-                //        break;
-                //    case 1:
-                //        str = $"接收消息：主题：“{c.ApplicationMessage.Topic}”\r\n" + dataFrame.ToString();
-                //        //$"内容：“{(c.ApplicationMessage?.Payload == null ? null : BitConverter.ToString(c.ApplicationMessage?.Payload))}”";
-                //        //接收的数据以字节显示
-                //        break;
-                //}
+                if (IsPause)
+                {
+                    return;
+                }
+
+                switch (MqttClientConfig.ReceivePaylodType)
+                {
+                    case MqttPayloadType.Plaintext:
+                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}");
+                        break;
+                    case MqttPayloadType.Json:
+                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}");
+                        break;
+                    case MqttPayloadType.Hex:
+                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{BitConverter.ToString(arg.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}");
+                        break;
+                    case MqttPayloadType.Base64:
+                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Convert.ToBase64String(arg.ApplicationMessage.Payload)}");
+                        break;
+                }
             }
             catch (Exception)
             {
@@ -671,6 +708,45 @@ namespace Wu.CommTool.ViewModels
             finally
             {
                 UpdateLoading(false);
+            }
+        }
+
+
+        //private  void OpenJsonDataView(object obj)
+        //{
+        //    try
+        //    {
+        //        //TODO 弹窗json
+        //        //DialogParameters param = new()
+        //        //{
+        //        //    { "Value", obj }
+        //        //};
+        //        //var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, nameof(DialogHostName));
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //}
+
+        /// <summary>
+        /// 打开json格式化界面
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OpenJsonDataView(object obj)
+        {
+            try
+            {
+                //TODO 弹窗json
+                //DialogParameters param = new()
+                //{
+                //    { "Value", obj }
+                //};
+                //var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, nameof(DialogHostName));
+            }
+            catch (Exception ex)
+            {
+
             }
         }
         #endregion

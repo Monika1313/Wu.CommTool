@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Prism.Mvvm;
+using Wu.CommTool.Enums;
 
 namespace Wu.CommTool.Models
 {
@@ -23,5 +24,17 @@ namespace Wu.CommTool.Models
         [JsonIgnore]
         public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
         private bool _IsOpened = false;
+
+        /// <summary>
+        /// 接收消息的格式
+        /// </summary>
+        public MqttPayloadType ReceivePaylodType { get => _ReceivePaylodType; set => SetProperty(ref _ReceivePaylodType, value); }
+        private MqttPayloadType _ReceivePaylodType = MqttPayloadType.Plaintext;
+
+        /// <summary>
+        /// 发送消息的格式
+        /// </summary>
+        public MqttPayloadType SendPaylodType { get => _SendPaylodType; set => SetProperty(ref _SendPaylodType, value); }
+        private MqttPayloadType _SendPaylodType = MqttPayloadType.Plaintext;
     }
 }

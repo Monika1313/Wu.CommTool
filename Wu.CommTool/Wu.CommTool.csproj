@@ -35,16 +35,16 @@
     <Resource Include="Images\XX.png" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="HandyControl" Version="3.3.0" />
+    <PackageReference Include="HandyControl" Version="3.4.0" />
     <PackageReference Include="log4net" Version="2.0.15" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.5.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.7.0" />
     <PackageReference Include="MQTTnet" Version="3.1.2" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
-    <PackageReference Include="System.IO.Ports" Version="6.0.0" />
-    <PackageReference Include="System.Management" Version="6.0.0" />
+    <PackageReference Include="System.IO.Ports" Version="7.0.0" />
+    <PackageReference Include="System.Management" Version="7.0.0" />
     <PackageReference Include="Wu" Version="1.0.5" />
-    <PackageReference Include="Wu.Wpf" Version="1.0.4" />
+    <PackageReference Include="Wu.Wpf" Version="1.0.5" />
   </ItemGroup>
   <ItemGroup>
     <None Update="Configs\Log4netConfig\log4net.config">

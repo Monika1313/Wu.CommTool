@@ -6,13 +6,13 @@
         public static MqttClientDesignViewModel Instance => _Instance ??= new();
         public MqttClientDesignViewModel()
         {
-            IsDrawersOpen.IsLeftDrawerOpen = true;
+            IsDrawersOpen.IsLeftDrawerOpen = false;
+            IsDrawersOpen.IsRightDrawerOpen = false;
             MqttClientConfig.SubscribeTopics.Add("Topic1");
             MqttClientConfig.SubscribeTopics.Add("Topic2");
             MqttClientConfig.SubscribeTopics.Add("Topic3");
             MqttClientConfig.SubscribeTopics.Add("Topic4");
             MqttClientConfig.SubscribeTopics.Add("Topic5");
-            IsDrawersOpen.IsRightDrawerOpen = true;
             MqttClientConfig.SubscribeSucceeds.Add("Topic1");
         }
     }

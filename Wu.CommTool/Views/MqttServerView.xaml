@@ -6,6 +6,7 @@
     xmlns:cvt="clr-namespace:Wu.CommTool.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+    xmlns:enums="clr-namespace:Wu.CommTool.Enums"
     xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:local="clr-namespace:Wu.CommTool.Views"
@@ -13,8 +14,8 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="600"
+    d:DesignWidth="1000"
     mc:Ignorable="d">
     <md:DialogHost Identifier="MqttServerView">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
@@ -320,6 +321,13 @@
                             Content="{md:PackIcon Kind=Delete}"
                             Style="{StaticResource Red_CircleButton}" />
 
+                        <ComboBox
+                            hc:InfoElement.Title="接收消息格式"
+                            hc:InfoElement.TitleWidth="80"
+                            ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type enums:MqttPayloadType}}}"
+                            SelectedItem="{Binding MqttServerConfig.ReceivePaylodType}"
+                            Style="{StaticResource FormComboBox}" />
+
 
                         <!--  客户端管理  -->
                         <Button
@@ -335,7 +343,7 @@
 
 
                         <!--  接收数据Json格式化  -->
-                        <Button
+                        <!--<Button
                             Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="20,5"
@@ -378,7 +386,7 @@
                                     </Style.Triggers>
                                 </Style>
                             </Button.Style>
-                        </Button>
+                        </Button>-->
                     </DockPanel>
                 </Grid>
 

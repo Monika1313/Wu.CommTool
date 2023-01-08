@@ -1,4 +1,6 @@
-﻿using log4net;
+﻿using DryIoc;
+using HandyControl.Expression.Shapes;
+using log4net;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;
@@ -17,6 +19,7 @@ using System.Net;
 using System.Text;
 using System.Windows;
 using Wu.CommTool.Common;
+using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.ViewModels;
@@ -133,18 +136,11 @@ namespace Wu.CommTool.ViewModels
         public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
         private bool _IsPause;
 
-
         /// <summary>
         /// MqttUsers
         /// </summary>
         public ObservableCollection<MqttUser> MqttUsers { get => _MqttUsers; set => SetProperty(ref _MqttUsers, value); }
         private ObservableCollection<MqttUser> _MqttUsers = new();
-
-        /// <summary>
-        /// 字符串格式化
-        /// </summary>
-        public int Format { get => _Format; set => SetProperty(ref _Format, value); }
-        private int _Format = 0;
         #endregion
 
 
@@ -186,18 +182,6 @@ namespace Wu.CommTool.ViewModels
                 case "OpenDialogView": OpenDialogView(); break;
                 case "ImportConfig": ImportConfig(); break;
                 case "ExportConfig": ExportConfig(); break;
-                case "Format":
-                    if (Format == 0)
-                    {
-                        Format = 1;
-                        ShowMessage("接收数据以Json格式化");
-                    }
-                    else
-                    {
-                        Format = 0;
-                        ShowMessage("接收数据以字符串显示");
-                    }
-                    break;
                 default: break;
             }
         }
@@ -456,28 +440,27 @@ namespace Wu.CommTool.ViewModels
                 var user = MqttUsers.FirstOrDefault(x => x.ClientId.Equals(obj.ClientId));
                 if (user is not null)
                     user.LastDataTime = DateTime.Now;
-                //接收的数据以字节显示
-                //ShowMessage($"客户端：“{obj.ClientId}” 发布主题：“{obj.ApplicationMessage.Topic}”\r\n内容：\r\n“{(obj.ApplicationMessage?.Payload == null ? null : BitConverter.ToString(obj.ApplicationMessage.Payload))}”");
-                //接收的数据以UTF8解码
 
                 //若暂停更新接收数据 则不显示
                 if (IsPause)
                     return;
 
-                if (Format == 0)
+                switch (MqttServerConfig.ReceivePaylodType)
                 {
-                    ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload))}", MessageType.Receive);
-                }
-                else
-                {
-                    //Newtonsoft.Json.JsonConvert.SerializeObject(Encoding.UTF8.GetString(obj.ApplicationMessage.Payload));
-
-                    ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n" +
-                        $"{(obj.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(obj.ApplicationMessage.Payload).ToJsonString())}", MessageType.Receive);
-
-                    //string str = JsonConvert.SerializeObject(Encoding.UTF8.GetString(obj.ApplicationMessage.Payload));
-                    //ShowMessage($"客户端：{obj.ClientId}    发布主题：{obj.ApplicationMessage?.Topic}\r\n" +
-                    //    $"{(obj.ApplicationMessage?.Payload == null ? null : str)}", MessageType.Receive);
+                    case MqttPayloadType.Plaintext:
+                        //接收的数据以UTF8解码
+                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload)}");
+                        break;
+                    case MqttPayloadType.Json:
+                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload).ToJsonString()}");
+                        break;
+                    case MqttPayloadType.Hex:
+                        //接收的数据以16进制字符串解码
+                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{BitConverter.ToString(obj.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}");
+                        break;
+                    case MqttPayloadType.Base64:
+                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{Convert.ToBase64String(obj.ApplicationMessage.Payload)}");
+                        break;
                 }
             }
             catch (Exception ex)
