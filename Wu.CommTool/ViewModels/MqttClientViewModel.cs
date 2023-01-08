@@ -51,7 +51,7 @@ namespace Wu.CommTool.ViewModels
             UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-            OpenJsonDataViewCommand = new DelegateCommand<object>(OpenJsonDataView);
+            OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
 
             MqttClientConfig.SubscribeTopics.Add("+/#");//默认订阅所有主题
 
@@ -164,7 +164,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 打开json格式化界面
         /// </summary>
-        public DelegateCommand<object> OpenJsonDataViewCommand { get; private set; }
+        public DelegateCommand<MessageData> OpenJsonDataViewCommand { get; private set; }
         #endregion
 
 
@@ -452,7 +452,8 @@ namespace Wu.CommTool.ViewModels
                 switch (MqttClientConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Plaintext:
-                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}");
+                        //ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Json:
                         ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}");
@@ -595,7 +596,7 @@ namespace Wu.CommTool.ViewModels
 
 
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
-        protected void ShowReceiveMessage(string message) => ShowMessage(message, MessageType.Receive);
+        protected void ShowReceiveMessage(string message, string title = "") => ShowMessage(message, MessageType.Receive, title);
         protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
 
         /// <summary>
@@ -603,13 +604,13 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(string message, MessageType type = MessageType.Info)
+        protected void ShowMessage(string message, MessageType type = MessageType.Info,string title = "")
         {
             try
             {
                 void action()
                 {
-                    Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
                     log.Info(message);
                     while (Messages.Count > 100)
                     {
@@ -711,38 +712,19 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-
-        //private  void OpenJsonDataView(object obj)
-        //{
-        //    try
-        //    {
-        //        //TODO 弹窗json
-        //        //DialogParameters param = new()
-        //        //{
-        //        //    { "Value", obj }
-        //        //};
-        //        //var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, nameof(DialogHostName));
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //    }
-        //}
-
         /// <summary>
         /// 打开json格式化界面
         /// </summary>
         /// <param name="obj"></param>
-        private void OpenJsonDataView(object obj)
+        private async void OpenJsonDataView(MessageData obj)
         {
             try
             {
-                //TODO 弹窗json
-                //DialogParameters param = new()
-                //{
-                //    { "Value", obj }
-                //};
-                //var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, nameof(DialogHostName));
+                DialogParameters param = new()
+                {
+                    { "Value", obj }
+                };
+                var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, DialogHostName);
             }
             catch (Exception ex)
             {

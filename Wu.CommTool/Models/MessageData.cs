@@ -8,11 +8,12 @@ namespace Wu.CommTool.Models
     /// </summary>
     public class MessageData : BindableBase
     {
-        public MessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info)
+        public MessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info, string Title = "")
         {
             this.Type = Type;
             this.Content = Content;
             this.Time = dateTime;
+            this.Title = Title;
         }
         /// <summary>
         /// 时间
@@ -25,6 +26,13 @@ namespace Wu.CommTool.Models
         /// </summary>
         public MessageType Type { get => _Type; set => SetProperty(ref _Type, value); }
         private MessageType _Type;
+
+
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get => _Title; set => SetProperty(ref _Title, value); }
+        private string _Title = string.Empty;
 
         /// <summary>
         /// 消息内容

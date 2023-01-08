@@ -30,8 +30,9 @@ Bug:
 
 
 2023 0108
-Mqtt客户端:数据发送和接收可选 纯文本、Base64、Json、Hex
+Mqtt客户端:数据发送和接收可选 纯文本、Base64、Json、Hex。 消息添加右键菜单，查看Json格式化
 Mqtt服务器:数据接收可选 纯文本、Base64、Json、Hex
+
 
 2023 0106
 Modbus Rtu 搜索到的设备列表显示接收的消息,便于判断

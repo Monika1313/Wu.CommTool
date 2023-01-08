@@ -18,7 +18,7 @@
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
-    <md:DialogHost Identifier="ModbusRtuView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+    <md:DialogHost Identifier="MqttClientView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
@@ -497,7 +497,7 @@
                     </DockPanel>
                     <TextBox
                         MaxHeight="300"
-                        Margin="4,0,4,4"
+                        Margin="4,0,4,0"
                         VerticalContentAlignment="Top"
                         hc:InfoElement.Placeholder="请输入要发送的内容..."
                         AcceptsReturn="True"
@@ -557,6 +557,13 @@
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource MessageTextBlock}"
                                                 Text="{Binding Type}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Title}" />
                                             <TextBox
                                                 VerticalAlignment="Center"
                                                 FontSize="12"

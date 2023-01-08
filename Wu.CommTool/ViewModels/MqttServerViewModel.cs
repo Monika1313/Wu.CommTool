@@ -596,7 +596,7 @@ namespace Wu.CommTool.ViewModels
 
 
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
-        protected void ShowReceiveMessage(string message) => ShowMessage(message, MessageType.Receive);
+        protected void ShowReceiveMessage(string message, string title = "") => ShowMessage(message, MessageType.Receive, title);
         protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
 
 
@@ -605,13 +605,13 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(string message, MessageType type = MessageType.Info)
+        protected void ShowMessage(string message, MessageType type = MessageType.Info, string title = "")
         {
             try
             {
                 void action()
                 {
-                    Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
                     log.Info(message);
                     while (Messages.Count > 100)
                     {

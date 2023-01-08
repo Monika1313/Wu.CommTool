@@ -1,11 +1,15 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
+using System.Collections.ObjectModel;
+using Wu.CommTool.Common;
+using Wu.CommTool.Models;
+using Wu.CommTool.Models.JsonModels;
 using Wu.ViewModels;
-using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels
 {
@@ -34,6 +38,12 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// Json
+        /// </summary>
+        public ObservableCollection<JsonHeaderLogic> JsonHeaderLogics { get => _JsonHeaderLogics; set => SetProperty(ref _JsonHeaderLogics, value); }
+        private ObservableCollection<JsonHeaderLogic> _JsonHeaderLogics = new();
         #endregion
 
 
@@ -81,6 +91,22 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                 //{
                 //    CurrentDto = getResult.Result;
                 //}
+                var msgdata = parameters.GetValue<MessageData>("Value");
+
+                string JsonString = msgdata.Content;
+                if (string.IsNullOrWhiteSpace(JsonString))
+                    return;
+                try
+                {
+                    //json字符串转JToken
+                    var jtoken = JToken.Parse(JsonString);
+                    var json = JsonHeaderLogic.FromJToken(jtoken);
+                    JsonHeaderLogics.Clear();
+                    JsonHeaderLogics.Add(json);
+                }
+                catch (Exception ex)
+                {
+                }
             }
         }
 
