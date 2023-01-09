@@ -36,8 +36,8 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         /// <summary>
         /// CurrentDto
         /// </summary>
-        public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-        private object _CurrentDto = new();
+        public MessageData CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
+        private MessageData _CurrentDto;
 
         /// <summary>
         /// Json
@@ -85,21 +85,13 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-                var msgdata = parameters.GetValue<MessageData>("Value");
-
-                string JsonString = msgdata.Content;
-                if (string.IsNullOrWhiteSpace(JsonString))
+                CurrentDto = parameters.GetValue<MessageData>("Value");
+                if (string.IsNullOrWhiteSpace(CurrentDto.Content))
                     return;
                 try
                 {
                     //json字符串转JToken
-                    var jtoken = JToken.Parse(JsonString);
+                    var jtoken = JToken.Parse(CurrentDto.Content);
                     var json = JsonHeaderLogic.FromJToken(jtoken);
                     JsonHeaderLogics.Clear();
                     JsonHeaderLogics.Add(json);
@@ -120,7 +112,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
                 return;
             //添加返回的参数
             DialogParameters param = new DialogParameters();
-            param.Add("Value", CurrentDto);
+            //param.Add("Value", CurrentDto);
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
@@ -144,7 +136,7 @@ namespace Wu.CommTool.ViewModels.DialogViewModels
             {
                 DialogParameters param = new()
                 {
-                    { "Value", CurrentDto }
+                    //{ "Value", CurrentDto }
                 };
                 //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
             }

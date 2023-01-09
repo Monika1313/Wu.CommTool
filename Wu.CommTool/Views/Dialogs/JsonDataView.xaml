@@ -83,6 +83,9 @@
             <Button Command="{Binding SaveCommand}" Content="确定" />
         </StackPanel>
 
+        <Grid DockPanel.Dock="Top"  HorizontalAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Text="{Binding CurrentDto.Title}" Margin="5"/>
+        </Grid>
         <TreeView ItemsSource="{Binding JsonHeaderLogics}" Style="{StaticResource TreeView.Small}">
             <TreeView.ItemContainerStyle>
                 <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
