@@ -345,7 +345,7 @@ namespace Wu.CommTool.ViewModels
                     default:
                         break;
                 }
-                
+
                 //todo 发送消息格式
                 switch (MqttClientConfig.SendPaylodType)
                 {
@@ -371,7 +371,7 @@ namespace Wu.CommTool.ViewModels
 
                 //发布
                 var result = await client.PublishAsync(mam, CancellationToken.None);
-                ShowSendMessage($"主题: {MqttClientConfig.PublishTopic}\r\n{SendMessage}");
+                ShowSendMessage($"{SendMessage}", $"主题: {MqttClientConfig.PublishTopic}");
             }
             catch (Exception ex)
             {
@@ -452,17 +452,16 @@ namespace Wu.CommTool.ViewModels
                 switch (MqttClientConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Plaintext:
-                        //ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}");
                         ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Json:
-                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Hex:
-                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{BitConverter.ToString(arg.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}");
+                        ShowReceiveMessage($"{BitConverter.ToString(arg.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"主题:{arg.ApplicationMessage.Topic}\r\n{Convert.ToBase64String(arg.ApplicationMessage.Payload)}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(arg.ApplicationMessage.Payload)}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                 }
             }
@@ -597,14 +596,14 @@ namespace Wu.CommTool.ViewModels
 
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
         protected void ShowReceiveMessage(string message, string title = "") => ShowMessage(message, MessageType.Receive, title);
-        protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
+        protected void ShowSendMessage(string message, string title = "") => ShowMessage(message, MessageType.Send, title);
 
         /// <summary>
         /// 界面显示数据
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(string message, MessageType type = MessageType.Info,string title = "")
+        protected void ShowMessage(string message, MessageType type = MessageType.Info, string title = "")
         {
             try
             {
@@ -720,11 +719,14 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                DialogParameters param = new()
+                if (obj.Type.Equals(MessageType.Send) || obj.Type.Equals(MessageType.Receive))
                 {
-                    { "Value", obj }
-                };
-                var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, DialogHostName);
+                    DialogParameters param = new()
+                    {
+                        { "Value", obj }
+                    };
+                    var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, DialogHostName);
+                }
             }
             catch (Exception ex)
             {

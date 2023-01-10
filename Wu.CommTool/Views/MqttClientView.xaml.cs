@@ -7,6 +7,7 @@ namespace Wu.CommTool.Views
     /// </summary>
     public partial class MqttClientView : UserControl
     {
+        public const string ViewName = nameof(MqttClientView);
         public MqttClientView()
         {
             InitializeComponent();

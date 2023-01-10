@@ -22,6 +22,7 @@ using Wu.CommTool.Common;
 using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+using Wu.CommTool.Views.Dialogs;
 using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels
@@ -49,6 +50,7 @@ namespace Wu.CommTool.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             TestCommand = new DelegateCommand<object>(Test);
             UnsubscribeTopicCommand = new DelegateCommand<MqttSubedTopic>(UnsubscribeTopic);
+            OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
 
             //从默认配置文件中读取配置
             try
@@ -158,12 +160,15 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public DelegateCommand<object> TestCommand { get; private set; }
 
-
         /// <summary>
         /// definity
         /// </summary>
         public DelegateCommand<MqttSubedTopic> UnsubscribeTopicCommand { get; private set; }
 
+        /// <summary>
+        /// 打开json格式化界面
+        /// </summary>
+        public DelegateCommand<MessageData> OpenJsonDataViewCommand { get; private set; }
         #endregion
 
 
@@ -449,17 +454,17 @@ namespace Wu.CommTool.ViewModels
                 {
                     case MqttPayloadType.Plaintext:
                         //接收的数据以UTF8解码
-                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload)}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload)}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Json:
-                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload).ToJsonString()}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload).ToJsonString()}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Hex:
                         //接收的数据以16进制字符串解码
-                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{BitConverter.ToString(obj.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}");
+                        ShowReceiveMessage($"{BitConverter.ToString(obj.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"主题:{obj.ApplicationMessage.Topic}\r\n{Convert.ToBase64String(obj.ApplicationMessage.Payload)}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(obj.ApplicationMessage.Payload)}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                 }
             }
@@ -638,6 +643,36 @@ namespace Wu.CommTool.ViewModels
                     Retain = false,
                     Payload = Encoding.UTF8.GetBytes("发布的消息")                                    //内容
                 });
+            }
+        }
+
+        /// <summary>
+        /// 打开json格式化界面
+        /// </summary>
+        /// <param name="obj"></param>
+        private async void OpenJsonDataView(MessageData obj)
+        {
+            try
+            {
+                try
+                {
+                    if (obj.Type.Equals(MessageType.Send) || obj.Type.Equals(MessageType.Receive))
+                    {
+                        DialogParameters param = new()
+                    {
+                        { "Value", obj }
+                    };
+                        var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, DialogHostName);
+                    }
+                }
+                catch (Exception ex)
+                {
+
+                }
+            }
+            catch (Exception ex)
+            {
+
             }
         }
         #endregion

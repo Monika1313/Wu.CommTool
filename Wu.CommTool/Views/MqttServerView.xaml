@@ -17,7 +17,7 @@
     d:DesignHeight="600"
     d:DesignWidth="1000"
     mc:Ignorable="d">
-    <md:DialogHost Identifier="MqttServerView">
+    <md:DialogHost Identifier="{x:Static local:MqttServerView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
@@ -436,8 +436,18 @@
                                         Margin="3"
                                         Padding="2"
                                         BorderThickness="1"
-                                        CornerRadius="4"
+                                        CornerRadius="4" 
+                                        Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                         Style="{StaticResource MessageBorder}">
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <!--  MenuItem绑定命令  -->
+                                                <MenuItem
+                                                    Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="查看Json格式化" />
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock
                                                 Margin="3"
@@ -449,6 +459,11 @@
                                                 VerticalAlignment="Center"
                                                 Style="{StaticResource MessageTextBlock}"
                                                 Text="{Binding Type}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Title}" />
                                             <TextBox
                                                 VerticalAlignment="Center"
                                                 FontSize="12"

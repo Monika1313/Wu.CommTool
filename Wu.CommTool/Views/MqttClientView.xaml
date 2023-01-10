@@ -18,7 +18,7 @@
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
-    <md:DialogHost Identifier="MqttClientView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+    <md:DialogHost Identifier="{x:Static local:MqttClientView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>

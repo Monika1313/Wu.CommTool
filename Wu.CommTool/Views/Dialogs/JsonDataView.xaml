@@ -83,10 +83,16 @@
             <Button Command="{Binding SaveCommand}" Content="确定" />
         </StackPanel>
 
-        <Grid DockPanel.Dock="Top"  HorizontalAlignment="Center" VerticalAlignment="Center">
-            <TextBlock Text="{Binding CurrentDto.Title}" Margin="5"/>
+        <Grid
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            DockPanel.Dock="Top">
+            <TextBlock Margin="5" Text="{Binding CurrentDto.Title}" />
         </Grid>
-        <TreeView ItemsSource="{Binding JsonHeaderLogics}" Style="{StaticResource TreeView.Small}">
+        <TreeView
+            Margin="4,0,4,0"
+            ItemsSource="{Binding JsonHeaderLogics}"
+            Style="{StaticResource TreeView.Small}">
             <TreeView.ItemContainerStyle>
                 <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
                     <Setter Property="IsExpanded" Value="True" />

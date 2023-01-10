@@ -41,7 +41,7 @@
                 Content="格式化" />
         </WrapPanel>
 
-        <Grid Margin="5">
+        <Grid Margin="5 5 5 0">
             <Grid.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">

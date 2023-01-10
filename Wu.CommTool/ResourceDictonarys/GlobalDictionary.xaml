@@ -217,6 +217,9 @@
     </Style>
 
 
+    <!--  md:DialogHost 默认使用MaterialDesignEmbeddedDialogHost 弹窗大小将限制在小于主窗口-->
+    <Style TargetType="md:DialogHost" BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}"/>
+
     <!--  Border  -->
     <!--<Style TargetType="Border">
         <Setter Property="CornerRadius" Value="16" />
