@@ -51,6 +51,7 @@
                             Content="{md:PackIcon Kind=Download}"
                             Cursor="Hand"
                             DockPanel.Dock="Right"
+                            IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                             Style="{StaticResource Blue_CircleButton}" />
                     </StackPanel>
                     <ctl:WuIpBox
@@ -436,9 +437,9 @@
                                         Margin="3"
                                         Padding="2"
                                         BorderThickness="1"
-                                        CornerRadius="4" 
-                                        Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                        Style="{StaticResource MessageBorder}">
+                                        CornerRadius="4"
+                                        Style="{StaticResource MessageBorder}"
+                                        Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                         <Border.ContextMenu>
                                             <ContextMenu>
                                                 <!--  MenuItem绑定命令  -->
