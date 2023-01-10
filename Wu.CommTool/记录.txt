@@ -8,13 +8,11 @@ ModbusRtu 接收数据需要验证, 否则监控通讯时,数据会合并为一�
 
 MqttServer
 添加客户端管理 可踢客户端
-添加过滤器 可查看指定设备的信息 
-若服务器已开启,将阻止软件关闭,弹窗需要先关闭服务器
+添加过滤器 可查看指定设备的信息
 
 MqttClient
 消息过滤器 过滤 接收 发送 等
 
-MqttClient和MqttServer点击json弹出格式化界面
 
 增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
 
