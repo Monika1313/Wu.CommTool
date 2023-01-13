@@ -323,7 +323,7 @@ namespace Wu.CommTool.ViewModels
                 //        xxx = Encoding.UTF8.GetBytes(PublishMessage);
                 //        break;
                 //}
-                if (/*MqttClientConfig.IsOpened.Equals(false)*/ client.IsConnected.Equals(false))
+                if (MqttClientConfig.IsOpened.Equals(false) || client.IsConnected.Equals(false))
                 {
                     var re = await OpenMqttClient();
                     if (re.Equals(false))
