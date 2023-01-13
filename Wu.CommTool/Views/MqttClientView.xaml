@@ -60,6 +60,7 @@
                                         Content="{md:PackIcon Kind=Download}"
                                         Cursor="Hand"
                                         DockPanel.Dock="Right"
+                                        IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                         Style="{StaticResource Blue_CircleButton}" />
                                 </StackPanel>
                                 <TextBlock
