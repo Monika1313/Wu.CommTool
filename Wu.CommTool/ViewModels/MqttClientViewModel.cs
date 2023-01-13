@@ -478,9 +478,9 @@ namespace Wu.CommTool.ViewModels
                         break;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                ShowErrorMessage("接收数据解析错误 (请尝试更换数据解析格式) : " + ex.Message);
             }
         }
 
