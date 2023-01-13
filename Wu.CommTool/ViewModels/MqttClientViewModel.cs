@@ -323,7 +323,14 @@ namespace Wu.CommTool.ViewModels
                 //        xxx = Encoding.UTF8.GetBytes(PublishMessage);
                 //        break;
                 //}
-
+                if (/*MqttClientConfig.IsOpened.Equals(false)*/ client.IsConnected.Equals(false))
+                {
+                    var re = await OpenMqttClient();
+                    if (re.Equals(false))
+                    {
+                        return;
+                    }
+                }
 
 
 
@@ -346,7 +353,7 @@ namespace Wu.CommTool.ViewModels
                         break;
                 }
 
-                //todo 发送消息格式
+
                 switch (MqttClientConfig.SendPaylodType)
                 {
                     case MqttPayloadType.Plaintext:
@@ -411,10 +418,14 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 打开Mqtt客户端
         /// </summary>
-        private async void OpenMqttClient()
+        private async Task<bool> OpenMqttClient()
         {
             try
             {
+                if (MqttClientConfig.IsOpened)
+                {
+                    return false;
+                }
                 var options = new MqttClientOptionsBuilder()
                     .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
                     .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
@@ -428,9 +439,11 @@ namespace Wu.CommTool.ViewModels
                 ShowMessage("连接中...");
                 MqttClientConfig.IsOpened = true;//连接时需要直接至位, 否则重复连接期间重复点击连接将导致异常
                 await client.ConnectAsync(options);                //启动连接
+                return true;
             }
             catch (Exception ex)
             {
+                return false;
                 //ShowErrorMessage($"{ex.Message}");
             }
         }

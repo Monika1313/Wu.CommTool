@@ -358,6 +358,7 @@ namespace Wu.CommTool.ViewModels
                         ShowErrorMessage($"客户端断开连接事件处理异常:{ex.Message}");
                     }
                 });
+                //server.UseClientDisconnectedHandler = new MqttServerClientDisconnectedHandlerDelegate(ClientDisconnectedHandler);
 
                 //客户端取消订阅主题
                 server.ClientUnsubscribedTopicHandler = new MqttServerClientUnsubscribedTopicHandlerDelegate(ClientUnsubscribedTopicHandler);
@@ -450,21 +451,30 @@ namespace Wu.CommTool.ViewModels
                 if (IsPause)
                     return;
 
+                //若消息为空则
+                //if (obj.ApplicationMessage.Payload is null || obj.ApplicationMessage.Payload.Length.Equals(0))
+                //{
+                //    ShowReceiveMessage(string.Empty, $"主题:{obj.ApplicationMessage.Topic}");
+                //    return;
+                //}
+
+                var payload = obj.ApplicationMessage.Payload ?? new byte[0];
+
                 switch (MqttServerConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Plaintext:
                         //接收的数据以UTF8解码
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload)}", $"主题:{obj.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Json:
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(obj.ApplicationMessage.Payload).ToJsonString()}", $"主题:{obj.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Hex:
                         //接收的数据以16进制字符串解码
-                        ShowReceiveMessage($"{BitConverter.ToString(obj.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{obj.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"{Convert.ToBase64String(obj.ApplicationMessage.Payload)}", $"主题:{obj.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题:{obj.ApplicationMessage.Topic}");
                         break;
                 }
             }

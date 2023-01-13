@@ -352,6 +352,13 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public int ModbusRtuFunIndex { get => _ModbusRtuFunIndex; set => SetProperty(ref _ModbusRtuFunIndex, value); }
         private int _ModbusRtuFunIndex = 0;
+
+
+        /// <summary>
+        /// 是否过滤没有设置的数据 ModbusRtu数据监控
+        /// </summary>
+        public bool IsFilter { get => _IsFilter; set => SetProperty(ref _IsFilter, value); }
+        private bool _IsFilter = false;
         #endregion
 
 
@@ -394,7 +401,7 @@ namespace Wu.CommTool.ViewModels
 
                 case "AreaData": AreaData(); break;                                             //周期读取区域数据
 
-                //case "AutoSearch": OpenAutoSearchView(); break;                                 //打开搜索页面 该功能已启用
+                //case "AutoSearch": OpenAutoSearchView(); break;                               //打开搜索页面 该功能已启用
 
                 case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                 case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
@@ -405,6 +412,8 @@ namespace Wu.CommTool.ViewModels
                 case "OpenCom": OpenCom(); break;                                               //打开串口
                 case "CloseCom": CloseCom(); break;                                             //关闭串口
                 case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
+
+                case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
 
                 case "ShowModbusRtuFunSelect": IsDrawersOpen.IsLeftDrawerOpen = true; break;    //打开ModbusRtu功能选择左侧抽屉
                 case "ConfigCom": IsDrawersOpen2.IsLeftDrawerOpen = true; break;                //打开ModbusRtu配置左侧抽屉
@@ -419,6 +428,12 @@ namespace Wu.CommTool.ViewModels
                 case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
                 default: break;
             }
+        }
+
+        //
+        private void OperateFilter()
+        {
+            IsFilter = !IsFilter;
         }
 
 

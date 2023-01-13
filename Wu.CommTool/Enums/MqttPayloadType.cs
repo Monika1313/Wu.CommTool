@@ -16,11 +16,12 @@ namespace Wu.CommTool.Enums
     {
         [Description("纯文本 UTF-8")]
         Plaintext,
+        [Description("Hex 16进制")]
+        Hex,
         [Description("Base64")]
         Base64,
         [Description("Json")]
         Json,
-        [Description("16进制文本")]
-        Hex
+        
     }
 }

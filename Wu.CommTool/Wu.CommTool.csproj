@@ -9,7 +9,7 @@
     <ApplicationIcon>Images\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Configs\ModbusRtuConfig\正泰DTSU666_1.jsonDMC" />
+    <None Remove="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC" />
     <None Remove="Images\En.png" />
     <None Remove="Images\GKD.png" />
     <None Remove="Images\KU.png" />
@@ -20,8 +20,8 @@
     <None Remove="Images\XX.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Configs\ModbusRtuConfig\正泰DTSU666_1.jsonDMC">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <Content Include="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

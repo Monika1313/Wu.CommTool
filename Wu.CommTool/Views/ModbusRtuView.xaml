@@ -1004,12 +1004,12 @@
                                                 Style="{StaticResource FormTextBox}"
                                                 Text="{Binding DataMonitorConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
-                                                hc:TitleElement.Title="读取数量:"
+                                                hc:TitleElement.Title="读取数量(word):"
                                                 IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                 Style="{StaticResource FormTextBox}"
                                                 Text="{Binding DataMonitorConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
-                                                hc:TitleElement.Title="周期:"
+                                                hc:TitleElement.Title="周期(ms):"
                                                 IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                 Style="{StaticResource FormTextBox}"
                                                 Text="{Binding DataMonitorConfig.Period}" />
@@ -1214,7 +1214,6 @@
                             <Grid DockPanel.Dock="Top">
                                 <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 数据监控" />
                                 <DockPanel LastChildFill="False">
-
                                     <!--  ModbusRtu 功能选择按钮  -->
                                     <Button
                                         Width="30"
@@ -1270,6 +1269,54 @@
                                         Content="{md:PackIcon Kind=Stop}"
                                         IsEnabled="{Binding DataMonitorConfig.IsOpened}"
                                         Style="{StaticResource Red_CircleButton}" />
+
+                                    <!--  过滤器  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="过滤未设置的数据"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="OperateFilter"
+                                        Cursor="Hand">
+
+                                        <md:PackIcon Width="24" Height="24">
+                                            <md:PackIcon.Style>
+                                                <Style TargetType="md:PackIcon">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsFilter}" Value="true">
+                                                            <Setter Property="Kind" Value="Filter" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsFilter}" Value="false">
+                                                            <Setter Property="Kind" Value="FilterRemove" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </md:PackIcon.Style>
+                                        </md:PackIcon>
+
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsFilter}" Value="true">
+                                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                        <Setter Property="hc:Poptip.Content" Value="开启数据过滤器" />
+                                                    </DataTrigger>
+
+                                                    <DataTrigger Binding="{Binding IsFilter}" Value="false">
+                                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                                        <Setter Property="hc:Poptip.Content" Value="关闭数据过滤器" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
 
                                     <!--  查看消息  -->
                                     <Button
@@ -1380,6 +1427,16 @@
                                             </DataTemplate>
                                         </DataGrid.RowHeaderTemplate>-->
 
+                                        <DataGrid.RowStyle>
+                                            <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="DataGridRow">
+                                                <!--<Setter Property="Visibility" Value="{Binding Name, Converter={wucvt:StringIsNullOrWhiteSpace2Collapsed}}" />-->
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding DataContext.IsFilter, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" Value="true">
+                                                        <Setter Property="Visibility" Value="{Binding Name, Converter={wucvt:StringIsNullOrWhiteSpace2Collapsed}}" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.RowStyle>
 
                                         <DataGrid.Columns>
                                             <DataGridTemplateColumn Header="名称">
@@ -1435,7 +1492,10 @@
                                             <DataGridTemplateColumn Header="单位">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox MinWidth="40" Text="{Binding Unit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                        <TextBox
+                                                            MinWidth="40"
+                                                            HorizontalContentAlignment="Center"
+                                                            Text="{Binding Unit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>
@@ -1443,7 +1503,10 @@
                                             <DataGridTemplateColumn Header="倍率">
                                                 <DataGridTemplateColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBox MinWidth="40" Text="{Binding Rate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                        <TextBox
+                                                            MinWidth="40"
+                                                            HorizontalContentAlignment="Center"
+                                                            Text="{Binding Rate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                     </DataTemplate>
                                                 </DataGridTemplateColumn.CellTemplate>
                                             </DataGridTemplateColumn>

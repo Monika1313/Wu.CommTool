@@ -217,8 +217,8 @@
     </Style>
 
 
-    <!--  md:DialogHost 默认使用MaterialDesignEmbeddedDialogHost 弹窗大小将限制在小于主窗口-->
-    <Style TargetType="md:DialogHost" BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}"/>
+    <!--  md:DialogHost 默认使用MaterialDesignEmbeddedDialogHost 弹窗大小将限制在小于主窗口  -->
+    <Style BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}" TargetType="md:DialogHost" />
 
     <!--  Border  -->
     <!--<Style TargetType="Border">
