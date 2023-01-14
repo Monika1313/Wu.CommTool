@@ -349,7 +349,7 @@ namespace Wu.CommTool.ViewModels
         public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
         private ObservableCollection<MenuBar> _MenuBars = new()
             {
-                new MenuBar() { Icon = "Number1", Title = "自定义数据帧", NameSpace = "0" },
+                new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = "0" },
                 new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = "1" },
                 new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = "2" },
                 new MenuBar() { Icon = "Number4", Title = "数据读写", NameSpace = "3" },
