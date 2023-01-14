@@ -102,6 +102,12 @@ namespace Wu.CommTool.Models
         }
 
         /// <summary>
+        /// 过滤数据, 没有设置Name的不显示
+        /// </summary>
+        public bool IsFilter { get => _IsFilter; set => SetProperty(ref _IsFilter, value); }
+        private bool _IsFilter = false;
+
+        /// <summary>
         /// 打开状态
         /// </summary>
         [JsonIgnore]

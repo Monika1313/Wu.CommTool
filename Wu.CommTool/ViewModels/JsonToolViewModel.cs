@@ -99,7 +99,7 @@ namespace Wu.CommTool.ViewModels
                 //json字符串转JToken
                 var jtoken = JToken.Parse(JsonString);
                 var json = JsonHeaderLogic.FromJToken(jtoken);
-                JsonHeaderLogics.Clear();
+                sJsonHeaderLogics.Clear();
                 JsonHeaderLogics.Add(json);
             }
             catch (Exception ex)

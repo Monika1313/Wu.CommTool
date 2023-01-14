@@ -7,6 +7,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.IO.Ports;
 using System.Linq;
@@ -16,6 +17,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Data;
+using System.Windows.Forms;
 using Wu.CommTool.Common;
 using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Extensions;
@@ -37,6 +40,8 @@ namespace Wu.CommTool.ViewModels
         //private object locker = new(); //线程锁
         #endregion
 
+
+        #region **************************************** 构造函数 ****************************************
         public ModbusRtuViewModel() { }
         public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost)
         {
@@ -55,7 +60,11 @@ namespace Wu.CommTool.ViewModels
             //默认选中9600无校验
             SelectedBaudRates.Add(BaudRate._9600);
             SelectedParitys.Add(Models.Parity.None);
+
+            //数据监控过滤器
+            RefreshModbusRtuDataDataView();
         }
+        #endregion
 
         /// <summary>
         /// ModbusRtu功能选择修改
@@ -354,11 +363,23 @@ namespace Wu.CommTool.ViewModels
         private int _ModbusRtuFunIndex = 0;
 
 
+        ///// <summary>
+        ///// 是否过滤没有设置的数据 ModbusRtu数据监控
+        ///// </summary>
+        //public bool IsFilter { get => _IsFilter; set => SetProperty(ref _IsFilter, value); }
+        //private bool _IsFilter = false;
+
         /// <summary>
-        /// 是否过滤没有设置的数据 ModbusRtu数据监控
+        /// ModbusRtuDataDataView
         /// </summary>
-        public bool IsFilter { get => _IsFilter; set => SetProperty(ref _IsFilter, value); }
-        private bool _IsFilter = false;
+        public ListCollectionView ModbusRtuDataDataView { get => _ModbusRtuDataDataView; set => SetProperty(ref _ModbusRtuDataDataView, value); }
+        private ListCollectionView _ModbusRtuDataDataView;
+
+        ///// <summary>
+        ///// definity
+        ///// </summary>
+        //public DataView TestDataView { get => _TestDataView; set => SetProperty(ref _TestDataView, value); }
+        //private DataView _TestDataView;
         #endregion
 
 
@@ -400,6 +421,7 @@ namespace Wu.CommTool.ViewModels
                 case "Pause": Pause(); break;
 
                 case "AreaData": AreaData(); break;                                             //周期读取区域数据
+                case "Test": Test(); break;                                             //周期读取区域数据
 
                 //case "AutoSearch": OpenAutoSearchView(); break;                               //打开搜索页面 该功能已启用
 
@@ -430,12 +452,42 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        //
-        private void OperateFilter()
+        private void Test()
         {
-            IsFilter = !IsFilter;
+            DataMonitorConfig.ModbusRtuDatas[0].Rate += 1;
         }
 
+        //开关数据过滤器
+        private void OperateFilter()
+        {
+            DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
+            RefreshModbusRtuDataDataView();
+        }
+
+        /// <summary>
+        /// 更新数据监控视图
+        /// </summary>
+        private void RefreshModbusRtuDataDataView()
+        {
+            ModbusRtuDataDataView = (ListCollectionView)CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
+            //数据监控过滤器
+            if (DataMonitorConfig.IsFilter)
+            {
+                ModbusRtuDataDataView.Filter = new Predicate<object>(x => !string.IsNullOrWhiteSpace(((ModbusRtuData)x).Name));
+            }
+            else
+            {
+                ModbusRtuDataDataView.Filter = new Predicate<object>(x => true);
+            }
+
+
+            //TestDataView = (DataView)CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
+            //var cview = CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
+            //cview.Filter = new Predicate<object>(x => true);
+            //TestDataView = (DataView)cview;
+
+
+        }
 
 
 
@@ -1184,12 +1236,19 @@ namespace Wu.CommTool.ViewModels
                     return;
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
                 DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
+                RefreshModbusRtuDataDataView();//更新数据视图
                 ShowMessage("导入配置完成");
             }
             catch (Exception ex)
             {
                 ShowErrorMessage(ex.Message);
             }
+        }
+
+        private void Fi()
+        {
+            var cview = CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
+            cview.Filter = new Predicate<object>(x => string.IsNullOrWhiteSpace(((ModbusRtuData)x).Name));
         }
         #endregion
     }
