@@ -37,12 +37,11 @@ namespace Wu.CommTool.Models
         public dynamic? Value { get => _Value; set => SetProperty(ref _Value, value); }
         private dynamic? _Value;
 
-
         /// <summary>
         /// 数据类型
         /// </summary>
         public DataType Type { get => _Type; set => SetProperty(ref _Type, value); }
-        private DataType _Type;
+        private DataType _Type = DataType.uShort;
 
         /// <summary>
         /// 数据更新时间
@@ -50,7 +49,6 @@ namespace Wu.CommTool.Models
         [JsonIgnore]
         public DateTime? UpdateTime { get => _UpdateTime; set => SetProperty(ref _UpdateTime, value); }
         private DateTime? _UpdateTime = null;
-
 
         /// <summary>
         /// 倍率
@@ -63,6 +61,19 @@ namespace Wu.CommTool.Models
         /// </summary>
         public string Unit { get => _Unit; set => SetProperty(ref _Unit, value); }
         private string _Unit = "";
+
+        /// <summary>
+        /// 待写入的值
+        /// </summary>
+        public string WriteValue { get => _WriteValue; set => SetProperty(ref _WriteValue, value); }
+        private string _WriteValue;
+
+        /// <summary>
+        /// 数据类型的长度 单位=字节
+        /// </summary>
+        public int DataTypeByteLength => GetDataTypeLength(Type);
+
+
 
         /// <summary>
         /// 源字节数组
@@ -117,7 +128,7 @@ namespace Wu.CommTool.Models
                 return null;
             }
             //从源数组中读取数据
-            byte[] arr = origin.Skip(skip).Take(DataTypeLength(dataType)).ToArray();
+            byte[] arr = origin.Skip(skip).Take(GetDataTypeLength(dataType)).ToArray();
             //进行字节序转换
             arr = ByteOrder(arr, byteOrder);
             return arr;
@@ -158,7 +169,7 @@ namespace Wu.CommTool.Models
         /// </summary>
         /// <param name="dataType"></param>
         /// <returns></returns>
-        public static int DataTypeLength(DataType dataType)
+        public static int GetDataTypeLength(DataType dataType)
         {
             switch (dataType)
             {

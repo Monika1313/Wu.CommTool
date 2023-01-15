@@ -92,13 +92,13 @@ namespace Wu.CommTool.Models
         /// <returns></returns>
         private string GetDataFrame()
         {
-            string a = SlaveId.ToString("X2");
-            string b = Function.ToString("X2");
-            string c = StartAddr.ToString("X4");
-            string d = Quantity.ToString("X4");
-            string s = a + b + c + d;
-            var crc = Wu.Utils.Crc.Crc16Modbus(s.GetBytes());
-            return $"{a} {b} {c} {d} {crc[1]:X2}{crc[0]:X2}";
+            string addr = SlaveId.ToString("X2");             //从站地址
+            string fun = Function.ToString("X2");             //功能码
+            string startAddr = StartAddr.ToString("X4");      //起始地址
+            string quantity = Quantity.ToString("X4");        //数量
+            string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的帧
+            var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
+            return $"{addr} {fun} {startAddr} {quantity} {crc[1]:X2}{crc[0]:X2}";
         }
 
         /// <summary>

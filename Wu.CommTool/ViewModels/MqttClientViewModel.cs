@@ -402,12 +402,20 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 ManualStopFlag = true;//主动关闭客户端
+                if (client.IsConnected)
+                {
+                    ShowMessage($"断开连接...");
+                }
+                else
+                {
+                    ShowMessage($"取消连接...");
+                }
                 await client.DisconnectAsync();          //断开连接
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
                     MqttClientConfig.IsOpened = false;
                 });
-                ShowMessage($"断开连接");
+                
             }
             catch (Exception ex)
             {

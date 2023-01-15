@@ -2,6 +2,8 @@
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections;
@@ -35,9 +37,14 @@ namespace Wu.CommTool.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
-        private SerialPort SerialPort = new();                 //串口
-        protected System.Timers.Timer timer = new();  //定时器 定时读取数据
+        private readonly SerialPort SerialPort = new();              //串口
+        protected System.Timers.Timer timer = new();        //定时器 定时读取数据
+        private Queue<string> PublishFrameQueue = new();    //数据帧发送队列
+        private Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
         //private object locker = new(); //线程锁
+        Task publishHandleTask;
+        Task receiveHandleTask;
+        CancellationTokenSource cts = new();
         #endregion
 
 
@@ -52,6 +59,7 @@ namespace Wu.CommTool.ViewModels
             SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);
             BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
             ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
+            ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
 
 
             //更新串口列表
@@ -63,6 +71,22 @@ namespace Wu.CommTool.ViewModels
 
             //数据监控过滤器
             RefreshModbusRtuDataDataView();
+
+            publishHandleTask = new Task(PublishFrame, cts.Token);
+            receiveHandleTask = new Task(ReceiveFrame, cts.Token);
+
+
+            //数据帧处理线程
+            //publishHandleThread = new Thread(PublishFrame)
+            //{
+            //    Name = "发送数据帧处理",
+            //    IsBackground = true,
+            //};
+            //receiveHandleThread = new Thread(ReceiveFrame)
+            //{
+            //    Name = "接收数据帧处理",
+
+            //};
         }
         #endregion
 
@@ -148,7 +172,11 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                //TODO 首先关闭其他功能
+                //若数据监控功能开启中则关闭
+                if (DataMonitorConfig.IsOpened)
+                {
+                    CloseAutoRead();
+                }
 
                 //设置串口
                 //修改串口设置
@@ -199,10 +227,10 @@ namespace Wu.CommTool.ViewModels
                             SerialPort.BaudRate = (int)baud;
                             SerialPort.Parity = (System.IO.Ports.Parity)parity;
                             SendMessage = $"{i:X2}0300000001";//读取第一个字
-                            //串口关闭时退出
-                            if (ComConfig.IsOpened == false)
+                            //串口关闭时或不处于搜索状态
+                            if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
-                            Send();
+                            PublishMessage(SendMessage);
                             await Task.Delay(100);
                         }
                         if (ComConfig.IsOpened == false)
@@ -267,6 +295,12 @@ namespace Wu.CommTool.ViewModels
         ///// </summary>
         public IList<Wu.CommTool.Models.Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
         private IList<Wu.CommTool.Models.Parity> _SelectedParitys = new List<Wu.CommTool.Models.Parity>();
+
+        /// <summary>
+        /// definity
+        /// </summary>
+        public IsDrawersOpen ModbusRtuReadDrawerOpen { get => _ModbusRtuReadDrawerOpen; set => SetProperty(ref _ModbusRtuReadDrawerOpen, value); }
+        private IsDrawersOpen _ModbusRtuReadDrawerOpen = new();
         #endregion
 
 
@@ -352,7 +386,7 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = "0" },
                 new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = "1" },
                 new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = "2" },
-                new MenuBar() { Icon = "Number4", Title = "数据读写", NameSpace = "3" },
+                //new MenuBar() { Icon = "Number4", Title = "数据读写", NameSpace = "3" },
             };
 
 
@@ -403,6 +437,12 @@ namespace Wu.CommTool.ViewModels
         /// 校验位选框选项修改
         /// </summary>
         public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
+
+        /// <summary>
+        /// ModburRtu数据写入
+        /// </summary>
+        public DelegateCommand<ModbusRtuData> ModburRtuDataWriteCommand { get; private set; }
+
         #endregion
 
 
@@ -414,41 +454,53 @@ namespace Wu.CommTool.ViewModels
         /// <param name="obj"></param>
         public void Execute(string obj)
         {
-            switch (obj)
+            try
             {
-                case "Search": GetDataAsync(); break;
-                case "Add": break;
-                case "Pause": Pause(); break;
+                switch (obj)
+                {
+                    //case "Search": GetDataAsync(); break;
+                    case "Add": break;
+                    case "Pause": Pause(); break;
 
-                case "AreaData": AreaData(); break;                                             //周期读取区域数据
-                case "Test": Test(); break;                                             //周期读取区域数据
+                    case "AreaData": AreaData(); break;                                             //周期读取区域数据
+                    case "Test": Test(); break;                                             //周期读取区域数据
 
-                //case "AutoSearch": OpenAutoSearchView(); break;                               //打开搜索页面 该功能已启用
+                    case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
+                    case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
 
-                case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
-                case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
+                    case "Send": /*PublishMessage(SendMessage)*/
+                        if (!ComConfig.IsOpened)
+                        {
+                            OpenCom();
+                        }
+                        PublishFrameQueue.Enqueue(SendMessage);
+                        break;                                           //发送数据
+                    case "GetComPorts": GetComPorts(); break;                                       //查找Com口
+                    case "Clear": Clear(); break;                                                   //清空页面信息
+                    case "OpenCom": OpenCom(); break;                                               //打开串口
+                    case "CloseCom": CloseCom(); break;                                             //关闭串口
+                    case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
 
-                case "Send": Send(); break;                                                     //发送数据
-                case "GetComPorts": GetComPorts(); break;                                       //查找Com口
-                case "Clear": Clear(); break;                                                   //清空页面信息
-                case "OpenCom": OpenCom(); break;                                               //打开串口
-                case "CloseCom": CloseCom(); break;                                             //关闭串口
-                case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
+                    case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
 
-                case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
+                    case "ShowModbusRtuFunSelect": IsDrawersOpen.IsLeftDrawerOpen = true; break;    //打开ModbusRtu功能选择左侧抽屉
+                    case "ConfigCom": IsDrawersOpen2.IsLeftDrawerOpen = true; break;                //打开ModbusRtu配置左侧抽屉
+                    case "ModbusRtuReadDrawerOpenLeft": ModbusRtuReadDrawerOpen.IsLeftDrawerOpen = true; break;  //打开ModbusRtu配置左侧抽屉
+                    case "OpenLeftDrawer3": IsDrawersOpen3.IsLeftDrawerOpen = true; break;          //打开3层抽屉的左侧抽屉
+                    case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;          //打开1层右侧抽屉
 
-                case "ShowModbusRtuFunSelect": IsDrawersOpen.IsLeftDrawerOpen = true; break;    //打开ModbusRtu功能选择左侧抽屉
-                case "ConfigCom": IsDrawersOpen2.IsLeftDrawerOpen = true; break;                //打开ModbusRtu配置左侧抽屉
-                case "OpenLeftDrawer3": IsDrawersOpen3.IsLeftDrawerOpen = true; break;          //打开3层抽屉的左侧抽屉
-                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;          //打开1层右侧抽屉
+                    case "OpenAutoRead": OpenAutoRead(); break;                                     //打开自动读取
+                    case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭自动读取
 
-                case "OpenAutoRead": OpenAutoRead(); break;                                     //打开自动读取
-                case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭自动读取
-
-                case "ImportConfig": ImportConfig(); break;                                     //导入数据监控配置
-                case "ExportConfig": ExportConfig(); break;                                     //导出数据监控配置
-                case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
-                default: break;
+                    case "ImportConfig": ImportConfig(); break;                                     //导入数据监控配置
+                    case "ExportConfig": ExportConfig(); break;                                     //导出数据监控配置
+                    case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
+                    default: break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
 
@@ -519,6 +571,12 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
+                //若搜索设备则先停止搜索
+                if (SearchDeviceState == 1)
+                {
+                    SearchDeviceState = 2;
+                }
+
                 //若串口未打开 则开启串口
                 if (!ComConfig.IsOpened)
                     OpenCom();
@@ -568,7 +626,7 @@ namespace Wu.CommTool.ViewModels
             {
                 timer.Stop();
                 SendMessage = DataMonitorConfig.DataFrame.Substring(0, DataMonitorConfig.DataFrame.Length - 4);
-                Send();
+                PublishMessage(SendMessage);
             }
             catch (Exception ex)
             {
@@ -632,6 +690,15 @@ namespace Wu.CommTool.ViewModels
                 {
                     SerialPort.Open();               //打开串口
                     ComConfig.IsOpened = true;      //标记串口已打开
+
+                    #region 开启数据帧处理线程
+                    cts = new CancellationTokenSource();
+                    publishHandleTask = new Task(PublishFrame, cts.Token);
+                    receiveHandleTask = new Task(ReceiveFrame, cts.Token);
+                    publishHandleTask.Start();
+                    receiveHandleTask.Start(); 
+                    #endregion
+
                     ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
                 }
                 catch (Exception ex)
@@ -662,7 +729,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 发送数据
         /// </summary>
-        private bool Send()
+        private bool PublishMessage(string message)
         {
             try
             {
@@ -675,7 +742,7 @@ namespace Wu.CommTool.ViewModels
                 }
 
                 //发送数据不能为空
-                if (SendMessage is null || SendMessage.Length.Equals(0))
+                if (message is null || message.Length.Equals(0))
                 {
                     ShowErrorMessage("发送的数据不能为空");
                     return false;
@@ -683,7 +750,7 @@ namespace Wu.CommTool.ViewModels
 
                 //验证数据字符必须符合16进制
                 Regex regex = new(@"^[0-9 a-f A-F -]*$");
-                if (!regex.IsMatch(SendMessage))
+                if (!regex.IsMatch(message))
                 {
                     ShowErrorMessage("数据字符仅限 0123456789 ABCDEF");
                     return false;
@@ -692,7 +759,7 @@ namespace Wu.CommTool.ViewModels
                 byte[] msg;
                 try
                 {
-                    msg = SendMessage.Replace("-", string.Empty).GetBytes();
+                    msg = message.Replace("-", string.Empty).GetBytes();
                 }
                 catch (Exception ex)
                 {
@@ -727,9 +794,8 @@ namespace Wu.CommTool.ViewModels
                         list.AddRange(msg);
                         list.AddRange(crc);
                         var data = list.ToArray();
-                        SendBytesCount += data.Length;//统计发送数据总数
-                        SerialPort.Write(data, 0, data.Length);//发送数据
-                        SendBytesCount += data.Length;//计算发送的数据量
+                        SerialPort.Write(data, 0, data.Length);     //发送数据
+                        SendBytesCount += data.Length;                    //统计发送数据总数
                         ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
                         return true;
                     }
@@ -802,7 +868,7 @@ namespace Wu.CommTool.ViewModels
                         list.AddRange(tempBuffer);                       //添加进接收的数据列表
                         if (!IsPause)
                             Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += (string.IsNullOrWhiteSpace(msg.Content) ? "" : " ") + BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
-                        //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断结束
+                        //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
                         if (list.Count > 300)
                             break;
                     }
@@ -812,26 +878,6 @@ namespace Wu.CommTool.ViewModels
                         Thread.Sleep(1);
                     }
                 } while (times < 30);
-
-                #region MyRegion
-                //if (SerialPort.BytesToRead == 0)
-                //{
-                //    times++;
-                //    Thread.Sleep(1);
-                //}
-                //else
-                //    times = 0;
-                //int dataCount = SerialPort.BytesToRead;          //获取数据量
-                //byte[] tempBuffer = new byte[dataCount];         //声明数组
-                //SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
-                //list.AddRange(tempBuffer);                       //添加进接收的数据列表
-                //if (!IsPause)
-                //    Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
-
-                ////限制一次接收的最大数量
-                //if (list.Count > 300)
-                //    break; 
-                #endregion
 
                 //030300000078
                 //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
@@ -851,10 +897,6 @@ namespace Wu.CommTool.ViewModels
                 //}
                 #endregion
 
-                #region old 2 该方法每读一个字节都延时一段时间, 会导致延时较高, 若调低延时则接收数据可能会分成多条
-                //list.Add((byte)SerialPort.ReadByte());
-                //Thread.Sleep(2);
-                #endregion
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表
                 if (SearchDeviceState == 1)
@@ -880,7 +922,6 @@ namespace Wu.CommTool.ViewModels
                 if (IsPause)
                     return;
 
-                //ShowMessage(BitConverter.ToString(list.ToArray()).Replace('-', ' '), MessageType.Receive);
             }
             catch (Exception ex)
             {
@@ -1001,9 +1042,11 @@ namespace Wu.CommTool.ViewModels
                 ComConfig.IsOpened = false;          //标记串口已关闭
                                                      //SerialPort.DataReceived -= ReceiveMessage;
                 SerialPort.Close();                   //关闭串口 
-
                 ShowMessage($"关闭串口{SerialPort.PortName}");
 
+                PublishFrameQueue.Clear();      //清空发送帧队列
+                ReceiveFrameQueue.Clear();      //清空接收帧队列
+                cts.Cancel();                 //停止帧处理线程
             }
             catch (Exception ex)
             {
@@ -1011,24 +1054,6 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        /// <summary>
-        /// 查询数据
-        /// </summary>
-        public async void GetDataAsync()
-        {
-            try
-            {
-
-            }
-            catch (global::System.Exception ex)
-            {
-
-            }
-            finally
-            {
-
-            }
-        }
 
 
         /// <summary>
@@ -1139,41 +1164,43 @@ namespace Wu.CommTool.ViewModels
             catch (Exception) { }
         }
 
-        /// <summary>
-        /// 自动搜索串口设备
-        /// </summary>
-        /// <exception cref="NotImplementedException"></exception>
-        private async void OpenAutoSearchView()
-        {
-            try
-            {
-                //若串口已打开 提示需要关闭串口
-                if (ComConfig.IsOpened)
-                {
-                    //弹窗确认 使用该功能需要先关闭串口
-                    var dialogResult = await dialogHost.Question("温馨提示", $"使用自动搜索功能将关闭当前串口, 确认是否关闭 {ComConfig.Port.Key} : {ComConfig.Port.Value}?");
-                    //取消
-                    if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
-                        return;
-                    //关闭串口
-                    CloseCom();
-                }
+        #region 已弃用
+        ///// <summary>
+        ///// 弃用  自动搜索串口设备
+        ///// </summary>
+        ///// <exception cref="NotImplementedException"></exception>
+        //private async void OpenAutoSearchView()
+        //{
+        //    try
+        //    {
+        //        //若串口已打开 提示需要关闭串口
+        //        if (ComConfig.IsOpened)
+        //        {
+        //            //弹窗确认 使用该功能需要先关闭串口
+        //            var dialogResult = await dialogHost.Question("温馨提示", $"使用自动搜索功能将关闭当前串口, 确认是否关闭 {ComConfig.Port.Key} : {ComConfig.Port.Value}?");
+        //            //取消
+        //            if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
+        //                return;
+        //            //关闭串口
+        //            CloseCom();
+        //        }
 
-                //打开自动搜索界面
-                //添加要传递的参数
-                DialogParameters param = new()
-                {
-                    { nameof(SerialPort), SerialPort },
-                    { nameof(ComConfig), ComConfig }
-                };
-                //弹窗
-                var dialogResult2 = await dialogHost.ShowDialog(nameof(ModbusRtuAutoSearchDeviceView), param, nameof(ModbusRtuView));
-            }
-            catch (Exception ex)
-            {
-                ShowMessage(ex.Message, MessageType.Error);
-            }
-        }
+        //        //打开自动搜索界面
+        //        //添加要传递的参数
+        //        DialogParameters param = new()
+        //        {
+        //            { nameof(SerialPort), SerialPort },
+        //            { nameof(ComConfig), ComConfig }
+        //        };
+        //        //弹窗
+        //        var dialogResult2 = await dialogHost.ShowDialog(nameof(ModbusRtuAutoSearchDeviceView), param, nameof(ModbusRtuView));
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ShowMessage(ex.Message, MessageType.Error);
+        //    }
+        //} 
+        #endregion
 
 
         /// <summary>
@@ -1245,10 +1272,94 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        private void Fi()
+        /// <summary>
+        /// ModbusRtu数据写入
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ModburRtuDataWrite(ModbusRtuData obj)
         {
-            var cview = CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
-            cview.Filter = new Predicate<object>(x => string.IsNullOrWhiteSpace(((ModbusRtuData)x).Name));
+            try
+            {
+                //TODO编辑写入数据帧
+                string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
+                string fun = "10";                                                     //0x10 写入多个寄存器
+                string startAddr = obj.Addr.ToString("X4");                     //起始地址
+                string quantity = (obj.DataTypeByteLength / 2).ToString("X2");        //数量
+
+                //Todo 将待写入值根据数据类型反向转换为设备的数据类型
+                //string data = obj.WriteValue.ToString($"X{obj.DataTypeByteLength}");   //数据值
+                //Todo
+                string data = "11";   //数据值
+
+                string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
+                var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
+                string frame = $"{addr} {fun} {startAddr} {quantity} {data} {crc[1]:X2}{crc[0]:X2}";
+
+                //Todo
+                //暂停数据读取
+                //请求发送数据帧
+
+
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+        #endregion
+
+
+        #region **************************************** 数据帧处理 ****************************************
+        /// <summary>
+        /// 发送数据帧处理线程
+        /// </summary>
+        private void PublishFrame()
+        {
+            try
+            {
+                while (!cts.IsCancellationRequested)
+                {
+                    if (ComConfig.IsOpened == false)
+                        return;
+                    //判断队列是否不空 若为空则等待
+                    if (PublishFrameQueue.Count == 0)
+                    {
+                        Thread.Sleep(50);
+                        continue;
+                    }
+
+                    var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
+                    PublishMessage(frame);                    //请求发送数据帧
+                    //从队列读取的间隔为50ms
+                    Thread.Sleep(50);
+                }
+            }
+            catch (Exception ex)
+            {
+                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() =>
+                {
+                    ShowErrorMessage(ex.Message);
+                });
+            }
+        }
+
+        /// <summary>
+        /// 接收数据帧处理线程
+        /// </summary>
+        private void ReceiveFrame()
+        {
+            while (!cts.IsCancellationRequested)
+            {
+                if (ComConfig.IsOpened == false)
+                    return;
+                Thread.Sleep(100);
+            }
+            //TODO
+            //根据接收的帧判断帧类型
+            //首先校验CRC
+            //校验失败则为异常的数据帧
+
         }
         #endregion
     }
