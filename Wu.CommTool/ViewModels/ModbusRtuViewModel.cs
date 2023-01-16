@@ -1221,89 +1221,7 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-        /// <summary>
-        /// ModbusRtu数据写入
-        /// </summary>
-        /// <param name="obj"></param>
-        /// <exception cref="NotImplementedException"></exception>
-        private void ModburRtuDataWrite(ModbusRtuData obj)
-        {
-            try
-            {
-                //TODO编辑写入数据帧
-                string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
-                string fun = "10";                                                     //0x10 写入多个寄存器
-                string startAddr = obj.Addr.ToString("X4");                     //起始地址
-                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");        //寄存器数量
-                string quantity = (obj.DataTypeByteLength).ToString("X2");  //字节数量
-
-                //Todo 将待写入值根据数据类型反向转换为设备的数据类型
-                //string data = obj.WriteValue.ToString($"X{obj.DataTypeByteLength}");   //数据值
-                //Todo 数据值编辑
-
-                double wValue = double.Parse(obj.WriteValue) / obj.Rate;
-                string dataStr = "";
-                dynamic data;
-                //根据设定的类型转换值
-                switch (obj.Type)
-                {
-                    case Enums.DataType.uShort:
-                        data= (ushort)wValue;
-                        dataStr = data.ToString("X4");
-                        break;
-                    case Enums.DataType.Short:
-                        data = (short)wValue;
-                        dataStr = data.ToString("X4");
-                        break;
-                    case Enums.DataType.uInt:
-                        data = (uint)wValue;
-                        dataStr = data.ToString("X8");
-                        break;
-                    case Enums.DataType.Int:
-                        data = (int)wValue;
-                        dataStr = data.ToString("X8");
-                        break;
-                    case Enums.DataType.uLong:
-                        data = (ulong)wValue;
-                        dataStr = data.ToString("X16");
-                        break;
-                    case Enums.DataType.Long:
-                        data = (long)wValue;
-                        dataStr = data.ToString("X16");
-                        break;
-                    case Enums.DataType.Float:
-                        data = (float)wValue;
-                        var xxxx = BitConverter.GetBytes(data);
-                        byte[] xxx = BitConverter.GetBytes(data);
-                        dataStr = xxx.ToString();
-                        break;
-                    case Enums.DataType.Double:
-                        data = (double)wValue;
-                        dataStr = data.ToString("X8");
-                        break;
-                    default:
-                        break;
-                }
-                //除以倍率
-                //dataStr = ModbusRtuData.ByteOrder(dataStr.GetBytes().ToArray(),obj.ModbusByteOrder).ToString();//字节序调换
-
-                dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(dataStr.GetBytes().ToArray(), obj.ModbusByteOrder)).Replace("-","");
-
-
-
-                string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
-                var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
-                string frame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr} {crc[1]:X2}{crc[0]:X2}";
-
-                ShowMessage("数据写入...");
-                //请求发送数据帧
-                PublishFrameQueue.Enqueue(frame);
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage(ex.Message);
-            }
-        }
+       
         #endregion
 
 
@@ -1442,6 +1360,76 @@ namespace Wu.CommTool.ViewModels
                 {
                     ShowErrorMessage(ex.Message);
                 }
+            }
+        }
+
+        /// <summary>
+        /// ModbusRtu数据写入
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ModburRtuDataWrite(ModbusRtuData obj)
+        {
+            try
+            {
+                //TODO编辑写入数据帧
+                string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
+                string fun = "10";                                                     //0x10 写入多个寄存器
+                string startAddr = obj.Addr.ToString("X4");                     //起始地址
+                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");        //寄存器数量
+                string quantity = (obj.DataTypeByteLength).ToString("X2");  //字节数量
+
+                //Todo 将待写入值根据数据类型反向转换为设备的数据类型
+                //string data = obj.WriteValue.ToString($"X{obj.DataTypeByteLength}");   //数据值
+                //Todo 数据值编辑
+
+                double wValue = double.Parse(obj.WriteValue) / obj.Rate;//对值的倍率做处理
+                string dataStr = "";
+                dynamic data = "";
+                //根据设定的类型转换值
+                switch (obj.Type)
+                {
+                    case Enums.DataType.uShort:
+                        data = (ushort)wValue;
+                        break;
+                    case Enums.DataType.Short:
+                        data = (short)wValue;
+                        break;
+                    case Enums.DataType.uInt:
+                        data = (uint)wValue;
+                        break;
+                    case Enums.DataType.Int:
+                        data = (int)wValue;
+                        break;
+                    case Enums.DataType.uLong:
+                        data = (ulong)wValue;
+                        break;
+                    case Enums.DataType.Long:
+                        data = (long)wValue;
+                        break;
+                    case Enums.DataType.Float:
+                        data = (float)wValue;
+                        break;
+                    case Enums.DataType.Double:
+                        data = (double)wValue;
+                        break;
+                    default:
+                        break;
+                }
+
+                dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
+
+                string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
+                var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
+                string frame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr} {crc[1]:X2}{crc[0]:X2}";
+
+                ShowMessage("数据写入...");
+                //请求发送数据帧
+                PublishFrameQueue.Enqueue(frame);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
         #endregion

@@ -22,6 +22,7 @@ MqttClient
 
 2023 0116
 ModbusRtu消息处理使用长延时替代重新初始化Task
+ModbusRtu数据写入
 
 2023 0115
 ModbusRtu发送和接收使用Task子线程处理(完成部分)
