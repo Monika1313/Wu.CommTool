@@ -45,6 +45,7 @@ namespace Wu.CommTool.ViewModels
         Task publishHandleTask;
         Task receiveHandleTask;
         CancellationTokenSource cts = new();
+        private int TaskDelayTime = int.MaxValue;
         #endregion
 
 
@@ -72,9 +73,10 @@ namespace Wu.CommTool.ViewModels
             //数据监控过滤器
             RefreshModbusRtuDataDataView();
 
-            publishHandleTask = new Task(PublishFrame, cts.Token);
-            receiveHandleTask = new Task(ReceiveFrame, cts.Token);
-
+            publishHandleTask = new Task(PublishFrame);
+            receiveHandleTask = new Task(ReceiveFrame);
+            publishHandleTask.Start();
+            receiveHandleTask.Start();
 
             //数据帧处理线程
             //publishHandleThread = new Thread(PublishFrame)
@@ -226,11 +228,11 @@ namespace Wu.CommTool.ViewModels
                             //修改设置
                             SerialPort.BaudRate = (int)baud;
                             SerialPort.Parity = (System.IO.Ports.Parity)parity;
-                            SendMessage = $"{i:X2}0300000001";//读取第一个字
+                            string msg = $"{i:X2}0300000001";//读取第一个字
                             //串口关闭时或不处于搜索状态
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
-                            PublishMessage(SendMessage);
+                            PublishMessage(msg);
                             await Task.Delay(100);
                         }
                         if (ComConfig.IsOpened == false)
@@ -458,7 +460,6 @@ namespace Wu.CommTool.ViewModels
             {
                 switch (obj)
                 {
-                    //case "Search": GetDataAsync(); break;
                     case "Add": break;
                     case "Pause": Pause(); break;
 
@@ -468,12 +469,14 @@ namespace Wu.CommTool.ViewModels
                     case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                     case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
 
-                    case "Send": /*PublishMessage(SendMessage)*/
+                    case "Send":
+                        //若串口未打开则打开串口
                         if (!ComConfig.IsOpened)
                         {
+                            ShowMessage("串口未打开, 尝试打开串口...");
                             OpenCom();
                         }
-                        PublishFrameQueue.Enqueue(SendMessage);
+                        PublishFrameQueue.Enqueue(SendMessage);          //将待发送的消息添加进队列
                         break;                                           //发送数据
                     case "GetComPorts": GetComPorts(); break;                                       //查找Com口
                     case "Clear": Clear(); break;                                                   //清空页面信息
@@ -565,7 +568,7 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
-        /// 打开自动读取数据
+        /// 打开数据监控
         /// </summary>
         private async void OpenAutoRead()
         {
@@ -583,6 +586,9 @@ namespace Wu.CommTool.ViewModels
                 //若串口开启失败则返回
                 if (!ComConfig.IsOpened)
                     return;
+
+                //数据监控时, 发送队列处理时间延迟, 避免数据采集与数据写入冲突
+                TaskDelayTime = 300;
 
                 timer = new()
                 {
@@ -692,11 +698,16 @@ namespace Wu.CommTool.ViewModels
                     ComConfig.IsOpened = true;      //标记串口已打开
 
                     #region 开启数据帧处理线程
-                    cts = new CancellationTokenSource();
-                    publishHandleTask = new Task(PublishFrame, cts.Token);
-                    receiveHandleTask = new Task(ReceiveFrame, cts.Token);
-                    publishHandleTask.Start();
-                    receiveHandleTask.Start(); 
+                    //cts = new CancellationTokenSource();
+                    //publishHandleTask = new Task(PublishFrame, cts.Token);
+                    //receiveHandleTask = new Task(ReceiveFrame, cts.Token);
+                    //publishHandleTask.Start();
+                    //receiveHandleTask.Start(); 
+
+                    //修改延时时间
+                    TaskDelayTime = 50;
+                    //取消上一次的延时
+                    cts.Cancel();
                     #endregion
 
                     ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
@@ -796,7 +807,9 @@ namespace Wu.CommTool.ViewModels
                         var data = list.ToArray();
                         SerialPort.Write(data, 0, data.Length);     //发送数据
                         SendBytesCount += data.Length;                    //统计发送数据总数
-                        ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
+
+                        if (!IsPause)
+                            ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
                         return true;
                     }
                     catch (Exception ex)
@@ -866,7 +879,7 @@ namespace Wu.CommTool.ViewModels
                         byte[] tempBuffer = new byte[dataCount];         //声明数组
                         SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
                         list.AddRange(tempBuffer);                       //添加进接收的数据列表
-                        if (!IsPause)
+                        //if (!IsPause)
                             Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += (string.IsNullOrWhiteSpace(msg.Content) ? "" : " ") + BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
                         //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
                         if (list.Count > 300)
@@ -1046,7 +1059,9 @@ namespace Wu.CommTool.ViewModels
 
                 PublishFrameQueue.Clear();      //清空发送帧队列
                 ReceiveFrameQueue.Clear();      //清空接收帧队列
-                cts.Cancel();                 //停止帧处理线程
+                //cts.Cancel();                 //停止帧处理线程
+                TaskDelayTime = int.MaxValue;
+                cts.TryReset();
             }
             catch (Exception ex)
             {
@@ -1314,25 +1329,34 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 发送数据帧处理线程
         /// </summary>
-        private void PublishFrame()
+        private async void PublishFrame()
         {
             try
             {
-                while (!cts.IsCancellationRequested)
+                while (true)
                 {
-                    if (ComConfig.IsOpened == false)
-                        return;
+                    //if (ComConfig.IsOpened == false)
+                    //    return;
                     //判断队列是否不空 若为空则等待
                     if (PublishFrameQueue.Count == 0)
                     {
-                        Thread.Sleep(50);
+                        try
+                        {
+                            await Task.Delay(TaskDelayTime, cts.Token);
+                        }
+                        catch (TaskCanceledException ex)
+                        {
+                            cts.Dispose();
+                            cts = new();
+                        }
                         continue;
                     }
+
+                    
 
                     var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
                     PublishMessage(frame);                    //请求发送数据帧
                     //从队列读取的间隔为50ms
-                    Thread.Sleep(50);
                 }
             }
             catch (Exception ex)
@@ -1347,19 +1371,33 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 接收数据帧处理线程
         /// </summary>
-        private void ReceiveFrame()
+        private async void ReceiveFrame()
         {
-            while (!cts.IsCancellationRequested)
+            try
             {
-                if (ComConfig.IsOpened == false)
-                    return;
-                Thread.Sleep(100);
-            }
-            //TODO
-            //根据接收的帧判断帧类型
-            //首先校验CRC
-            //校验失败则为异常的数据帧
+                while (true)
+                {
+                    try
+                    {
+                        await Task.Delay(TaskDelayTime, cts.Token);
+                    }
+                    catch (TaskCanceledException ex)
+                    {
+                        cts.Dispose();
+                        cts = new();
+                    }
+                    continue;
+                }
+                //TODO
+                //根据接收的帧判断帧类型
+                //首先校验CRC
+                //校验失败则为异常的数据帧
 
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         #endregion
     }

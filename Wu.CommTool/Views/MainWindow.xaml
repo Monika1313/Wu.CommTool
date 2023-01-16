@@ -9,7 +9,7 @@
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
-    Width="1000"
+    Width="1250"
     Height="700"
     MinWidth="1000"
     MinHeight="700"
