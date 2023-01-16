@@ -20,7 +20,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Forms;
+using System.Windows.Interop;
 using Wu.CommTool.Common;
 using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Extensions;
@@ -62,7 +64,6 @@ namespace Wu.CommTool.ViewModels
             ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
             ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
 
-
             //更新串口列表
             GetComPorts();
 
@@ -77,190 +78,8 @@ namespace Wu.CommTool.ViewModels
             receiveHandleTask = new Task(ReceiveFrame);
             publishHandleTask.Start();
             receiveHandleTask.Start();
-
-            //数据帧处理线程
-            //publishHandleThread = new Thread(PublishFrame)
-            //{
-            //    Name = "发送数据帧处理",
-            //    IsBackground = true,
-            //};
-            //receiveHandleThread = new Thread(ReceiveFrame)
-            //{
-            //    Name = "接收数据帧处理",
-
-            //};
         }
         #endregion
-
-        /// <summary>
-        /// ModbusRtu功能选择修改
-        /// </summary>
-        /// <param name="obj"></param>
-        private void ModbusRtuFunChanged(MenuBar obj)
-        {
-            try
-            {
-                switch (obj.NameSpace)
-                {
-                    case "0":
-                        ModbusRtuFunIndex = 0;
-                        IsDrawersOpen.IsLeftDrawerOpen = false;
-                        break;
-                    case "1":
-                        ModbusRtuFunIndex = 1;
-                        IsDrawersOpen.IsLeftDrawerOpen = false;
-                        break;
-                    case "2":
-                        ModbusRtuFunIndex = 2;
-                        IsDrawersOpen.IsLeftDrawerOpen = false;
-                        break;
-                    case "3":
-                        ModbusRtuFunIndex = 3;
-                        IsDrawersOpen.IsLeftDrawerOpen = false;
-                        break;
-                }
-            }
-            catch { }
-        }
-
-        /// <summary>
-        /// 校验位选框修改时
-        /// </summary>
-        /// <param name="obj"></param>
-        private void ParitySelectionChanged(object obj)
-        {
-            IList items = (IList)obj;
-            var collection = items.Cast<Wu.CommTool.Models.Parity>();
-            SelectedParitys = collection.ToList();
-        }
-
-        /// <summary>
-        /// 波特率选框修改时
-        /// </summary>
-        /// <param name="obj"></param>
-        private void BaudRateSelectionChanged(object obj)
-        {
-            //获取选中项列表
-            System.Collections.IList items = (System.Collections.IList)obj;
-            var collection = items.Cast<BaudRate>();
-            //获取所有选中项
-            SelectedBaudRates = collection.ToList();
-        }
-
-        /// <summary>
-        /// 停止搜索设备
-        /// </summary>
-        private void StopSearchDevices()
-        {
-            try
-            {
-                //若串口已打开则关闭
-                if (ComConfig.IsOpened == true)
-                {
-                    OperatePort();
-                }
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage(ex.Message);
-            }
-        }
-
-
-        /// <summary>
-        /// 自动搜索ModbusRtu设备
-        /// </summary>
-        private async void SearchDevices()
-        {
-            try
-            {
-                //若数据监控功能开启中则关闭
-                if (DataMonitorConfig.IsOpened)
-                {
-                    CloseAutoRead();
-                }
-
-                //设置串口
-                //修改串口设置
-                if (SelectedBaudRates.Count.Equals(0))
-                {
-                    ShowErrorMessage("未选择要搜索的波特率");
-                    return;
-                }
-                if (SelectedParitys.Count.Equals(0))
-                {
-                    ShowErrorMessage("未选择要搜索的校验位");
-                    return;
-                }
-
-                //打开串口
-                if (ComConfig.IsOpened == false)
-                {
-                    OperatePort();
-                }
-
-                SearchDeviceState = 1;//标记状态为搜索设备中
-                //清空搜索到的设备列表
-                ModbusRtuDevices.Clear();
-
-                //遍历选项
-
-                //Flag:
-                foreach (var baud in SelectedBaudRates)
-                {
-                    foreach (var parity in SelectedParitys)
-                    {
-                        //搜索
-                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
-
-                        for (int i = 0; i <= 255; i++)
-                        {
-                            //当前搜索的设备
-                            CurrentDevice = new()
-                            {
-                                Address = i,
-                                BaudRate = baud,
-                                Parity = parity,
-                                DataBits = ComConfig.DataBits,
-                                StopBits = ComConfig.StopBits
-                            };
-
-                            //修改设置
-                            SerialPort.BaudRate = (int)baud;
-                            SerialPort.Parity = (System.IO.Ports.Parity)parity;
-                            string msg = $"{i:X2}0300000001";//读取第一个字
-                            //串口关闭时或不处于搜索状态
-                            if (ComConfig.IsOpened == false || SearchDeviceState != 1)
-                                break;
-                            PublishMessage(msg);
-                            await Task.Delay(100);
-                        }
-                        if (ComConfig.IsOpened == false)
-                            break;
-                    }
-                    if (ComConfig.IsOpened == false)
-                        break;
-                }
-                if (ComConfig.IsOpened)
-                {
-                    ShowMessage("搜索完成");
-                    OperatePort();
-                }
-                else
-                {
-                    ShowMessage("停止搜索");
-                }
-            }
-            catch (Exception ex)
-            {
-
-            }
-            finally
-            {
-                SearchDeviceState = 2;//标记状态为搜索结束
-            }
-        }
-
 
 
 
@@ -449,7 +268,6 @@ namespace Wu.CommTool.ViewModels
 
 
         #region **************************************** 方法 ****************************************
-
         /// <summary>
         /// 执行命令
         /// </summary>
@@ -512,7 +330,9 @@ namespace Wu.CommTool.ViewModels
             DataMonitorConfig.ModbusRtuDatas[0].Rate += 1;
         }
 
-        //开关数据过滤器
+        /// <summary>
+        /// 开关数据过滤器
+        /// </summary>
         private void OperateFilter()
         {
             DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
@@ -543,9 +363,6 @@ namespace Wu.CommTool.ViewModels
 
 
         }
-
-
-
 
         /// <summary>
         /// 关闭自动读取数据
@@ -622,7 +439,7 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
-        /// 定时器事件
+        /// 数据监控 定时器事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -631,8 +448,8 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 timer.Stop();
-                SendMessage = DataMonitorConfig.DataFrame.Substring(0, DataMonitorConfig.DataFrame.Length - 4);
-                PublishMessage(SendMessage);
+                string msg = DataMonitorConfig.DataFrame[..^4];
+                PublishMessage(msg);
             }
             catch (Exception ex)
             {
@@ -724,8 +541,6 @@ namespace Wu.CommTool.ViewModels
                 ShowMessage(ex.Message, MessageType.Error);
             }
         }
-
-
 
         /// <summary>
         /// 清空消息
@@ -830,32 +645,16 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-
-
         /// <summary>
         /// 接收消息
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private async void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
-                #region OLD 1 该方法需要等待一定的时间接收完数据, 由于长数据与短数据接收时间不同,会导致多条断数据数据被合并为一条或一条长数据被分成多条, 该方法并不实用
-                //Thread.Sleep(60);       //延时读取数据 等待数据接收完成
-                //if (!SerialPort.IsOpen)
-                //{
-                //    return;
-                //}
-
-                //int n = SerialPort.BytesToRead;          //获取接收的数据总数
-                //byte[] buf = new byte[n];
-                //SerialPort.Read(buf, 0, n);        //从第0个读取n个字节, 写入buf
-                //ReceivBytesCount += buf.Length;          //统计发送的数据总数 
-                #endregion
-
-
                 //若串口未开启则返回
                 if (!SerialPort.IsOpen)
                     return;
@@ -865,10 +664,7 @@ namespace Wu.CommTool.ViewModels
                 List<byte> list = new();
                 if (ComConfig.IsOpened == false)
                     return;
-                //界面展示接收消息, 并缓存该条消息, 接收期间持续添加接收的数据
-                var msg = new MessageData("", DateTime.Now, MessageType.Receive);
-                if (!IsPause)
-                    ShowMessage(msg);
+                string msg = string.Empty;
                 int times = 0;
                 do
                 {
@@ -879,8 +675,8 @@ namespace Wu.CommTool.ViewModels
                         byte[] tempBuffer = new byte[dataCount];         //声明数组
                         SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
                         list.AddRange(tempBuffer);                       //添加进接收的数据列表
-                        //if (!IsPause)
-                            Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += (string.IsNullOrWhiteSpace(msg.Content) ? "" : " ") + BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
+                        msg += BitConverter.ToString(tempBuffer);
+                        //Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += (string.IsNullOrWhiteSpace(msg.Content) ? "" : " ") + BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
                         //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
                         if (list.Count > 300)
                             break;
@@ -888,27 +684,17 @@ namespace Wu.CommTool.ViewModels
                     else
                     {
                         times++;
+                        //await Task.Delay(millisecondsDelay: 10);
                         Thread.Sleep(1);
                     }
                 } while (times < 30);
-
-                //030300000078
-                //判断接收缓存区是否有数据 有数据则读取 直接读取完接收缓存
-                //while (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
-                //{
-                //    #region 修改为一次读取多个, 这样可以适当增加休眠的等待时间, 避免由于设备响应速度慢导致一条数据变为多条数据
-                //    int dataCount = SerialPort.BytesToRead;          //获取数据量
-                //    byte[] tempBuffer = new byte[dataCount];         //声明数组
-                //    SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
-                //    list.AddRange(tempBuffer);                       //添加进接收的数据列表
-                //    if (!IsPause)
-                //        Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
-
-                //    Thread.Sleep(35);                 //等待数毫秒后确认是否读取完成
-
-                //    #endregion
-                //}
                 #endregion
+
+                if (!IsPause)
+                {
+                    msg = msg.Replace('-', ' ');
+                    ReceiveFrameQueue.Enqueue(msg);
+                }
 
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表
@@ -916,18 +702,12 @@ namespace Wu.CommTool.ViewModels
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
                     {
-                        CurrentDevice.ReceiveMessage = msg.Content;
-                        CurrentDevice.Address = int.Parse(msg.Content[..2], System.Globalization.NumberStyles.HexNumber);
+                        CurrentDevice.ReceiveMessage = msg;
+                        CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
                         ModbusRtuDevices.Add(CurrentDevice);
                     }));
                 }
 
-
-                //若自动读取开启则解析接收的数据
-                if (DataMonitorConfig.IsOpened)
-                {
-                    Analyse(list);
-                }
                 //计算总接收数据量
                 ReceiveBytesCount += list.Count;
 
@@ -948,7 +728,6 @@ namespace Wu.CommTool.ViewModels
         private void Analyse(List<byte> list)
         {
             //TODO 解析数据
-            //对接收的数据进行CRC校验 若校验失败则直接返回
             //目前仅支持03功能码
 
             //判断字节数为奇数还是偶数
@@ -956,30 +735,22 @@ namespace Wu.CommTool.ViewModels
             if (list.Count % 2 == 0)
                 return;
             //奇数为响应
-            //验证校验码
-            var crc = Wu.Utils.Crc.Crc16Modbus(list.ToArray()); //带校验码校验 结果应为 00 00
-            //校验失败则返回
-            if (crc[0] != 0 || crc[1] != 0)
-                return;
-            //crc校验成功
-            //验证数据是否为请求的数据
-            if (list[0] != DataMonitorConfig.SlaveId || list[1] != DataMonitorConfig.Function && list[2] != DataMonitorConfig.Quantity)
-                return;//非请求的数据
-            var byteArr = list.ToArray();
 
-            //Todo解析数据
+            //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
+            if (list[0] != DataMonitorConfig.SlaveId || list[1] != DataMonitorConfig.Function || list[2] != DataMonitorConfig.Quantity * 2)
+                return;//非请求的数据
+
+            var byteArr = list.ToArray();
             //将读取的数据写入
             for (int i = 0; i < DataMonitorConfig.Quantity; i++)
             {
-                DataMonitorConfig.ModbusRtuDatas[i].Location = i * 2 + 3;            //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+                DataMonitorConfig.ModbusRtuDatas[i].Location = i * 2 + 3;         //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
                 DataMonitorConfig.ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
                 DataMonitorConfig.ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
                 DataMonitorConfig.ModbusRtuDatas[i].ModbusByteOrder = DataMonitorConfig.ByteOrder; //字节序
                 DataMonitorConfig.ModbusRtuDatas[i].UpdateTime = DateTime.Now;    //更新时间
             }
         }
-
-
 
         /// <summary>
         /// 打开串口 若串口未打开则打开串口 若串口已打开则关闭
@@ -1033,7 +804,6 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-
         /// <summary>
         /// 关闭串口
         /// </summary>
@@ -1068,8 +838,6 @@ namespace Wu.CommTool.ViewModels
                 ShowMessage(ex.Message, MessageType.Error);
             }
         }
-
-
 
         /// <summary>
         /// 获取串口完整名字（包括驱动名字）
@@ -1253,8 +1021,6 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-
-
         /// <summary>
         /// 导入配置文件
         /// </summary>
@@ -1288,6 +1054,174 @@ namespace Wu.CommTool.ViewModels
         }
 
         /// <summary>
+        /// ModbusRtu功能选择修改
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ModbusRtuFunChanged(MenuBar obj)
+        {
+            try
+            {
+                switch (obj.NameSpace)
+                {
+                    case "0":
+                        ModbusRtuFunIndex = 0;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
+                        break;
+                    case "1":
+                        ModbusRtuFunIndex = 1;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
+                        break;
+                    case "2":
+                        ModbusRtuFunIndex = 2;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
+                        break;
+                    case "3":
+                        ModbusRtuFunIndex = 3;
+                        IsDrawersOpen.IsLeftDrawerOpen = false;
+                        break;
+                }
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// 校验位选框修改时
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ParitySelectionChanged(object obj)
+        {
+            IList items = (IList)obj;
+            var collection = items.Cast<Wu.CommTool.Models.Parity>();
+            SelectedParitys = collection.ToList();
+        }
+
+        /// <summary>
+        /// 波特率选框修改时
+        /// </summary>
+        /// <param name="obj"></param>
+        private void BaudRateSelectionChanged(object obj)
+        {
+            //获取选中项列表
+            System.Collections.IList items = (System.Collections.IList)obj;
+            var collection = items.Cast<BaudRate>();
+            //获取所有选中项
+            SelectedBaudRates = collection.ToList();
+        }
+
+        /// <summary>
+        /// 停止搜索设备
+        /// </summary>
+        private void StopSearchDevices()
+        {
+            try
+            {
+                //若串口已打开则关闭
+                if (ComConfig.IsOpened == true)
+                {
+                    OperatePort();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 自动搜索ModbusRtu设备
+        /// </summary>
+        private async void SearchDevices()
+        {
+            try
+            {
+                //若数据监控功能开启中则关闭
+                if (DataMonitorConfig.IsOpened)
+                {
+                    CloseAutoRead();
+                }
+
+                //设置串口
+                //修改串口设置
+                if (SelectedBaudRates.Count.Equals(0))
+                {
+                    ShowErrorMessage("未选择要搜索的波特率");
+                    return;
+                }
+                if (SelectedParitys.Count.Equals(0))
+                {
+                    ShowErrorMessage("未选择要搜索的校验位");
+                    return;
+                }
+
+                //打开串口
+                if (ComConfig.IsOpened == false)
+                {
+                    OperatePort();
+                }
+
+                SearchDeviceState = 1;//标记状态为搜索设备中
+                //清空搜索到的设备列表
+                ModbusRtuDevices.Clear();
+
+                //遍历选项
+
+                //Flag:
+                foreach (var baud in SelectedBaudRates)
+                {
+                    foreach (var parity in SelectedParitys)
+                    {
+                        //搜索
+                        ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
+
+                        for (int i = 0; i <= 255; i++)
+                        {
+                            //当前搜索的设备
+                            CurrentDevice = new()
+                            {
+                                Address = i,
+                                BaudRate = baud,
+                                Parity = parity,
+                                DataBits = ComConfig.DataBits,
+                                StopBits = ComConfig.StopBits
+                            };
+
+                            //修改设置
+                            SerialPort.BaudRate = (int)baud;
+                            SerialPort.Parity = (System.IO.Ports.Parity)parity;
+                            string msg = $"{i:X2}0300000001";//读取第一个字
+                            //串口关闭时或不处于搜索状态
+                            if (ComConfig.IsOpened == false || SearchDeviceState != 1)
+                                break;
+                            PublishMessage(msg);
+                            await Task.Delay(100);
+                        }
+                        if (ComConfig.IsOpened == false)
+                            break;
+                    }
+                    if (ComConfig.IsOpened == false)
+                        break;
+                }
+                if (ComConfig.IsOpened)
+                {
+                    ShowMessage("搜索完成");
+                    OperatePort();
+                }
+                else
+                {
+                    ShowMessage("停止搜索");
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                SearchDeviceState = 2;//标记状态为搜索结束
+            }
+        }
+
+        /// <summary>
         /// ModbusRtu数据写入
         /// </summary>
         /// <param name="obj"></param>
@@ -1300,22 +1234,70 @@ namespace Wu.CommTool.ViewModels
                 string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
                 string fun = "10";                                                     //0x10 写入多个寄存器
                 string startAddr = obj.Addr.ToString("X4");                     //起始地址
-                string quantity = (obj.DataTypeByteLength / 2).ToString("X2");        //数量
+                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");        //寄存器数量
+                string quantity = (obj.DataTypeByteLength).ToString("X2");  //字节数量
 
                 //Todo 将待写入值根据数据类型反向转换为设备的数据类型
                 //string data = obj.WriteValue.ToString($"X{obj.DataTypeByteLength}");   //数据值
-                //Todo
-                string data = "11";   //数据值
+                //Todo 数据值编辑
+
+                double wValue = double.Parse(obj.WriteValue) / obj.Rate;
+                string dataStr = "";
+                dynamic data;
+                //根据设定的类型转换值
+                switch (obj.Type)
+                {
+                    case Enums.DataType.uShort:
+                        data= (ushort)wValue;
+                        dataStr = data.ToString("X4");
+                        break;
+                    case Enums.DataType.Short:
+                        data = (short)wValue;
+                        dataStr = data.ToString("X4");
+                        break;
+                    case Enums.DataType.uInt:
+                        data = (uint)wValue;
+                        dataStr = data.ToString("X8");
+                        break;
+                    case Enums.DataType.Int:
+                        data = (int)wValue;
+                        dataStr = data.ToString("X8");
+                        break;
+                    case Enums.DataType.uLong:
+                        data = (ulong)wValue;
+                        dataStr = data.ToString("X16");
+                        break;
+                    case Enums.DataType.Long:
+                        data = (long)wValue;
+                        dataStr = data.ToString("X16");
+                        break;
+                    case Enums.DataType.Float:
+                        data = (float)wValue;
+                        var xxxx = BitConverter.GetBytes(data);
+                        byte[] xxx = BitConverter.GetBytes(data);
+                        dataStr = xxx.ToString();
+                        break;
+                    case Enums.DataType.Double:
+                        data = (double)wValue;
+                        dataStr = data.ToString("X8");
+                        break;
+                    default:
+                        break;
+                }
+                //除以倍率
+                //dataStr = ModbusRtuData.ByteOrder(dataStr.GetBytes().ToArray(),obj.ModbusByteOrder).ToString();//字节序调换
+
+                dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(dataStr.GetBytes().ToArray(), obj.ModbusByteOrder)).Replace("-","");
+
+
 
                 string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
                 var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
-                string frame = $"{addr} {fun} {startAddr} {quantity} {data} {crc[1]:X2}{crc[0]:X2}";
+                string frame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr} {crc[1]:X2}{crc[0]:X2}";
 
-                //Todo
-                //暂停数据读取
+                ShowMessage("数据写入...");
                 //请求发送数据帧
-
-
+                PublishFrameQueue.Enqueue(frame);
             }
             catch (Exception ex)
             {
@@ -1331,9 +1313,9 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private async void PublishFrame()
         {
-            try
+            while (true)
             {
-                while (true)
+                try
                 {
                     //if (ComConfig.IsOpened == false)
                     //    return;
@@ -1352,19 +1334,14 @@ namespace Wu.CommTool.ViewModels
                         continue;
                     }
 
-                    
-
                     var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
                     PublishMessage(frame);                    //请求发送数据帧
-                    //从队列读取的间隔为50ms
+                                                              //从队列读取的间隔为50ms
                 }
-            }
-            catch (Exception ex)
-            {
-                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() =>
+                catch (Exception ex)
                 {
                     ShowErrorMessage(ex.Message);
-                });
+                }
             }
         }
 
@@ -1373,30 +1350,98 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private async void ReceiveFrame()
         {
-            try
+            while (true)
             {
-                while (true)
+                try
                 {
-                    try
+                    //若无消息需要处理则不执行
+                    if (ReceiveFrameQueue.Count == 0)
                     {
-                        await Task.Delay(TaskDelayTime, cts.Token);
+                        try
+                        {
+                            await Task.Delay(TaskDelayTime, cts.Token);
+                        }
+                        catch (TaskCanceledException ex)
+                        {
+                            cts.Dispose();
+                            cts = new();
+                        }
+                        continue;
                     }
-                    catch (TaskCanceledException ex)
+
+                    //从接收消息队列中取出一条消息
+                    var frame = ReceiveFrameQueue.Dequeue();
+                    if (frame is null)
                     {
-                        cts.Dispose();
-                        cts = new();
+                        continue;
                     }
-                    continue;
+
+                    // 1 对接收的消息直接进行crc校验
+                    var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码
+                    //若校验结果不为0000则校验失败
+                    if (crc == null || !crc[0].Equals(0) || !crc[1].Equals(0))
+                    {
+                        ShowReceiveMessage(frame + "\n校验失败...");
+                        continue;
+                    }
+                    else
+                    {
+                        ShowReceiveMessage(frame);
+                    }
+
+                    //CRC校验通过 执行以下内容
+                    List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
+
+                    int slaveId = frameList[0]; //从站地址
+                    int func = frameList[1];    //功能码
+
+
+                    //03功能码 字节数量奇数为响应帧 字节数量=8请求帧    错误码0x83
+                    if (func == 0x03)
+                    {
+                        //判断字节数量是否为奇数
+                        if (frameList.Count % 2 == 1)
+                        {
+                            //若自动读取开启则解析接收的数据
+                            if (DataMonitorConfig.IsOpened)
+                            {
+                                //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
+                                if (frameList[0] == DataMonitorConfig.SlaveId && frameList[2] == DataMonitorConfig.Quantity * 2)
+                                {
+                                    Analyse(frameList);
+                                }
+
+                                //frame = frame.Replace(" ", "");
+                                //if (Convert.ToInt32(frame[..2], 16) == DataMonitorConfig.SlaveId && Convert.ToInt32(frame[2..4], 16) == DataMonitorConfig.Function && Convert.ToInt32(frame[4..6], 16) == DataMonitorConfig.Quantity * 2)
+                                //{
+                                //    //将数据帧转换为list
+                                //    List<byte> list = frame.GetBytes().ToList();
+                                //    Analyse(list);
+                                //}
+                            }
+                        }
+                    }
+
+                    //0x10功能码 多字节写入  错误码 0x90
+                    if (func == 0x10)
+                    {
+                        //请求帧为奇数字节
+
+
+                        //响应帧8字节
+                        if (frameList.Count == 8)
+                        {
+                            //todo验证写入是否成功
+                            ShowMessage("数据写入成功");
+                        }
+                    }
+
+                    await Task.Delay(20);
                 }
-                //TODO
-                //根据接收的帧判断帧类型
-                //首先校验CRC
-                //校验失败则为异常的数据帧
-
-            }
-            catch (Exception ex)
-            {
-
+                catch (Exception ex)
+                {
+                    ShowErrorMessage(ex.Message);
+                }
             }
         }
         #endregion
