@@ -697,7 +697,8 @@ namespace Wu.CommTool.ViewModels
                 //{
                 //    msg = msg.Replace('-', ' ');
                 //}
-                ReceiveFrameQueue.Enqueue(msg.Replace('-', ' '));
+                msg = msg.Replace('-', ' ');
+                ReceiveFrameQueue.Enqueue(msg);
 
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表

@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC" />
+    <None Remove="Configs\ModbusRtuConfig\西门子MAG6000流量计.jsonDMC" />
+    <None Remove="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig" />
+    <None Remove="Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig" />
     <None Remove="Images\En.png" />
     <None Remove="Images\GKD.png" />
     <None Remove="Images\KU.png" />
@@ -21,7 +24,16 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\ModbusRtuConfig\西门子MAG6000流量计.jsonDMC">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
@@ -48,12 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="Configs\Log4netConfig\log4net.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
