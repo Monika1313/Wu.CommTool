@@ -16,6 +16,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,8 @@ namespace Wu.CommTool.ViewModels
 
         private IMqttClient client;
         public string DialogHostName { get; set; } = "MqttClientView";
+
+        private string MqttClientConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
         #endregion
 
         public MqttClientViewModel() { }
@@ -52,13 +55,14 @@ namespace Wu.CommTool.ViewModels
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
+            ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
 
             MqttClientConfig.SubscribeTopics.Add("+/#");//默认订阅所有主题
 
             //从默认配置文件中读取配置
             try
             {
-                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig");
+                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig\Default.jsonMCC");
                 var xx = Common.Utils.ReadJsonFile(p);
                 var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx);
                 if (x == null)
@@ -70,6 +74,9 @@ namespace Wu.CommTool.ViewModels
             {
                 ShowErrorMessage("配置文件读取失败");
             }
+
+            //读取配置文件夹
+            RefreshQuickImportList();
         }
 
 
@@ -138,6 +145,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public bool ManualStopFlag { get => _ManualStopFlag; set => SetProperty(ref _ManualStopFlag, value); }
         private bool _ManualStopFlag;
+
+        /// <summary>
+        /// 配置文件列表
+        /// </summary>
+        public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
+        private ObservableCollection<ConfigFile> _ConfigFiles = new();
         #endregion
 
 
@@ -165,6 +178,11 @@ namespace Wu.CommTool.ViewModels
         /// 打开json格式化界面
         /// </summary>
         public DelegateCommand<MessageData> OpenJsonDataViewCommand { get; private set; }
+
+        /// <summary>
+        /// 快速导入配置
+        /// </summary>
+        public DelegateCommand<ConfigFile> ImportConfigCommand { get; private set; }
         #endregion
 
 
@@ -186,6 +204,7 @@ namespace Wu.CommTool.ViewModels
                 case "OpenDialogView": OpenDialogView(); break;
                 case "ImportConfig": ImportConfig(); break;
                 case "ExportConfig": ExportConfig(); break;
+                case "RefreshQuickImportList": RefreshQuickImportList(); break;                 //刷新快速导入配置列表
                 default: break;
             }
         }
@@ -200,13 +219,13 @@ namespace Wu.CommTool.ViewModels
                 //配置文件目录
                 string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
                 Wu.Utils.IOUtil.Exists(dict);
-                SaveFileDialog sfd = new SaveFileDialog()
+                SaveFileDialog sfd = new()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonMqttClientConfig)|*.jsonMqttClientConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonMCC)|*.jsonMCC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
-                    FileName = "MqttClientConfig",                                           //默认文件名
-                    DefaultExt = "jsonMqttClientConfig",                                     //默认扩展名
+                    FileName = "Default",                                           //默认文件名
+                    DefaultExt = "jsonMCC",                                     //默认扩展名
                     InitialDirectory = dict,                //指定初始的目录
                     OverwritePrompt = true,                                                  //文件已存在警告
                     AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
@@ -218,6 +237,7 @@ namespace Wu.CommTool.ViewModels
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
                 MessageBox.Show("导出完成");
+                RefreshQuickImportList();
             }
             catch (Exception ex)
             {
@@ -241,7 +261,7 @@ namespace Wu.CommTool.ViewModels
                 OpenFileDialog dlg = new()
                 {
                     Title = "请选择导入配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonMqttClientConfig)|*.jsonMqttClientConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonMCC)|*.jsonMCC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
                     InitialDirectory = dict
                 };
@@ -257,6 +277,52 @@ namespace Wu.CommTool.ViewModels
                 ShowErrorMessage(ex.Message);
             }
         }
+
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ImportConfig(ConfigFile obj)
+        {
+            try
+            {
+                var xx = Common.Utils.ReadJsonFile(obj.FullName);//读取文件
+                var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx)!;//反序列化
+                if (x == null)
+                {
+                    ShowErrorMessage("读取配置文件失败");
+                    return;
+                }
+                MqttClientConfig = x;
+                ShowMessage("导入配置完成");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 更新快速导入配置列表
+        /// </summary>
+        private void RefreshQuickImportList()
+        {
+            try
+            {
+                DirectoryInfo Folder = new DirectoryInfo(MqttClientConfigDict);
+                var a = Folder.GetFiles().Where(x=>x.Extension.ToLower().Equals(".jsonmcc")).Select(item => new ConfigFile(item));
+                ConfigFiles.Clear();
+                foreach (var item in a)
+                {
+                    ConfigFiles.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("读取配置文件夹异常: " + ex.Message);
+            }
+        }
+
 
         /// <summary>
         /// 暂停更新接收的数据

@@ -4,7 +4,6 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
-using Prism.Services.Dialogs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,14 +19,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms;
-using System.Windows.Interop;
 using Wu.CommTool.Common;
-using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
-using Wu.CommTool.Views;
 using Wu.Extensions;
 using Wu.ViewModels;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -50,6 +44,7 @@ namespace Wu.CommTool.ViewModels
         CancellationTokenSource cts = new();      //用于线程睡眠取消
         private int TaskDelayTime = int.MaxValue; //线程睡眠时间
         private int receiveTaskDelayTime = int.MaxValue; //线程睡眠时间
+        private string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
         #endregion
 
 
@@ -65,6 +60,7 @@ namespace Wu.CommTool.ViewModels
             BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
             ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
             ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
+            ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
 
             //更新串口列表
             GetComPorts();
@@ -76,16 +72,19 @@ namespace Wu.CommTool.ViewModels
             //数据监控过滤器
             RefreshModbusRtuDataDataView();
 
+            //数据帧处理子线程
             publishHandleTask = new Task(PublishFrame);
             receiveHandleTask = new Task(ReceiveFrame);
             publishHandleTask.Start();
             receiveHandleTask.Start();
+
+            //读取配置文件夹
+            RefreshQuickImportList();
         }
         #endregion
 
 
-
-
+       
 
         #region 搜索设备 属性
         /// <summary>
@@ -232,11 +231,11 @@ namespace Wu.CommTool.ViewModels
         public ListCollectionView ModbusRtuDataDataView { get => _ModbusRtuDataDataView; set => SetProperty(ref _ModbusRtuDataDataView, value); }
         private ListCollectionView _ModbusRtuDataDataView;
 
-        ///// <summary>
-        ///// definity
-        ///// </summary>
-        //public DataView TestDataView { get => _TestDataView; set => SetProperty(ref _TestDataView, value); }
-        //private DataView _TestDataView;
+        /// <summary>
+        /// 配置文件列表
+        /// </summary>
+        public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
+        private ObservableCollection<ConfigFile> _ConfigFiles = new();
         #endregion
 
 
@@ -266,6 +265,10 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public DelegateCommand<ModbusRtuData> ModburRtuDataWriteCommand { get; private set; }
 
+        /// <summary>
+        /// 快速导入配置
+        /// </summary>
+        public DelegateCommand<ConfigFile> ImportConfigCommand { get; private set; }
         #endregion
 
 
@@ -288,6 +291,7 @@ namespace Wu.CommTool.ViewModels
 
                     case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                     case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
+                    case "RefreshQuickImportList": RefreshQuickImportList(); break;                 //刷新快速导入配置列表
 
                     case "Send":
                         //若串口未打开则打开串口
@@ -525,7 +529,7 @@ namespace Wu.CommTool.ViewModels
 
                     //修改延时时间
                     TaskDelayTime = 100;
-                    receiveTaskDelayTime = 20;
+                    receiveTaskDelayTime = 10;
                     //取消上一次的延时
                     cts.Cancel();
                     #endregion
@@ -668,7 +672,7 @@ namespace Wu.CommTool.ViewModels
                 if (ComConfig.IsOpened == false)
                     return;
                 string msg = string.Empty;
-                int times = 0;
+                int times = 0;//计算次数 连续30ms无数据判断为一帧结束
                 do
                 {
                     if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
@@ -687,19 +691,14 @@ namespace Wu.CommTool.ViewModels
                     else
                     {
                         times++;
-                        //await Task.Delay(millisecondsDelay: 10);
                         Thread.Sleep(1);
                     }
                 } while (times < 30);
                 #endregion
 
-                //if (!IsPause)
-                //{
-                //    msg = msg.Replace('-', ' ');
-                //}
+
                 msg = msg.Replace('-', ' ');
                 ReceiveFrameQueue.Enqueue(msg);
-
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表
                 if (SearchDeviceState == 1)
@@ -999,7 +998,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //配置文件目录
-                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
                 Wu.Utils.IOUtil.Exists(dict);
                 Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
                 {
@@ -1019,6 +1018,7 @@ namespace Wu.CommTool.ViewModels
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
                 ShowMessage("导出配置完成");
+                RefreshQuickImportList();//更新列表
             }
             catch (Exception ex)
             {
@@ -1034,7 +1034,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 //配置文件目录
-                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
                 Wu.Utils.IOUtil.Exists(dict);
                 //选中配置文件
                 OpenFileDialog dlg = new()
@@ -1055,6 +1055,52 @@ namespace Wu.CommTool.ViewModels
             catch (Exception ex)
             {
                 ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        /// <param name="obj"></param>
+        private void ImportConfig(ConfigFile obj)
+        {
+            try
+            {
+                var xx = Common.Utils.ReadJsonFile(obj.FullName);
+                DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
+                if (DataMonitorConfig == null)
+                {
+                    ShowErrorMessage("读取配置文件失败");
+                    return;
+                }
+                RefreshModbusRtuDataDataView();//更新数据视图
+                ShowMessage("导入配置完成");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 更新快速导入配置列表
+        /// </summary>
+        private void RefreshQuickImportList()
+        {
+            try
+            {
+                DirectoryInfo Folder = new DirectoryInfo(ModbusRtuConfigDict);
+                //var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsondmc"));
+                var a = Folder.GetFiles().Select(item => new ConfigFile(item));
+                ConfigFiles.Clear();
+                foreach (var item in a)
+                {
+                    ConfigFiles.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("读取配置文件夹异常: " + ex.Message);
             }
         }
 
@@ -1301,7 +1347,7 @@ namespace Wu.CommTool.ViewModels
 
                     //从接收消息队列中取出一条消息
                     var frame = ReceiveFrameQueue.Dequeue();
-                    if (frame is null)
+                    if (string.IsNullOrWhiteSpace(frame))
                     {
                         continue;
                     }
@@ -1318,13 +1364,13 @@ namespace Wu.CommTool.ViewModels
                     //若校验结果不为0000则校验失败
                     else if (crc == null || !crc[0].Equals(0) || !crc[1].Equals(0))
                     {
-                        ShowReceiveMessage(frame + "\n校验失败...");
+                        ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...");
                         continue;
                     }
                     //校验成功
                     else
                     {
-                        ShowReceiveMessage(frame);
+                        ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
 
                     //CRC校验通过 执行以下内容
@@ -1450,7 +1496,7 @@ namespace Wu.CommTool.ViewModels
                 //请求发送数据帧 由于会失败, 请求多次
                 PublishFrameQueue.Enqueue(unCrcFrame);
                 PublishFrameQueue.Enqueue(unCrcFrame);
-                await Task.Delay(2000);
+                await Task.Delay(1000);
                 TaskDelayTime = 100;
             }
             catch (Exception ex)

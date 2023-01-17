@@ -11,8 +11,8 @@
   <ItemGroup>
     <None Remove="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC" />
     <None Remove="Configs\ModbusRtuConfig\西门子MAG6000流量计.jsonDMC" />
-    <None Remove="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig" />
-    <None Remove="Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig" />
+    <None Remove="Configs\MqttClientConfig\Default.jsonMCC" />
+    <None Remove="Configs\MqttServerConfig\MqttServerConfig.jsonMSC" />
     <None Remove="Images\En.png" />
     <None Remove="Images\GKD.png" />
     <None Remove="Images\KU.png" />
@@ -29,10 +29,10 @@
     <Content Include="Configs\ModbusRtuConfig\西门子MAG6000流量计.jsonDMC">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\MqttClientConfig\MqttClientConfig.jsonMqttClientConfig">
+    <Content Include="Configs\MqttClientConfig\Default.jsonMCC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig">
+    <Content Include="Configs\MqttServerConfig\MqttServerConfig.jsonMSC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

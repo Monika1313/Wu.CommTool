@@ -55,7 +55,7 @@ namespace Wu.CommTool.ViewModels
             //从默认配置文件中读取配置
             try
             {
-                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig\MqttServerConfig.jsonMqttServerConfig");
+                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig\Default.jsonMSC");
                 var xx = Common.Utils.ReadJsonFile(p);
                 var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
                 if (x == null)
@@ -205,10 +205,10 @@ namespace Wu.CommTool.ViewModels
                 SaveFileDialog sfd = new SaveFileDialog()
                 {
                     Title = "请选择导出配置文件...",                                          //对话框标题
-                    Filter = "json files(*.jsonMqttServerConfig)|*.jsonMqttServerConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
-                    FileName = "MqttServerConfig",                                           //默认文件名
-                    DefaultExt = "jsonMqttServerConfig",                                     //默认扩展名
+                    FileName = "Default",                                           //默认文件名
+                    DefaultExt = "jsonMSC",                                     //默认扩展名
                     InitialDirectory = dict,                //指定初始的目录
                     OverwritePrompt = true,                                                  //文件已存在警告
                     AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
@@ -243,7 +243,7 @@ namespace Wu.CommTool.ViewModels
                 OpenFileDialog dlg = new()
                 {
                     Title = "请选择导入配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonMqttServerConfig)|*.jsonMqttServerConfig",    //文件格式过滤器
+                    Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
                     InitialDirectory = dict
                 };
