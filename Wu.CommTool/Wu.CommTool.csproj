@@ -9,6 +9,7 @@
     <ApplicationIcon>Images\logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Configs\ModbusRtuAutoResponseConfig\Default.jsonARC" />
     <None Remove="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC" />
     <None Remove="Configs\ModbusRtuConfig\西门子MAG6000流量计.jsonDMC" />
     <None Remove="Configs\MqttClientConfig\Default.jsonMCC" />
@@ -23,6 +24,9 @@
     <None Remove="Images\XX.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Configs\ModbusRtuAutoResponseConfig\Default.jsonARC">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Content>
     <Content Include="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

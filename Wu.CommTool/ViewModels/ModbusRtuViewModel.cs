@@ -18,6 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Controls;
 using System.Windows.Data;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
@@ -80,11 +81,19 @@ namespace Wu.CommTool.ViewModels
 
             //读取配置文件夹
             RefreshQuickImportList();
+
+
+            MosbusRtuAutoResponseDatas.Add(new());
+            MosbusRtuAutoResponseDatas.Add(new());
+            MosbusRtuAutoResponseDatas.Add(new());
+            MosbusRtuAutoResponseDatas.Add(new());
+            MosbusRtuAutoResponseDatas.Add(new());
+            MosbusRtuAutoResponseDatas.Add(new());
         }
         #endregion
 
 
-       
+
 
         #region 搜索设备 属性
         /// <summary>
@@ -208,7 +217,7 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = "0" },
                 new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = "1" },
                 new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = "2" },
-                //new MenuBar() { Icon = "Number4", Title = "数据读写", NameSpace = "3" },
+                new MenuBar() { Icon = "Number4", Title = "自动应答", NameSpace = "3" },
             };
 
 
@@ -236,6 +245,18 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
         private ObservableCollection<ConfigFile> _ConfigFiles = new();
+
+        /// <summary>
+        /// ModbusRtu自动应答
+        /// </summary>
+        public ObservableCollection<ModbusRtuAutoResponseData> MosbusRtuAutoResponseDatas { get => _MosbusRtuAutoResponseDatas; set => SetProperty(ref _MosbusRtuAutoResponseDatas, value); }
+        private ObservableCollection<ModbusRtuAutoResponseData> _MosbusRtuAutoResponseDatas = new();
+
+        /// <summary>
+        /// 是否开启自动应答
+        /// </summary>
+        public bool IsAutoResponse { get => _IsAutoResponse; set => SetProperty(ref _IsAutoResponse, value); }
+        private bool _IsAutoResponse = false;
         #endregion
 
 
@@ -292,6 +313,13 @@ namespace Wu.CommTool.ViewModels
                     case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                     case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
                     case "RefreshQuickImportList": RefreshQuickImportList(); break;                 //刷新快速导入配置列表
+                    case "AddMosbusRtuAutoResponseData": AddMosbusRtuAutoResponseData(); break;                 //刷新快速导入配置列表
+
+                    case "AutoResponseOn": IsAutoResponse = true; break;//自动应答
+                    case "AutoResponseOff": IsAutoResponse = false; break;//自动应答
+                    case "ImportAutoResponseConfig": ImportAutoResponseConfig(); break;                //导入自动应答配置
+                    case "ExportAutoResponseConfig": ExportAutoResponseConfig(); break;                //导出自动应答配置
+
 
                     case "Send":
                         //若串口未打开则打开串口
@@ -324,6 +352,21 @@ namespace Wu.CommTool.ViewModels
                     case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
                     default: break;
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 添加新的响应
+        /// </summary>
+        private void AddMosbusRtuAutoResponseData()
+        {
+            try
+            {
+                MosbusRtuAutoResponseDatas.Add(new());
             }
             catch (Exception ex)
             {
@@ -989,6 +1032,75 @@ namespace Wu.CommTool.ViewModels
         //} 
         #endregion
 
+        /// <summary>
+        /// 导出配置文件
+        /// </summary>
+        private void ExportAutoResponseConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
+                {
+                    Title = "请选择导出配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    FileName = "Default",                                           //默认文件名
+                    DefaultExt = "jsonARC",                                     //默认扩展名
+                    InitialDirectory = dict,                //指定初始的目录
+                    OverwritePrompt = true,                                                  //文件已存在警告
+                    AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                };
+                if (sfd.ShowDialog() != true)
+                    return;
+                //将当前的配置序列化为json字符串
+                var content = JsonConvert.SerializeObject(MosbusRtuAutoResponseDatas);
+                //保存文件
+                Common.Utils.WriteJsonFile(sfd.FileName, content);
+                ShowMessage("导出配置完成");
+                RefreshQuickImportList();//更新列表
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        private void ImportAutoResponseConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                //选中配置文件
+                OpenFileDialog dlg = new()
+                {
+                    Title = "请选择导入自动应答配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    InitialDirectory = dict
+                };
+
+                if (dlg.ShowDialog() != true)
+                    return;
+                var xx = Common.Utils.ReadJsonFile(dlg.FileName);
+                MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
+                RefreshModbusRtuDataDataView();//更新数据视图
+                ShowMessage("导入配置完成");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+
 
         /// <summary>
         /// 导出配置文件
@@ -1017,7 +1129,7 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(DataMonitorConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                ShowMessage("导出配置完成");
+                ShowMessage("导出自动应答配置完成");
                 RefreshQuickImportList();//更新列表
             }
             catch (Exception ex)
@@ -1351,6 +1463,20 @@ namespace Wu.CommTool.ViewModels
                     {
                         continue;
                     }
+
+                    //todo自动应答
+                    if (IsAutoResponse)
+                    {
+                        //验证匹配哪一条规则
+                        var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
+                        if (xx != null)
+                        {
+                            PublishFrameQueue.Enqueue(xx.ResponseTemplate);
+                        }
+                    }
+
+
+
 
                     // 1 对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码
