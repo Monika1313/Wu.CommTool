@@ -43,11 +43,13 @@ namespace Wu.CommTool.ViewModels
         protected System.Timers.Timer timer = new();        //定时器 定时读取数据
         private Queue<string> PublishFrameQueue = new();    //数据帧发送队列
         private Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
-        //private object locker = new(); //线程锁
-        Task publishHandleTask;
-        Task receiveHandleTask;
-        CancellationTokenSource cts = new();
-        private int TaskDelayTime = int.MaxValue;
+                                                            //private object locker = new(); //线程锁
+        readonly Task publishHandleTask; //发布消息处理线程
+        readonly Task receiveHandleTask; //接收处理线程
+        readonly Task writeHandleTask;   //数据写入处理线程
+        CancellationTokenSource cts = new();      //用于线程睡眠取消
+        private int TaskDelayTime = int.MaxValue; //线程睡眠时间
+        private int receiveTaskDelayTime = int.MaxValue; //线程睡眠时间
         #endregion
 
 
@@ -405,7 +407,7 @@ namespace Wu.CommTool.ViewModels
                     return;
 
                 //数据监控时, 发送队列处理时间延迟, 避免数据采集与数据写入冲突
-                TaskDelayTime = 500;
+                TaskDelayTime = 1000;
 
                 timer = new()
                 {
@@ -522,7 +524,8 @@ namespace Wu.CommTool.ViewModels
                     //receiveHandleTask.Start(); 
 
                     //修改延时时间
-                    TaskDelayTime = 50;
+                    TaskDelayTime = 100;
+                    receiveTaskDelayTime = 20;
                     //取消上一次的延时
                     cts.Cancel();
                     #endregion
@@ -690,11 +693,11 @@ namespace Wu.CommTool.ViewModels
                 } while (times < 30);
                 #endregion
 
-                if (!IsPause)
-                {
-                    msg = msg.Replace('-', ' ');
-                    ReceiveFrameQueue.Enqueue(msg);
-                }
+                //if (!IsPause)
+                //{
+                //    msg = msg.Replace('-', ' ');
+                //}
+                ReceiveFrameQueue.Enqueue(msg.Replace('-', ' '));
 
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表
@@ -831,6 +834,7 @@ namespace Wu.CommTool.ViewModels
                 ReceiveFrameQueue.Clear();      //清空接收帧队列
                 //cts.Cancel();                 //停止帧处理线程
                 TaskDelayTime = int.MaxValue;
+                receiveTaskDelayTime = int.MaxValue;
                 cts.TryReset();
             }
             catch (Exception ex)
@@ -1224,7 +1228,7 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
-       
+
         #endregion
 
 
@@ -1255,6 +1259,8 @@ namespace Wu.CommTool.ViewModels
                         continue;
                     }
 
+                    await Task.Delay(TaskDelayTime, cts.Token);
+
                     var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
                     PublishMessage(frame);                    //请求发送数据帧
                                                               //从队列读取的间隔为50ms
@@ -1280,7 +1286,7 @@ namespace Wu.CommTool.ViewModels
                     {
                         try
                         {
-                            await Task.Delay(TaskDelayTime, cts.Token);
+                            await Task.Delay(receiveTaskDelayTime, cts.Token);
                         }
                         catch (TaskCanceledException ex)
                         {
@@ -1289,6 +1295,8 @@ namespace Wu.CommTool.ViewModels
                         }
                         continue;
                     }
+
+                    await Task.Delay(receiveTaskDelayTime, cts.Token);
 
                     //从接收消息队列中取出一条消息
                     var frame = ReceiveFrameQueue.Dequeue();
@@ -1299,12 +1307,20 @@ namespace Wu.CommTool.ViewModels
 
                     // 1 对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码
+
+
+
+                    if (IsPause)
+                    {
+                        //若暂停更新显示则不输出
+                    }
                     //若校验结果不为0000则校验失败
-                    if (crc == null || !crc[0].Equals(0) || !crc[1].Equals(0))
+                    else if (crc == null || !crc[0].Equals(0) || !crc[1].Equals(0))
                     {
                         ShowReceiveMessage(frame + "\n校验失败...");
                         continue;
                     }
+                    //校验成功
                     else
                     {
                         ShowReceiveMessage(frame);
@@ -1371,7 +1387,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="obj"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void ModburRtuDataWrite(ModbusRtuData obj)
+        private async void ModburRtuDataWrite(ModbusRtuData obj)
         {
             try
             {
@@ -1428,14 +1444,22 @@ namespace Wu.CommTool.ViewModels
                 string unCrcFrame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr}";
 
                 ShowMessage("数据写入...");
-                //请求发送数据帧
+
+                TaskDelayTime = 500;
+                //请求发送数据帧 由于会失败, 请求多次
                 PublishFrameQueue.Enqueue(unCrcFrame);
+                PublishFrameQueue.Enqueue(unCrcFrame);
+                await Task.Delay(2000);
+                TaskDelayTime = 100;
             }
             catch (Exception ex)
             {
                 ShowErrorMessage(ex.Message);
             }
         }
+
+        //TODO 数据写入处理  数据写入时 在列表内保存帧, 写入失败需要重新触发写入,至多3次  
+
         #endregion
     }
 }
