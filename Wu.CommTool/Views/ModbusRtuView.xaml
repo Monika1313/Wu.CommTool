@@ -1098,6 +1098,7 @@
                                                 Text="{Binding DataMonitorConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
                                                 hc:TitleElement.Title="读取数量(word):"
+                                                hc:TitleElement.TitleWidth="100"
                                                 IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                 Style="{StaticResource FormTextBox}"
                                                 Text="{Binding DataMonitorConfig.Quantity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />

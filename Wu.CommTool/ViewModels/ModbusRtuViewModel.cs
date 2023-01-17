@@ -300,7 +300,7 @@ namespace Wu.CommTool.ViewModels
                     case "Clear": Clear(); break;                                                   //清空页面信息
                     case "OpenCom": OpenCom(); break;                                               //打开串口
                     case "CloseCom": CloseCom(); break;                                             //关闭串口
-                    case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
+                    //case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
 
                     case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
 
@@ -405,7 +405,7 @@ namespace Wu.CommTool.ViewModels
                     return;
 
                 //数据监控时, 发送队列处理时间延迟, 避免数据采集与数据写入冲突
-                TaskDelayTime = 300;
+                TaskDelayTime = 500;
 
                 timer = new()
                 {
@@ -1156,7 +1156,7 @@ namespace Wu.CommTool.ViewModels
                 //打开串口
                 if (ComConfig.IsOpened == false)
                 {
-                    OperatePort();
+                    OpenCom();
                 }
 
                 SearchDeviceState = 1;//标记状态为搜索设备中
@@ -1203,8 +1203,11 @@ namespace Wu.CommTool.ViewModels
                 }
                 if (ComConfig.IsOpened)
                 {
+                    //Thread.Sleep(1000);
+                    await Task.Delay(1000);
                     ShowMessage("搜索完成");
-                    OperatePort();
+                    //OperatePort();
+                    CloseCom();
                 }
                 else
                 {
@@ -1419,13 +1422,14 @@ namespace Wu.CommTool.ViewModels
 
                 dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
 
-                string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
-                var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
-                string frame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr} {crc[1]:X2}{crc[0]:X2}";
+                //string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
+                //var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
+                //string frame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr} {crc[1]:X2}{crc[0]:X2}";
+                string unCrcFrame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr}";
 
                 ShowMessage("数据写入...");
                 //请求发送数据帧
-                PublishFrameQueue.Enqueue(frame);
+                PublishFrameQueue.Enqueue(unCrcFrame);
             }
             catch (Exception ex)
             {
