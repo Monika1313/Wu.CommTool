@@ -46,6 +46,7 @@ namespace Wu.CommTool.ViewModels
         public MqttClientViewModel() { }
         public MqttClientViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
+            log.Info("MqttClient模块加载...");
             this.provider = provider;
             this.dialogHost = dialogHost;
 

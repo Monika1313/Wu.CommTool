@@ -1,4 +1,5 @@
 ﻿using ImTools;
+using log4net;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
@@ -43,7 +44,9 @@ namespace Wu.CommTool.ViewModels
         protected System.Timers.Timer timer = new();        //定时器 定时读取数据
         private Queue<string> PublishFrameQueue = new();    //数据帧发送队列
         private Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
-                                                            //private object locker = new(); //线程锁
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
+
+        //private object locker = new(); //线程锁
         readonly Task publishHandleTask; //发布消息处理线程
         readonly Task receiveHandleTask; //接收处理线程
         readonly Task writeHandleTask;   //数据写入处理线程
@@ -56,9 +59,10 @@ namespace Wu.CommTool.ViewModels
 
 
         #region **************************************** 构造函数 ****************************************
-        public ModbusRtuViewModel() { }
-        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost)
+        public ModbusRtuViewModel() { log.Info("ModbusRtu模块加载错误..."); }
+        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
+            log.Info("ModbusRtu模块加载...");
             this.provider = provider;
             this.dialogHost = dialogHost;
             ExecuteCommand = new(Execute);
@@ -101,6 +105,7 @@ namespace Wu.CommTool.ViewModels
             {
                 ShowErrorMessage(ex.Message);
             }
+            
         }
 
         #endregion
@@ -372,7 +377,7 @@ namespace Wu.CommTool.ViewModels
                             List<byte> list = new List<byte>();
                             list.AddRange(msg);
                             list.AddRange(crc);
-                            var data = BitConverter.ToString(list.ToArray()).Replace("-","");
+                            var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
                             PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
                         }
                         catch (Exception ex)
@@ -381,7 +386,7 @@ namespace Wu.CommTool.ViewModels
                         }
 
 
-                        
+
                         break;                                           //发送数据
                     case "GetComPorts": GetComPorts(); break;                                       //查找Com口
                     case "Clear": Clear(); break;                                                   //清空页面信息
@@ -1491,7 +1496,7 @@ namespace Wu.CommTool.ViewModels
                 DialogParameters param = new();
                 if (obj != null)
                     param.Add("Value", obj);
-                var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param,nameof(ModbusRtuView));
+                var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, nameof(ModbusRtuView));
 
                 //TODO 将修改后的内容写入
                 if (dialogResult.Result == ButtonResult.OK)
@@ -1506,8 +1511,8 @@ namespace Wu.CommTool.ViewModels
                             return;
                         }
                         obj.Name = resultDto.Name;
-                        obj.MateTemplate= resultDto.MateTemplate;
-                        obj.ResponseTemplate= resultDto.ResponseTemplate;
+                        obj.MateTemplate = resultDto.MateTemplate;
+                        obj.ResponseTemplate = resultDto.ResponseTemplate;
 
                         //aggregator.SendMessage($"{updateResult.Result.InformationNum}已修改完成");
                     }

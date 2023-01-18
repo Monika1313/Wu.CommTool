@@ -19,7 +19,7 @@
     <None Remove="Images\KU.png" />
     <None Remove="Images\Kun.png" />
     <None Remove="Images\Wu.png" />
-    <None Remove="Images\Wwwww.PNG" />
+    <None Remove="Images\Ww.png" />
     <None Remove="Images\X1.png" />
     <None Remove="Images\XX.png" />
   </ItemGroup>
@@ -46,7 +46,7 @@
     <Resource Include="Images\KU.png" />
     <Resource Include="Images\Kun.png" />
     <Resource Include="Images\Wu.png" />
-    <Resource Include="Images\Wwwww.PNG" />
+    <Resource Include="Images\Ww.png" />
     <Resource Include="Images\X1.png" />
     <Resource Include="Images\XX.png" />
   </ItemGroup>
@@ -66,6 +66,9 @@
     <None Update="Configs\Log4netConfig\log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Images\About\" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
 </Project>

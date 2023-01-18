@@ -21,7 +21,7 @@ namespace Wu.CommTool
     {
         public static AppConfig AppConfig { get; set; } = new();
         public static string ConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
-        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -60,8 +60,8 @@ namespace Wu.CommTool
 
             //注册页面
             containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();                                           //首页
-            containerRegistry.RegisterForNavigation<ModbusRtuAutoSearchDeviceView, ModbusRtuAutoSearchDeviceViewModel>();   //消息提示窗口
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
+            containerRegistry.RegisterForNavigation<ModbusRtuAutoSearchDeviceView, ModbusRtuAutoSearchDeviceViewModel>();   //消息提示窗口
             containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();                                             //Mqtt

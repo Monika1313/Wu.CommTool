@@ -36,5 +36,11 @@ namespace Wu.CommTool.Models
         /// </summary>
         public string ResponseTemplate { get => _ResponseTemplate; set => SetProperty(ref _ResponseTemplate, value); }
         private string _ResponseTemplate = string.Empty;
+
+        /// <summary>
+        /// 匹配模板是否为正则表达式
+        /// </summary>
+        public bool IsRegular { get => _IsRegular; set => SetProperty(ref _IsRegular, value); }
+        private bool _IsRegular = false;
     }
 }

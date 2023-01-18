@@ -1,7 +1,10 @@
-﻿using Prism.Commands;
+﻿using log4net;
+using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Regions;
+using System;
 using System.Collections.ObjectModel;
+using System.Windows.Forms;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
@@ -18,6 +21,7 @@ namespace Wu.CommTool.ViewModels
         private string _Title = "串口调试工具";
         private readonly IRegionManager regionManager;
         private IRegionNavigationJournal journal;
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public MainWindowViewModel()
         {
@@ -90,7 +94,9 @@ namespace Wu.CommTool.ViewModels
         }
 
 
-
+        /// <summary>
+        /// 初始化配置
+        /// </summary>
         public void Configure()
         {
             this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
@@ -109,7 +115,8 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "Bug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) },
                 new MenuBar() { Icon = "TOOLS", Title = "转换工具", NameSpace = nameof(ConvertToolView) },
                 new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = nameof(JsonToolView) },
-                new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) }
+                new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
+                new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
             };
         }
 
@@ -124,12 +131,20 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 App.AppConfig.DefaultView = obj.NameSpace;
+                log.Info($"切换界面{obj.NameSpace}");
+                regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(obj.NameSpace, back =>
+                {
+                    journal = back.Context.NavigationService.Journal;
+                    if (back.Error != null)
+                    {
+                        log.Error(back.Error.Message + "\n" +  back.Error.InnerException?.Message);
+                    }
+                });
             }
-            catch { }
-            regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(obj.NameSpace, back =>
+            catch (Exception ex)
             {
-                journal = back.Context.NavigationService.Journal;
-            });
+                log.Info(ex.Message);
+            }
         }
     }
 }

@@ -22,54 +22,9 @@
     <UserControl.Resources />
 
     <md:DialogHost Identifier="{x:Static local:ModbusRtuView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
-        <!--<md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
-        -->
-        <!--  左侧抽屉  -->
-        <!--
-            <md:DrawerHost.LeftDrawerContent>
-                <DockPanel Width="200" Background="#f5f5f5">
-                    <Border
-                        Margin="5"
-                        Background="White"
-                        CornerRadius="5"
-                        DockPanel.Dock="Top">
-                        <DockPanel>
-                            <TextBlock
-                                Margin="4"
-                                HorizontalAlignment="Center"
-                                DockPanel.Dock="Top"
-                                FontSize="18"
-                                Text="选择功能模式" />
-                            <ListBox
-                                Background="Transparent"
-                                BorderThickness="0"
-                                ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
-                                ItemsSource="{Binding MenuBars}"
-                                SelectedIndex="{Binding ModbusRtuFunIndex}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="SelectionChanged">
-                                        <i:InvokeCommandAction Command="{Binding ModbusRtuFunChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Background="Transparent" Orientation="Horizontal">
-                                            <md:PackIcon Margin="20,0" Kind="{Binding Icon}" />
-                                            <TextBlock
-                                                Margin="0,0,20,0"
-                                                VerticalAlignment="Center"
-                                                Text="{Binding Title}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </DockPanel>
-                    </Border>
-                </DockPanel>
-            </md:DrawerHost.LeftDrawerContent>
-        </md:DrawerHost>-->
         <!--  主体内容  -->
         <DockPanel>
+            <!--  左侧功能菜单  -->
             <DockPanel DockPanel.Dock="Left">
                 <Border
                     Margin="5"
@@ -79,12 +34,6 @@
                     CornerRadius="5"
                     DockPanel.Dock="Top">
                     <DockPanel>
-                        <!--<TextBlock
-                                Margin="4"
-                                HorizontalAlignment="Center"
-                                DockPanel.Dock="Top"
-                                FontSize="18"
-                                Text="选择功能模式" />-->
                         <ListBox
                             Background="Transparent"
                             BorderThickness="0"
@@ -111,7 +60,6 @@
                     </DockPanel>
                 </Border>
             </DockPanel>
-
             <md:Transitioner AutoApplyTransitionOrigins="True" SelectedIndex="{Binding ModbusRtuFunIndex}">
                 <!--  自定义帧 Index 0  -->
                 <md:TransitionerSlide>
@@ -789,7 +737,7 @@
                                         <Image
                                             Width="150"
                                             Height="150"
-                                            d:Source="/Images/Wwwww.png">
+                                            d:Source="/Images/Ww.png">
                                             <Image.Style>
                                                 <Style TargetType="Image">
                                                     <Style.Triggers>
@@ -801,7 +749,7 @@
                                                             <Setter Property="Source" Value="/Images/Kun.png" />
                                                         </DataTrigger>
                                                         <DataTrigger Binding="{Binding SearchDeviceState}" Value="2">
-                                                            <Setter Property="Source" Value="/Images/Wwwww.png" />
+                                                            <Setter Property="Source" Value="/Images/Ww.png" />
                                                             <Setter Property="Visibility" Value="{Binding ModbusRtuDevices.Count, Converter={cvt:MoreThanZero2Collapsed}, IsAsync=True}" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -2178,7 +2126,7 @@
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBox
-                                                        Width="280"
+                                                        Width="240"
                                                         HorizontalContentAlignment="Center"
                                                         Text="{Binding MateTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                 </DataTemplate>
@@ -2189,12 +2137,20 @@
                                             <DataGridTemplateColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBox
-                                                        Width="280"
+                                                        Width="240"
                                                         HorizontalContentAlignment="Center"
                                                         Text="{Binding ResponseTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
+
+                                        <!--<DataGridTemplateColumn Header="使用正则">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <CheckBox Margin="0" IsChecked="{Binding IsRegular, Mode=TwoWay}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>-->
                                     </DataGrid.Columns>
                                 </DataGrid>
                             </Border>
