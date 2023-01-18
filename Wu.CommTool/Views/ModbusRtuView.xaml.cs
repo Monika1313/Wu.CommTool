@@ -7,6 +7,7 @@ namespace Wu.CommTool.Views
     /// </summary>
     public partial class ModbusRtuView : UserControl
     {
+        public const string ViewName = nameof(ModbusRtuView);
         public ModbusRtuView()
         {
             InitializeComponent();

@@ -17,6 +17,8 @@ MqttClient
 增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
 
 
+2023 0118
+modbusrtu自动应答添加模板修改弹窗
 
 2023 0117
 ModbusRtu数据监控界面写入功能(写入可能会失败,需要优化)

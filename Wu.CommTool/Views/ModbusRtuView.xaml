@@ -21,7 +21,7 @@
     mc:Ignorable="d">
     <UserControl.Resources />
 
-    <md:DialogHost Identifier="ModbusRtuView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+    <md:DialogHost Identifier="{x:Static local:ModbusRtuView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <!--<md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
         -->
         <!--  左侧抽屉  -->
@@ -1924,7 +1924,7 @@
                                         Background="{StaticResource Green_Background}"
                                         BorderBrush="{StaticResource Green_BorderBrush}"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="OpenCom"
+                                        CommandParameter="OpenComAndAutoResponse"
                                         Content="{md:PackIcon Kind=Play}"
                                         Cursor="Hand"
                                         Foreground="{StaticResource Green_Foreground}"
@@ -1939,10 +1939,24 @@
                                         HorizontalAlignment="Left"
                                         hc:Poptip.Content="关闭串口"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="CloseCom"
+                                        CommandParameter="CloseComAndAutoResponse"
                                         Content="{md:PackIcon Kind=Stop}"
                                         Cursor="Hand"
                                         IsEnabled="{Binding ComConfig.IsOpened}"
+                                        Style="{StaticResource Red_CircleButton}" />
+
+
+                                    <!--  清空消息按钮  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="清空消息"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Clear"
+                                        Content="{md:PackIcon Kind=Delete}"
+                                        DockPanel.Dock="Right"
                                         Style="{StaticResource Red_CircleButton}" />
 
                                     <!--  暂停界面更新  -->
@@ -1953,7 +1967,8 @@
                                         HorizontalAlignment="Left"
                                         Command="{Binding ExecuteCommand}"
                                         CommandParameter="Pause"
-                                        Cursor="Hand">
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right">
                                         <md:PackIcon Width="24" Height="24">
                                             <md:PackIcon.Style>
                                                 <Style TargetType="md:PackIcon">
@@ -1991,6 +2006,8 @@
                                             </Style>
                                         </Button.Style>
                                     </Button>
+
+
 
                                     <!--  打开自动应答  -->
                                     <Button
@@ -2136,6 +2153,15 @@
                                     ItemsSource="{Binding MosbusRtuAutoResponseDatas, IsAsync=True}"
                                     RowHeaderWidth="60"
                                     Style="{StaticResource NumDataGrid}">
+
+                                    <!--  添加触发器,支持点击事件  -->
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.OpenMosbusRtuAutoResponseDataEditViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+
+
                                     <DataGrid.Columns>
                                         <DataGridTemplateColumn Header="名称">
                                             <DataGridTemplateColumn.CellTemplate>
@@ -2154,8 +2180,7 @@
                                                     <TextBox
                                                         Width="280"
                                                         HorizontalContentAlignment="Center"
-                                                        Text="{Binding MateTemplate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                        TextWrapping="Wrap" />
+                                                        Text="{Binding MateTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
@@ -2166,8 +2191,7 @@
                                                     <TextBox
                                                         Width="280"
                                                         HorizontalContentAlignment="Center"
-                                                        Text="{Binding ResponseTemplate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
-                                                        TextWrapping="Wrap" />
+                                                        Text="{Binding ResponseTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>

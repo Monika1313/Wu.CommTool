@@ -4,6 +4,7 @@ using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
+using Prism.Services.Dialogs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,9 +21,13 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Forms;
+using System.Windows.Interop;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+using Wu.CommTool.Views;
+using Wu.CommTool.Views.Dialogs;
 using Wu.Extensions;
 using Wu.ViewModels;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -46,6 +51,7 @@ namespace Wu.CommTool.ViewModels
         private int TaskDelayTime = int.MaxValue; //线程睡眠时间
         private int receiveTaskDelayTime = int.MaxValue; //线程睡眠时间
         private string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
+        private string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
         #endregion
 
 
@@ -62,6 +68,7 @@ namespace Wu.CommTool.ViewModels
             ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
             ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
             ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
+            OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
 
             //更新串口列表
             GetComPorts();
@@ -83,13 +90,19 @@ namespace Wu.CommTool.ViewModels
             RefreshQuickImportList();
 
 
-            MosbusRtuAutoResponseDatas.Add(new());
-            MosbusRtuAutoResponseDatas.Add(new());
-            MosbusRtuAutoResponseDatas.Add(new());
-            MosbusRtuAutoResponseDatas.Add(new());
-            MosbusRtuAutoResponseDatas.Add(new());
-            MosbusRtuAutoResponseDatas.Add(new());
+            //导入默认自动应答配置
+            try
+            {
+                var xx = Common.Utils.ReadJsonFile(Path.Combine(ModbusRtuAutoResponseConfigDict, "Default.jsonARC"));
+                MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
+                RefreshModbusRtuDataDataView();//更新数据视图
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
         }
+
         #endregion
 
 
@@ -290,6 +303,11 @@ namespace Wu.CommTool.ViewModels
         /// 快速导入配置
         /// </summary>
         public DelegateCommand<ConfigFile> ImportConfigCommand { get; private set; }
+
+        /// <summary>
+        /// 打开自动应答编辑界面
+        /// </summary>
+        public DelegateCommand<ModbusRtuAutoResponseData> OpenMosbusRtuAutoResponseDataEditViewCommand { get; private set; }
         #endregion
 
 
@@ -315,8 +333,8 @@ namespace Wu.CommTool.ViewModels
                     case "RefreshQuickImportList": RefreshQuickImportList(); break;                 //刷新快速导入配置列表
                     case "AddMosbusRtuAutoResponseData": AddMosbusRtuAutoResponseData(); break;                 //刷新快速导入配置列表
 
-                    case "AutoResponseOn": IsAutoResponse = true; break;//自动应答
-                    case "AutoResponseOff": IsAutoResponse = false; break;//自动应答
+                    case "AutoResponseOn": AutoResponseOn(); break;//自动应答
+                    case "AutoResponseOff": AutoResponseOff(); break;//自动应答
                     case "ImportAutoResponseConfig": ImportAutoResponseConfig(); break;                //导入自动应答配置
                     case "ExportAutoResponseConfig": ExportAutoResponseConfig(); break;                //导出自动应答配置
 
@@ -328,12 +346,49 @@ namespace Wu.CommTool.ViewModels
                             ShowMessage("串口未打开, 尝试打开串口...");
                             OpenCom();
                         }
-                        PublishFrameQueue.Enqueue(SendMessage);          //将待发送的消息添加进队列
+
+
+                        try
+                        {
+                            var msg = SendMessage.Replace("-", string.Empty).GetBytes();
+                            List<byte> crc = new();
+                            //根据选择进行CRC校验
+                            switch (CrcMode)
+                            {
+                                //无校验
+                                case CrcMode.None:
+                                    break;
+
+                                //Modebus校验
+                                case CrcMode.Modbus:
+                                    var code = Wu.Utils.Crc.Crc16Modbus(msg);
+                                    Array.Reverse(code);
+                                    crc.AddRange(code);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            //合并数组
+                            List<byte> list = new List<byte>();
+                            list.AddRange(msg);
+                            list.AddRange(crc);
+                            var data = BitConverter.ToString(list.ToArray()).Replace("-","");
+                            PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowErrorMessage(ex.Message);
+                        }
+
+
+                        
                         break;                                           //发送数据
                     case "GetComPorts": GetComPorts(); break;                                       //查找Com口
                     case "Clear": Clear(); break;                                                   //清空页面信息
                     case "OpenCom": OpenCom(); break;                                               //打开串口
+                    case "OpenComAndAutoResponse": OpenCom(); AutoResponseOn(); break;                                               //打开串口
                     case "CloseCom": CloseCom(); break;                                             //关闭串口
+                    case "CloseComAndAutoResponse": CloseCom(); AutoResponseOff(); break;                                             //关闭串口
                     //case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
 
                     case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
@@ -352,6 +407,38 @@ namespace Wu.CommTool.ViewModels
                     case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
                     default: break;
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 关闭自动应答
+        /// </summary>
+        private void AutoResponseOff()
+        {
+            try
+            {
+                IsAutoResponse = false;
+                ShowMessage("关闭自动应答...");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 启用自动应答
+        /// </summary>
+        private void AutoResponseOn()
+        {
+            try
+            {
+                IsAutoResponse = true;
+                ShowMessage("启用自动应答...");
             }
             catch (Exception ex)
             {
@@ -632,10 +719,10 @@ namespace Wu.CommTool.ViewModels
                     return false;
                 }
 
-                byte[] msg;
+                byte[] data;
                 try
                 {
-                    msg = message.Replace("-", string.Empty).GetBytes();
+                    data = message.Replace("-", string.Empty).GetBytes();
                 }
                 catch (Exception ex)
                 {
@@ -647,34 +734,37 @@ namespace Wu.CommTool.ViewModels
                 {
                     try
                     {
-                        List<byte> crc = new();
-                        //根据选择进行CRC校验
-                        switch (CrcMode)
-                        {
-                            //无校验
-                            case CrcMode.None:
-                                break;
+                        #region MyRegion
+                        //List<byte> crc = new();
+                        ////根据选择进行CRC校验
+                        //switch (CrcMode)
+                        //{
+                        //    //无校验
+                        //    case CrcMode.None:
+                        //        break;
 
-                            //Modebus校验
-                            case CrcMode.Modbus:
-                                var code = Wu.Utils.Crc.Crc16Modbus(msg);
-                                Array.Reverse(code);
-                                crc.AddRange(code);
-                                break;
-                            default:
-                                break;
-                        }
+                        //    //Modebus校验
+                        //    case CrcMode.Modbus:
+                        //        var code = Wu.Utils.Crc.Crc16Modbus(msg);
+                        //        Array.Reverse(code);
+                        //        crc.AddRange(code);
+                        //        break;
+                        //    default:
+                        //        break;
+                        //}
 
-                        //合并数组
-                        List<byte> list = new List<byte>();
-                        list.AddRange(msg);
-                        list.AddRange(crc);
-                        var data = list.ToArray();
+                        ////合并数组
+                        //List<byte> list = new List<byte>();
+                        //list.AddRange(msg);
+                        //list.AddRange(crc);
+                        //var data = list.ToArray(); 
+                        #endregion
+
                         SerialPort.Write(data, 0, data.Length);     //发送数据
                         SendBytesCount += data.Length;                    //统计发送数据总数
 
                         if (!IsPause)
-                            ShowMessage(BitConverter.ToString(data).Replace('-', ' '), MessageType.Send);
+                            ShowMessage(BitConverter.ToString(data).Replace("-", "").Replace(" ", "").InsertFormat(4, " "), MessageType.Send);
                         return true;
                     }
                     catch (Exception ex)
@@ -894,7 +984,7 @@ namespace Wu.CommTool.ViewModels
             //清空列表
             ComPorts.Clear();
             //查找Com口
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'"))
+            using (ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'"))
             {
                 var hardInfos = searcher.Get();
                 foreach (var hardInfo in hardInfos)
@@ -915,7 +1005,7 @@ namespace Wu.CommTool.ViewModels
                         //int endIndex = deviceName.IndexOf(")");
                         //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
                         string key = dList[0];
-                        string name = deviceName.Substring(0, startIndex - 1);
+                        string name = deviceName[..(startIndex - 1)];
                         //添加进列表
                         ComPorts.Add(new KeyValuePair<string, string>(key, name));
 
@@ -1042,7 +1132,7 @@ namespace Wu.CommTool.ViewModels
                 //配置文件目录
                 string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
                 Wu.Utils.IOUtil.Exists(dict);
-                Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
+                Microsoft.Win32.SaveFileDialog sfd = new()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
                     Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
@@ -1387,7 +1477,59 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+        /// <summary>
+        /// 打开自动响应编辑界面
+        /// </summary>
+        /// <param name="obj"></param>
+        private async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
+        {
+            try
+            {
+                if (obj == null)
+                    return;
+                //添加参数
+                DialogParameters param = new();
+                if (obj != null)
+                    param.Add("Value", obj);
+                var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param,nameof(ModbusRtuView));
 
+                //TODO 将修改后的内容写入
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    try
+                    {
+                        //UpdateLoading(true);
+                        //从结果中获取数据
+                        var resultDto = dialogResult.Parameters.GetValue<ModbusRtuAutoResponseData>("Value");
+                        if (resultDto == null)
+                        {
+                            return;
+                        }
+                        obj.Name = resultDto.Name;
+                        obj.MateTemplate= resultDto.MateTemplate;
+                        obj.ResponseTemplate= resultDto.ResponseTemplate;
+
+                        //aggregator.SendMessage($"{updateResult.Result.InformationNum}已修改完成");
+                    }
+                    catch (Exception ex)
+                    {
+                        aggregator.SendMessage($"{ex.Message}");
+                    }
+                    finally
+                    {
+                        //UpdateLoading(false);
+                    }
+                }
+                else if (dialogResult.Result == ButtonResult.Abort)
+                {
+                    //Delete(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                aggregator.SendMessage(ex.Message);
+            }
+        }
         #endregion
 
 
