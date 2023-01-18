@@ -21,6 +21,7 @@ MqttClient
 2023 0117
 ModbusRtu数据监控界面写入功能(写入可能会失败,需要优化)
 添加配置文件快捷导入功能
+ModbusRtu添加自动应答功能
 
 2023 0116
 ModbusRtu消息处理使用长延时替代重新初始化Task

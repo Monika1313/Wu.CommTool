@@ -1886,7 +1886,7 @@
                             <!--  主体内容  -->
                             <!--  头部区域  -->
                             <Grid DockPanel.Dock="Top">
-                                <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 数据读写" />
+                                <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 自动应答" />
                                 <DockPanel LastChildFill="False">
                                     <!--  ModbusRtu 功能选择  -->
                                     <!--<Button
@@ -1992,30 +1992,73 @@
                                         </Button.Style>
                                     </Button>
 
-                                    <!--  清空消息按钮  -->
+                                    <!--  打开自动应答  -->
                                     <Button
                                         Width="30"
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="5"
                                         HorizontalAlignment="Left"
-                                        hc:Poptip.Content="清空消息"
+                                        hc:Poptip.Content="打开自动应答"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="Clear"
-                                        Content="{md:PackIcon Kind=Delete}"
+                                        CommandParameter="AutoResponseOn"
+                                        Content="{md:PackIcon Kind=Robot}"
+                                        Cursor="Hand"
+                                        IsEnabled="{Binding IsAutoResponse, Converter={wucvt:ReverseBool}}"
+                                        Style="{StaticResource Green_CircleButton}" />
+
+                                    <!--  关闭自动应答  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="关闭自动应答"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="AutoResponseOff"
+                                        Content="{md:PackIcon Kind=RobotOff}"
+                                        Cursor="Hand"
+                                        IsEnabled="{Binding IsAutoResponse}"
                                         Style="{StaticResource Red_CircleButton}" />
 
-                                    <!--  自动搜索ModbusRtu设备  -->
-                                    <!--<Button
-                                            Width="30"
-                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                            Margin="4"
-                                            hc:Poptip.Content="自动搜索ModbusRtu设备"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="AutoSearch"
-                                            Content="{md:PackIcon Kind=Search}"
-                                            Cursor="Hand"
-                                            DockPanel.Dock="Right"
-                                            Style="{StaticResource Blue_CircleButton}" />-->
+                                    <Border Margin="20" DockPanel.Dock="Left" />
+
+                                    <!--  导出配置文件  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="导出配置文件"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="ExportAutoResponseConfig"
+                                        Content="{md:PackIcon Kind=Upload}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Left"
+                                        Style="{StaticResource Blue_CircleButton}" />
+                                    <!--  导入配置文件  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="导入配置文件"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="ImportAutoResponseConfig"
+                                        Content="{md:PackIcon Kind=Download}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Left"
+                                        Style="{StaticResource Blue_CircleButton}" />
+
+
+                                    <!--  添加行  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="添加行"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="AddMosbusRtuAutoResponseData"
+                                        Content="{md:PackIcon Kind=Add}"
+                                        Style="{StaticResource Green_CircleButton}" />
                                 </DockPanel>
                             </Grid>
 
@@ -2077,12 +2120,60 @@
                             </StackPanel>
 
 
+                            <!--  匹配设置列表  -->
+                            <Border
+                                Margin="5,0"
+                                BorderBrush="Gray"
+                                BorderThickness="1"
+                                CornerRadius="5"
+                                DockPanel.Dock="Left">
+                                <DataGrid
+                                    hc:DataGridAttach.ShowRowNumber="True"
+                                    AutoGenerateColumns="False"
+                                    Background="Transparent"
+                                    CanUserSortColumns="False"
+                                    FrozenColumnCount="4"
+                                    ItemsSource="{Binding MosbusRtuAutoResponseDatas, IsAsync=True}"
+                                    RowHeaderWidth="60"
+                                    Style="{StaticResource NumDataGrid}">
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="名称">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox
+                                                        Width="120"
+                                                        HorizontalContentAlignment="Center"
+                                                        Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
 
-                            <!--<DockPanel DockPanel.Dock="Bottom">
-                                <StackPanel DockPanel.Dock="Left">
-                                    <TextBlock Style="{StaticResource TextBlockDefaultInfo}" Text="地址:" />
-                                </StackPanel>
-                            </DockPanel>-->
+                                        <DataGridTemplateColumn Header="匹配模板">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox
+                                                        Width="280"
+                                                        HorizontalContentAlignment="Center"
+                                                        Text="{Binding MateTemplate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                        TextWrapping="Wrap" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="应答模板">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox
+                                                        Width="280"
+                                                        HorizontalContentAlignment="Center"
+                                                        Text="{Binding ResponseTemplate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                                        TextWrapping="Wrap" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Border>
 
                             <!--  页面消息  -->
                             <Border
@@ -2090,7 +2181,7 @@
                                 BorderBrush="Gray"
                                 BorderThickness="1"
                                 CornerRadius="5"
-                                DockPanel.Dock="Top">
+                                DockPanel.Dock="Right">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                     <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
                                         <ItemsControl.ItemsPanel>
@@ -2132,7 +2223,6 @@
                                     </ItemsControl>
                                 </hc:ScrollViewer>
                             </Border>
-
                         </DockPanel>
                     </md:DrawerHost>
                 </md:TransitionerSlide>
