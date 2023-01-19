@@ -27,12 +27,9 @@
             <!--  左侧功能菜单  -->
             <DockPanel DockPanel.Dock="Left">
                 <Border
-                    Margin="5"
-                    Background="White"
-                    BorderBrush="#e0e0e0"
-                    BorderThickness="1"
-                    CornerRadius="5"
-                    DockPanel.Dock="Top">
+                    Margin="4"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource FormBorder}">
                     <DockPanel>
                         <ListBox
                             Background="Transparent"
@@ -67,13 +64,8 @@
                     <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen2.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen2.IsRightDrawerOpen}">
                         <!--  左侧抽屉  -->
                         <md:DrawerHost.LeftDrawerContent>
-                            <DockPanel Width="300" Background="AliceBlue">
-                                <Border
-                                    Margin="5"
-                                    Background="White"
-                                    BorderThickness="1"
-                                    CornerRadius="5"
-                                    DockPanel.Dock="Top">
+                            <DockPanel>
+                                <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock
                                             Margin="5"
@@ -380,53 +372,49 @@
                                     TextWrapping="Wrap" />
                             </DockPanel>
                             <!--  页面消息  -->
-                            <Border
-                                Margin="5,0"
-                                BorderBrush="Gray"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Left">
-                                <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                                    <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel />
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border
-                                                    Margin="3"
-                                                    Padding="2"
-                                                    BorderThickness="1"
-                                                    CornerRadius="4"
-                                                    Style="{StaticResource MessageBorder}">
-                                                    <WrapPanel Orientation="Horizontal">
-                                                        <TextBlock
-                                                            Margin="3"
-                                                            VerticalAlignment="Center"
-                                                            Style="{StaticResource MessageTextBlock}"
-                                                            Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                                        <TextBlock
-                                                            Margin="5,0"
-                                                            VerticalAlignment="Center"
-                                                            Style="{StaticResource MessageTextBlock}"
-                                                            Text="{Binding Type}" />
-                                                        <TextBox
-                                                            VerticalAlignment="Center"
-                                                            FontSize="12"
-                                                            FontWeight="Bold"
-                                                            IsReadOnly="True"
-                                                            Style="{StaticResource MessageTextBox}"
-                                                            Text="{Binding Content}"
-                                                            TextWrapping="Wrap" />
-                                                    </WrapPanel>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </hc:ScrollViewer>
-                            </Border>
+                            <Grid>
+                                <Border Style="{StaticResource FormBorder}" />
+                                <Border
+                                    Margin="4"
+                                    Padding="4"
+                                    DockPanel.Dock="Left">
+                                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Style="{StaticResource MessageBorder}">
+                                                        <WrapPanel Orientation="Horizontal">
+                                                            <TextBlock
+                                                                Margin="3"
+                                                                VerticalAlignment="Center"
+                                                                Style="{StaticResource MessageTextBlock}"
+                                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                            <TextBlock
+                                                                Margin="5,0"
+                                                                VerticalAlignment="Center"
+                                                                Style="{StaticResource MessageTextBlock}"
+                                                                Text="{Binding Type}" />
+                                                            <TextBox
+                                                                VerticalAlignment="Center"
+                                                                FontSize="12"
+                                                                FontWeight="Bold"
+                                                                IsReadOnly="True"
+                                                                Style="{StaticResource MessageTextBox}"
+                                                                Text="{Binding Content}"
+                                                                TextWrapping="Wrap" />
+                                                        </WrapPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </hc:ScrollViewer>
+                                </Border>
+                            </Grid>
                         </DockPanel>
                     </md:DrawerHost>
                 </md:TransitionerSlide>
@@ -572,10 +560,9 @@
                         <DockPanel Margin="4,0">
                             <!--  左侧配置  -->
                             <Border
-                                BorderBrush="Black"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Left">
+                                Margin="4,0"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource FormBorder}">
                                 <DockPanel>
                                     <TextBlock
                                         Margin="4"
@@ -722,11 +709,9 @@
 
                             <!--  右侧搜索到的设备  -->
                             <Border
-                                Margin="5,0"
-                                BorderBrush="Gray"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Right">
+                                Margin="4,0"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource FormBorder}">
                                 <Grid>
                                     <!--  列表为空时显示  -->
                                     <StackPanel
@@ -932,9 +917,8 @@
                                 <!--  页面消息  -->
                                 <Border
                                     Margin="4,0"
-                                    BorderBrush="Gray"
-                                    BorderThickness="1"
-                                    CornerRadius="4">
+                                    Padding="4"
+                                    Style="{StaticResource FormBorder}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                         <!--  页面消息  -->
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
@@ -946,12 +930,7 @@
 
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border
-                                                        Margin="3"
-                                                        Padding="2"
-                                                        BorderThickness="1"
-                                                        CornerRadius="4"
-                                                        Style="{StaticResource MessageBorder}">
+                                                    <Border Style="{StaticResource MessageBorder}">
                                                         <WrapPanel Orientation="Horizontal">
                                                             <TextBlock
                                                                 Margin="3"
@@ -991,59 +970,63 @@
                         <md:DrawerHost.LeftDrawerContent>
                             <ScrollViewer>
                                 <DockPanel MinWidth="300" Background="#f5f5f5">
-                                    <DockPanel DockPanel.Dock="Right">
-                                        <StackPanel
-                                            HorizontalAlignment="Center"
-                                            DockPanel.Dock="Top"
-                                            Orientation="Horizontal">
-                                            <TextBlock
-                                                Margin="5"
-                                                HorizontalAlignment="Center"
-                                                FontSize="20"
-                                                Text="快速导入配置" />
-                                            <!--  更新配置列表  -->
-                                            <Button
-                                                Width="30"
-                                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                                Margin="4"
-                                                hc:Poptip.Content="更新配置列表"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="RefreshQuickImportList"
-                                                Content="{md:PackIcon Kind=Refresh}"
-                                                Cursor="Hand"
-                                                DockPanel.Dock="Right"
-                                                Style="{StaticResource Blue_CircleButton}" />
-                                        </StackPanel>
-
-                                        <ItemsControl
-                                            Background="Transparent"
-                                            DockPanel.Dock="Top"
-                                            ItemsSource="{Binding ConfigFiles, IsAsync=True}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel HorizontalAlignment="Center" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Margin="4" CornerRadius="4">
-                                                        <WrapPanel Orientation="Horizontal">
-                                                            <Button
-                                                                Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                CommandParameter="{Binding}"
-                                                                Content="{Binding Name}" />
-                                                        </WrapPanel>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </DockPanel>
                                     <Border
-                                        Margin="5"
-                                        Background="White"
-                                        BorderThickness="1"
-                                        CornerRadius="5"
-                                        DockPanel.Dock="Top">
+                                        Margin="4"
+                                        DockPanel.Dock="Right"
+                                        Effect="{StaticResource EffectShadow2}"
+                                        Style="{StaticResource BorderRegion}">
+                                        <DockPanel>
+                                            <StackPanel
+                                                HorizontalAlignment="Center"
+                                                DockPanel.Dock="Top"
+                                                Orientation="Horizontal">
+                                                <TextBlock
+                                                    Margin="5"
+                                                    HorizontalAlignment="Center"
+                                                    FontSize="20"
+                                                    Text="快速导入配置" />
+                                                <!--  更新配置列表  -->
+                                                <Button
+                                                    Width="30"
+                                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                    Margin="4"
+                                                    hc:Poptip.Content="更新配置列表"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="RefreshQuickImportList"
+                                                    Content="{md:PackIcon Kind=Refresh}"
+                                                    Cursor="Hand"
+                                                    DockPanel.Dock="Right"
+                                                    Style="{StaticResource Blue_CircleButton}" />
+                                            </StackPanel>
+                                            <ItemsControl
+                                                Background="Transparent"
+                                                DockPanel.Dock="Top"
+                                                ItemsSource="{Binding ConfigFiles, IsAsync=True}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <StackPanel HorizontalAlignment="Center" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="4" CornerRadius="4">
+                                                            <WrapPanel Orientation="Horizontal">
+                                                                <Button
+                                                                    Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                    CommandParameter="{Binding}"
+                                                                    Content="{Binding Name}" />
+                                                            </WrapPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </DockPanel>
+                                    </Border>
+                                    <Border
+                                        Margin="4"
+                                        DockPanel.Dock="Top"
+                                        Effect="{StaticResource EffectShadow2}"
+                                        Style="{StaticResource BorderRegion}">
                                         <StackPanel Orientation="Vertical">
                                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                                 <TextBlock
@@ -1145,11 +1128,10 @@
                                         </StackPanel>
                                     </Border>
                                     <Border
-                                        Margin="5"
-                                        Background="White"
-                                        BorderThickness="1"
-                                        CornerRadius="5"
-                                        DockPanel.Dock="Top">
+                                        Margin="4"
+                                        DockPanel.Dock="Top"
+                                        Effect="{StaticResource EffectShadow2}"
+                                        Style="{StaticResource BorderRegion}">
                                         <StackPanel Orientation="Vertical">
                                             <TextBlock
                                                 Margin="5"
@@ -1243,10 +1225,9 @@
                             <Border
                                 Width="700"
                                 Margin="5,5"
-                                BorderBrush="Gray"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Left">
+                                Padding="4"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource FormBorder}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                     <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
                                         <ItemsControl.ItemsPanel>
@@ -1256,12 +1237,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border
-                                                    Margin="3"
-                                                    Padding="2"
-                                                    BorderThickness="1"
-                                                    CornerRadius="4"
-                                                    Style="{StaticResource MessageBorder}">
+                                                <Border Style="{StaticResource MessageBorder}">
                                                     <WrapPanel Orientation="Horizontal">
                                                         <TextBlock
                                                             Margin="3"
@@ -1549,24 +1525,10 @@
                             <DockPanel>
                                 <!--  数据  -->
                                 <Border
-                                    Margin="5,0"
-                                    BorderBrush="Gray"
-                                    BorderThickness="1"
-                                    CornerRadius="5"
-                                    DockPanel.Dock="Right">
-
-                                    <Border.Style>
-                                        <Style>
-                                            <Style.Resources>
-                                                <!--<Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource DataGridColumnHeaderStyle}">
-                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
-                                                </Style>-->
-                                            </Style.Resources>
-                                        </Style>
-                                    </Border.Style>
-
-                                    <!--  ModbusRtuDataDataView  -->
-                                    <!--  ItemsSource="{Binding DataMonitorConfig.ModbusRtuDatas}"  -->
+                                    Margin="4,0"
+                                    Padding="0"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource FormBorder}">
                                     <DataGrid
                                         MinWidth="100"
                                         hc:DataGridAttach.ShowRowNumber="True"
@@ -1584,20 +1546,6 @@
                                                 </Grid>
                                             </DataTemplate>
                                         </DataGrid.RowHeaderTemplate>-->
-
-                                        <!--<DataGrid.RowStyle>
-                                            <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="DataGridRow">
-                                        -->
-                                        <!--<Setter Property="Visibility" Value="{Binding Name, Converter={wucvt:StringIsNullOrWhiteSpace2Collapsed}}" />-->
-                                        <!--
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding DataContext.IsFilter, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" Value="true">
-                                                        <Setter Property="Visibility" Value="{Binding Name, Converter={wucvt:StringIsNullOrWhiteSpace2Collapsed}}" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGrid.RowStyle>-->
-
                                         <DataGrid.Columns>
                                             <DataGridTemplateColumn Header="名称">
                                                 <DataGridTemplateColumn.CellTemplate>
@@ -1737,13 +1685,8 @@
                     <md:DrawerHost IsLeftDrawerOpen="{Binding ModbusRtuReadDrawerOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding ModbusRtuReadDrawerOpen.IsRightDrawerOpen}">
                         <!--  左侧抽屉  -->
                         <md:DrawerHost.LeftDrawerContent>
-                            <DockPanel Width="300" Background="AliceBlue">
-                                <Border
-                                    Margin="5"
-                                    Background="White"
-                                    BorderThickness="1"
-                                    CornerRadius="5"
-                                    DockPanel.Dock="Top">
+                            <DockPanel Background="AliceBlue">
+                                <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock
                                             Margin="5"
@@ -2087,15 +2030,15 @@
 
                             <!--  匹配设置列表  -->
                             <Border
-                                Margin="5,0"
-                                BorderBrush="Gray"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Left">
+                                Margin="4,0"
+                                Padding="0"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource FormBorder}">
                                 <DataGrid
                                     hc:DataGridAttach.ShowRowNumber="True"
                                     AutoGenerateColumns="False"
                                     Background="Transparent"
+                                    BorderThickness="0"
                                     CanUserSortColumns="False"
                                     FrozenColumnCount="4"
                                     ItemsSource="{Binding MosbusRtuAutoResponseDatas, IsAsync=True}"
@@ -2157,11 +2100,10 @@
 
                             <!--  页面消息  -->
                             <Border
-                                Margin="5,0"
-                                BorderBrush="Gray"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Right">
+                                Margin="4,0"
+                                Padding="4"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource FormBorder}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                     <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
                                         <ItemsControl.ItemsPanel>
@@ -2171,12 +2113,7 @@
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border
-                                                    Margin="3"
-                                                    Padding="2"
-                                                    BorderThickness="1"
-                                                    CornerRadius="4"
-                                                    Style="{StaticResource MessageBorder}">
+                                                <Border Style="{StaticResource MessageBorder}">
                                                     <WrapPanel Orientation="Horizontal">
                                                         <TextBlock
                                                             Margin="3"

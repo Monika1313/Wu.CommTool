@@ -15,25 +15,24 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <DockPanel>
-        <TextBox
-            Height="150"
-            Margin="4,0,4,4"
-            VerticalContentAlignment="Top"
-            hc:InfoElement.Placeholder="请输入Json字符串..."
-            wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
-            AcceptsReturn="True"
-            DockPanel.Dock="Bottom"
-            Foreground="#999999"
-            Style="{StaticResource TextBoxExtend}"
-            Text="{Binding JsonString}"
-            TextWrapping="Wrap" />
+        <Grid DockPanel.Dock="Bottom">
+            <Border
+                Margin="4,0,4,4"
+                Padding="0"
+                Style="{StaticResource FormBorder}" />
+            <TextBox
+                Height="150"
+                Margin="4,0,4,4"
+                VerticalContentAlignment="Top"
+                hc:InfoElement.Placeholder="请输入Json字符串..."
+                wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
+                AcceptsReturn="True"
+                Foreground="#999999"
+                Style="{StaticResource TextBoxExtend}"
+                Text="{Binding JsonString}"
+                TextWrapping="Wrap" />
+        </Grid>
         <WrapPanel DockPanel.Dock="Bottom">
-            <!--<ComboBox hc:TitleElement.Title="缩进量" Style="{StaticResource FormComboBox}" />
-            <TextBlock
-                Margin="10"
-                VerticalAlignment="Center"
-                Text="引号:" />
-            <CheckBox Style="{StaticResource ToggleButtonSwitch}" />-->
             <Button
                 Margin="5"
                 Command="{Binding ExecuteCommand}"
@@ -41,7 +40,7 @@
                 Content="格式化" />
         </WrapPanel>
 
-        <Grid Margin="5 5 5 0">
+        <Grid Margin="5,5,5,0">
             <Grid.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">
@@ -96,15 +95,10 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </Grid.Resources>
-
-            <!--<Menu
-                Name="menu1"
-                Margin="10,10,10,10"
-                DockPanel.Dock="Top">
-                <MenuItem Header="XXXXXXXX" ItemsSource="{Binding JsonHeaderLogics}" />
-            </Menu>-->
-
-            <TreeView ItemsSource="{Binding JsonHeaderLogics}" Style="{StaticResource TreeView.Small}">
+            <TreeView
+                Effect="{StaticResource EffectShadow2}"
+                ItemsSource="{Binding JsonHeaderLogics}"
+                Style="{StaticResource TreeView.Small}">
                 <TreeView.ItemContainerStyle>
                     <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="True" />
@@ -130,53 +124,7 @@
                         </Style.Triggers>
                     </Style>
                 </TreeView.ItemContainerStyle>
-                <!--<TreeViewItem Header="XXXXXXXX" ItemsSource="{Binding JsonHeaderLogics}" />-->
             </TreeView>
-
-
-
-            <!--<TreeView Name="treeView" ItemsSource="{Binding JsonHeaderLogics}">
-                <TreeView.ItemContainerStyle>
-                    <Style TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="IsExpanded" Value="True" />
-                    </Style>
-                </TreeView.ItemContainerStyle>
-                <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding Children}">
-                        <StackPanel Orientation="Horizontal">
-            -->
-            <!--<TextBlock Text="" />-->
-            <!--
-                            <TextBlock Text="{Binding Header}">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-            -->
-            <!--<Style.Triggers>
-                                            <DataTrigger Binding="{Binding Token.Type}" Value="String">
-                                                <Setter Property="Foreground" Value="Purple" />
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Token.Type}" Value="Property">
-                                                <Setter Property="Foreground" Value="Green" />
-                                            </DataTrigger>
-                                        </Style.Triggers>-->
-            <!--
-                                    </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-
-            -->
-            <!--<TextBlock Margin="10,0,0,0" Text=":" />-->
-
-            <!--<TextBlock
-                                Margin="10,0,0,0"
-                                Foreground="Gray"
-                                Text="{Binding Token.Type}" />-->
-            <!--
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeView.ItemTemplate>
-            </TreeView>-->
-
         </Grid>
     </DockPanel>
 </UserControl>

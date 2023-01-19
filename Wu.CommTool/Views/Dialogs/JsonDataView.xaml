@@ -89,20 +89,23 @@
             DockPanel.Dock="Top">
             <TextBlock Margin="5" Text="{Binding CurrentDto.Title}" />
         </Grid>
-        <TreeView
-            Margin="4,0,4,0"
-            ItemsSource="{Binding JsonHeaderLogics}"
-            Style="{StaticResource TreeView.Small}">
-            <TreeView.ItemContainerStyle>
-                <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
-                    <Setter Property="IsExpanded" Value="True" />
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="White" />
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </TreeView.ItemContainerStyle>
-        </TreeView>
+        <Grid>
+            <Border Style="{StaticResource FormBorder}" />
+            <TreeView
+                Margin="4,0,4,0"
+                ItemsSource="{Binding JsonHeaderLogics}"
+                Style="{StaticResource TreeView.Small}">
+                <TreeView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
+                        <Setter Property="IsExpanded" Value="True" />
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="White" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </TreeView.ItemContainerStyle>
+            </TreeView>
+        </Grid>
     </DockPanel>
 </UserControl>

@@ -102,27 +102,7 @@
                         FontSize="20"
                         Text="客户端管理" />
                     <Grid>
-                        <StackPanel
-                            Grid.Column="1"
-                            Margin="5"
-                            HorizontalAlignment="Left"
-                            VerticalAlignment="Center"
-                            Visibility="{Binding MqttUsers.Count, Converter={cvt:MoreThanZero2Collapsed}}">
-                            <Image
-                                Width="240"
-                                Height="240"
-                                Source="/Images/GKD.png" />
-                            <TextBlock
-                                Margin="0,10"
-                                HorizontalAlignment="Center"
-                                FontSize="18"
-                                Text="没有在线客户端..." />
-                        </StackPanel>
-                        <Border
-                            Margin="4"
-                            BorderBrush="Gray"
-                            BorderThickness="1"
-                            CornerRadius="4">
+                        <Border Margin="4" Style="{StaticResource FormBorder}">
                             <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                 <ItemsControl Background="Transparent" ItemsSource="{Binding MqttUsers}">
                                     <ItemsControl.ItemsPanel>
@@ -213,6 +193,23 @@
                                 </ItemsControl>
                             </hc:ScrollViewer>
                         </Border>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Visibility="{Binding MqttUsers.Count, Converter={cvt:MoreThanZero2Collapsed}}">
+                            <Image
+                                Width="240"
+                                Height="240"
+                                Margin="4"
+                                Source="/Images/GKD.png" />
+                            <TextBlock
+                                Margin="0,10"
+                                HorizontalAlignment="Center"
+                                FontSize="18"
+                                Text="没有在线客户端..." />
+                        </StackPanel>
                     </Grid>
                 </DockPanel>
             </md:DrawerHost.RightDrawerContent>
@@ -418,10 +415,9 @@
                     <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerPort}" />
                 </DockPanel>
                 <Border
-                    Margin="5,0"
-                    BorderBrush="Gray"
-                    BorderThickness="1"
-                    CornerRadius="5">
+                    Margin="4,0"
+                    Padding="4"
+                    Style="{StaticResource FormBorder}">
                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <!--  页面消息  -->
                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">

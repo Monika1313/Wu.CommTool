@@ -23,62 +23,59 @@
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
                 <DockPanel>
-                    <DockPanel DockPanel.Dock="Right">
-                        <StackPanel
-                            HorizontalAlignment="Center"
-                            DockPanel.Dock="Top"
-                            Orientation="Horizontal">
-                            <TextBlock
-                                Margin="5"
+                    <Border DockPanel.Dock="Right" Style="{StaticResource FormBorder}">
+                        <DockPanel>
+                            <StackPanel
                                 HorizontalAlignment="Center"
-                                FontSize="20"
-                                Text="快速导入配置" />
-                            <!--  更新配置列表  -->
-                            <Button
-                                Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="4"
-                                hc:Poptip.Content="更新配置列表"
-                                Command="{Binding ExecuteCommand}"
-                                CommandParameter="RefreshQuickImportList"
-                                Content="{md:PackIcon Kind=Refresh}"
-                                Cursor="Hand"
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />
-                        </StackPanel>
+                                DockPanel.Dock="Top"
+                                Orientation="Horizontal">
+                                <TextBlock
+                                    Margin="5"
+                                    HorizontalAlignment="Center"
+                                    FontSize="20"
+                                    Text="快速导入配置" />
+                                <!--  更新配置列表  -->
+                                <Button
+                                    Width="30"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="4"
+                                    hc:Poptip.Content="更新配置列表"
+                                    Command="{Binding ExecuteCommand}"
+                                    CommandParameter="RefreshQuickImportList"
+                                    Content="{md:PackIcon Kind=Refresh}"
+                                    Cursor="Hand"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource Blue_CircleButton}" />
+                            </StackPanel>
+                            <ItemsControl
+                                Background="Transparent"
+                                DockPanel.Dock="Top"
+                                ItemsSource="{Binding ConfigFiles, IsAsync=True}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel HorizontalAlignment="Center" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="4" CornerRadius="4">
+                                            <WrapPanel Orientation="Horizontal">
+                                                <Button
+                                                    Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Content="{Binding Name}" />
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </DockPanel>
+                    </Border>
 
-                        <ItemsControl
-                            Background="Transparent"
-                            DockPanel.Dock="Top"
-                            ItemsSource="{Binding ConfigFiles, IsAsync=True}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel HorizontalAlignment="Center" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border Margin="4" CornerRadius="4">
-                                        <WrapPanel Orientation="Horizontal">
-                                            <Button
-                                                Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding}"
-                                                Content="{Binding Name}" />
-                                        </WrapPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </DockPanel>
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
 
                         <DockPanel Width="300" Background="#f5f5f5">
-                            <Border
-                                Margin="5"
-                                Background="White"
-                                BorderThickness="1"
-                                CornerRadius="5"
-                                DockPanel.Dock="Top">
+                            <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
                                 <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock
@@ -273,7 +270,10 @@
                         HorizontalAlignment="Center"
                         FontSize="20"
                         Text="订阅管理" />
-                    <Border MinHeight="30" Style="{StaticResource CircleBorder}">
+                    <Border
+                        MinHeight="30"
+                        Padding="4"
+                        Style="{StaticResource FormBorder}">
                         <Grid>
                             <DockPanel>
                                 <Grid DockPanel.Dock="Top">
@@ -546,90 +546,98 @@
                             Style="{StaticResource FormTextBox}"
                             Text="{Binding MqttClientConfig.PublishTopic}" />
                     </DockPanel>
-                    <TextBox
-                        MaxHeight="300"
-                        Margin="4,0,4,0"
-                        VerticalContentAlignment="Top"
-                        hc:InfoElement.Placeholder="请输入要发送的内容..."
-                        AcceptsReturn="True"
-                        Style="{StaticResource TextBoxExtend}"
-                        Text="{Binding SendMessage}"
-                        TextWrapping="Wrap" />
+                    <Grid>
+                        <Border
+                            Margin="4,0"
+                            Padding="0"
+                            Style="{StaticResource FormBorder}" />
+                        <TextBox
+                            MaxHeight="300"
+                            Margin="4,0"
+                            VerticalContentAlignment="Top"
+                            hc:InfoElement.Placeholder="请输入要发送的内容..."
+                            AcceptsReturn="True"
+                            Style="{StaticResource TextBoxExtend}"
+                            Text="{Binding SendMessage}"
+                            TextWrapping="Wrap" />
+                    </Grid>
                 </DockPanel>
 
-                <Border
-                    Margin="4,0"
-                    BorderBrush="Gray"
-                    BorderThickness="1"
-                    CornerRadius="5">
-                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                        <!--  页面消息  -->
-                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
+                <Grid>
+                    <Border
+                        Margin="4,0"
+                        Padding="4"
+                        Style="{StaticResource FormBorder}" />
+                    <Border Margin="4,0" Padding="4">
+                        <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                            <!--  页面消息  -->
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
 
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <Border
-                                        Margin="3"
-                                        Padding="2"
-                                        BorderThickness="1"
-                                        CornerRadius="4"
-                                        Style="{StaticResource MessageBorder}"
-                                        Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                        <Border.ContextMenu>
-                                            <ContextMenu>
-                                                <!--  MenuItem绑定命令  -->
-                                                <MenuItem
-                                                    Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                    CommandParameter="{Binding}"
-                                                    Header="查看Json格式化" />
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            Margin="3"
+                                            Padding="2"
+                                            BorderThickness="1"
+                                            CornerRadius="4"
+                                            Style="{StaticResource MessageBorder}"
+                                            Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <!--  MenuItem绑定命令  -->
+                                                    <MenuItem
+                                                        Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                        CommandParameter="{Binding}"
+                                                        Header="查看Json格式化" />
 
-                                                <!--  MenuItem绑定命令 该方法绑定失败  -->
-                                                <!--<MenuItem
+                                                    <!--  MenuItem绑定命令 该方法绑定失败  -->
+                                                    <!--<MenuItem
                                                     Command="{Binding DataContext.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding}"
                                                     Header="查看Json格式化" />-->
 
-                                            </ContextMenu>
-                                        </Border.ContextMenu>
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
 
-                                        <WrapPanel Orientation="Horizontal">
-                                            <TextBlock
-                                                Margin="3"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MessageTextBlock}"
-                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                            <TextBlock
-                                                Margin="5,0"
-                                                VerticalAlignment="Center"
-                                                Style="{StaticResource MessageTextBlock}"
-                                                Text="{Binding Type}" />
-                                            <TextBlock
-                                                Margin="5,0"
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                Style="{StaticResource MessageTextBlock}"
-                                                Text="{Binding Title}" />
-                                            <TextBox
-                                                VerticalAlignment="Center"
-                                                FontSize="12"
-                                                FontWeight="Bold"
-                                                IsReadOnly="True"
-                                                Style="{StaticResource MessageTextBox}"
-                                                Text="{Binding Content}"
-                                                TextWrapping="Wrap" />
-                                        </WrapPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </hc:ScrollViewer>
-                </Border>
+                                            <WrapPanel Orientation="Horizontal">
+                                                <TextBlock
+                                                    Margin="3"
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource MessageTextBlock}"
+                                                    Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                <TextBlock
+                                                    Margin="5,0"
+                                                    VerticalAlignment="Center"
+                                                    Style="{StaticResource MessageTextBlock}"
+                                                    Text="{Binding Type}" />
+                                                <TextBlock
+                                                    Margin="5,0"
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    Style="{StaticResource MessageTextBlock}"
+                                                    Text="{Binding Title}" />
+                                                <TextBox
+                                                    VerticalAlignment="Center"
+                                                    FontSize="12"
+                                                    FontWeight="Bold"
+                                                    IsReadOnly="True"
+                                                    Style="{StaticResource MessageTextBox}"
+                                                    Text="{Binding Content}"
+                                                    TextWrapping="Wrap" />
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </hc:ScrollViewer>
+                    </Border>
+                </Grid>
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>
