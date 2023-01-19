@@ -21,16 +21,21 @@
             DockPanel.Dock="Bottom"
             Style="{StaticResource Effect2Control}">
             <TextBox
-                MinHeight="100"
-                MaxHeight="200"
+                Height="130"
                 VerticalContentAlignment="Top"
                 hc:InfoElement.Placeholder="请输入Json字符串..."
                 wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
-                AcceptsReturn="True"
                 Foreground="#999999"
                 Style="{StaticResource TextBoxExtend}"
                 Text="{Binding JsonString}"
-                TextWrapping="Wrap" />
+                TextWrapping="Wrap">
+                <TextBox.InputBindings>
+                    <KeyBinding
+                        Key="Enter"
+                        Command="{Binding ExecuteCommand}"
+                        CommandParameter="Format" />
+                </TextBox.InputBindings>
+            </TextBox>
         </ContentControl>
         <WrapPanel DockPanel.Dock="Bottom">
             <Button

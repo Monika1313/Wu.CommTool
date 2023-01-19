@@ -4,7 +4,6 @@ using Prism.Mvvm;
 using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
-using System.Windows.Forms;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
@@ -137,7 +136,7 @@ namespace Wu.CommTool.ViewModels
                     journal = back.Context.NavigationService.Journal;
                     if (back.Error != null)
                     {
-                        log.Error(back.Error.Message + "\n" +  back.Error.InnerException?.Message);
+                        log.Error(back.Error.Message + "\n" + back.Error.InnerException?.Message);
                     }
                 });
             }

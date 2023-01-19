@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel;
 using Wu.Wpf.Converters;
 
 namespace Wu.CommTool.Enums
@@ -22,6 +17,6 @@ namespace Wu.CommTool.Enums
         Base64,
         [Description("Json")]
         Json,
-        
+
     }
 }

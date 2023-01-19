@@ -1,6 +1,4 @@
-﻿using DryIoc;
-using HandyControl.Expression.Shapes;
-using log4net;
+﻿using log4net;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;

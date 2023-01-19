@@ -63,7 +63,8 @@
                                                 <Button
                                                     Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
-                                                    Content="{Binding Name}" />
+                                                    Content="{Binding Name}"
+                                                    Style="{StaticResource ButtonPrimary}" />
                                             </WrapPanel>
                                         </Border>
                                     </DataTemplate>
@@ -558,7 +559,14 @@
                             AcceptsReturn="True"
                             Style="{StaticResource TextBoxExtend}"
                             Text="{Binding SendMessage}"
-                            TextWrapping="Wrap" />
+                            TextWrapping="Wrap">
+                            <TextBox.InputBindings>
+                                <KeyBinding
+                                    Key="Enter"
+                                    Command="{Binding ExecuteCommand}"
+                                    CommandParameter="Publish" />
+                            </TextBox.InputBindings>
+                        </TextBox>
                     </ContentControl>
                 </DockPanel>
 

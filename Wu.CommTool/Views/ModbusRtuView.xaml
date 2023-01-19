@@ -369,7 +369,14 @@
                                         hc:InfoElement.Placeholder="请输入要发送的内容..."
                                         Style="{StaticResource TextBoxExtend}"
                                         Text="{Binding SendMessage}"
-                                        TextWrapping="Wrap" />
+                                        TextWrapping="Wrap">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding
+                                                Key="Enter"
+                                                Command="{Binding ExecuteCommand}"
+                                                CommandParameter="Send" />
+                                        </TextBox.InputBindings>
+                                    </TextBox>
                                 </ContentControl>
                             </DockPanel>
                             <!--  页面消息  -->
@@ -1009,7 +1016,8 @@
                                                                 <Button
                                                                     Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                     CommandParameter="{Binding}"
-                                                                    Content="{Binding Name}" />
+                                                                    Content="{Binding Name}"
+                                                                    Style="{StaticResource ButtonPrimary}" />
                                                             </WrapPanel>
                                                         </Border>
                                                     </DataTemplate>
@@ -1747,7 +1755,7 @@
                                                 Margin="20"
                                                 hc:Poptip.Content="打开串口"
                                                 Command="{Binding ExecuteCommand}"
-                                                CommandParameter="OpenCom"
+                                                CommandParameter="OpenComAndAutoResponse"
                                                 Content="打开"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                 Style="{StaticResource GreenButton}" />
@@ -1757,7 +1765,7 @@
                                                 Margin="20"
                                                 hc:Poptip.Content="关闭串口"
                                                 Command="{Binding ExecuteCommand}"
-                                                CommandParameter="CloseCom"
+                                                CommandParameter="CloseComAndAutoResponse"
                                                 Content="关闭"
                                                 DockPanel.Dock="Left"
                                                 IsEnabled="{Binding ComConfig.IsOpened}"
@@ -1799,13 +1807,13 @@
                                         Cursor="Hand"
                                         Style="{StaticResource Blue_CircleButton}" />
 
-                                    <!--  打开串口  -->
+                                    <!--  打开串口和自动应答  -->
                                     <Button
                                         Width="30"
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="5"
                                         HorizontalAlignment="Left"
-                                        hc:Poptip.Content="打开串口"
+                                        hc:Poptip.Content="打开串口和自动应答"
                                         Background="{StaticResource Green_Background}"
                                         BorderBrush="{StaticResource Green_BorderBrush}"
                                         Command="{Binding ExecuteCommand}"
@@ -1816,13 +1824,13 @@
                                         IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
-                                    <!--  关闭串口  -->
+                                    <!--  关闭串口和自动应答  -->
                                     <Button
                                         Width="30"
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="5"
                                         HorizontalAlignment="Left"
-                                        hc:Poptip.Content="关闭串口"
+                                        hc:Poptip.Content="关闭串口和自动应答"
                                         Command="{Binding ExecuteCommand}"
                                         CommandParameter="CloseComAndAutoResponse"
                                         Content="{md:PackIcon Kind=Stop}"

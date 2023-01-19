@@ -1,13 +1,4 @@
-﻿using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Prism.Mvvm;
 
 namespace Wu.CommTool.Models
 {
@@ -17,7 +8,7 @@ namespace Wu.CommTool.Models
         /// 名称
         /// </summary>
         public string Name { get => _Name; set => SetProperty(ref _Name, value); }
-        private string _Name = string.Empty ;
+        private string _Name = string.Empty;
 
         /// <summary>
         /// 优先级

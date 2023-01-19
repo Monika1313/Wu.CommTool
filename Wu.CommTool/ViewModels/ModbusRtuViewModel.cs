@@ -3,8 +3,6 @@ using log4net;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections;
@@ -20,10 +18,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
-using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Forms;
-using System.Windows.Interop;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
@@ -105,7 +100,7 @@ namespace Wu.CommTool.ViewModels
             {
                 ShowErrorMessage(ex.Message);
             }
-            
+
         }
 
         #endregion
@@ -1212,7 +1207,7 @@ namespace Wu.CommTool.ViewModels
                     Title = "请选择导出配置文件...",                                              //对话框标题
                     Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
                     FilterIndex = 1,                                                         //默认选中的过滤器
-                    FileName = "MqttClientConfig",                                           //默认文件名
+                    FileName = "Default",                                           //默认文件名
                     DefaultExt = "jsonDMC",                                     //默认扩展名
                     InitialDirectory = dict,                //指定初始的目录
                     OverwritePrompt = true,                                                  //文件已存在警告

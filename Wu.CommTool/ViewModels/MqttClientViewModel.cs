@@ -1,5 +1,4 @@
-﻿using DryIoc;
-using log4net;
+﻿using log4net;
 using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;
@@ -10,7 +9,6 @@ using MQTTnet.Client.Options;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
@@ -311,7 +309,7 @@ namespace Wu.CommTool.ViewModels
             try
             {
                 DirectoryInfo Folder = new DirectoryInfo(MqttClientConfigDict);
-                var a = Folder.GetFiles().Where(x=>x.Extension.ToLower().Equals(".jsonmcc")).Select(item => new ConfigFile(item));
+                var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsonmcc")).Select(item => new ConfigFile(item));
                 ConfigFiles.Clear();
                 foreach (var item in a)
                 {
@@ -482,7 +480,7 @@ namespace Wu.CommTool.ViewModels
                 {
                     MqttClientConfig.IsOpened = false;
                 });
-                
+
             }
             catch (Exception ex)
             {
