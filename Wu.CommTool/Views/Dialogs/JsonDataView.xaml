@@ -87,12 +87,17 @@
             HorizontalAlignment="Center"
             VerticalAlignment="Center"
             DockPanel.Dock="Top">
-            <TextBlock Margin="5" Text="{Binding CurrentDto.Title}" />
+            <TextBlock
+                Margin="5"
+                FontSize="16"
+                Text="{Binding CurrentDto.Title}" />
         </Grid>
-        <Grid>
+        <!--<Grid>
             <Border Style="{StaticResource FormBorder}" />
+        </Grid>-->
+        <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
             <TreeView
-                Margin="4,0,4,0"
+                BorderThickness="0"
                 ItemsSource="{Binding JsonHeaderLogics}"
                 Style="{StaticResource TreeView.Small}">
                 <TreeView.ItemContainerStyle>
@@ -106,6 +111,6 @@
                     </Style>
                 </TreeView.ItemContainerStyle>
             </TreeView>
-        </Grid>
+        </ContentControl>
     </DockPanel>
 </UserControl>

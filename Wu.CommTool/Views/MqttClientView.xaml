@@ -23,7 +23,7 @@
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
                 <DockPanel>
-                    <Border DockPanel.Dock="Right" Style="{StaticResource FormBorder}">
+                    <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
                         <DockPanel>
                             <StackPanel
                                 HorizontalAlignment="Center"
@@ -70,12 +70,12 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </DockPanel>
-                    </Border>
+                    </ContentControl>
 
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
 
                         <DockPanel Width="300" Background="#f5f5f5">
-                            <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
+                            <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
                                 <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock
@@ -256,7 +256,7 @@
                                     <!--
                             </hc:TagContainer>-->
                                 </StackPanel>
-                            </Border>
+                            </ContentControl>
                         </DockPanel>
                     </ScrollViewer>
                 </DockPanel>
@@ -509,7 +509,7 @@
                 </StackPanel>
 
 
-                <DockPanel MinHeight="150" DockPanel.Dock="Bottom">
+                <DockPanel DockPanel.Dock="Bottom">
                     <DockPanel DockPanel.Dock="Top">
                         <Button
                             Margin="4"
@@ -546,98 +546,91 @@
                             Style="{StaticResource FormTextBox}"
                             Text="{Binding MqttClientConfig.PublishTopic}" />
                     </DockPanel>
-                    <Grid>
-                        <Border
-                            Margin="4,0"
-                            Padding="0"
-                            Style="{StaticResource FormBorder}" />
+                    <ContentControl Padding="0" Style="{StaticResource Effect2Control}">
                         <TextBox
+                            MinHeight="100"
                             MaxHeight="300"
-                            Margin="4,0"
                             VerticalContentAlignment="Top"
                             hc:InfoElement.Placeholder="请输入要发送的内容..."
                             AcceptsReturn="True"
                             Style="{StaticResource TextBoxExtend}"
                             Text="{Binding SendMessage}"
                             TextWrapping="Wrap" />
-                    </Grid>
+                    </ContentControl>
                 </DockPanel>
 
-                <Grid>
-                    <Border
-                        Margin="4,0"
-                        Padding="4"
-                        Style="{StaticResource FormBorder}" />
-                    <Border Margin="4,0" Padding="4">
-                        <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                            <!--  页面消息  -->
-                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel />
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+                <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
+                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                        <!--  页面消息  -->
+                        <ItemsControl
+                            Margin="0"
+                            Background="Transparent"
+                            ItemsSource="{Binding Messages}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
 
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border
-                                            Margin="3"
-                                            Padding="2"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Style="{StaticResource MessageBorder}"
-                                            Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                            <Border.ContextMenu>
-                                                <ContextMenu>
-                                                    <!--  MenuItem绑定命令  -->
-                                                    <MenuItem
-                                                        Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                        CommandParameter="{Binding}"
-                                                        Header="查看Json格式化" />
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border
+                                        Margin="3"
+                                        Padding="2"
+                                        BorderThickness="1"
+                                        CornerRadius="4"
+                                        Style="{StaticResource MessageBorder}"
+                                        Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <!--  MenuItem绑定命令  -->
+                                                <MenuItem
+                                                    Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="查看Json格式化" />
 
-                                                    <!--  MenuItem绑定命令 该方法绑定失败  -->
-                                                    <!--<MenuItem
+                                                <!--  MenuItem绑定命令 该方法绑定失败  -->
+                                                <!--<MenuItem
                                                     Command="{Binding DataContext.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     CommandParameter="{Binding}"
                                                     Header="查看Json格式化" />-->
 
-                                                </ContextMenu>
-                                            </Border.ContextMenu>
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
 
-                                            <WrapPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    Margin="3"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                                <TextBlock
-                                                    Margin="5,0"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Type}" />
-                                                <TextBlock
-                                                    Margin="5,0"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Title}" />
-                                                <TextBox
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    IsReadOnly="True"
-                                                    Style="{StaticResource MessageTextBox}"
-                                                    Text="{Binding Content}"
-                                                    TextWrapping="Wrap" />
-                                            </WrapPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </hc:ScrollViewer>
-                    </Border>
-                </Grid>
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="3"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Type}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Title}" />
+                                            <TextBox
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                IsReadOnly="True"
+                                                Style="{StaticResource MessageTextBox}"
+                                                Text="{Binding Content}"
+                                                TextWrapping="Wrap" />
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
+                </ContentControl>
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>

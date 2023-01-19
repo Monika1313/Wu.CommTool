@@ -95,15 +95,16 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </Grid.Resources>
-            <TreeView
-                Effect="{StaticResource EffectShadow2}"
-                ItemsSource="{Binding JsonHeaderLogics}"
-                Style="{StaticResource TreeView.Small}">
-                <TreeView.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="IsExpanded" Value="True" />
-                        <Style.Triggers>
-                            <!--<DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
+            <ContentControl Padding="0" Style="{StaticResource Effect2Control}">
+                <TreeView
+                    BorderThickness="0"
+                    ItemsSource="{Binding JsonHeaderLogics}"
+                    Style="{StaticResource TreeView.Small}">
+                    <TreeView.ItemContainerStyle>
+                        <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
+                            <Setter Property="IsExpanded" Value="True" />
+                            <Style.Triggers>
+                                <!--<DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
                                 <Setter Property="Foreground" Value="#a31515" />
                             </DataTrigger>
                             <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
@@ -116,15 +117,16 @@
                                 <Setter Property="Foreground" Value="Blue" />
                             </DataTrigger>-->
 
-                            <Trigger Property="IsSelected" Value="True">
-                                <!--<Setter Property="Background" Value="Red" />-->
-                                <Setter Property="Foreground" Value="White" />
-                                <!--<Setter Property="Opacity" Value="0.2" />-->
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </TreeView.ItemContainerStyle>
-            </TreeView>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <!--<Setter Property="Background" Value="Red" />-->
+                                    <Setter Property="Foreground" Value="White" />
+                                    <!--<Setter Property="Opacity" Value="0.2" />-->
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TreeView.ItemContainerStyle>
+                </TreeView>
+            </ContentControl>
         </Grid>
     </DockPanel>
 </UserControl>

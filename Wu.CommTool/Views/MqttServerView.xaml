@@ -17,79 +17,82 @@
     d:DesignHeight="600"
     d:DesignWidth="1000"
     mc:Ignorable="d">
+
     <md:DialogHost Identifier="{x:Static local:MqttServerView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
             <!--  左侧抽屉  -->
             <md:DrawerHost.LeftDrawerContent>
-                <StackPanel Width="240" Orientation="Vertical">
-                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                        <TextBlock
-                            Margin="10"
+                <ContentControl Style="{StaticResource Effect2Control}">
+                    <StackPanel Width="240" Orientation="Vertical">
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <TextBlock
+                                Margin="10"
+                                HorizontalAlignment="Center"
+                                FontSize="18"
+                                Text="服务器配置" />
+                            <!--  导出配置文件  -->
+                            <Button
+                                Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="导出配置文件"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ExportConfig"
+                                Content="{md:PackIcon Kind=Upload}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
+                            <!--  导入配置文件  -->
+                            <Button
+                                Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="导入配置文件"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ImportConfig"
+                                Content="{md:PackIcon Kind=Download}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                Style="{StaticResource Blue_CircleButton}" />
+                        </StackPanel>
+                        <ctl:WuIpBox
+                            Margin="5"
+                            Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            IpTitle="IP"
+                            TitleWidth="45" />
+                        <TextBox
+                            hc:TitleElement.Title="Port"
+                            hc:TitleElement.TitleWidth="45"
+                            Style="{StaticResource FormTextBox}"
+                            Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <!--  服务器开关  -->
+                        <StackPanel
                             HorizontalAlignment="Center"
-                            FontSize="18"
-                            Text="服务器配置" />
-                        <!--  导出配置文件  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="4"
-                            hc:Poptip.Content="导出配置文件"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="ExportConfig"
-                            Content="{md:PackIcon Kind=Upload}"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource Blue_CircleButton}" />
-                        <!--  导入配置文件  -->
-                        <Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="4"
-                            hc:Poptip.Content="导入配置文件"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="ImportConfig"
-                            Content="{md:PackIcon Kind=Download}"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right"
-                            IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                            Style="{StaticResource Blue_CircleButton}" />
-                    </StackPanel>
-                    <ctl:WuIpBox
-                        Margin="5"
-                        Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        IpTitle="IP"
-                        TitleWidth="45" />
-                    <TextBox
-                        hc:TitleElement.Title="Port"
-                        hc:TitleElement.TitleWidth="45"
-                        Style="{StaticResource FormTextBox}"
-                        Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            VerticalAlignment="Top"
+                            Orientation="Horizontal">
+                            <Button
+                                Margin="20"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenMqttServer"
+                                Content="打开"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                Style="{StaticResource GreenButton}" />
 
-                    <!--  服务器开关  -->
-                    <StackPanel
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Top"
-                        Orientation="Horizontal">
-                        <Button
-                            Margin="20"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="OpenMqttServer"
-                            Content="打开"
-                            IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                            Style="{StaticResource GreenButton}" />
-
-                        <Button
-                            Width="60"
-                            Margin="20"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="CloseMqttServer"
-                            Content="关闭"
-                            Cursor="Hand"
-                            DockPanel.Dock="Left"
-                            IsEnabled="{Binding MqttServerConfig.IsOpened}"
-                            Style="{StaticResource RedButton}" />
+                            <Button
+                                Width="60"
+                                Margin="20"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="CloseMqttServer"
+                                Content="关闭"
+                                Cursor="Hand"
+                                DockPanel.Dock="Left"
+                                IsEnabled="{Binding MqttServerConfig.IsOpened}"
+                                Style="{StaticResource RedButton}" />
+                        </StackPanel>
                     </StackPanel>
-                </StackPanel>
+                </ContentControl>
             </md:DrawerHost.LeftDrawerContent>
 
             <!--  右侧抽屉  -->
@@ -414,10 +417,7 @@
                     <TextBlock VerticalAlignment="Center" Text="   Port：" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerPort}" />
                 </DockPanel>
-                <Border
-                    Margin="4,0"
-                    Padding="4"
-                    Style="{StaticResource FormBorder}">
+                <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <!--  页面消息  -->
                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
@@ -475,7 +475,7 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </hc:ScrollViewer>
-                </Border>
+                </ContentControl>
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>

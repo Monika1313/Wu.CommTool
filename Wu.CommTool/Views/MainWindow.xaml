@@ -101,7 +101,7 @@
                     <md:ColorZone
                         x:Name="ColorZone"
                         Padding="10"
-                        md:ShadowAssist.ShadowDepth="Depth2"
+                        md:ElevationAssist.Elevation="Dp2"
                         DockPanel.Dock="Top"
                         Mode="PrimaryMid">
                         <Grid>

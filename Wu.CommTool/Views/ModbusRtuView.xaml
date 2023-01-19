@@ -26,10 +26,10 @@
         <DockPanel>
             <!--  左侧功能菜单  -->
             <DockPanel DockPanel.Dock="Left">
-                <Border
+                <ContentControl
                     Margin="4"
                     DockPanel.Dock="Top"
-                    Style="{StaticResource FormBorder}">
+                    Style="{StaticResource Effect2Control}">
                     <DockPanel>
                         <ListBox
                             Background="Transparent"
@@ -55,7 +55,7 @@
                             </ListBox.ItemTemplate>
                         </ListBox>
                     </DockPanel>
-                </Border>
+                </ContentControl>
             </DockPanel>
             <md:Transitioner AutoApplyTransitionOrigins="True" SelectedIndex="{Binding ModbusRtuFunIndex}">
                 <!--  自定义帧 Index 0  -->
@@ -372,49 +372,47 @@
                                     TextWrapping="Wrap" />
                             </DockPanel>
                             <!--  页面消息  -->
-                            <Grid>
-                                <Border Style="{StaticResource FormBorder}" />
-                                <Border
-                                    Margin="4"
-                                    Padding="4"
-                                    DockPanel.Dock="Left">
-                                    <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Border Style="{StaticResource MessageBorder}">
-                                                        <WrapPanel Orientation="Horizontal">
-                                                            <TextBlock
-                                                                Margin="3"
-                                                                VerticalAlignment="Center"
-                                                                Style="{StaticResource MessageTextBlock}"
-                                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                                            <TextBlock
-                                                                Margin="5,0"
-                                                                VerticalAlignment="Center"
-                                                                Style="{StaticResource MessageTextBlock}"
-                                                                Text="{Binding Type}" />
-                                                            <TextBox
-                                                                VerticalAlignment="Center"
-                                                                FontSize="12"
-                                                                FontWeight="Bold"
-                                                                IsReadOnly="True"
-                                                                Style="{StaticResource MessageTextBox}"
-                                                                Text="{Binding Content}"
-                                                                TextWrapping="Wrap" />
-                                                        </WrapPanel>
-                                                    </Border>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </hc:ScrollViewer>
-                                </Border>
-                            </Grid>
+                            <ContentControl
+                                Margin="4"
+                                Padding="4"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource Effect2Control}">
+                                <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                                    <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Style="{StaticResource MessageBorder}">
+                                                    <WrapPanel Orientation="Horizontal">
+                                                        <TextBlock
+                                                            Margin="3"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource MessageTextBlock}"
+                                                            Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                        <TextBlock
+                                                            Margin="5,0"
+                                                            VerticalAlignment="Center"
+                                                            Style="{StaticResource MessageTextBlock}"
+                                                            Text="{Binding Type}" />
+                                                        <TextBox
+                                                            VerticalAlignment="Center"
+                                                            FontSize="12"
+                                                            FontWeight="Bold"
+                                                            IsReadOnly="True"
+                                                            Style="{StaticResource MessageTextBox}"
+                                                            Text="{Binding Content}"
+                                                            TextWrapping="Wrap" />
+                                                    </WrapPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </hc:ScrollViewer>
+                            </ContentControl>
                         </DockPanel>
                     </md:DrawerHost>
                 </md:TransitionerSlide>
@@ -915,10 +913,10 @@
                                 </Border>
 
                                 <!--  页面消息  -->
-                                <Border
+                                <ContentControl
                                     Margin="4,0"
                                     Padding="4"
-                                    Style="{StaticResource FormBorder}">
+                                    Style="{StaticResource Effect2Control}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                         <!--  页面消息  -->
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
@@ -956,7 +954,7 @@
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
                                     </hc:ScrollViewer>
-                                </Border>
+                                </ContentControl>
                             </DockPanel>
                         </DockPanel>
                     </DockPanel>
@@ -1222,14 +1220,16 @@
                         <!--  右侧抽屉  -->
                         <md:DrawerHost.RightDrawerContent>
                             <!--  页面消息  -->
-                            <Border
+                            <ContentControl
                                 Width="700"
                                 Margin="5,5"
-                                Padding="4"
                                 DockPanel.Dock="Left"
-                                Style="{StaticResource FormBorder}">
+                                Style="{StaticResource Effect2Control}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                                    <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
+                                    <ItemsControl
+                                        Margin="4"
+                                        Background="Transparent"
+                                        ItemsSource="{Binding Messages, IsAsync=True}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel />
@@ -1263,7 +1263,7 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </hc:ScrollViewer>
-                            </Border>
+                            </ContentControl>
                         </md:DrawerHost.RightDrawerContent>
                         <!--  主体内容  -->
                         <DockPanel>
@@ -1527,13 +1527,15 @@
                                 <Border
                                     Margin="4,0"
                                     Padding="0"
-                                    DockPanel.Dock="Right"
+                                    DockPanel.Dock="Top"
                                     Style="{StaticResource FormBorder}">
                                     <DataGrid
                                         MinWidth="100"
+                                        Margin="0"
                                         hc:DataGridAttach.ShowRowNumber="True"
                                         AutoGenerateColumns="False"
                                         Background="Transparent"
+                                        BorderThickness="0"
                                         CanUserSortColumns="False"
                                         FrozenColumnCount="4"
                                         ItemsSource="{Binding ModbusRtuDataDataView, IsAsync=True}"
@@ -1673,7 +1675,6 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Border>
-
                             </DockPanel>
                         </DockPanel>
                     </md:DrawerHost>
@@ -2040,7 +2041,7 @@
                                     Background="Transparent"
                                     BorderThickness="0"
                                     CanUserSortColumns="False"
-                                    FrozenColumnCount="4"
+                                    FrozenColumnCount="2"
                                     ItemsSource="{Binding MosbusRtuAutoResponseDatas, IsAsync=True}"
                                     RowHeaderWidth="60"
                                     Style="{StaticResource NumDataGrid}">
@@ -2099,11 +2100,11 @@
                             </Border>
 
                             <!--  页面消息  -->
-                            <Border
+                            <ContentControl
                                 Margin="4,0"
                                 Padding="4"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource FormBorder}">
+                                Style="{StaticResource Effect2Control}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                     <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
                                         <ItemsControl.ItemsPanel>
@@ -2139,7 +2140,7 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </hc:ScrollViewer>
-                            </Border>
+                            </ContentControl>
                         </DockPanel>
                     </md:DrawerHost>
                 </md:TransitionerSlide>
