@@ -17,6 +17,9 @@ MqttClient
 增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
 
 
+2023 0119
+更新控件样式 使用控件模板
+
 2023 0118
 modbusrtu自动应答添加模板修改弹窗
 
