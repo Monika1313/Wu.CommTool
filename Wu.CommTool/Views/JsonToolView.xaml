@@ -15,14 +15,14 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <DockPanel>
-        <Grid DockPanel.Dock="Bottom">
-            <Border
-                Margin="4,0,4,4"
-                Padding="0"
-                Style="{StaticResource FormBorder}" />
+        <ContentControl
+            Margin="4,0,4,4"
+            Padding="0"
+            DockPanel.Dock="Bottom"
+            Style="{StaticResource Effect2Control}">
             <TextBox
-                Height="150"
-                Margin="4,0,4,4"
+                MinHeight="100"
+                MaxHeight="200"
                 VerticalContentAlignment="Top"
                 hc:InfoElement.Placeholder="请输入Json字符串..."
                 wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
@@ -31,16 +31,16 @@
                 Style="{StaticResource TextBoxExtend}"
                 Text="{Binding JsonString}"
                 TextWrapping="Wrap" />
-        </Grid>
+        </ContentControl>
         <WrapPanel DockPanel.Dock="Bottom">
             <Button
-                Margin="5"
+                Margin="4"
                 Command="{Binding ExecuteCommand}"
                 CommandParameter="Format"
                 Content="格式化" />
         </WrapPanel>
 
-        <Grid Margin="5,5,5,0">
+        <Grid>
             <Grid.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
                     <StackPanel Orientation="Horizontal">
@@ -95,7 +95,7 @@
                     </StackPanel>
                 </HierarchicalDataTemplate>
             </Grid.Resources>
-            <ContentControl Padding="0" Style="{StaticResource Effect2Control}">
+            <ContentControl Margin="4,4,4,0" Style="{StaticResource Effect2Control}">
                 <TreeView
                     BorderThickness="0"
                     ItemsSource="{Binding JsonHeaderLogics}"

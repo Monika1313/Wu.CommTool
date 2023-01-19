@@ -546,7 +546,10 @@
                             Style="{StaticResource FormTextBox}"
                             Text="{Binding MqttClientConfig.PublishTopic}" />
                     </DockPanel>
-                    <ContentControl Padding="0" Style="{StaticResource Effect2Control}">
+                    <ContentControl
+                        Margin="4,0"
+                        Padding="0"
+                        Style="{StaticResource Effect2Control}">
                         <TextBox
                             MinHeight="100"
                             MaxHeight="300"
@@ -559,7 +562,7 @@
                     </ContentControl>
                 </DockPanel>
 
-                <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
+                <ContentControl Margin="4,0" Style="{DynamicResource Effect2Control}">
                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <!--  页面消息  -->
                         <ItemsControl

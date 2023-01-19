@@ -9,58 +9,6 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-
-
-
-    <UserControl.Resources>
-        <Style x:Key="BorderStyle1" TargetType="{x:Type Border}">
-            <Setter Property="CornerRadius" Value="4" />
-            <Setter Property="Margin" Value="3" />
-            <Setter Property="Padding" Value="2" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Type}" Value="0">
-                    <Setter Property="Background" Value="{StaticResource Blue_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="1">
-                    <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="2">
-                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="3">
-                    <Setter Property="Background" Value="{StaticResource Red_Background}" />
-                    <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Type}" Value="4">
-                    <Setter Property="Background" Value="#fdffe5" />
-                    <Setter Property="BorderBrush" Value="#f6ff91" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-
-
-        <!--<Style x:Key="TestTemplate" TargetType="Label">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Label}">
-                        <Grid>
-                            <Border Effect="{StaticResource EffectShadow1}" Style="{StaticResource BorderRegion}" />
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
-
-
-    </UserControl.Resources>
-
-
-
     <DockPanel>
         <Grid Height="40" DockPanel.Dock="Top">
             <TextBlock Style="{StaticResource TitleTextBlock}" Text="关于" />
@@ -84,34 +32,7 @@
                 Text="https://github.com/Monika1313/Wu.CommTool" />
             <!--<Button Command="{Binding ExecuteCommand}" CommandParameter="ShowGitHub"></Button>-->
 
-
-
-            <!--<ContentControl
-                Width="200"
-                Height="100"
-                Style="{StaticResource Effect2Control}">
-                <Grid
-                    MinWidth="10"
-                    MinHeight="10"
-                    Background="Orange" />
-            </ContentControl>
-            <ContentControl Width="200" Height="100">
-                <Grid
-                    MinWidth="10"
-                    MinHeight="10"
-                    Background="Orange" />
-            </ContentControl>-->
-
-
-            <!--<Grid>
-                <Border Effect="{StaticResource EffectShadow1}" />
-                <Border>
-            -->
-            <!--  内容  -->
-            <!--
-                </Border>
-            </Grid>-->
-
         </StackPanel>
+
     </DockPanel>
 </UserControl>

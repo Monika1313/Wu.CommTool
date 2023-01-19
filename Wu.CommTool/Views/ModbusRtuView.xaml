@@ -26,10 +26,7 @@
         <DockPanel>
             <!--  左侧功能菜单  -->
             <DockPanel DockPanel.Dock="Left">
-                <ContentControl
-                    Margin="4"
-                    DockPanel.Dock="Top"
-                    Style="{StaticResource Effect2Control}">
+                <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
                     <DockPanel>
                         <ListBox
                             Background="Transparent"
@@ -363,18 +360,21 @@
                                         CommandParameter="Send"
                                         Content="发送" />
                                 </StackPanel>
-                                <TextBox
+                                <ContentControl
                                     Margin="4,0"
-                                    VerticalContentAlignment="Top"
-                                    hc:InfoElement.Placeholder="请输入要发送的内容..."
-                                    Style="{StaticResource TextBoxExtend}"
-                                    Text="{Binding SendMessage}"
-                                    TextWrapping="Wrap" />
+                                    Padding="0"
+                                    Style="{StaticResource Effect2Control}">
+                                    <TextBox
+                                        VerticalContentAlignment="Top"
+                                        hc:InfoElement.Placeholder="请输入要发送的内容..."
+                                        Style="{StaticResource TextBoxExtend}"
+                                        Text="{Binding SendMessage}"
+                                        TextWrapping="Wrap" />
+                                </ContentControl>
                             </DockPanel>
                             <!--  页面消息  -->
                             <ContentControl
-                                Margin="4"
-                                Padding="4"
+                                Margin="4,0"
                                 DockPanel.Dock="Left"
                                 Style="{StaticResource Effect2Control}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
@@ -555,12 +555,12 @@
                         </StackPanel>
 
                         <!--  内容  -->
-                        <DockPanel Margin="4,0">
+                        <DockPanel Margin="0,0,4,0">
                             <!--  左侧配置  -->
-                            <Border
+                            <ContentControl
                                 Margin="4,0"
                                 DockPanel.Dock="Left"
-                                Style="{StaticResource FormBorder}">
+                                Style="{StaticResource Effect2Control}">
                                 <DockPanel>
                                     <TextBlock
                                         Margin="4"
@@ -703,7 +703,7 @@
                                         </StackPanel>
                                     </ScrollViewer>
                                 </DockPanel>
-                            </Border>
+                            </ContentControl>
 
                             <!--  右侧搜索到的设备  -->
                             <Border
@@ -913,10 +913,7 @@
                                 </Border>
 
                                 <!--  页面消息  -->
-                                <ContentControl
-                                    Margin="4,0"
-                                    Padding="4"
-                                    Style="{StaticResource Effect2Control}">
+                                <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                         <!--  页面消息  -->
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
@@ -1222,14 +1219,10 @@
                             <!--  页面消息  -->
                             <ContentControl
                                 Width="700"
-                                Margin="5,5"
                                 DockPanel.Dock="Left"
                                 Style="{StaticResource Effect2Control}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                                    <ItemsControl
-                                        Margin="4"
-                                        Background="Transparent"
-                                        ItemsSource="{Binding Messages, IsAsync=True}">
+                                    <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel />
@@ -1524,11 +1517,11 @@
                             <!--  主体内容  -->
                             <DockPanel>
                                 <!--  数据  -->
-                                <Border
+                                <ContentControl
                                     Margin="4,0"
                                     Padding="0"
                                     DockPanel.Dock="Top"
-                                    Style="{StaticResource FormBorder}">
+                                    Style="{StaticResource Effect2Control}">
                                     <DataGrid
                                         MinWidth="100"
                                         Margin="0"
@@ -1674,7 +1667,7 @@
                                             </DataGridTemplateColumn>
                                         </DataGrid.Columns>
                                     </DataGrid>
-                                </Border>
+                                </ContentControl>
                             </DockPanel>
                         </DockPanel>
                     </md:DrawerHost>
@@ -2030,11 +2023,11 @@
 
 
                             <!--  匹配设置列表  -->
-                            <Border
+                            <ContentControl
                                 Margin="4,0"
                                 Padding="0"
                                 DockPanel.Dock="Left"
-                                Style="{StaticResource FormBorder}">
+                                Style="{StaticResource Effect2Control}">
                                 <DataGrid
                                     hc:DataGridAttach.ShowRowNumber="True"
                                     AutoGenerateColumns="False"
@@ -2097,12 +2090,11 @@
                                         </DataGridTemplateColumn>-->
                                     </DataGrid.Columns>
                                 </DataGrid>
-                            </Border>
+                            </ContentControl>
 
                             <!--  页面消息  -->
                             <ContentControl
                                 Margin="4,0"
-                                Padding="4"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Effect2Control}">
                                 <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">

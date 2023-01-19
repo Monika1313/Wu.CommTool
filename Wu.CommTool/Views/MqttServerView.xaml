@@ -105,7 +105,7 @@
                         FontSize="20"
                         Text="客户端管理" />
                     <Grid>
-                        <Border Margin="4" Style="{StaticResource FormBorder}">
+                        <ContentControl Style="{StaticResource Effect2Control}">
                             <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                 <ItemsControl Background="Transparent" ItemsSource="{Binding MqttUsers}">
                                     <ItemsControl.ItemsPanel>
@@ -195,7 +195,7 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
                             </hc:ScrollViewer>
-                        </Border>
+                        </ContentControl>
                         <StackPanel
                             Grid.Column="1"
                             Margin="5"

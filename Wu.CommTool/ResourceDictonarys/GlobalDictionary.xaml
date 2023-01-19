@@ -276,18 +276,20 @@
         <Setter Property="CornerRadius" Value="4" />
     </Style>
 
-    <!--  带阴影的布局容器  -->
+    <!--  带阴影2的布局容器  -->
     <Style x:Key="Effect2Control" TargetType="ContentControl">
         <Setter Property="Margin" Value="4" />
         <Setter Property="Padding" Value="4" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ContentControl}">
                     <Grid>
                         <Border Effect="{StaticResource EffectShadow2}" Style="{StaticResource BorderRegion}" />
-                        <Border Padding="{TemplateBinding Padding}">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
-                        </Border>
+                        <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
