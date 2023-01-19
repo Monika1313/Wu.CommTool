@@ -14,6 +14,9 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
+
+
+
     <DockPanel>
         <ContentControl
             Margin="4,0,4,4"
@@ -48,88 +51,118 @@
         <Grid>
             <Grid.Resources>
                 <HierarchicalDataTemplate DataType="{x:Type model:JsonHeaderLogic}" ItemsSource="{Binding Path=Children}">
-                    <StackPanel Orientation="Horizontal">
-                        <!--<TextBlock Text="{Binding Path=Header}" />-->
-                        <TextBlock Text="{Binding Header}">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Token.Type}" Value="Object">
-                                            <Setter Property="Foreground" Value="Green" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Token.Type}" Value="Array">
-                                            <Setter Property="Foreground" Value="Blue" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                        <TextBlock Text=" : " Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}" />
-                        <TextBlock Text="{Binding DispValue}" Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}">
-                            <TextBlock.Style>
-                                <Style TargetType="TextBlock">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
-                                            <Setter Property="Foreground" Value="#a31515" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
-                                            <Setter Property="Foreground" Value="Green" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
-                                            <Setter Property="Foreground" Value="Green" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
-                                            <Setter Property="Foreground" Value="Blue" />
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding Token.Type}" Value="Object">
-                                            <Setter Property="Foreground" Value="Blue" />
-                                        </DataTrigger>
-                                        <!--<Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="Opacity" Value="0.2" />
-                                        </Trigger>-->
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                        <!--<TextBlock Text="{Binding Token.Value.Type}" />-->
-                        <!--<TextBlock
-                            Margin="10,0,0,0"
-                            Foreground="LightGreen"
-                            Text="{Binding Token.Type}" />-->
-                    </StackPanel>
+                    <ContentControl>
+                        <!--<ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
+                                        <Setter Property="Foreground" Value="#a31515" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
+                                        <Setter Property="Foreground" Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
+                                        <Setter Property="Foreground" Value="Green" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
+                                        <Setter Property="Foreground" Value="Blue" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                                        <Setter Property="Foreground" Value="Blue" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>-->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding Header}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Foreground" Value="Black" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Token.Type}" Value="Array">
+                                                <Setter Property="Foreground" Value="Blue" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                            <TextBlock Text=" : " Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}" />
+                            <TextBlock Text="{Binding DispValue}" Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
+                                                <Setter Property="Foreground" Value="#a31515" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
+                                                <Setter Property="Foreground" Value="Green" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
+                                                <Setter Property="Foreground" Value="Blue" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Token.Type}" Value="Object">
+                                                <Setter Property="Foreground" Value="Blue" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>
+                    </ContentControl>
                 </HierarchicalDataTemplate>
             </Grid.Resources>
+
             <ContentControl Margin="4,4,4,0" Style="{StaticResource Effect2Control}">
                 <TreeView
                     BorderThickness="0"
                     ItemsSource="{Binding JsonHeaderLogics}"
                     Style="{StaticResource TreeView.Small}">
                     <TreeView.ItemContainerStyle>
-                        <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
+                        <Style BasedOn="{StaticResource TreeViewItemBaseStyle.Small}" TargetType="{x:Type TreeViewItem}">
                             <Setter Property="IsExpanded" Value="True" />
+                            <Setter Property="IsEnabled" Value="False" />
                             <Style.Triggers>
-                                <!--<DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
-                                <Setter Property="Foreground" Value="#a31515" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
-                                <Setter Property="Foreground" Value="Green" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
-                                <Setter Property="Foreground" Value="Green" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
-                                <Setter Property="Foreground" Value="Blue" />
-                            </DataTrigger>-->
-
                                 <Trigger Property="IsSelected" Value="True">
-                                    <!--<Setter Property="Background" Value="Red" />-->
-                                    <Setter Property="Foreground" Value="White" />
-                                    <!--<Setter Property="Opacity" Value="0.2" />-->
+                                    <Setter Property="Foreground" Value="{DynamicResource TextIconBrush}" />
+                                    <Setter Property="Background" Value="White" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </TreeView.ItemContainerStyle>
+
+                    <!--<TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="" />
+                                <TextBlock Text="{Binding Header}">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Token.Type}" Value="String">
+                                                    <Setter Property="Foreground" Value="Purple" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Token.Type}" Value="Property">
+                                                    <Setter Property="Foreground" Value="Green" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                                <TextBlock Margin="10,0,0,0" Text=":" />
+                                <TextBlock
+                                    Margin="10,0,0,0"
+                                    Foreground="Gray"
+                                    Text="{Binding Token.Type}" />
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>-->
+
                 </TreeView>
             </ContentControl>
         </Grid>

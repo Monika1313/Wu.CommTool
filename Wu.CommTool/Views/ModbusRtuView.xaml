@@ -774,6 +774,7 @@
                                             Margin="5"
                                             HorizontalAlignment="Center"
                                             DockPanel.Dock="Top"
+                                            FontSize="16"
                                             Text="搜索到的设备" />
                                         <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                             <!--  搜索到的设备  -->

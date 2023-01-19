@@ -271,10 +271,7 @@
                         HorizontalAlignment="Center"
                         FontSize="20"
                         Text="订阅管理" />
-                    <Border
-                        MinHeight="30"
-                        Padding="4"
-                        Style="{StaticResource FormBorder}">
+                    <ContentControl MinHeight="30" Style="{StaticResource Effect2Control}">
                         <Grid>
                             <DockPanel>
                                 <Grid DockPanel.Dock="Top">
@@ -345,7 +342,7 @@
                                     TextWrapping="Wrap" />
                             </DockPanel>
                         </Grid>
-                    </Border>
+                    </ContentControl>
                 </StackPanel>
             </md:DrawerHost.RightDrawerContent>
 

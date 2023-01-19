@@ -21,6 +21,7 @@
                 <TextBlock Text="{Binding Header}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">
+                            <Setter Property="Foreground" Value="Black" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Token.Type}" Value="Object">
                                     <Setter Property="Foreground" Value="Green" />
@@ -92,17 +93,17 @@
                 FontSize="16"
                 Text="{Binding CurrentDto.Title}" />
         </Grid>
-        <!--<Grid>
-            <Border Style="{StaticResource FormBorder}" />
-        </Grid>-->
+
+
         <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
             <TreeView
                 BorderThickness="0"
                 ItemsSource="{Binding JsonHeaderLogics}"
                 Style="{StaticResource TreeView.Small}">
                 <TreeView.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource TreeViewItemBaseStyle}" TargetType="{x:Type TreeViewItem}">
+                    <Style BasedOn="{StaticResource TreeViewItemBaseStyle.Small}" TargetType="{x:Type TreeViewItem}">
                         <Setter Property="IsExpanded" Value="True" />
+                        <Setter Property="IsEnabled" Value="False" />
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
                                 <Setter Property="Foreground" Value="White" />
