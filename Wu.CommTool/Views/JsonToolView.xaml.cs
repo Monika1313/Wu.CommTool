@@ -7,6 +7,7 @@ namespace Wu.CommTool.Views
     /// </summary>
     public partial class JsonToolView : UserControl
     {
+        public const string ViewName = nameof(JsonToolView);
         public JsonToolView()
         {
             InitializeComponent();

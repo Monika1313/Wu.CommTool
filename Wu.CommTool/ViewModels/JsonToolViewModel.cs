@@ -7,7 +7,9 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
+using Wu.CommTool.Extensions;
 using Wu.CommTool.Models.JsonModels;
+using Wu.CommTool.Views;
 using Wu.ViewModels;
 //using Wu.Wpf.Common;
 
@@ -80,7 +82,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 格式化json字符串
         /// </summary>
-        private void Format()
+        private async void Format()
         {
             if (string.IsNullOrWhiteSpace(JsonString))
                 return;
@@ -104,7 +106,8 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);
+                //MessageBox.Show(ex.Message);
+                await dialogHost.Question("错误", $"Json格式化失败:\n{ex.Message}", nameof(JsonToolView));
             }
         }
 

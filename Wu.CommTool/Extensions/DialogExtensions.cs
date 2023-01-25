@@ -22,10 +22,12 @@ namespace Wu.CommTool.Extensions
         /// <returns></returns>
         public static async Task<IDialogResult> Question(this IDialogHostService dialogHost, string title, string content, string dialogHostName = "Root")
         {
-            DialogParameters param = new DialogParameters();
-            param.Add("Title", title);
-            param.Add("Content", content);
-            param.Add("dialogHostName", dialogHostName);
+            DialogParameters param = new()
+            {
+                { "Title", title },
+                { "Content", content },
+                { "dialogHostName", dialogHostName }
+            };
             var dialogResult = await dialogHost.ShowDialog("MsgView", param, dialogHostName);
             return dialogResult;
         }
