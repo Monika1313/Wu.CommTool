@@ -126,13 +126,13 @@
                     <TreeView.ItemContainerStyle>
                         <Style BasedOn="{StaticResource TreeViewItemBaseStyle.Small}" TargetType="{x:Type TreeViewItem}">
                             <Setter Property="IsExpanded" Value="True" />
-                            <Setter Property="IsEnabled" Value="False" />
-                            <Style.Triggers>
+                            <!--<Setter Property="IsEnabled" Value="False" />-->
+                            <!--<Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Foreground" Value="{DynamicResource TextIconBrush}" />
                                     <Setter Property="Background" Value="White" />
                                 </Trigger>
-                            </Style.Triggers>
+                            </Style.Triggers>-->
                         </Style>
                     </TreeView.ItemContainerStyle>
 
