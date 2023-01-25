@@ -107,7 +107,7 @@ namespace Wu.CommTool.ViewModels
             catch (Exception ex)
             {
                 //MessageBox.Show(ex.Message);
-                await dialogHost.Question("错误", $"Json格式化失败:\n{ex.Message}", nameof(JsonToolView));
+                await dialogHost.Question("Json格式化失败", $"{ex.Message}", nameof(JsonToolView));
             }
         }
 
