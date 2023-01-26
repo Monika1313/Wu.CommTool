@@ -185,7 +185,7 @@ namespace Wu.CommTool.Controls
             {
                 try
                 {
-                    var splited = self.Ip.Split(".");
+                    var splited = self.Ip.Split('.');
                     self.IpPart1 = splited[0];
                     self.IpPart2 = splited[1];
                     self.IpPart3 = splited[2];

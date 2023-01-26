@@ -968,7 +968,7 @@ namespace Wu.CommTool.ViewModels
                 //cts.Cancel();                 //停止帧处理线程
                 TaskDelayTime = int.MaxValue;
                 receiveTaskDelayTime = int.MaxValue;
-                cts.TryReset();
+                //cts.TryReset();
             }
             catch (Exception ex)
             {

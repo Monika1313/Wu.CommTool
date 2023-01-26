@@ -143,14 +143,14 @@ namespace Wu.CommTool.Models
             }
             return dataType switch
             {
-                DataType.uShort => BitConverter.ToUInt16(databytes) * rate,
-                DataType.Short => BitConverter.ToInt16(databytes) * rate,
-                DataType.uInt => BitConverter.ToUInt32(databytes) * rate,
-                DataType.Int => BitConverter.ToInt32(databytes) * rate,
-                DataType.uLong => BitConverter.ToUInt64(databytes) * rate,
-                DataType.Long => BitConverter.ToInt64(databytes) * rate,
-                DataType.Float => Math.Round((BitConverter.ToSingle(databytes) * rate), 2),
-                DataType.Double => Math.Round(BitConverter.ToDouble(databytes) * rate, 2),
+                DataType.uShort => BitConverter.ToUInt16(databytes,0) * rate,
+                DataType.Short => BitConverter.ToInt16(databytes,0) * rate,
+                DataType.uInt => BitConverter.ToUInt32(databytes, 0) * rate,
+                DataType.Int => BitConverter.ToInt32(databytes, 0) * rate,
+                DataType.uLong => BitConverter.ToUInt64(databytes, 0) * rate,
+                DataType.Long => BitConverter.ToInt64(databytes, 0) * rate,
+                DataType.Float => Math.Round((BitConverter.ToSingle(databytes, 0) * rate), 2),
+                DataType.Double => Math.Round(BitConverter.ToDouble(databytes, 0) * rate, 2),
                 _ => (dynamic)0,
             };
         }

@@ -138,7 +138,6 @@ namespace Wu.CommTool.Models.JsonModels
                         str = str[..^2];
                         header = $"[ {str} ]";
                     }
-                    //header = $"[ {children.Count()} ]";
                 }
                 else if (typeof(JObject).IsAssignableFrom(type))
                     header = $"{{ {children.Count()} }}";
