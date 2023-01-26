@@ -971,8 +971,8 @@
                     <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen3.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen3.IsRightDrawerOpen}">
                         <!--  左侧抽屉  -->
                         <md:DrawerHost.LeftDrawerContent>
-                            <ScrollViewer>
-                                <DockPanel MinWidth="300" Background="#f5f5f5">
+                            <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                <DockPanel MinWidth="280" Background="#f5f5f5">
                                     <Border
                                         Margin="4"
                                         DockPanel.Dock="Right"

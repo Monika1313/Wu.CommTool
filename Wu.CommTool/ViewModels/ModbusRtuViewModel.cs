@@ -1606,13 +1606,14 @@ namespace Wu.CommTool.ViewModels
                         continue;
                     }
 
-                    //todo自动应答
+                    //自动应答
                     if (IsAutoResponse)
                     {
                         //验证匹配哪一条规则
                         var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
                         if (xx != null)
                         {
+                            ShowMessage($"自动应答匹配: {xx.Name}");
                             PublishFrameQueue.Enqueue(xx.ResponseTemplate);
                         }
                     }
@@ -1620,10 +1621,8 @@ namespace Wu.CommTool.ViewModels
 
 
 
-                    // 1 对接收的消息直接进行crc校验
+                    //对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码
-
-
 
                     if (IsPause)
                     {
@@ -1641,12 +1640,10 @@ namespace Wu.CommTool.ViewModels
                         ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
 
-                    //CRC校验通过 执行以下内容
+                    
                     List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
-
                     int slaveId = frameList[0]; //从站地址
                     int func = frameList[1];    //功能码
-
 
                     //03功能码 字节数量奇数为响应帧 字节数量=8请求帧    错误码0x83
                     if (func == 0x03)

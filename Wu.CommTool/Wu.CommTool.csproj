@@ -1,7 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <!--<TargetFramework>net6.0-windows</TargetFramework>-->
+	<TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <AssemblyName>Wu通讯调试工具</AssemblyName>
     <UseWindowsForms>True</UseWindowsForms>
@@ -63,8 +64,19 @@
     <PackageReference Include="Wu.Wpf" Version="1.0.5" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <None Update="Configs\Log4netConfig\log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>
