@@ -968,7 +968,19 @@ namespace Wu.CommTool.ViewModels
                 //cts.Cancel();                 //停止帧处理线程
                 TaskDelayTime = int.MaxValue;
                 receiveTaskDelayTime = int.MaxValue;
+
+#if NETFRAMEWORK
+                //todo framework处理
+                //无法使用该方法
                 //cts.TryReset();
+
+#endif
+
+#if NET
+                cts.TryReset();
+#endif
+
+
             }
             catch (Exception ex)
             {
@@ -1084,7 +1096,7 @@ namespace Wu.CommTool.ViewModels
             catch (Exception) { }
         }
 
-        #region 已弃用
+#region 已弃用
         ///// <summary>
         ///// 弃用  自动搜索串口设备
         ///// </summary>
@@ -1120,7 +1132,7 @@ namespace Wu.CommTool.ViewModels
         //        ShowMessage(ex.Message, MessageType.Error);
         //    }
         //} 
-        #endregion
+#endregion
 
         /// <summary>
         /// 导出配置文件
@@ -1530,10 +1542,10 @@ namespace Wu.CommTool.ViewModels
                 aggregator.SendMessage(ex.Message);
             }
         }
-        #endregion
+#endregion
 
 
-        #region **************************************** 数据帧处理 ****************************************
+#region **************************************** 数据帧处理 ****************************************
         /// <summary>
         /// 发送数据帧处理线程
         /// </summary>
@@ -1772,6 +1784,6 @@ namespace Wu.CommTool.ViewModels
 
         //TODO 数据写入处理  数据写入时 在列表内保存帧, 写入失败需要重新触发写入,至多3次  
 
-        #endregion
+#endregion
     }
 }
