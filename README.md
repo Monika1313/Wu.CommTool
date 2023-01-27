@@ -1,6 +1,6 @@
 # Wu.CommTool
 目前支持  
-1 ModbusRtu调试(自定义帧、设备搜索、数据监控、自动应答)
+1 ModbusRtu调试(自定义帧、设备搜索、数据监控、自动应答)  
 2 Mqtt服务器调试  
 3 Mqtt客户端调试
 
