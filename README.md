@@ -40,3 +40,5 @@ Mqtt服务器 在线客户端界面
 ## 如何下载
 - 进入 [Release](https://github.com/Monika1313/Wu.CommTool/releases/tag/Latest)页面下载
 
+## 联系作者
+- QQ:961501261
