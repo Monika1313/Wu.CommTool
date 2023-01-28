@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
                 <md:BundledTheme
                     BaseTheme="Light"
+                    ColorAdjustment="{md:ColorAdjustment}"
                     PrimaryColor="Indigo"
                     SecondaryColor="Lime" />
                 <!--  HandyControl  -->

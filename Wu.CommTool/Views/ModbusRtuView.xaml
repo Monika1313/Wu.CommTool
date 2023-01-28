@@ -1011,7 +1011,7 @@
                                                                     Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                     CommandParameter="{Binding}"
                                                                     Content="{Binding Name}"
-                                                                    Style="{StaticResource ButtonPrimary}" />
+                                                                    Style="{StaticResource MaterialDesignRaisedSecondaryButton}" />
                                                             </WrapPanel>
                                                         </Border>
                                                     </DataTemplate>
