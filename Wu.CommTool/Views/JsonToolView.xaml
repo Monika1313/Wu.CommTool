@@ -41,7 +41,7 @@
             </ContentControl>
             <WrapPanel DockPanel.Dock="Bottom">
                 <Button
-                    Margin="4"
+                    Margin="5"
                     Command="{Binding ExecuteCommand}"
                     CommandParameter="Format"
                     Content="格式化" />

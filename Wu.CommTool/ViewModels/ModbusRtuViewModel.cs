@@ -101,6 +101,12 @@ namespace Wu.CommTool.ViewModels
                 ShowErrorMessage(ex.Message);
             }
 
+            //初始化一个10个数据的列表
+            for (int i = 0; i < 10; i++)
+            {
+                DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData());
+            }
+
         }
 
         #endregion
@@ -241,12 +247,6 @@ namespace Wu.CommTool.ViewModels
         private int _ModbusRtuFunIndex = 0;
 
 
-        ///// <summary>
-        ///// 是否过滤没有设置的数据 ModbusRtu数据监控
-        ///// </summary>
-        //public bool IsFilter { get => _IsFilter; set => SetProperty(ref _IsFilter, value); }
-        //private bool _IsFilter = false;
-
         /// <summary>
         /// ModbusRtuDataDataView
         /// </summary>
@@ -326,63 +326,20 @@ namespace Wu.CommTool.ViewModels
                     case "Pause": Pause(); break;
 
                     case "AreaData": AreaData(); break;                                             //周期读取区域数据
-                    case "Test": Test(); break;                                             //周期读取区域数据
+                    case "Test": Test(); break;                                                     //测试
 
                     case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                     case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
                     case "RefreshQuickImportList": RefreshQuickImportList(); break;                 //刷新快速导入配置列表
-                    case "AddMosbusRtuAutoResponseData": AddMosbusRtuAutoResponseData(); break;                 //刷新快速导入配置列表
+                    case "AddMosbusRtuAutoResponseData": AddMosbusRtuAutoResponseData(); break;         //刷新快速导入配置列表
 
-                    case "AutoResponseOn": AutoResponseOn(); break;//自动应答
-                    case "AutoResponseOff": AutoResponseOff(); break;//自动应答
-                    case "ImportAutoResponseConfig": ImportAutoResponseConfig(); break;                //导入自动应答配置
-                    case "ExportAutoResponseConfig": ExportAutoResponseConfig(); break;                //导出自动应答配置
-
-
-                    case "Send":
-                        //若串口未打开则打开串口
-                        if (!ComConfig.IsOpened)
-                        {
-                            ShowMessage("串口未打开, 尝试打开串口...");
-                            OpenCom();
-                        }
+                    case "AutoResponseOn": AutoResponseOn(); break;                                     //开启自动应答
+                    case "AutoResponseOff": AutoResponseOff(); break;                                   //关闭自动应答
+                    case "ImportAutoResponseConfig": ImportAutoResponseConfig(); break;                 //导入自动应答配置
+                    case "ExportAutoResponseConfig": ExportAutoResponseConfig(); break;                 //导出自动应答配置
 
 
-                        try
-                        {
-                            var msg = SendMessage.Replace("-", string.Empty).GetBytes();
-                            List<byte> crc = new();
-                            //根据选择进行CRC校验
-                            switch (CrcMode)
-                            {
-                                //无校验
-                                case CrcMode.None:
-                                    break;
-
-                                //Modebus校验
-                                case CrcMode.Modbus:
-                                    var code = Wu.Utils.Crc.Crc16Modbus(msg);
-                                    Array.Reverse(code);
-                                    crc.AddRange(code);
-                                    break;
-                                default:
-                                    break;
-                            }
-                            //合并数组
-                            List<byte> list = new List<byte>();
-                            list.AddRange(msg);
-                            list.AddRange(crc);
-                            var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
-                            PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowErrorMessage(ex.Message);
-                        }
-
-
-
-                        break;                                           //发送数据
+                    case "Send": SendCustomFrame(); break;                                          //发送数据
                     case "GetComPorts": GetComPorts(); break;                                       //查找Com口
                     case "Clear": Clear(); break;                                                   //清空页面信息
                     case "OpenCom": OpenCom(); break;                                               //打开串口
@@ -407,6 +364,52 @@ namespace Wu.CommTool.ViewModels
                     case "ViewMessage": IsDrawersOpen3.IsRightDrawerOpen = true; break;             //打开数据监控页面右侧抽屉
                     default: break;
                 }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+
+        /// <summary>
+        /// 发送自定义帧
+        /// </summary>
+        private void SendCustomFrame()
+        {
+            //若串口未打开则打开串口
+            if (!ComConfig.IsOpened)
+            {
+                ShowMessage("串口未打开, 尝试打开串口...");
+                OpenCom();
+            }
+
+            try
+            {
+                var msg = SendMessage.Replace("-", string.Empty).GetBytes();
+                List<byte> crc = new();
+                //根据选择进行CRC校验
+                switch (CrcMode)
+                {
+                    //无校验
+                    case CrcMode.None:
+                        break;
+
+                    //Modebus校验
+                    case CrcMode.Modbus:
+                        var code = Wu.Utils.Crc.Crc16Modbus(msg);
+                        Array.Reverse(code);
+                        crc.AddRange(code);
+                        break;
+                    default:
+                        break;
+                }
+                //合并数组
+                List<byte> list = new List<byte>();
+                list.AddRange(msg);
+                list.AddRange(crc);
+                var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
+                PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
             }
             catch (Exception ex)
             {
@@ -461,9 +464,13 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// 测试
+        /// </summary>
         private void Test()
         {
-            DataMonitorConfig.ModbusRtuDatas[0].Rate += 1;
+            //
         }
 
         /// <summary>
@@ -1096,7 +1103,7 @@ namespace Wu.CommTool.ViewModels
             catch (Exception) { }
         }
 
-#region 已弃用
+        #region 已弃用
         ///// <summary>
         ///// 弃用  自动搜索串口设备
         ///// </summary>
@@ -1132,7 +1139,7 @@ namespace Wu.CommTool.ViewModels
         //        ShowMessage(ex.Message, MessageType.Error);
         //    }
         //} 
-#endregion
+        #endregion
 
         /// <summary>
         /// 导出配置文件
@@ -1542,10 +1549,10 @@ namespace Wu.CommTool.ViewModels
                 aggregator.SendMessage(ex.Message);
             }
         }
-#endregion
+        #endregion
 
 
-#region **************************************** 数据帧处理 ****************************************
+        #region **************************************** 数据帧处理 ****************************************
         /// <summary>
         /// 发送数据帧处理线程
         /// </summary>
@@ -1652,7 +1659,7 @@ namespace Wu.CommTool.ViewModels
                         ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
 
-                    
+
                     List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
                     int slaveId = frameList[0]; //从站地址
                     int func = frameList[1];    //功能码
@@ -1784,6 +1791,6 @@ namespace Wu.CommTool.ViewModels
 
         //TODO 数据写入处理  数据写入时 在列表内保存帧, 写入失败需要重新触发写入,至多3次  
 
-#endregion
+        #endregion
     }
 }

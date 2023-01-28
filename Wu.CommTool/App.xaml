@@ -30,20 +30,6 @@
                 <ResourceDictionary Source="ResourceDictonarys\ListDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!--  PRIMARY  -->
-            <!--
-            <SolidColorBrush x:Key="PrimaryHueLightBrush" Color="#349fda"/>
-            <SolidColorBrush x:Key="PrimaryHueLightForegroundBrush" Color="#333333"/>
-            <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="#0288d1"/>
-            <SolidColorBrush x:Key="PrimaryHueMidForegroundBrush" Color="#FFFFFF"/>
-            <SolidColorBrush x:Key="PrimaryHueDarkBrush" Color="#015f92"/>
-            <SolidColorBrush x:Key="PrimaryHueDarkForegroundBrush" Color="#FFFFFF"/>
-            -->
-            <!--  ACCENT  -->
-            <!--
-            <SolidColorBrush x:Key="SecondaryAccentBrush" Color="#689f38"/>
-            <SolidColorBrush x:Key="SecondaryAccentForegroundBrush" Color="#FFFFFF"/>-->
-
 
             <Style x:Key="MessageTextBlock" TargetType="TextBlock">
                 <Style.Triggers>
