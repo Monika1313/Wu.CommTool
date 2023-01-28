@@ -859,15 +859,9 @@
 
                             <DockPanel>
                                 <!--  搜索中  -->
-                                <Border
-                                    Height="30"
-                                    Margin="4,4,4,0"
-                                    BorderBrush="Gray"
-                                    BorderThickness="1"
-                                    CornerRadius="4"
-                                    DockPanel.Dock="Bottom">
-                                    <Border.Style>
-                                        <Style TargetType="Border">
+                                <ContentControl Margin="4,4,4,0" DockPanel.Dock="Bottom">
+                                    <ContentControl.Style>
+                                        <Style BasedOn="{StaticResource Effect2Control}" TargetType="ContentControl">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding SearchDeviceState}" Value="0">
                                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -880,8 +874,8 @@
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
-                                    </Border.Style>
-                                    <StackPanel Orientation="Horizontal">
+                                    </ContentControl.Style>
+                                    <StackPanel Height="30" Orientation="Horizontal">
                                         <TextBlock
                                             Margin="5,0"
                                             VerticalAlignment="Center"
@@ -918,8 +912,7 @@
                                             Foreground="{StaticResource Green_Foreground}"
                                             Text="{Binding CurrentDevice.Address}" />
                                     </StackPanel>
-                                </Border>
-
+                                </ContentControl>
                                 <!--  页面消息  -->
                                 <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">

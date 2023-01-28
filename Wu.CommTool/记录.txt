@@ -16,6 +16,8 @@ MqttClient
 
 增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
 
+Bug: 串口打开时, 未开启搜索设备, 搜索设置无法设置
+
 
 2023 0126
 添加多框架开发

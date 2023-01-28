@@ -29,9 +29,9 @@
     <SolidColorBrush x:Key="Purple_BorderBrush">#d3adf7</SolidColorBrush>
     <SolidColorBrush x:Key="Purple_Background">#f9f0ff</SolidColorBrush>
 
-    <SolidColorBrush x:Key="Cyan_Foreground">#7D97B3</SolidColorBrush>
-    <SolidColorBrush x:Key="Cyan_BorderBrush">#87E8DE</SolidColorBrush>
-    <SolidColorBrush x:Key="Cyan_Background">#E6FFFB</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_Foreground">#08979c</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_BorderBrush">#87e8de</SolidColorBrush>
+    <SolidColorBrush x:Key="Cyan_Background">#e6fffb</SolidColorBrush>
 
     <SolidColorBrush x:Key="Pink_Foreground">#c45ebe</SolidColorBrush>
     <SolidColorBrush x:Key="Pink_BorderBrush">#ffadd2</SolidColorBrush>
@@ -41,12 +41,12 @@
     <SolidColorBrush x:Key="Volcano_BorderBrush">#ffd591</SolidColorBrush>
     <SolidColorBrush x:Key="Volcano_Background">#fff7e6</SolidColorBrush>
 
-    <SolidColorBrush x:Key="GeekBlue_Foreground">#1d39cf</SolidColorBrush>
+    <SolidColorBrush x:Key="GeekBlue_Foreground">#1d39c4</SolidColorBrush>
     <SolidColorBrush x:Key="GeekBlue_BorderBrush">#adc6ff</SolidColorBrush>
     <SolidColorBrush x:Key="GeekBlue_Background">#f0f5ff</SolidColorBrush>
 
-    <SolidColorBrush x:Key="Orange_Foreground">#c41d7f</SolidColorBrush>
-    <SolidColorBrush x:Key="Orange_BorderBrush">#ffadd2</SolidColorBrush>
+    <SolidColorBrush x:Key="Orange_Foreground">#d46b08</SolidColorBrush>
+    <SolidColorBrush x:Key="Orange_BorderBrush">#ffd591</SolidColorBrush>
     <SolidColorBrush x:Key="Orange_Background">#fff7e6</SolidColorBrush>
 
     <SolidColorBrush x:Key="Gold_Foreground">#d48806</SolidColorBrush>
@@ -126,6 +126,9 @@
         <Setter Property="Background" Value="{StaticResource Blue_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
     </Style>
+
+
+
 
 
     <!--  导航菜单按钮样式  -->

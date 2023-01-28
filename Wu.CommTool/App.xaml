@@ -53,19 +53,18 @@
                         <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="2">
-                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                        <Setter Property="Foreground" Value="{StaticResource Orange_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="3">
                         <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="4">
-                        <Setter Property="Foreground" Value="#d5ca14" />
+                        <Setter Property="Foreground" Value="{StaticResource Gold_Foreground}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
 
             <Style x:Key="MessageBorder" TargetType="Border">
-                <!--<Setter Property="Effect" Value="{StaticResource EffectShadow1}" />-->
                 <Setter Property="CornerRadius" Value="4" />
                 <Setter Property="Margin" Value="3" />
                 <Setter Property="Padding" Value="2" />
@@ -80,8 +79,8 @@
                         <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="2">
-                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                        <Setter Property="Background" Value="{StaticResource Orange_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Orange_BorderBrush}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="3">
                         <Setter Property="Background" Value="{StaticResource Red_Background}" />
@@ -99,19 +98,19 @@
                 <Setter Property="Background" Value="#00FFFFFF" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Type}" Value="0">
-                        <Setter Property="Foreground" Value="#096dd9" />
+                        <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="1">
-                        <Setter Property="Foreground" Value="#389E0D" />
+                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="2">
-                        <Setter Property="Foreground" Value="#faae19" />
+                        <Setter Property="Foreground" Value="{StaticResource Orange_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="3">
-                        <Setter Property="Foreground" Value="#cf1322" />
+                        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="4">
-                        <Setter Property="Foreground" Value="#d5ca14" />
+                        <Setter Property="Foreground" Value="{StaticResource Gold_Foreground}" />
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
