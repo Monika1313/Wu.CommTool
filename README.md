@@ -1,11 +1,18 @@
-# Wu.CommTool
-目前支持  
-1 ModbusRtu调试(自定义帧、设备搜索、数据监控、自动应答)  
-2 Mqtt服务器调试  
-3 Mqtt客户端调试
+# Wu通讯调试工具
 
+## 功能介绍
+1. Modbus Rtu 
+- 自定义帧  支持自动校验
+- 搜索设备  可设置多种组合，自动搜索设备
+- 数据监控  可设置字节序、数据类型等，支持读取与写入
+- 自动应答  
+2. Mqtt Server
+- 可右键对Json格式的数据进行格式化查看
+3. MqttClient
+- 可右键对Json格式的数据进行格式化查看
+4. Json格式化查看
 
-ModbusRtu
+## Modbus Rtu
 Modbus Rtu 自定义帧
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu自定义帧.png)
 
@@ -18,7 +25,7 @@ Modbus Rtu 设置界面
 Modbus Rtu 自动搜索设备界面
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X3.png)
 
-
+## Mqtt Server
 Mqtt服务器调试界面
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X101.png)
 
@@ -27,3 +34,5 @@ Mqtt服务器设置界面
 
 Mqtt服务器 在线客户端界面
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X102.png)
+
+## Mqtt Client
