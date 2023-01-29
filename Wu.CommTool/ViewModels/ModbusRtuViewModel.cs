@@ -815,7 +815,7 @@ namespace Wu.CommTool.ViewModels
                 if (ComConfig.IsOpened == false)
                     return;
                 string msg = string.Empty;
-                int times = 0;//计算次数 连续30ms无数据判断为一帧结束
+                int times = 0;//计算次数 连续数ms无数据判断为一帧结束
                 do
                 {
                     if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
@@ -826,9 +826,8 @@ namespace Wu.CommTool.ViewModels
                         SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
                         list.AddRange(tempBuffer);                       //添加进接收的数据列表
                         msg += BitConverter.ToString(tempBuffer);
-                        //Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += (string.IsNullOrWhiteSpace(msg.Content) ? "" : " ") + BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
                         //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
-                        if (list.Count > 10240)
+                        if (list.Count > ComConfig.MaxLength)
                             break;
                     }
                     else
@@ -836,7 +835,7 @@ namespace Wu.CommTool.ViewModels
                         times++;
                         Thread.Sleep(1);
                     }
-                } while (times < 30);
+                } while (times < ComConfig.TimeOut);
                 #endregion
 
 
