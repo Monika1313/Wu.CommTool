@@ -828,7 +828,7 @@ namespace Wu.CommTool.ViewModels
                         msg += BitConverter.ToString(tempBuffer);
                         //Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => msg.Content += (string.IsNullOrWhiteSpace(msg.Content) ? "" : " ") + BitConverter.ToString(tempBuffer).Replace('-', ' '));//更新界面消息
                         //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
-                        if (list.Count > 300)
+                        if (list.Count > 10240)
                             break;
                     }
                     else
