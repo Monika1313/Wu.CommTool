@@ -17,7 +17,7 @@ namespace Wu.CommTool.ViewModels
         /// 标题
         /// </summary>
         public string Title { get => _Title; set => SetProperty(ref _Title, value); }
-        private string _Title = "串口调试工具";
+        private string _Title = "Wu";
         private readonly IRegionManager regionManager;
         private IRegionNavigationJournal journal;
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -46,7 +46,7 @@ namespace Wu.CommTool.ViewModels
             });
         }
 
-        #region 属性
+        #region *****************************************  属性  *****************************************
         /// <summary>
         /// 主菜单
         /// </summary>
