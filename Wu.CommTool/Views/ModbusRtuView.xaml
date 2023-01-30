@@ -1201,6 +1201,18 @@
                                                 ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
                                                 SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
+                                            <TextBox
+                                                hc:TitleElement.Title="分包超时(ms):"
+                                                hc:TitleElement.TitleWidth="100"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding ComConfig.TimeOut}" />
+                                            <TextBox
+                                                hc:TitleElement.Title="分包最大字节:"
+                                                hc:TitleElement.TitleWidth="100"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding ComConfig.MaxLength}" />
 
                                             <StackPanel
                                                 HorizontalAlignment="Center"
@@ -1755,7 +1767,18 @@
                                             ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
                                             SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             Style="{StaticResource FormComboBox}" />
-
+                                        <TextBox
+                                            hc:TitleElement.Title="分包超时(ms):"
+                                            hc:TitleElement.TitleWidth="100"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            Style="{StaticResource FormTextBox}"
+                                            Text="{Binding ComConfig.TimeOut}" />
+                                        <TextBox
+                                            hc:TitleElement.Title="分包最大字节:"
+                                            hc:TitleElement.TitleWidth="100"
+                                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                            Style="{StaticResource FormTextBox}"
+                                            Text="{Binding ComConfig.MaxLength}" />
                                         <StackPanel
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Top"

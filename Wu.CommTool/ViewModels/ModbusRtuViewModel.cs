@@ -338,17 +338,14 @@ namespace Wu.CommTool.ViewModels
                     case "ImportAutoResponseConfig": ImportAutoResponseConfig(); break;                 //导入自动应答配置
                     case "ExportAutoResponseConfig": ExportAutoResponseConfig(); break;                 //导出自动应答配置
 
-
-                    case "Send": SendCustomFrame(); break;                                          //发送数据
+                    case "Send": SendCustomFrame(); break;                                          //发送自定义帧
                     case "GetComPorts": GetComPorts(); break;                                       //查找Com口
                     case "Clear": Clear(); break;                                                   //清空页面信息
                     case "OpenCom": OpenCom(); break;                                               //打开串口
-                    case "OpenComAndAutoResponse": OpenCom(); AutoResponseOn(); break;                                               //打开串口
+                    case "OpenComAndAutoResponse": OpenCom(); AutoResponseOn(); break;              //启用自动应答
                     case "CloseCom": CloseCom(); break;                                             //关闭串口
-                    case "CloseComAndAutoResponse": CloseCom(); AutoResponseOff(); break;                                             //关闭串口
-                    //case "OperatePort": OperatePort(); break;                                       //操作串口 开启则关闭 关闭则开启
+                    case "CloseComAndAutoResponse": CloseCom(); AutoResponseOff(); break;           //关闭自动应答
 
-                    case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
 
                     case "ShowModbusRtuFunSelect": IsDrawersOpen.IsLeftDrawerOpen = true; break;    //打开ModbusRtu功能选择左侧抽屉
                     case "ConfigCom": IsDrawersOpen2.IsLeftDrawerOpen = true; break;                //打开ModbusRtu配置左侧抽屉
@@ -358,6 +355,7 @@ namespace Wu.CommTool.ViewModels
 
                     case "OpenAutoRead": OpenAutoRead(); break;                                     //打开数据监控
                     case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭数据监控
+                    case "OperateFilter": OperateFilter(); break;                                   //操作ModbusRtu数据过滤器
 
                     case "ImportConfig": ImportConfig(); break;                                     //导入数据监控配置
                     case "ExportConfig": ExportConfig(); break;                                     //导出数据监控配置
@@ -601,6 +599,11 @@ namespace Wu.CommTool.ViewModels
                 //生成列表
                 if (DataMonitorConfig.ModbusRtuDatas.Count != DataMonitorConfig.Quantity)
                 {
+                    //关闭过滤器
+                    DataMonitorConfig.IsFilter = false;
+                    RefreshModbusRtuDataDataView();
+
+                    //生成列表
                     DataMonitorConfig.ModbusRtuDatas.Clear();
                     for (int i = DataMonitorConfig.StartAddr; i < DataMonitorConfig.Quantity + DataMonitorConfig.StartAddr; i++)
                     {
