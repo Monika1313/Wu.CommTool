@@ -417,6 +417,42 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+
+        /// <summary>
+        /// 对字符串进行crc校验
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public string GetCrcedStr(string msg)
+        {
+            var msg2 = msg.Replace("-", string.Empty).GetBytes();
+            List<byte> crc = new();
+            //根据选择进行CRC校验
+            switch (CrcMode)
+            {
+                //无校验
+                case CrcMode.None:
+                    break;
+
+                //Modebus校验
+                case CrcMode.Modbus:
+                    var code = Wu.Utils.Crc.Crc16Modbus(msg2);
+                    Array.Reverse(code);
+                    crc.AddRange(code);
+                    break;
+                default:
+                    break;
+            }
+            //合并数组
+            List<byte> list = new List<byte>();
+            list.AddRange(msg2);
+            list.AddRange(crc);
+            var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
+            return data;
+        }
+
+
+
         /// <summary>
         /// 关闭自动应答
         /// </summary>
@@ -1463,10 +1499,12 @@ namespace Wu.CommTool.ViewModels
                             SerialPort.BaudRate = (int)baud;
                             SerialPort.Parity = (System.IO.Ports.Parity)parity;
                             string msg = $"{i:X2}0300000001";//读取第一个字
+                            ////TODO 添加校验
+
                             //串口关闭时或不处于搜索状态
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
-                            PublishMessage(msg);
+                            PublishMessage(GetCrcedStr(msg));
                             await Task.Delay(100);
                         }
                         if (ComConfig.IsOpened == false)
