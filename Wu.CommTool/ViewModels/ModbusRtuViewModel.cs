@@ -356,8 +356,8 @@ namespace Wu.CommTool.ViewModels
                     case "OpenLeftDrawer3": IsDrawersOpen3.IsLeftDrawerOpen = true; break;          //打开3层抽屉的左侧抽屉
                     case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;          //打开1层右侧抽屉
 
-                    case "OpenAutoRead": OpenAutoRead(); break;                                     //打开自动读取
-                    case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭自动读取
+                    case "OpenAutoRead": OpenAutoRead(); break;                                     //打开数据监控
+                    case "CloseAutoRead": CloseAutoRead(); break;                                   //关闭数据监控
 
                     case "ImportConfig": ImportConfig(); break;                                     //导入数据监控配置
                     case "ExportConfig": ExportConfig(); break;                                     //导出数据监控配置
@@ -628,7 +628,7 @@ namespace Wu.CommTool.ViewModels
             {
                 timer.Stop();
                 string msg = DataMonitorConfig.DataFrame[..^4];
-                PublishMessage(msg);
+                PublishMessage(GetCrcedStr(msg));
             }
             catch (Exception ex)
             {
