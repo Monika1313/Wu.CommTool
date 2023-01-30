@@ -16,14 +16,16 @@
 Modbus Rtu 自定义帧
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu自定义帧.png)
 
-Modbus Rtu 调试界面
-![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X1.png)
+Modbus Rtu 搜索设备设置, 可选择多个波特率与校验方式
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu搜索设备设置.png)
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu搜索设备中.png)
 
-Modbus Rtu 设置界面
-![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X2.png)
+Modbus Rtu 数据监控
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu数据监控设置.png)
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu数据监控.png)
 
-Modbus Rtu 自动搜索设备界面
-![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/X3.png)
+Modbus Rtu 应答
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu自动应答.png)
 
 ## Mqtt Server
 Mqtt服务器调试界面
