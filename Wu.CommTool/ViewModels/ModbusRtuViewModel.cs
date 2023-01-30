@@ -1669,9 +1669,6 @@ namespace Wu.CommTool.ViewModels
                     }
 
 
-
-
-
                     //对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
 

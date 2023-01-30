@@ -549,8 +549,7 @@
                         Padding="0"
                         Style="{StaticResource Effect2Control}">
                         <TextBox
-                            MinHeight="100"
-                            MaxHeight="300"
+                            Height="130"
                             VerticalContentAlignment="Top"
                             hc:InfoElement.Placeholder="请输入要发送的内容..."
                             AcceptsReturn="True"

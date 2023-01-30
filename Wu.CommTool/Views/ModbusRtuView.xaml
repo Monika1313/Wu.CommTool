@@ -359,7 +359,7 @@
                             </StackPanel>
 
                             <!--  发送区域  -->
-                            <DockPanel Height="100" DockPanel.Dock="Bottom">
+                            <DockPanel Height="130" DockPanel.Dock="Bottom">
                                 <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
                                     <ComboBox
                                         MinWidth="190"
@@ -1026,6 +1026,7 @@
                                                                     Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                     CommandParameter="{Binding}"
                                                                     Content="{Binding Name}"
+                                                                    IsEnabled="{Binding DataContext.DataMonitorConfig.IsOpened,RelativeSource={RelativeSource AncestorType=UserControl},  Converter={wucvt:ReverseBool}}"
                                                                     Style="{StaticResource MaterialDesignRaisedSecondaryButton}" />
                                                             </WrapPanel>
                                                         </Border>
