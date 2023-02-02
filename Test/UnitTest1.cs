@@ -3,7 +3,24 @@ namespace Test
     [TestClass]
     public class UnitTest1
     {
-        
+
+
+
+        [FlagsAttribute]
+        enum Colors_1
+        {
+            Red = 1, Green = 2, Blue = 4, Yellow = 8
+        }
+
+
+        [TestMethod]
+        public void TestMethod1()
+        {
+            Colors_1 color_2 = Colors_1.Red | Colors_1.Green | Colors_1.Blue| Colors_1.Yellow;
+
+            string strResult = color_2.ToString();
+        }
+
 
 
 
