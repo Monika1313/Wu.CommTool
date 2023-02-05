@@ -9,11 +9,19 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <DockPanel>
+    <DockPanel LastChildFill="False">
         <Grid Height="40" DockPanel.Dock="Top">
             <TextBlock Style="{StaticResource TitleTextBlock}" Text="关于" />
         </Grid>
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+
+        <Image
+            Width="200"
+            DockPanel.Dock="Top"
+            Source="/Images/AI.png" />
+        <StackPanel
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            DockPanel.Dock="TOP ">
             <TextBox
                 Margin="5"
                 hc:Poptip.Content="有问题可Github反馈或QQ反馈"
@@ -31,8 +39,8 @@
                 Style="{StaticResource FormTextBox}"
                 Text="https://github.com/Monika1313/Wu.CommTool" />
             <!--<Button Command="{Binding ExecuteCommand}" CommandParameter="ShowGitHub"></Button>-->
-
         </StackPanel>
+
 
     </DockPanel>
 </UserControl>
