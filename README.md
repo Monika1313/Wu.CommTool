@@ -42,10 +42,8 @@
 右键消息可查看格式化Json
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/Mqtt服务器查看格式化Json.png)
 
-Mqtt服务器 在线客户端界面
-![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/Mqtt客户端.png)
-
 ## Mqtt Client
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/Mqtt客户端.png)
 
 ## 如何下载
 - 进入 [Release](https://github.com/Monika1313/Wu.CommTool/releases) 页面下载
