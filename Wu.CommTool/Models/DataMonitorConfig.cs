@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Prism.Mvvm;
+using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using Wu.CommTool.Enums;
@@ -41,7 +42,7 @@ namespace Wu.CommTool.Models
         private int _Function = 03;
 
         /// <summary>
-        /// 起始地址
+        /// 起始地址 十进制
         /// </summary>
         public int StartAddr
         {
@@ -49,10 +50,40 @@ namespace Wu.CommTool.Models
             set
             {
                 SetProperty(ref _StartAddr, value);
+
+                _StartAddrHex = value.ToString("x");
+                RaisePropertyChanged(nameof(StartAddrHex));
+
                 RaisePropertyChanged(nameof(DataFrame));
             }
         }
-        private int _StartAddr = 8192;
+        private int _StartAddr = 0;
+
+
+        /// <summary>
+        /// 起始地址Hex
+        /// </summary>
+        public string StartAddrHex
+        {
+            get => _StartAddrHex;
+            set
+            {
+                SetProperty(ref _StartAddrHex, value);
+
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(value))
+                        return;
+                    _StartAddr = Convert.ToInt32(value, 16);
+                    RaisePropertyChanged(nameof(StartAddr));
+
+                    RaisePropertyChanged(nameof(DataFrame));
+                }
+                catch (Exception ) {}
+
+            }
+        }
+        private string _StartAddrHex = "0";
 
         /// <summary>
         /// 读取数量

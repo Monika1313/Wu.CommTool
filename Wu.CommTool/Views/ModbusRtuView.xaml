@@ -1086,10 +1086,17 @@
                                                 Style="{StaticResource FormTextBox}"
                                                 Text="{Binding DataMonitorConfig.Function, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, StringFormat={}{0:00}}" />
                                             <TextBox
-                                                hc:TitleElement.Title="起始地址:"
+                                                hc:TitleElement.Title="起始地址 Dec:"
+                                                hc:TitleElement.TitleWidth="100"
                                                 IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                                 Style="{StaticResource FormTextBox}"
                                                 Text="{Binding DataMonitorConfig.StartAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBox
+                                                hc:TitleElement.Title="起始地址 Hex:"
+                                                hc:TitleElement.TitleWidth="100"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding DataMonitorConfig.StartAddrHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                             <TextBox
                                                 hc:TitleElement.Title="读取数量(word):"
                                                 hc:TitleElement.TitleWidth="100"

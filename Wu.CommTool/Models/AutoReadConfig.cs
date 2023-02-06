@@ -49,9 +49,30 @@ namespace Wu.CommTool.Models
             {
                 SetProperty(ref _StartAddr, value);
                 RaisePropertyChanged(nameof(DataFrame));
+                StartAddrHex = StartAddr.ToString("x");
+                RaisePropertyChanged(nameof(StartAddrHex));
             }
         }
-        private int _StartAddr = 8192;
+        private int _StartAddr = 0;
+
+
+        /// <summary>
+        /// 起始地址
+        /// </summary>
+        public string StartAddrHex
+        {
+            get => _StartAddrHex;
+            set
+            {
+                SetProperty(ref _StartAddrHex, value);
+                RaisePropertyChanged(nameof(DataFrame));
+                int.TryParse(StartAddrHex, out _StartAddr);
+                RaisePropertyChanged(nameof(StartAddr));
+
+            }
+        }
+        private string _StartAddrHex = "0";
+
 
         /// <summary>
         /// 读取数量
