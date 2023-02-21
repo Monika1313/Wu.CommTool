@@ -12,8 +12,15 @@
             Width="20"
             Height="20"
             Margin="{Binding ElementName=self, Path=Margin}"
-            d:Fill="LawnGreen"
-            Effect="{StaticResource EffectShadow2}">
+            d:Fill="LawnGreen">
+            <Ellipse.Effect>
+                <BlurEffect Radius="3" />
+                <!--<DropShadowEffect
+                    BlurRadius="5"
+                    Opacity="0.4"
+                    ShadowDepth="0"
+                    Color="Black" />-->
+            </Ellipse.Effect>
             <Ellipse.Style>
                 <Style TargetType="Ellipse">
                     <Style.Triggers>
