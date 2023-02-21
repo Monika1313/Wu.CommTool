@@ -24,6 +24,9 @@ namespace Wu.CommTool.Controls
         public BreatheLight()
         {
             InitializeComponent();
+            SetCurrentValue(OnColorProperty, Brushes.LawnGreen);
+            SetCurrentValue(OffColorProperty, Brushes.Red);
+            SetCurrentValue(MarginProperty,new Thickness(5));
         }
 
 
@@ -41,32 +44,38 @@ namespace Wu.CommTool.Controls
 
         [Category("Wu")]
         [Description("On时的颜色")]
-        public SolidColorBrush OnColor
+        public Brush OnColor
         {
-            get { return (SolidColorBrush)GetValue(OnColorProperty); }
+            get { return (Brush)GetValue(OnColorProperty); }
             set { SetValue(OnColorProperty, value); }
         }
         public static readonly DependencyProperty OnColorProperty =
-                    DependencyProperty.Register("OnColor", typeof(SolidColorBrush), typeof(BreatheLight),
-                        new FrameworkPropertyMetadata(default(SolidColorBrush),
+                    DependencyProperty.Register("OnColor", typeof(Brush), typeof(BreatheLight),
+                        new FrameworkPropertyMetadata(default(Brush),
                         FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
         [Category("Wu")]
         [Description("Off时的颜色")]
-        public SolidColorBrush OffColor
+        public Brush OffColor
         {
-            get { return (SolidColorBrush)GetValue(OffColorProperty); }
+            get { return (Brush)GetValue(OffColorProperty); }
             set { SetValue(OffColorProperty, value); }
         }
         public static readonly DependencyProperty OffColorProperty =
-                    DependencyProperty.Register("OffColor", typeof(SolidColorBrush), typeof(BreatheLight),
-                        new FrameworkPropertyMetadata(default(SolidColorBrush),
+                    DependencyProperty.Register("OffColor", typeof(Brush), typeof(BreatheLight),
+                        new FrameworkPropertyMetadata(default(Brush),
                         FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
 
-
-
-
-
-
+        [Category("Wu")]
+        [Description("Margin外边距")]
+        public new Thickness Margin
+        {
+            get { return (Thickness)GetValue(MarginProperty); }
+            set { SetValue(MarginProperty, value); }
+        }
+        public static new readonly DependencyProperty MarginProperty =
+                    DependencyProperty.Register("Margin", typeof(Thickness), typeof(BreatheLight),
+                        new FrameworkPropertyMetadata(default(Thickness),
+                        FrameworkPropertyMetadataOptions.AffectsMeasure | FrameworkPropertyMetadataOptions.AffectsRender));
     }
 }

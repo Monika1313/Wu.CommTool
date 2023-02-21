@@ -391,8 +391,12 @@
                     </DockPanel>
                 </Grid>
 
-                <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
-                    <Border
+                <DockPanel
+                    Height="30"
+                    DockPanel.Dock="Bottom"
+                    LastChildFill="False">
+                    <ctl:BreatheLight IsBreathing="{Binding MqttServerConfig.IsOpened}" />
+                    <!--<Border
                         Width="20"
                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                         Margin="4"
@@ -411,7 +415,7 @@
                                 </Style.Triggers>
                             </Style>
                         </Border.Style>
-                    </Border>
+                    </Border>-->
                     <TextBlock VerticalAlignment="Center" Text="IP：" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerIp}" />
                     <TextBlock VerticalAlignment="Center" Text="   Port：" />

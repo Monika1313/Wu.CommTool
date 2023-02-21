@@ -11,16 +11,17 @@
         <Ellipse
             Width="20"
             Height="20"
+            Margin="{Binding ElementName=self, Path=Margin}"
             d:Fill="LawnGreen"
             Effect="{StaticResource EffectShadow2}">
             <Ellipse.Style>
                 <Style TargetType="Ellipse">
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="True">
-                            <Setter Property="Fill" Value="LawnGreen" />
+                            <Setter Property="Fill" Value="{Binding ElementName=self, Path=OnColor}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="False">
-                            <Setter Property="Fill" Value="Red" />
+                            <Setter Property="Fill" Value="{Binding ElementName=self, Path=OffColor}" />
                         </DataTrigger>
                         <DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="True">
                             <DataTrigger.EnterActions>
@@ -29,7 +30,7 @@
                                         <DoubleAnimationUsingKeyFrames
                                             RepeatBehavior="Forever"
                                             Storyboard.TargetProperty="Opacity"
-                                            Duration="00:00:02">
+                                            Duration="00:00:03">
                                             <LinearDoubleKeyFrame KeyTime="0%" Value="1" />
                                             <LinearDoubleKeyFrame KeyTime="50%" Value="0.2" />
                                             <LinearDoubleKeyFrame KeyTime="100%" Value="1" />
