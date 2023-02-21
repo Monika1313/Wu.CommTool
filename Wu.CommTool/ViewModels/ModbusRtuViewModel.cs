@@ -37,9 +37,9 @@ namespace Wu.CommTool.ViewModels
         private readonly IDialogHostService dialogHost;
         private readonly SerialPort SerialPort = new();              //串口
         protected System.Timers.Timer timer = new();        //定时器 定时读取数据
-        private Queue<string> PublishFrameQueue = new();    //数据帧发送队列
-        //private Queue<(string,int)> PublishFrameQueue = new();    //数据帧发送队列
-        private Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
+        //private readonly Queue<string> PublishFrameQueue = new();    //数据帧发送队列
+        private Queue<(string, int)> PublishFrameQueue = new();    //数据帧发送队列
+        private readonly Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
         //private object locker = new(); //线程锁
@@ -50,6 +50,7 @@ namespace Wu.CommTool.ViewModels
         private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
         private readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
         
+        public EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
         public EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
         #endregion
 
@@ -406,7 +407,8 @@ namespace Wu.CommTool.ViewModels
                 list.AddRange(msg);
                 list.AddRange(crc);
                 var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
-                PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
+                //PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
+                PublishFrameEnqueue(data);                  //将待发送的消息添加进队列
             }
             catch (Exception ex)
             {
@@ -1469,8 +1471,9 @@ namespace Wu.CommTool.ViewModels
                             //串口关闭时或不处于搜索状态
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
-                            PublishMessage(GetCrcedStr(msg));
-                            await Task.Delay(100);
+                            //PublishMessage(GetCrcedStr(msg));
+                            PublishFrameEnqueue(GetCrcedStr(msg),50);//发送消息
+                            await Task.Delay(80);           //间隔80ms后再请求下一个
                         }
                         if (ComConfig.IsOpened == false)
                             break;
@@ -1554,6 +1557,17 @@ namespace Wu.CommTool.ViewModels
                 aggregator.SendMessage(ex.Message);
             }
         }
+
+        /// <summary>
+        /// 发送消息帧入队
+        /// </summary>
+        /// <param name="msg">发送的消息</param>
+        /// <param name="delay">发送完成后等待的时间,期间不会发送消息</param>
+        private void PublishFrameEnqueue(string msg,int delay = 10)
+        {
+            PublishFrameQueue.Enqueue((msg, delay));       //发布消息入队
+            WaitPublishFrameEnqueue.Set();                 //置位发布消息入队标志
+        }
         #endregion
 
 
@@ -1563,32 +1577,20 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private async void PublishFrame()
         {
+            WaitPublishFrameEnqueue.Reset();
             while (true)
             {
                 try
                 {
-                    //if (ComConfig.IsOpened == false)
-                    //    return;
                     //判断队列是否不空 若为空则等待
                     if (PublishFrameQueue.Count == 0)
                     {
-                        try
-                        {
-                            await Task.Delay(TaskDelayTime, cts.Token);
-                        }
-                        catch (TaskCanceledException ex)
-                        {
-                            cts.Dispose();
-                            cts = new();
-                        }
-                        continue;
+                        WaitPublishFrameEnqueue.WaitOne();
+                        continue;//需要再次验证队列是否为空
                     }
-
-                    await Task.Delay(TaskDelayTime, cts.Token);
-
                     var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
-                    PublishMessage(frame);                    //请求发送数据帧
-                                                              //从队列读取的间隔为50ms
+                    PublishMessage(frame.Item1);              //请求发送数据帧
+                    await Task.Delay(frame.Item2);            //等待一段时间
                 }
                 catch (Exception ex)
                 {
@@ -1600,7 +1602,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 接收数据帧处理线程
         /// </summary>
-        private async void ReceiveFrame()
+        private void ReceiveFrame()
         {
             WaitUartReceived.Reset();
             while (true)
@@ -1648,7 +1650,8 @@ namespace Wu.CommTool.ViewModels
                         if (xx != null)
                         {
                             ShowMessage($"自动应答匹配: {xx.Name}");
-                            PublishFrameQueue.Enqueue(xx.ResponseTemplate);
+                            //PublishFrameQueue.Enqueue(xx.ResponseTemplate);
+                            PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
                         }
                     }
 
@@ -1763,10 +1766,12 @@ namespace Wu.CommTool.ViewModels
 
                 TaskDelayTime = 500;
                 //请求发送数据帧 由于会失败, 请求多次
-                PublishFrameQueue.Enqueue(unCrcFrame);
-                PublishFrameQueue.Enqueue(unCrcFrame);
-                await Task.Delay(1000);
-                TaskDelayTime = 100;
+                PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
+                //PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
+                //PublishFrameQueue.Enqueue(unCrcFrame);
+                ////PublishFrameQueue.Enqueue(unCrcFrame);
+                ////await Task.Delay(1000);
+                //TaskDelayTime = 100;
             }
             catch (Exception ex)
             {
