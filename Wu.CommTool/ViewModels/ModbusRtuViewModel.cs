@@ -38,18 +38,19 @@ namespace Wu.CommTool.ViewModels
         private readonly SerialPort SerialPort = new();              //串口
         protected System.Timers.Timer timer = new();        //定时器 定时读取数据
         private Queue<string> PublishFrameQueue = new();    //数据帧发送队列
+        //private Queue<(string,int)> PublishFrameQueue = new();    //数据帧发送队列
         private Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
         public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
         //private object locker = new(); //线程锁
         readonly Task publishHandleTask; //发布消息处理线程
         readonly Task receiveHandleTask; //接收处理线程
-        readonly Task writeHandleTask;   //数据写入处理线程
         CancellationTokenSource cts = new();      //用于线程睡眠取消
         private int TaskDelayTime = int.MaxValue; //线程睡眠时间
-        private int receiveTaskDelayTime = int.MaxValue; //线程睡眠时间
         private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
         private readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+        
+        public EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
         #endregion
 
 
@@ -106,9 +107,7 @@ namespace Wu.CommTool.ViewModels
             {
                 DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData());
             }
-
         }
-
         #endregion
 
 
@@ -705,7 +704,6 @@ namespace Wu.CommTool.ViewModels
 
                     //修改延时时间
                     TaskDelayTime = 100;
-                    receiveTaskDelayTime = 10;
                     //取消上一次的延时
                     cts.Cancel();
                     #endregion
@@ -837,7 +835,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        private async void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
@@ -879,7 +877,7 @@ namespace Wu.CommTool.ViewModels
 
 
                 msg = msg.Replace('-', ' ');
-                ReceiveFrameQueue.Enqueue(msg);
+                ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
 
                 //TODO 搜索时将验证通过的添加至搜索到的设备列表
                 if (SearchDeviceState == 1)
@@ -899,6 +897,7 @@ namespace Wu.CommTool.ViewModels
                 if (IsPause)
                     return;
 
+                WaitUartReceived.Set();//置位数据接收完成标志
             }
             catch (Exception ex)
             {
@@ -1015,7 +1014,6 @@ namespace Wu.CommTool.ViewModels
                 ReceiveFrameQueue.Clear();      //清空接收帧队列
                 //cts.Cancel();                 //停止帧处理线程
                 TaskDelayTime = int.MaxValue;
-                receiveTaskDelayTime = int.MaxValue;
 
 #if NETFRAMEWORK
                 //todo framework处理
@@ -1143,44 +1141,6 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception) { }
         }
-
-        #region 已弃用
-        ///// <summary>
-        ///// 弃用  自动搜索串口设备
-        ///// </summary>
-        ///// <exception cref="NotImplementedException"></exception>
-        //private async void OpenAutoSearchView()
-        //{
-        //    try
-        //    {
-        //        //若串口已打开 提示需要关闭串口
-        //        if (ComConfig.IsOpened)
-        //        {
-        //            //弹窗确认 使用该功能需要先关闭串口
-        //            var dialogResult = await dialogHost.Question("温馨提示", $"使用自动搜索功能将关闭当前串口, 确认是否关闭 {ComConfig.Port.Key} : {ComConfig.Port.Value}?");
-        //            //取消
-        //            if (dialogResult.Result != Prism.Services.Dialogs.ButtonResult.OK)
-        //                return;
-        //            //关闭串口
-        //            CloseCom();
-        //        }
-
-        //        //打开自动搜索界面
-        //        //添加要传递的参数
-        //        DialogParameters param = new()
-        //        {
-        //            { nameof(SerialPort), SerialPort },
-        //            { nameof(ComConfig), ComConfig }
-        //        };
-        //        //弹窗
-        //        var dialogResult2 = await dialogHost.ShowDialog(nameof(ModbusRtuAutoSearchDeviceView), param, nameof(ModbusRtuView));
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        ShowMessage(ex.Message, MessageType.Error);
-        //    }
-        //} 
-        #endregion
 
         /// <summary>
         /// 导出配置文件
@@ -1472,6 +1432,8 @@ namespace Wu.CommTool.ViewModels
                     OpenCom();
                 }
 
+                ComConfig.TimeOut = 20;//搜索时设置帧超时时间为20
+
                 SearchDeviceState = 1;//标记状态为搜索设备中
                 //清空搜索到的设备列表
                 ModbusRtuDevices.Clear();
@@ -1640,26 +1602,16 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private async void ReceiveFrame()
         {
+            WaitUartReceived.Reset();
             while (true)
             {
                 try
                 {
-                    //若无消息需要处理则不执行
+                    //若无消息需要处理则进入等待
                     if (ReceiveFrameQueue.Count == 0)
                     {
-                        try
-                        {
-                            await Task.Delay(receiveTaskDelayTime, cts.Token);
-                        }
-                        catch (TaskCanceledException ex)
-                        {
-                            cts.Dispose();
-                            cts = new();
-                        }
-                        continue;
+                        WaitUartReceived.WaitOne(); //等待接收消息
                     }
-
-                    await Task.Delay(receiveTaskDelayTime, cts.Token);
 
                     //从接收消息队列中取出一条消息
                     var frame = ReceiveFrameQueue.Dequeue();
@@ -1667,7 +1619,6 @@ namespace Wu.CommTool.ViewModels
                     {
                         continue;
                     }
-
 
                     //对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
@@ -1700,8 +1651,6 @@ namespace Wu.CommTool.ViewModels
                             PublishFrameQueue.Enqueue(xx.ResponseTemplate);
                         }
                     }
-
-
 
                     List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
                     int slaveId = frameList[0]; //从站地址
@@ -1746,8 +1695,6 @@ namespace Wu.CommTool.ViewModels
                             ShowMessage("数据写入成功");
                         }
                     }
-
-                    await Task.Delay(20);
                 }
                 catch (Exception ex)
                 {
@@ -1765,18 +1712,13 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                //TODO编辑写入数据帧
                 string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
-                string fun = "10";                                                     //0x10 写入多个寄存器
+                string fun = "10";                                                    //0x10 写入多个寄存器
                 string startAddr = obj.Addr.ToString("X4");                     //起始地址
-                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");        //寄存器数量
-                string quantity = (obj.DataTypeByteLength).ToString("X2");  //字节数量
+                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");     //寄存器数量
+                string quantity = (obj.DataTypeByteLength).ToString("X2");      //字节数量
 
-                //Todo 将待写入值根据数据类型反向转换为设备的数据类型
-                //string data = obj.WriteValue.ToString($"X{obj.DataTypeByteLength}");   //数据值
-                //Todo 数据值编辑
-
-                double wValue = double.Parse(obj.WriteValue) / obj.Rate;//对值的倍率做处理
+                double wValue = double.Parse(obj.WriteValue) / obj.Rate;              //对值的倍率做处理
                 string dataStr = "";
                 dynamic data = "";
                 //根据设定的类型转换值
