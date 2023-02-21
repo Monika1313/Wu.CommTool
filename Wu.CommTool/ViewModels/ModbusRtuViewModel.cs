@@ -36,20 +36,14 @@ namespace Wu.CommTool.ViewModels
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
         private readonly SerialPort SerialPort = new();              //串口
-        protected System.Timers.Timer timer = new();        //定时器 定时读取数据
-        //private readonly Queue<string> PublishFrameQueue = new();    //数据帧发送队列
-        private Queue<(string, int)> PublishFrameQueue = new();    //数据帧发送队列
+        protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
+        private Queue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
         private readonly Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
-        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
-
-        //private object locker = new(); //线程锁
+        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);//log4日志
         readonly Task publishHandleTask; //发布消息处理线程
         readonly Task receiveHandleTask; //接收处理线程
-        CancellationTokenSource cts = new();      //用于线程睡眠取消
-        private int TaskDelayTime = int.MaxValue; //线程睡眠时间
-        private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
-        private readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
-        
+        private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
+        private readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
         public EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
         public EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
         #endregion
@@ -90,7 +84,6 @@ namespace Wu.CommTool.ViewModels
             //读取配置文件夹
             RefreshQuickImportList();
 
-
             //导入默认自动应答配置
             try
             {
@@ -126,7 +119,6 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public int SearchDeviceState { get => _SearchDeviceState; set => SetProperty(ref _SearchDeviceState, value); }
         private int _SearchDeviceState = 0;
-
 
         /// <summary>
         /// 搜索到的ModbusRtu设备
@@ -245,7 +237,6 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public int ModbusRtuFunIndex { get => _ModbusRtuFunIndex; set => SetProperty(ref _ModbusRtuFunIndex, value); }
         private int _ModbusRtuFunIndex = 0;
-
 
         /// <summary>
         /// ModbusRtuDataDataView
@@ -380,6 +371,10 @@ namespace Wu.CommTool.ViewModels
             {
                 ShowMessage("串口未打开, 尝试打开串口...");
                 OpenCom();
+                if (!ComConfig.IsOpened)
+                {
+                    return;
+                }
             }
 
             try
@@ -450,8 +445,6 @@ namespace Wu.CommTool.ViewModels
             return data;
         }
 
-
-
         /// <summary>
         /// 关闭自动应答
         /// </summary>
@@ -498,7 +491,6 @@ namespace Wu.CommTool.ViewModels
                 ShowErrorMessage(ex.Message);
             }
         }
-
 
         /// <summary>
         /// 测试
@@ -581,9 +573,6 @@ namespace Wu.CommTool.ViewModels
                 //若串口开启失败则返回
                 if (!ComConfig.IsOpened)
                     return;
-
-                //数据监控时, 发送队列处理时间延迟, 避免数据采集与数据写入冲突
-                TaskDelayTime = 1000;
 
                 timer = new()
                 {
@@ -696,20 +685,6 @@ namespace Wu.CommTool.ViewModels
                 {
                     SerialPort.Open();               //打开串口
                     ComConfig.IsOpened = true;      //标记串口已打开
-
-                    #region 开启数据帧处理线程
-                    //cts = new CancellationTokenSource();
-                    //publishHandleTask = new Task(PublishFrame, cts.Token);
-                    //receiveHandleTask = new Task(ReceiveFrame, cts.Token);
-                    //publishHandleTask.Start();
-                    //receiveHandleTask.Start(); 
-
-                    //修改延时时间
-                    TaskDelayTime = 100;
-                    //取消上一次的延时
-                    cts.Cancel();
-                    #endregion
-
                     ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
                 }
                 catch (Exception ex)
@@ -1014,21 +989,6 @@ namespace Wu.CommTool.ViewModels
 
                 PublishFrameQueue.Clear();      //清空发送帧队列
                 ReceiveFrameQueue.Clear();      //清空接收帧队列
-                //cts.Cancel();                 //停止帧处理线程
-                TaskDelayTime = int.MaxValue;
-
-#if NETFRAMEWORK
-                //todo framework处理
-                //无法使用该方法
-                //cts.TryReset();
-
-#endif
-
-#if NET
-                cts.TryReset();
-#endif
-
-
             }
             catch (Exception ex)
             {
@@ -1472,7 +1432,7 @@ namespace Wu.CommTool.ViewModels
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
                             //PublishMessage(GetCrcedStr(msg));
-                            PublishFrameEnqueue(GetCrcedStr(msg),50);//发送消息
+                            PublishFrameEnqueue(GetCrcedStr(msg), 50);//发送消息
                             await Task.Delay(80);           //间隔80ms后再请求下一个
                         }
                         if (ComConfig.IsOpened == false)
@@ -1563,7 +1523,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="msg">发送的消息</param>
         /// <param name="delay">发送完成后等待的时间,期间不会发送消息</param>
-        private void PublishFrameEnqueue(string msg,int delay = 10)
+        private void PublishFrameEnqueue(string msg, int delay = 10)
         {
             PublishFrameQueue.Enqueue((msg, delay));       //发布消息入队
             WaitPublishFrameEnqueue.Set();                 //置位发布消息入队标志
@@ -1641,7 +1601,6 @@ namespace Wu.CommTool.ViewModels
                         ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
 
-
                     //自动应答
                     if (IsAutoResponse)
                     {
@@ -1650,7 +1609,6 @@ namespace Wu.CommTool.ViewModels
                         if (xx != null)
                         {
                             ShowMessage($"自动应答匹配: {xx.Name}");
-                            //PublishFrameQueue.Enqueue(xx.ResponseTemplate);
                             PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
                         }
                     }
@@ -1764,7 +1722,6 @@ namespace Wu.CommTool.ViewModels
 
                 ShowMessage("数据写入...");
 
-                TaskDelayTime = 500;
                 //请求发送数据帧 由于会失败, 请求多次
                 PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
                 //PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
