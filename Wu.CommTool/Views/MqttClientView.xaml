@@ -13,45 +13,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:model="clr-namespace:Wu.CommTool.Models"
+    xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dvm:MqttClientDesignViewModel.Instance}"
     d:DesignHeight="800"
     d:DesignWidth="1000"
     mc:Ignorable="d">
-    <UserControl.Resources>
-        <Style x:Key="BreathLight" TargetType="Ellipse">
-            <Setter Property="Width" Value="20" />
-            <Setter Property="Height" Value="20" />
-            <Setter Property="Margin" Value="10,5" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag}" Value="True">
-                    <Setter Property="Fill" Value="LawnGreen" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag}" Value="False">
-                    <Setter Property="Fill" Value="Red" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Tag}" Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard Name="Breath">
-                            <Storyboard>
-                                <DoubleAnimationUsingKeyFrames
-                                    RepeatBehavior="Forever"
-                                    Storyboard.TargetProperty="Opacity"
-                                    Duration="00:00:02">
-                                    <LinearDoubleKeyFrame KeyTime="0%" Value="1" />
-                                    <LinearDoubleKeyFrame KeyTime="50%" Value="0.2" />
-                                    <LinearDoubleKeyFrame KeyTime="100%" Value="1" />
-                                </DoubleAnimationUsingKeyFrames>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <StopStoryboard BeginStoryboardName="Breath" />
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-    </UserControl.Resources>
 
     <md:DialogHost Identifier="{x:Static local:MqttClientView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
@@ -514,32 +481,7 @@
                     Height="30"
                     DockPanel.Dock="Bottom"
                     Orientation="Horizontal">
-                    <!--<Border
-                        Width="20"
-                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                        Margin="10,5"
-                        CornerRadius="10">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding MqttClientConfig.IsOpened}" Value="True">
-                                        <Setter Property="Background" Value="LawnGreen" />
-                                        <Setter Property="hc:Poptip.Content" Value="客户端已打开" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding MqttClientConfig.IsOpened}" Value="False">
-                                        <Setter Property="Background" Value="Red" />
-                                        <Setter Property="hc:Poptip.Content" Value="客户端已关闭" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                    </Border>-->
-
-                    <Ellipse
-                        d:Fill="LawnGreen"
-                        Style="{StaticResource BreathLight}"
-                        Tag="{Binding MqttClientConfig.IsOpened}" />
-
+                    <wuctrl:BreatheLight IsBreathing="{Binding MqttClientConfig.IsOpened}" />
                     <TextBlock
                         Margin="0"
                         VerticalAlignment="Center"

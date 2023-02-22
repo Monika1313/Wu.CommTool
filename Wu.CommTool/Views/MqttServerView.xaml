@@ -12,6 +12,7 @@
     xmlns:local="clr-namespace:Wu.CommTool.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
     d:DesignHeight="600"
@@ -395,27 +396,7 @@
                     Height="30"
                     DockPanel.Dock="Bottom"
                     LastChildFill="False">
-                    <ctl:BreatheLight IsBreathing="{Binding MqttServerConfig.IsOpened}" />
-                    <!--<Border
-                        Width="20"
-                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                        Margin="4"
-                        CornerRadius="10">
-                        <Border.Style>
-                            <Style TargetType="Border">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding MqttServerConfig.IsOpened}" Value="True">
-                                        <Setter Property="Background" Value="LawnGreen" />
-                                        <Setter Property="hc:Poptip.Content" Value="服务器已打开" />
-                                    </DataTrigger>
-                                    <DataTrigger Binding="{Binding MqttServerConfig.IsOpened}" Value="False">
-                                        <Setter Property="Background" Value="Red" />
-                                        <Setter Property="hc:Poptip.Content" Value="服务器已关闭" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Border.Style>
-                    </Border>-->
+                    <wuctrl:BreatheLight IsBreathing="{Binding MqttServerConfig.IsOpened}" />
                     <TextBlock VerticalAlignment="Center" Text="IP：" />
                     <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerIp}" />
                     <TextBlock VerticalAlignment="Center" Text="   Port：" />

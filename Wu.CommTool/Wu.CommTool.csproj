@@ -63,6 +63,7 @@
 		<PackageReference Include="System.Management" Version="7.0.0" />
 		<PackageReference Include="Wu" Version="1.0.6" />
 		<PackageReference Include="Wu.Wpf" Version="1.0.6" />
+		<PackageReference Include="Wu.Wpf.ControlLibrary" Version="1.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Configs\Log4netConfig\log4net.config">
