@@ -18,7 +18,7 @@
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dvm:ModbusRtuDesignViewModel.Instance}"
     d:DesignHeight="600"
-    d:DesignWidth="800"
+    d:DesignWidth="1000"
     mc:Ignorable="d">
     <UserControl.Resources />
 
@@ -429,18 +429,6 @@
                         <Grid DockPanel.Dock="Top">
                             <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 搜索设备" />
                             <DockPanel LastChildFill="False">
-                                <!--  ModbusRtu 功能选择按钮  -->
-                                <!--<Button
-                                        Width="30"
-                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                        Margin="5"
-                                        HorizontalAlignment="Left"
-                                        hc:Poptip.Content="功能选择"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ShowModbusRtuFunSelect"
-                                        Content="{md:PackIcon Kind=Apps}"
-                                        Style="{StaticResource Blue_CircleButton}" />-->
-
                                 <!--  暂停界面更新  -->
                                 <Button
                                     Width="30"
@@ -456,12 +444,9 @@
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding IsPause}" Value="true">
                                                         <Setter Property="Kind" Value="PlayPause" />
-
                                                     </DataTrigger>
-
                                                     <DataTrigger Binding="{Binding IsPause}" Value="false">
                                                         <Setter Property="Kind" Value="Pause" />
-
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -476,7 +461,6 @@
                                                     <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                                     <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
                                                 </DataTrigger>
-
                                                 <DataTrigger Binding="{Binding IsPause}" Value="false">
                                                     <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
                                                     <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
@@ -644,6 +628,13 @@
                                                     </i:EventTrigger>
                                                 </i:Interaction.Triggers>
                                             </hc:CheckComboBox>
+
+                                            <TextBox
+                                                hc:TitleElement.Title="搜索间隔(ms):"
+                                                hc:TitleElement.TitleWidth="100"
+                                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                                Style="{StaticResource FormTextBox}"
+                                                Text="{Binding ComConfig.SearchInterval}" />
 
                                             <StackPanel
                                                 HorizontalAlignment="Center"
@@ -1332,48 +1323,7 @@
                                         IsEnabled="{Binding DataMonitorConfig.IsOpened}"
                                         Style="{StaticResource Red_CircleButton}" />
 
-                                    <!--  暂停界面更新  -->
-                                    <Button
-                                        Width="30"
-                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                        Margin="5"
-                                        HorizontalAlignment="Left"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="Pause"
-                                        Cursor="Hand">
-                                        <md:PackIcon Width="24" Height="24">
-                                            <md:PackIcon.Style>
-                                                <Style TargetType="md:PackIcon">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsPause}" Value="true">
-                                                            <Setter Property="Kind" Value="PlayPause" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsPause}" Value="false">
-                                                            <Setter Property="Kind" Value="Pause" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </md:PackIcon.Style>
-                                        </md:PackIcon>
-                                        <Button.Style>
-                                            <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsPause}" Value="true">
-                                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                                        <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsPause}" Value="false">
-                                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                                                        <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+
 
 
                                     <!--  过滤器  -->
@@ -1456,6 +1406,49 @@
                                         Content="{md:PackIcon Kind=Delete}"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource Red_CircleButton}" />
+                                    <!--  暂停界面更新  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Pause"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right">
+                                        <md:PackIcon Width="24" Height="24">
+                                            <md:PackIcon.Style>
+                                                <Style TargetType="md:PackIcon">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                                            <Setter Property="Kind" Value="PlayPause" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                                            <Setter Property="Kind" Value="Pause" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </md:PackIcon.Style>
+                                        </md:PackIcon>
+                                        <Button.Style>
+                                            <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                        <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                                        <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
                                 </DockPanel>
                             </Grid>
 
@@ -2003,6 +1996,7 @@
                                 DockPanel.Dock="Left"
                                 Style="{StaticResource Effect2Control}">
                                 <DataGrid
+                                    MinWidth="410"
                                     hc:DataGridAttach.ShowRowNumber="True"
                                     AutoGenerateColumns="False"
                                     Background="Transparent"

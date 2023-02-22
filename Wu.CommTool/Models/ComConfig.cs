@@ -59,5 +59,12 @@ namespace Wu.CommTool.Models
         public int MaxLength { get => _MaxLength; set => SetProperty(ref _MaxLength, value); }
         private int _MaxLength = 10240;
 
+
+        /// <summary>
+        /// 自动搜索设备的间隔 单位ms
+        /// </summary>
+        public int SearchInterval { get => _SearchInterval; set => SetProperty(ref _SearchInterval, value); }
+        private int _SearchInterval = 50;
+
     }
 }

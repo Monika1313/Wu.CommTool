@@ -1425,15 +1425,12 @@ namespace Wu.CommTool.ViewModels
                             //修改设置
                             SerialPort.BaudRate = (int)baud;
                             SerialPort.Parity = (System.IO.Ports.Parity)parity;
-                            string msg = $"{i:X2}0300000001";//读取第一个字
-                            ////TODO 添加校验
-
+                            string unCrcMsg = $"{i:X2}0300000001";//读取第一个字
                             //串口关闭时或不处于搜索状态
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
-                            //PublishMessage(GetCrcedStr(msg));
-                            PublishFrameEnqueue(GetCrcedStr(msg), 50);//发送消息
-                            await Task.Delay(80);           //间隔80ms后再请求下一个
+                            PublishFrameEnqueue(GetCrcedStr(unCrcMsg), ComConfig.SearchInterval);//发送消息入队
+                            await Task.Delay(ComConfig.SearchInterval);           //间隔80ms后再请求下一个
                         }
                         if (ComConfig.IsOpened == false)
                             break;
