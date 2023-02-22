@@ -40,6 +40,7 @@ namespace Wu.CommTool.ViewModels
         public string DialogHostName { get; set; } = "MqttClientView";
 
         private string MqttClientConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
+        private static string viewName = "MqttClientView";
         #endregion
 
         public MqttClientViewModel() { }
@@ -806,6 +807,21 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(obj.Content))
+                {
+                    HcGrowlExtensions.Warning("无法进行Json格式化...", viewName);
+                    return;
+                }
+                try
+                {
+                    var xx = JsonConvert.DeserializeObject(obj.Content);
+                }
+                catch (Exception ex)
+                {
+                    HcGrowlExtensions.Warning("无法进行Json格式化...", viewName);
+                    return;
+                }
+
                 if (obj.Type.Equals(MessageType.Send) || obj.Type.Equals(MessageType.Receive))
                 {
                     DialogParameters param = new()

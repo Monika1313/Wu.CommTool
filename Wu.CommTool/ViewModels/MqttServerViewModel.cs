@@ -11,6 +11,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -35,7 +36,7 @@ namespace Wu.CommTool.ViewModels
         public string DialogHostName { get; set; } = "MqttServerView";
         private IMqttServer server;                                 //Mqtt服务器
         //private List<MqttUser> Users = new List<MqttUser>();     //用户列表
-
+        private static string viewName = "MqttServerView";
         #endregion
 
         public MqttServerViewModel() { }
@@ -663,20 +664,29 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
+                if (string.IsNullOrWhiteSpace(obj.Content))
+                {
+                    HcGrowlExtensions.Warning("无法进行Json格式化...", viewName);
+                    return;
+                }
                 try
                 {
-                    if (obj.Type.Equals(MessageType.Send) || obj.Type.Equals(MessageType.Receive))
-                    {
-                        DialogParameters param = new()
-                    {
-                        { "Value", obj }
-                    };
-                        var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, DialogHostName);
-                    }
+                    var xx = JsonConvert.DeserializeObject(obj.Content);
                 }
                 catch (Exception ex)
                 {
+                    HcGrowlExtensions.Warning("无法进行Json格式化...", viewName);
+                    return;
+                }
 
+
+                if (obj.Type.Equals(MessageType.Send) || obj.Type.Equals(MessageType.Receive))
+                {
+                    DialogParameters param = new()
+                        {
+                            { "Value", obj }
+                        };
+                    var dialogResult = await dialogHost.ShowDialog(nameof(JsonDataView), param, DialogHostName);
                 }
             }
             catch (Exception ex)

@@ -456,6 +456,7 @@ namespace Wu.CommTool.ViewModels
             {
                 IsAutoResponse = false;
                 ShowMessage("关闭自动应答...");
+                HcGrowlExtensions.Warning("关闭自动应答...",viewName);
             }
             catch (Exception ex)
             {
@@ -472,6 +473,7 @@ namespace Wu.CommTool.ViewModels
             {
                 IsAutoResponse = true;
                 ShowMessage("启用自动应答...");
+                HcGrowlExtensions.Success("启用自动应答...",viewName);
             }
             catch (Exception ex)
             {
