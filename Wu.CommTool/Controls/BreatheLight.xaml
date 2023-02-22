@@ -15,21 +15,17 @@
             d:Fill="LawnGreen">
             <Ellipse.Effect>
                 <BlurEffect Radius="3" />
-                <!--<DropShadowEffect
-                    BlurRadius="5"
-                    Opacity="0.4"
-                    ShadowDepth="0"
-                    Color="Black" />-->
             </Ellipse.Effect>
             <Ellipse.Style>
                 <Style TargetType="Ellipse">
+                    <Setter Property="Fill" Value="{Binding ElementName=self, Path=OffColor}" />
                     <Style.Triggers>
                         <DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="True">
                             <Setter Property="Fill" Value="{Binding ElementName=self, Path=OnColor}" />
                         </DataTrigger>
-                        <DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="False">
+                        <!--<DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="False">
                             <Setter Property="Fill" Value="{Binding ElementName=self, Path=OffColor}" />
-                        </DataTrigger>
+                        </DataTrigger>-->
                         <DataTrigger Binding="{Binding ElementName=self, Path=IsBreathing}" Value="True">
                             <DataTrigger.EnterActions>
                                 <BeginStoryboard Name="Breath">

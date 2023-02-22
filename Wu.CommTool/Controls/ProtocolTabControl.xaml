@@ -1,17 +1,19 @@
-﻿<UserControl x:Class="Wu.CommTool.Controls.ProtocolTabControl"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:local="clr-namespace:Wu.CommTool.Controls"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             x:Name="self"
-             d:DesignHeight="50"
-             d:DesignWidth="300"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="Wu.CommTool.Controls.ProtocolTabControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Wu.CommTool.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="self"
+    d:DesignHeight="50"
+    d:DesignWidth="300"
+    mc:Ignorable="d">
     <StackPanel Orientation="Horizontal">
-        <Border Width="20"
-                Height="20"
-                Background="LawnGreen" />
+        <Border
+            Width="20"
+            Height="20"
+            Background="LawnGreen" />
         <local:WuIpBox Ip="{Binding ElementName=self, Path=Ip, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
     </StackPanel>
 </UserControl>

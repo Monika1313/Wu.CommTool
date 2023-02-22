@@ -15,6 +15,7 @@
     xmlns:model="clr-namespace:Wu.CommTool.Models"
     xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dvm:ModbusRtuDesignViewModel.Instance}"
     d:DesignHeight="600"
@@ -492,6 +493,7 @@
                             DockPanel.Dock="Bottom"
                             Orientation="Horizontal">
                             <Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
+
                             <TextBlock
                                 Margin="0"
                                 VerticalAlignment="Center"
@@ -738,6 +740,18 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
+                                        <hc:LoadingCircle>
+                                            <hc:LoadingCircle.Style>
+                                                <Style BasedOn="{StaticResource LoadingCircleBaseStyle}" TargetType="hc:LoadingCircle">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </hc:LoadingCircle.Style>
+                                        </hc:LoadingCircle>
                                     </StackPanel>
                                     <DockPanel>
                                         <TextBlock
@@ -887,7 +901,7 @@
                                 <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                         <!--  页面消息  -->
-                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
+                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel />
@@ -1955,7 +1969,8 @@
                                 Height="30"
                                 DockPanel.Dock="Bottom"
                                 Orientation="Horizontal">
-                                <Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
+                                <!--<Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />-->
+                                <wuctrl:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
                                 <TextBlock
                                     Margin="0"
                                     VerticalAlignment="Center"

@@ -1072,7 +1072,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
-                    while (Messages.Count > 100)
+                    while (Messages.Count > 5000)
                     {
                         Messages.RemoveAt(0);
                     }
@@ -1094,7 +1094,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(msg);
-                    while (Messages.Count > 100)
+                    while (Messages.Count > 10000)
                     {
                         Messages.RemoveAt(0);
                     }
