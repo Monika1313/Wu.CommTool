@@ -1,4 +1,5 @@
-﻿using ImTools;
+﻿using HandyControl.Controls;
+using ImTools;
 using log4net;
 using Newtonsoft.Json;
 using Prism.Commands;
@@ -46,6 +47,7 @@ namespace Wu.CommTool.ViewModels
         private readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
         public EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
         public EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
+        private static string viewName = "ModbusRtuView";
         #endregion
 
 
@@ -865,6 +867,7 @@ namespace Wu.CommTool.ViewModels
                         CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
                         ModbusRtuDevices.Add(CurrentDevice);
                     }));
+                    HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", viewName);
                 }
 
                 //计算总接收数据量
@@ -1072,7 +1075,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new MessageData($"{message}", DateTime.Now, type));
-                    while (Messages.Count > 5000)
+                    while (Messages.Count > 500)
                     {
                         Messages.RemoveAt(0);
                     }
@@ -1372,6 +1375,7 @@ namespace Wu.CommTool.ViewModels
                 //若数据监控功能开启中则关闭
                 if (DataMonitorConfig.IsOpened)
                 {
+                    HcGrowlExtensions.Warning("数据监控功能关闭...", viewName);
                     CloseAutoRead();
                 }
 
@@ -1393,6 +1397,14 @@ namespace Wu.CommTool.ViewModels
                 {
                     OpenCom();
                 }
+
+                HcGrowlExtensions.Info("开始搜索...", viewName);
+                //Growl.Info(new HandyControl.Data.GrowlInfo()
+                //{
+                //    WaitTime = 1,
+                //    Message = "开始搜索...",
+                //    //Token = "ModbusRtu"
+                //});
 
                 ComConfig.TimeOut = 20;//搜索时设置帧超时时间为20
 
@@ -1440,10 +1452,8 @@ namespace Wu.CommTool.ViewModels
                 }
                 if (ComConfig.IsOpened)
                 {
-                    //Thread.Sleep(1000);
                     await Task.Delay(1000);
                     ShowMessage("搜索完成");
-                    //OperatePort();
                     CloseCom();
                 }
                 else

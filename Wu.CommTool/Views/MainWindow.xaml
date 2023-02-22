@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
     xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
-    xmlns:hd="https://handyorg.github.io/handycontrol"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
@@ -87,8 +87,6 @@
                         </ListBox>
                     </DockPanel>
                 </md:DrawerHost.LeftDrawerContent>
-                <!--  右侧抽屉  -->
-
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto" />
@@ -166,6 +164,15 @@
                         </Grid>
                     </md:ColorZone>
                     <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
+                    <ScrollViewer
+                        Grid.Row="1"
+                        HorizontalAlignment="Right"
+                        VerticalScrollBarVisibility="Hidden">
+                        <StackPanel
+                            Margin="0,10,10,10"
+                            VerticalAlignment="Top"
+                            hc:Growl.GrowlParent="True" />
+                    </ScrollViewer>
                 </Grid>
             </md:DrawerHost>
         </md:DialogHost>
