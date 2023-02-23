@@ -442,10 +442,10 @@
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource MessageTextBlock}"
                                                     Text="{Binding Type}" />
-                                                <TextBlock
+                                                <TextBox
                                                     Margin="5,0"
                                                     VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
+                                                    Style="{StaticResource MessageTextBox}"
                                                     Text="{Binding Title}" />
                                                 <TextBox
                                                     VerticalAlignment="Center"
