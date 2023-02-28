@@ -134,7 +134,13 @@ namespace Wu.CommTool.Models
             return arr;
         }
 
-
+        /// <summary>
+        /// 根据字节数据 数据类型 获取值
+        /// </summary>
+        /// <param name="databytes"></param>
+        /// <param name="dataType"></param>
+        /// <param name="rate"></param>
+        /// <returns></returns>
         public static dynamic? GetVal(byte[]? databytes, DataType dataType, double rate)
         {
             if (databytes == null)
