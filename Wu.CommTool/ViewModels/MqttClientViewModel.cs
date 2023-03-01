@@ -51,14 +51,14 @@ namespace Wu.CommTool.ViewModels
             this.dialogHost = dialogHost;
 
             ExecuteCommand = new(Execute);
-            SubTopicCommand = new DelegateCommand<string>(SubTopic);
+            SubTopicCommand = new DelegateCommand<MqttTopic>(SubTopic);
             UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
             ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
 
-            MqttClientConfig.SubscribeTopics.Add("+/#");//默认订阅所有主题
+            MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
 
             //从默认配置文件中读取配置
             try
@@ -85,12 +85,11 @@ namespace Wu.CommTool.ViewModels
         /// 减少主题
         /// </summary>
         /// <param name="obj"></param>
-        private void SubTopic(string obj)
+        private void SubTopic(MqttTopic obj)
         {
-            //TODO
             try
             {
-                var xx = MqttClientConfig.SubscribeTopics.Remove(obj.ToString());
+                var xx = MqttClientConfig.SubscribeTopics.Remove(obj);
             }
             catch (Exception ex)
             {
@@ -138,8 +137,8 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 新的订阅主题
         /// </summary>
-        public string NewSubTopic { get => _NewSubTopic; set => SetProperty(ref _NewSubTopic, value); }
-        private string _NewSubTopic = string.Empty;
+        public MqttTopic NewSubTopic { get => _NewSubTopic; set => SetProperty(ref _NewSubTopic, value); }
+        private MqttTopic _NewSubTopic = new(string.Empty);
 
         /// <summary>
         /// 主动关闭客户端标志
@@ -168,7 +167,7 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 取消订阅主题
         /// </summary>
-        public DelegateCommand<string> SubTopicCommand { get; private set; }
+        public DelegateCommand<MqttTopic> SubTopicCommand { get; private set; }
 
         /// <summary>
         /// 取消订阅主题
@@ -188,7 +187,7 @@ namespace Wu.CommTool.ViewModels
 
 
         #region **************************************** 方法 ****************************************
-        public void Execute(string obj)
+        public async void Execute(string obj)
         {
             switch (obj)
             {
@@ -199,7 +198,7 @@ namespace Wu.CommTool.ViewModels
                 case "Pause": Pause(); break;
                 case "Publish": Publish(); break;
                 case "AddTopic": AddTopic(); break;                               //添加订阅的主题
-                case "SubscribeTopic": SubscribeTopic(NewSubTopic); break;                               //添加订阅的主题
+                case "SubscribeTopic": await SubscribeTopic(NewSubTopic.Topic); break;                               //添加订阅的主题
                 case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
@@ -348,15 +347,15 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(NewSubTopic))
+                if (string.IsNullOrWhiteSpace(NewSubTopic.Topic))
                 {
                     //不能订阅空主题
                     return;
                 }
-                //若重复了则取消
-                if (MqttClientConfig.SubscribeTopics.Contains(NewSubTopic))
+                //若重复了则不执行操作
+                if (MqttClientConfig.SubscribeTopics.FirstOrDefault(x => x.Topic.Equals(NewSubTopic.Topic.Trim())) != null)
                     return;
-                MqttClientConfig.SubscribeTopics.Add(NewSubTopic.Trim());
+                MqttClientConfig.SubscribeTopics.Add(new MqttTopic(NewSubTopic.Topic.Trim()));
             }
             catch (Exception ex)
             {
@@ -609,7 +608,7 @@ namespace Wu.CommTool.ViewModels
                 {
                     //await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(x).Build());       //订阅服务端消息
                     //ShowMessage($"已订阅主题: {x}");
-                    await SubscribeTopic(x);
+                    await SubscribeTopic(x.Topic);
                 }
             }
             catch (Exception ex)

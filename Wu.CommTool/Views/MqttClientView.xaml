@@ -198,7 +198,7 @@
                                             FontSize="16"
                                             Text="订阅主题" />
 
-                                        <DockPanel DockPanel.Dock="Top">
+                                        <DockPanel Cursor="" DockPanel.Dock="Top">
                                             <Button
                                                 Margin="4"
                                                 Command="{Binding ExecuteCommand}"
@@ -209,7 +209,7 @@
                                                 Margin="4"
                                                 hc:InfoElement.Placeholder="请输入要订阅的主题..."
                                                 Style="{StaticResource TextBoxExtend}"
-                                                Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                Text="{Binding NewSubTopic.Topic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 TextWrapping="Wrap" />
                                         </DockPanel>
 
@@ -235,13 +235,14 @@
                                                                     Command="{Binding DataContext.SubTopicCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ItemsControl}}"
                                                                     CommandParameter="{Binding}"
                                                                     Content="×"
+                                                                    Cursor="Hand"
                                                                     DockPanel.Dock="Right"
                                                                     Style="{StaticResource Red_CircleButton}" />
                                                                 <TextBox
                                                                     Margin="4"
                                                                     Foreground="{StaticResource Green_Foreground}"
                                                                     IsReadOnly="false"
-                                                                    Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                    Text="{Binding Topic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                     TextWrapping="Wrap" />
                                                             </DockPanel>
                                                         </Border>
@@ -266,7 +267,7 @@
                             DockPanel.Dock="Top"
                             FontSize="20"
                             Text="订阅管理" />
-                        <DockPanel DockPanel.Dock="Bottom">
+                        <DockPanel DockPanel.Dock="Top">
                             <Button
                                 Margin="4"
                                 Command="{Binding ExecuteCommand}"
@@ -278,7 +279,7 @@
                                 Margin="4"
                                 hc:InfoElement.Placeholder="请输入要订阅的主题..."
                                 Style="{StaticResource TextBoxExtend}"
-                                Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Text="{Binding NewSubTopic.Topic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 TextWrapping="Wrap" />
                         </DockPanel>
                         <ContentControl MinHeight="30" Style="{StaticResource Effect2Control}">

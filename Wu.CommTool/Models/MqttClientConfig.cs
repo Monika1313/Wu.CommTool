@@ -28,8 +28,8 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 订阅的主题
         /// </summary>
-        public ObservableCollection<string> SubscribeTopics { get => _SubscribeTopics; set => SetProperty(ref _SubscribeTopics, value); }
-        private ObservableCollection<string> _SubscribeTopics = new();
+        public ObservableCollection<MqttTopic> SubscribeTopics { get => _SubscribeTopics; set => SetProperty(ref _SubscribeTopics, value); }
+        private ObservableCollection<MqttTopic> _SubscribeTopics = new();
 
         /// <summary>
         /// 成功订阅的主题
