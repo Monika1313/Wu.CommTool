@@ -444,7 +444,7 @@ namespace Wu.CommTool.ViewModels
 
                 //发布
                 var result = await client.PublishAsync(mam, CancellationToken.None);
-                ShowSendMessage($"{SendMessage}", $"主题: {MqttClientConfig.PublishTopic}");
+                ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
             }
             catch (Exception ex)
             {
@@ -539,16 +539,16 @@ namespace Wu.CommTool.ViewModels
                 switch (MqttClientConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Plaintext:
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Json:
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Hex:
-                        ShowReceiveMessage($"{BitConverter.ToString(arg.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{BitConverter.ToString(arg.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"{Convert.ToBase64String(arg.ApplicationMessage.Payload)}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(arg.ApplicationMessage.Payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                 }
             }
