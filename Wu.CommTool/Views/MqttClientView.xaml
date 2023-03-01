@@ -77,7 +77,6 @@
                         </ContentControl>
 
                         <ScrollViewer VerticalScrollBarVisibility="Hidden">
-
                             <DockPanel Width="300" Background="#f5f5f5">
                                 <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
                                     <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
@@ -268,14 +267,30 @@
 
                 <!--  右侧抽屉  -->
                 <md:DrawerHost.RightDrawerContent>
-                    <StackPanel Width="240" Orientation="Vertical">
+                    <DockPanel Width="240">
                         <TextBlock
                             Margin="4"
                             HorizontalAlignment="Center"
+                            DockPanel.Dock="Top"
                             FontSize="20"
                             Text="订阅管理" />
+                        <DockPanel DockPanel.Dock="Bottom">
+                            <Button
+                                Margin="4"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="SubscribeTopic"
+                                Content="订阅"
+                                DockPanel.Dock="Right" />
+                            <TextBox
+                                x:Name="Topic"
+                                Margin="4"
+                                hc:InfoElement.Placeholder="请输入要订阅的主题..."
+                                Style="{StaticResource TextBoxExtend}"
+                                Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                TextWrapping="Wrap" />
+                        </DockPanel>
                         <ContentControl MinHeight="30" Style="{StaticResource Effect2Control}">
-                            <Grid>
+                            <ScrollViewer>
                                 <DockPanel>
                                     <Grid DockPanel.Dock="Top">
                                         <StackPanel
@@ -330,23 +345,11 @@
                                             </ItemsControl>
                                         </StackPanel>
                                     </Grid>
-                                    <Button
-                                        Margin="4"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="SubscribeTopic"
-                                        Content="订阅"
-                                        DockPanel.Dock="Right" />
-                                    <TextBox
-                                        x:Name="Topic"
-                                        Margin="4"
-                                        hc:InfoElement.Placeholder="请输入要订阅的主题..."
-                                        Style="{StaticResource TextBoxExtend}"
-                                        Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                        TextWrapping="Wrap" />
                                 </DockPanel>
-                            </Grid>
+                            </ScrollViewer>
                         </ContentControl>
-                    </StackPanel>
+
+                    </DockPanel>
                 </md:DrawerHost.RightDrawerContent>
 
 
