@@ -527,7 +527,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task ReceiveMessage(MqttApplicationMessageReceivedEventArgs arg)
+        private void ReceiveMessage(MqttApplicationMessageReceivedEventArgs arg)
         {
             try
             {

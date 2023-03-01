@@ -595,14 +595,18 @@
                                                     VerticalAlignment="Center"
                                                     Style="{StaticResource MessageTextBlock}"
                                                     Text="{Binding Type}" />
+
                                                 <TextBox
                                                     Margin="5,0"
                                                     VerticalAlignment="Center"
                                                     FontSize="12"
                                                     FontWeight="Bold"
                                                     Style="{StaticResource MessageTextBox}"
-                                                    Text="{Binding Title}" />
+                                                    Text="{Binding Title}"
+                                                    Visibility="{Binding Title, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
+
                                                 <TextBox
+                                                    Margin="5,0"
                                                     VerticalAlignment="Center"
                                                     FontSize="12"
                                                     FontWeight="Bold"
