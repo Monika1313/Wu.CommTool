@@ -188,9 +188,8 @@
 
 
 
-                                <ContentControl Style="{StaticResource Effect2Control}">
+                                <ContentControl Margin="0" Style="{StaticResource Effect2Control}">
                                     <DockPanel>
-
                                         <TextBlock
                                             Margin="5"
                                             HorizontalAlignment="Center"
@@ -214,11 +213,11 @@
                                         </DockPanel>
 
 
-                                        <ScrollViewer DockPanel.Dock="Bottom">
+                                        <ScrollViewer DockPanel.Dock="Bottom" VerticalScrollBarVisibility="Auto">
                                             <ItemsControl Background="Transparent" ItemsSource="{Binding MqttClientConfig.SubscribeTopics}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Vertical" />
+                                                        <StackPanel />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
