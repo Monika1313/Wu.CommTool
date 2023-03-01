@@ -6,7 +6,7 @@
         public static MqttClientDesignViewModel Instance => _Instance ??= new();
         public MqttClientDesignViewModel()
         {
-            IsDrawersOpen.IsLeftDrawerOpen = false;
+            IsDrawersOpen.IsLeftDrawerOpen = true;
             IsDrawersOpen.IsRightDrawerOpen = false;
             MqttClientConfig.SubscribeTopics.Add("Topic1");
             MqttClientConfig.SubscribeTopics.Add("Topic2");

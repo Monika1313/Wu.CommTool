@@ -76,42 +76,45 @@
                             </DockPanel>
                         </ContentControl>
 
-                        <DockPanel Width="300" Background="#f5f5f5">
-                            <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
-                                <ScrollViewer VerticalScrollBarVisibility="Hidden">
-                                <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock
-                                            Margin="5"
-                                            HorizontalAlignment="Center"
-                                            FontSize="24"
-                                            Text="Mqtt客户端配置" />
-                                        <!--  导出配置文件  -->
-                                        <Button
-                                            Width="30"
-                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                            Margin="4"
-                                            hc:Poptip.Content="导出配置文件"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="ExportConfig"
-                                            Content="{md:PackIcon Kind=Upload}"
-                                            Cursor="Hand"
-                                            DockPanel.Dock="Right"
-                                            Style="{StaticResource Blue_CircleButton}" />
-                                        <!--  导入配置文件  -->
-                                        <Button
-                                            Width="30"
-                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                            Margin="4"
-                                            hc:Poptip.Content="导入配置文件"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="ImportConfig"
-                                            Content="{md:PackIcon Kind=Download}"
-                                            Cursor="Hand"
-                                            DockPanel.Dock="Right"
-                                            IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource Blue_CircleButton}" />
-                                    </StackPanel>
+                        <ContentControl Padding="10" Style="{StaticResource Effect2Control}">
+                            <DockPanel>
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    DockPanel.Dock="Top"
+                                    Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="5"
+                                        HorizontalAlignment="Center"
+                                        FontSize="24"
+                                        Text="Mqtt客户端配置" />
+                                    <!--  导出配置文件  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="导出配置文件"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="ExportConfig"
+                                        Content="{md:PackIcon Kind=Upload}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Blue_CircleButton}" />
+                                    <!--  导入配置文件  -->
+                                    <Button
+                                        Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="导入配置文件"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="ImportConfig"
+                                        Content="{md:PackIcon Kind=Download}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right"
+                                        IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                        Style="{StaticResource Blue_CircleButton}" />
+                                </StackPanel>
+
+                                <StackPanel DockPanel.Dock="Top">
                                     <TextBlock
                                         Margin="5"
                                         HorizontalAlignment="Center"
@@ -156,14 +159,62 @@
                                             <ext:PasswordBehavior />
                                         </i:Interaction.Behaviors>
                                     </PasswordBox>
+                                </StackPanel>
 
-                                    <TextBlock
-                                        Margin="5"
-                                        HorizontalAlignment="Center"
-                                        FontSize="16"
-                                        Text="订阅主题" />
-                                    <Border MinHeight="30" Style="{StaticResource CircleBorder}">
-                                        <Grid>
+                                <StackPanel
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    DockPanel.Dock="Top"
+                                    Orientation="Horizontal">
+                                    <Button
+                                        Margin="20"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Open"
+                                        Content="打开"
+                                        IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
+                                        Style="{StaticResource GreenButton}" />
+
+                                    <Button
+                                        Width="60"
+                                        Margin="20"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="Close"
+                                        Content="关闭"
+                                        DockPanel.Dock="Left"
+                                        IsEnabled="{Binding MqttClientConfig.IsOpened}"
+                                        Style="{StaticResource RedButton}" />
+                                </StackPanel>
+
+
+
+
+                                <ContentControl Style="{StaticResource Effect2Control}">
+                                    <DockPanel>
+
+                                        <TextBlock
+                                            Margin="5"
+                                            HorizontalAlignment="Center"
+                                            DockPanel.Dock="Top"
+                                            FontSize="16"
+                                            Text="订阅主题" />
+
+                                        <DockPanel DockPanel.Dock="Top">
+                                            <Button
+                                                Margin="4"
+                                                Command="{Binding ExecuteCommand}"
+                                                CommandParameter="AddTopic"
+                                                Content="添加"
+                                                DockPanel.Dock="Right" />
+                                            <TextBox
+                                                Margin="4"
+                                                hc:InfoElement.Placeholder="请输入要订阅的主题..."
+                                                Style="{StaticResource TextBoxExtend}"
+                                                Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap" />
+                                        </DockPanel>
+
+
+                                        <ScrollViewer DockPanel.Dock="Bottom">
                                             <ItemsControl Background="Transparent" ItemsSource="{Binding MqttClientConfig.SubscribeTopics}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
@@ -189,7 +240,7 @@
                                                                 <TextBox
                                                                     Margin="4"
                                                                     Foreground="{StaticResource Green_Foreground}"
-                                                                    IsReadOnly="True"
+                                                                    IsReadOnly="false"
                                                                     Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                                     TextWrapping="Wrap" />
                                                             </DockPanel>
@@ -197,48 +248,11 @@
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
-                                        </Grid>
-                                    </Border>
-                                    <DockPanel>
-                                        <Button
-                                            Margin="4"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="AddTopic"
-                                            Content="添加"
-                                            DockPanel.Dock="Right" />
-                                        <TextBox
-                                            Margin="4"
-                                            hc:InfoElement.Placeholder="请输入要添加的订阅主题..."
-                                            Style="{StaticResource TextBoxExtend}"
-                                            Text="{Binding NewSubTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                            TextWrapping="Wrap" />
+                                        </ScrollViewer>
                                     </DockPanel>
-                                    <StackPanel
-                                        HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        Orientation="Horizontal">
-                                        <Button
-                                            Margin="20"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="Open"
-                                            Content="打开"
-                                            IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                            Style="{StaticResource GreenButton}" />
-
-                                        <Button
-                                            Width="60"
-                                            Margin="20"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="Close"
-                                            Content="关闭"
-                                            DockPanel.Dock="Left"
-                                            IsEnabled="{Binding MqttClientConfig.IsOpened}"
-                                            Style="{StaticResource RedButton}" />
-                                    </StackPanel>
-                                </StackPanel>
-                                </ScrollViewer>
-                            </ContentControl>
-                        </DockPanel>
+                                </ContentControl>
+                            </DockPanel>
+                        </ContentControl>
 
                     </DockPanel>
                 </md:DrawerHost.LeftDrawerContent>
