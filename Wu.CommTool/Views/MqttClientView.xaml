@@ -78,6 +78,7 @@
 
                         <DockPanel Width="300" Background="#f5f5f5">
                             <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
+                                <ScrollViewer VerticalScrollBarVisibility="Hidden">
                                 <StackPanel HorizontalAlignment="Center" Orientation="Vertical">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock
@@ -235,6 +236,7 @@
                                             Style="{StaticResource RedButton}" />
                                     </StackPanel>
                                 </StackPanel>
+                                </ScrollViewer>
                             </ContentControl>
                         </DockPanel>
 
