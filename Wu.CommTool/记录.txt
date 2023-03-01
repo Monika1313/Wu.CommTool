@@ -1,10 +1,6 @@
 ﻿ 
 TODO
 
-
-
-指示灯添加呼吸效果
-
 ModbusRtu   
 添加另一种数据监控功能 可自定义添加数据行, 程序根据配置的地址自动生成数据帧
 ModbusRtu 接收数据需要验证, 否则监控通讯时,数据会合并为一条数据显示,影响查看
@@ -23,6 +19,8 @@ MqttServer
 
 MqttClient
 消息过滤器 过滤 接收 发送 等
+接收消息的主题列表
 
 
-增加小工具 输入数值转换 ABCD DCBA BADC BADC CDAB等等
+小工具 
+输入数值转换 ABCD DCBA BADC BADC CDAB等等
