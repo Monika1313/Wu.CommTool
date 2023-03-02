@@ -199,30 +199,28 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
-                //配置文件目录
-                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
-                Wu.Utils.IOUtil.Exists(dict);
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig"); //配置文件目录
+                Wu.Utils.IOUtil.Exists(dict);                                                                   //验证文件夹是否存在, 不存在则创建
                 SaveFileDialog sfd = new SaveFileDialog()
                 {
-                    Title = "请选择导出配置文件...",                                          //对话框标题
-                    Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
-                    FilterIndex = 1,                                                         //默认选中的过滤器
-                    FileName = "Default",                                           //默认文件名
+                    Title = "请选择导出配置文件...",                             //对话框标题
+                    Filter = "json files(*.jsonMSC)|*.jsonMSC",                 //文件格式过滤器
+                    FilterIndex = 1,                                            //默认选中的过滤器
+                    FileName = "Default",                                       //默认文件名
                     DefaultExt = "jsonMSC",                                     //默认扩展名
-                    InitialDirectory = dict,                //指定初始的目录
-                    OverwritePrompt = true,                                                  //文件已存在警告
-                    AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                    InitialDirectory = dict,                                    //指定初始的目录
+                    OverwritePrompt = true,                                     //文件已存在警告
+                    AddExtension = true,                                        //若用户省略扩展名将自动添加扩展名
                 };
                 if (sfd.ShowDialog() != true)
                     return;
-                //将当前的配置序列化为json字符串
-                var content = JsonConvert.SerializeObject(MqttServerConfig);
-                //保存文件
-                Common.Utils.WriteJsonFile(sfd.FileName, content);
-                ShowMessage("配置导出成功");
+                var content = JsonConvert.SerializeObject(MqttServerConfig);    //将当前的配置序列化为json字符串
+                Common.Utils.WriteJsonFile(sfd.FileName, content);              //保存文件
+                HcGrowlExtensions.Success("配置文件导出成功", viewName);
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning("配置文件导出失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
@@ -253,10 +251,11 @@ namespace Wu.CommTool.ViewModels
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
                 var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
                 MqttServerConfig = x;
-                ShowMessage("配置导入成功");
+                HcGrowlExtensions.Success("配置文件导入成功", viewName);
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning("配置文件导入失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }

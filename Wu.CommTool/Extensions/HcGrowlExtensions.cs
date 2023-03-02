@@ -13,7 +13,10 @@ namespace Wu.CommTool.Extensions
     /// </summary>
     public static class HcGrowlExtensions
     {
-        public static void Warning(string message, string token = "", int waitTime = 1,bool showDateTime = false)
+        //默认的停留时间
+        public const int WaitTime = 2;
+
+        public static void Warning(string message, string token = "", int waitTime = WaitTime, bool showDateTime = false)
         {
             Growl.Warning(new GrowlInfo()
             {
@@ -24,7 +27,7 @@ namespace Wu.CommTool.Extensions
             });
         }
 
-        public static void Success(string message, string token = "", int waitTime = 1, bool showDateTime = false)
+        public static void Success(string message, string token = "", int waitTime = WaitTime, bool showDateTime = false)
         {
             Growl.Success(new GrowlInfo()
             {
@@ -35,7 +38,7 @@ namespace Wu.CommTool.Extensions
             });
         }
 
-        public static void Info(string message, string token = "", int waitTime = 1, bool showDateTime = false)
+        public static void Info(string message, string token = "", int waitTime = WaitTime, bool showDateTime = false)
         {
             Growl.Info(new GrowlInfo()
             {

@@ -1136,11 +1136,12 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(MosbusRtuAutoResponseDatas);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                ShowMessage("导出配置完成");
+                HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(sfd.FileName)}\"导出成功", viewName);
                 RefreshQuickImportList();//更新列表
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning($"自动应答配置导出失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
@@ -1169,10 +1170,11 @@ namespace Wu.CommTool.ViewModels
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
                 MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
                 RefreshModbusRtuDataDataView();//更新数据视图
-                ShowMessage("导入配置完成");
+                HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", viewName);
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning($"自动应答配置导入成功", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
@@ -1206,11 +1208,13 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(DataMonitorConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                ShowMessage("导出自动应答配置完成");
+                //ShowMessage("导出自动应答配置完成");
+                HcGrowlExtensions.Success("导出自动应答配置完成", viewName);
                 RefreshQuickImportList();//更新列表
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning("导出自动应答配置失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
@@ -1239,10 +1243,12 @@ namespace Wu.CommTool.ViewModels
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
                 DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
                 RefreshModbusRtuDataDataView();//更新数据视图
-                ShowMessage("导入配置完成");
+                //ShowMessage("导入配置完成");
+                HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入完成", viewName);
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning("自动应答配置导入失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
@@ -1263,10 +1269,11 @@ namespace Wu.CommTool.ViewModels
                     return;
                 }
                 RefreshModbusRtuDataDataView();//更新数据视图
-                ShowMessage("导入配置完成");
+                HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(obj.FullName)}\"导入完成", viewName);
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning("自动应答配置导入失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }

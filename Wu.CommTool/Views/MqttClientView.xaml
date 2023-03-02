@@ -25,6 +25,7 @@
                 <!--  左侧抽屉  -->
                 <md:DrawerHost.LeftDrawerContent>
                     <DockPanel>
+                        <!--  快速导入配置  -->
                         <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
                             <DockPanel>
                                 <StackPanel
@@ -76,8 +77,12 @@
                             </DockPanel>
                         </ContentControl>
 
-                        <ContentControl Padding="10" Style="{StaticResource Effect2Control}">
-                            <DockPanel>
+                        <!--  Mqtt客户端配置  -->
+                        <ContentControl
+                            MaxWidth="600"
+                            Padding="10"
+                            Style="{StaticResource Effect2Control}">
+                            <DockPanel Cursor="">
                                 <StackPanel
                                     HorizontalAlignment="Center"
                                     DockPanel.Dock="Top"
@@ -259,7 +264,7 @@
 
                 <!--  右侧抽屉  -->
                 <md:DrawerHost.RightDrawerContent>
-                    <DockPanel Width="240">
+                    <DockPanel MinWidth="240" MaxWidth="600">
                         <TextBlock
                             Margin="4"
                             HorizontalAlignment="Center"

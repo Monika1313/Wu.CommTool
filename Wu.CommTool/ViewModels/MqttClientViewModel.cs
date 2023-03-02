@@ -236,7 +236,7 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(MqttClientConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                MessageBox.Show("导出完成");
+                HcGrowlExtensions.Success("配置导出完成",viewName);
                 RefreshQuickImportList();
             }
             catch (Exception ex)
@@ -260,9 +260,9 @@ namespace Wu.CommTool.ViewModels
                 //选中配置文件
                 OpenFileDialog dlg = new()
                 {
-                    Title = "请选择导入配置文件...",                                              //对话框标题
-                    Filter = "json files(*.jsonMCC)|*.jsonMCC",    //文件格式过滤器
-                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    Title = "请选择导入配置文件...",                      //对话框标题
+                    Filter = "json files(*.jsonMCC)|*.jsonMCC",          //文件格式过滤器
+                    FilterIndex = 1,                                     //默认选中的过滤器
                     InitialDirectory = dict
                 };
 
@@ -271,6 +271,7 @@ namespace Wu.CommTool.ViewModels
                 var xx = Common.Utils.ReadJsonFile(dlg.FileName);
                 var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx);
                 MqttClientConfig = x;
+                HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入成功", viewName);
             }
             catch (Exception ex)
             {
@@ -294,10 +295,12 @@ namespace Wu.CommTool.ViewModels
                     return;
                 }
                 MqttClientConfig = x;
-                ShowMessage("导入配置完成");
+                //ShowMessage("导入配置完成");
+                HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(obj.FullName)}\"导入成功", viewName);
             }
             catch (Exception ex)
             {
+                HcGrowlExtensions.Warning($"配置文件导入失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
