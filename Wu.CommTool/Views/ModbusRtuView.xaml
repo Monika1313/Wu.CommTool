@@ -57,6 +57,46 @@
                     </ContentControl>
                 </DockPanel>
 
+                <!--  底部区域  -->
+                <StackPanel
+                    Height="30"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+                    <Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
+
+                    <TextBlock
+                        Margin="0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="{Binding ComConfig.Port.Key}" />
+                    <TextBlock VerticalAlignment="Center" Text=" : " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding ComConfig.StopBits}" />
+
+                    <Controls:BreatheLight
+                        Margin="30,5,5,5"
+                        IsBreathing="{Binding ComConfig.IsReceiving}"
+                        Visibility="{Binding ComConfig.IsReceiving, Converter={cvt:False2Hidden}}" />
+                    <TextBlock VerticalAlignment="Center" Text="接收: " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ReceiveBytesCount}" />
+                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+
+                    <Controls:BreatheLight
+                        Margin="30,5,5,5"
+                        IsBreathing="{Binding ComConfig.IsSending}"
+                        Visibility="{Binding ComConfig.IsSending, Converter={cvt:False2Hidden}}" />
+                    <TextBlock VerticalAlignment="Center" Text="发送: " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
+                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                </StackPanel>
+
                 <md:Transitioner AutoApplyTransitionOrigins="True" SelectedIndex="{Binding ModbusRtuFunIndex}">
                     <!--  自定义帧 Index 0  -->
                     <md:TransitionerSlide>
@@ -288,60 +328,8 @@
                                             CommandParameter="Clear"
                                             Content="{md:PackIcon Kind=Delete}"
                                             Style="{StaticResource Red_CircleButton}" />
-
-                                        <!--  自动搜索ModbusRtu设备  -->
-                                        <!--<Button
-                                            Width="30"
-                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                            Margin="4"
-                                            hc:Poptip.Content="自动搜索ModbusRtu设备"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="AutoSearch"
-                                            Content="{md:PackIcon Kind=Search}"
-                                            Cursor="Hand"
-                                            DockPanel.Dock="Right"
-                                            Style="{StaticResource Blue_CircleButton}" />-->
                                     </DockPanel>
                                 </Grid>
-
-
-                                <!--  底部区域  -->
-                                <StackPanel
-                                    Height="30"
-                                    DockPanel.Dock="Bottom"
-                                    Orientation="Horizontal">
-                                    <Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
-                                    <TextBlock
-                                        Margin="0"
-                                        VerticalAlignment="Center"
-                                        FontWeight="Bold"
-                                        Text="{Binding ComConfig.Port.Key}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" : " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
-                                    <TextBlock VerticalAlignment="Center" Text="  " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
-                                    <TextBlock VerticalAlignment="Center" Text="  " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
-                                    <TextBlock
-                                        Margin="5,0"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding ComConfig.StopBits}" />
-
-                                    <Border
-                                        Margin="30,3"
-                                        BorderBrush="LightBlue"
-                                        BorderThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" Text="Receive: " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ReceiveBytesCount}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                    <Border
-                                        Margin="30,3"
-                                        BorderBrush="LightBlue"
-                                        BorderThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" Text="Send: " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                </StackPanel>
 
                                 <!--  发送区域  -->
                                 <DockPanel Height="130" DockPanel.Dock="Bottom">
@@ -487,45 +475,6 @@
                                         Style="{StaticResource Red_CircleButton}" />
                                 </DockPanel>
                             </Grid>
-
-                            <!--  底部区域  -->
-                            <StackPanel
-                                Height="30"
-                                DockPanel.Dock="Bottom"
-                                Orientation="Horizontal">
-                                <Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
-
-                                <TextBlock
-                                    Margin="0"
-                                    VerticalAlignment="Center"
-                                    FontWeight="Bold"
-                                    Text="{Binding ComConfig.Port.Key}" />
-                                <TextBlock VerticalAlignment="Center" Text=" : " />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
-                                <TextBlock VerticalAlignment="Center" Text="  " />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
-                                <TextBlock VerticalAlignment="Center" Text="  " />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
-                                <TextBlock
-                                    Margin="5,0"
-                                    VerticalAlignment="Center"
-                                    Text="{Binding ComConfig.StopBits}" />
-
-                                <Border
-                                    Margin="30,3"
-                                    BorderBrush="LightBlue"
-                                    BorderThickness="1" />
-                                <TextBlock VerticalAlignment="Center" Text="Receive: " />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding ReceiveBytesCount}" />
-                                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                <Border
-                                    Margin="30,3"
-                                    BorderBrush="LightBlue"
-                                    BorderThickness="1" />
-                                <TextBlock VerticalAlignment="Center" Text="Send: " />
-                                <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
-                                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                            </StackPanel>
 
                             <!--  内容  -->
                             <DockPanel Margin="0,0,4,0">
@@ -1467,43 +1416,7 @@
                                     </DockPanel>
                                 </Grid>
 
-                                <!--  底部区域  -->
-                                <StackPanel
-                                    Height="30"
-                                    DockPanel.Dock="Bottom"
-                                    Orientation="Horizontal">
-                                    <Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
-                                    <TextBlock
-                                        Margin="0"
-                                        VerticalAlignment="Center"
-                                        FontWeight="Bold"
-                                        Text="{Binding ComConfig.Port.Key}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" : " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
-                                    <TextBlock VerticalAlignment="Center" Text="  " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
-                                    <TextBlock VerticalAlignment="Center" Text="  " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
-                                    <TextBlock
-                                        Margin="5,0"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding ComConfig.StopBits}" />
 
-                                    <Border
-                                        Margin="30,3"
-                                        BorderBrush="LightBlue"
-                                        BorderThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" Text="Receive: " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ReceiveBytesCount}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                    <Border
-                                        Margin="30,3"
-                                        BorderBrush="LightBlue"
-                                        BorderThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" Text="Send: " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                </StackPanel>
                                 <!--  主体内容  -->
                                 <DockPanel>
                                     <!--  数据  -->
@@ -1964,46 +1877,6 @@
                                             Style="{StaticResource Green_CircleButton}" />
                                     </DockPanel>
                                 </Grid>
-
-                                <!--  底部区域  -->
-                                <StackPanel
-                                    Height="30"
-                                    DockPanel.Dock="Bottom"
-                                    Orientation="Horizontal">
-                                    <!--<Controls:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />-->
-                                    <wuctrl:BreatheLight IsBreathing="{Binding ComConfig.IsOpened}" />
-                                    <TextBlock
-                                        Margin="0"
-                                        VerticalAlignment="Center"
-                                        FontWeight="Bold"
-                                        Text="{Binding ComConfig.Port.Key}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" : " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Port.Value}" />
-                                    <TextBlock VerticalAlignment="Center" Text="  " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.Parity}" />
-                                    <TextBlock VerticalAlignment="Center" Text="  " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ComConfig.DataBits}" />
-                                    <TextBlock
-                                        Margin="5,0"
-                                        VerticalAlignment="Center"
-                                        Text="{Binding ComConfig.StopBits}" />
-
-                                    <Border
-                                        Margin="30,3"
-                                        BorderBrush="LightBlue"
-                                        BorderThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" Text="Receive: " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding ReceiveBytesCount}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                    <Border
-                                        Margin="30,3"
-                                        BorderBrush="LightBlue"
-                                        BorderThickness="1" />
-                                    <TextBlock VerticalAlignment="Center" Text="Send: " />
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding SendBytesCount}" />
-                                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                                </StackPanel>
-
 
                                 <!--  匹配设置列表  -->
                                 <ContentControl

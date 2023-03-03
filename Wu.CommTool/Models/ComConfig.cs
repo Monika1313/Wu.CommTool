@@ -46,6 +46,19 @@ namespace Wu.CommTool.Models
         public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
         private bool _IsOpened = false;
 
+        /// <summary>
+        /// 是否处于接收数据状态
+        /// </summary>
+        [JsonIgnore]
+        public bool IsReceiving { get => _IsReceiving; set => SetProperty(ref _IsReceiving, value); }
+        private bool _IsReceiving = false;
+
+        /// <summary>
+        /// 是否处于发送数据状态
+        /// </summary>
+        [JsonIgnore]
+        public bool IsSending { get => _IsSending; set => SetProperty(ref _IsSending, value); }
+        private bool _IsSending = false;
 
         /// <summary>
         /// 分包超时时间

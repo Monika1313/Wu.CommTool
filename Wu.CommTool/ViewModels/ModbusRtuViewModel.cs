@@ -456,7 +456,7 @@ namespace Wu.CommTool.ViewModels
             {
                 IsAutoResponse = false;
                 ShowMessage("关闭自动应答...");
-                HcGrowlExtensions.Warning("关闭自动应答...",viewName);
+                HcGrowlExtensions.Warning("关闭自动应答...", viewName);
             }
             catch (Exception ex)
             {
@@ -473,7 +473,7 @@ namespace Wu.CommTool.ViewModels
             {
                 IsAutoResponse = true;
                 ShowMessage("启用自动应答...");
-                HcGrowlExtensions.Success("启用自动应答...",viewName);
+                HcGrowlExtensions.Success("启用自动应答...", viewName);
             }
             catch (Exception ex)
             {
@@ -785,6 +785,16 @@ namespace Wu.CommTool.ViewModels
                         //var data = list.ToArray(); 
                         #endregion
 
+
+                        #region 测试发送数据所用的时间
+                        //System.Diagnostics.Stopwatch oTime = new();   //定义一个计时对象  
+                        //oTime.Start();                         //开始计时 
+                        //SerialPort.Write(data, 0, data.Length);     //发送数据
+                        //oTime.Stop();
+                        //ShowMessage($"发送数据用时{oTime.Elapsed.TotalMilliseconds} ms");
+                        #endregion
+
+
                         SerialPort.Write(data, 0, data.Length);     //发送数据
                         SendBytesCount += data.Length;                    //统计发送数据总数
 
@@ -826,6 +836,11 @@ namespace Wu.CommTool.ViewModels
                     SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
                     return;
                 }
+
+                ComConfig.IsReceiving = true;
+
+                //System.Diagnostics.Stopwatch oTime = new();   //定义一个计时对象  
+                //oTime.Start();                         //开始计时 
 
                 #region 接收数据
                 //接收的数据缓存
@@ -880,10 +895,17 @@ namespace Wu.CommTool.ViewModels
                     return;
 
                 WaitUartReceived.Set();//置位数据接收完成标志
+
+                //oTime.Stop();
+                //ShowMessage($"接收数据用时{oTime.Elapsed.TotalMilliseconds} ms");
             }
             catch (Exception ex)
             {
                 ShowMessage(ex.Message, MessageType.Receive);
+            }
+            finally
+            {
+                ComConfig.IsReceiving = false;
             }
         }
 
@@ -1556,6 +1578,8 @@ namespace Wu.CommTool.ViewModels
             WaitPublishFrameEnqueue.Reset();
             while (true)
             {
+                //System.Diagnostics.Stopwatch oTime = new System.Diagnostics.Stopwatch();   //定义一个计时对象  
+                //oTime.Start();                         //开始计时 
                 try
                 {
                     //判断队列是否不空 若为空则等待
@@ -1564,6 +1588,7 @@ namespace Wu.CommTool.ViewModels
                         WaitPublishFrameEnqueue.WaitOne();
                         continue;//需要再次验证队列是否为空
                     }
+                    ComConfig.IsSending = true;
                     var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
                     PublishMessage(frame.Item1);              //请求发送数据帧
                     await Task.Delay(frame.Item2);            //等待一段时间
@@ -1572,6 +1597,12 @@ namespace Wu.CommTool.ViewModels
                 {
                     ShowErrorMessage(ex.Message);
                 }
+                finally
+                {
+                    ComConfig.IsSending = false;
+                }
+                //oTime.Stop();                          //结束计时
+                //ShowMessage($"{oTime.ElapsedMilliseconds} ms");
             }
         }
 
@@ -1597,7 +1628,6 @@ namespace Wu.CommTool.ViewModels
                     {
                         continue;
                     }
-
                     //对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
 
