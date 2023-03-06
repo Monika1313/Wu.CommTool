@@ -457,7 +457,7 @@ namespace Wu.CommTool.ViewModels
                 //    return;
                 //}
 
-                var payload = obj.ApplicationMessage.Payload ?? new byte[0];
+                var payload = obj.ApplicationMessage.Payload ?? Array.Empty<byte>();
 
                 switch (MqttServerConfig.ReceivePaylodType)
                 {

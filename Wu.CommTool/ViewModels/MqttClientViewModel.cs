@@ -539,19 +539,21 @@ namespace Wu.CommTool.ViewModels
                     return;
                 }
 
+                var payload = arg.ApplicationMessage.Payload ?? Array.Empty<byte>();
+
                 switch (MqttClientConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Plaintext:
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload)}", $"主题：{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Json:
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(arg.ApplicationMessage.Payload).ToJsonString()}", $"主题：{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Hex:
-                        ShowReceiveMessage($"{BitConverter.ToString(arg.ApplicationMessage.Payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"{Convert.ToBase64String(arg.ApplicationMessage.Payload)}", $"主题：{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                 }
             }
