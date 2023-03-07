@@ -243,6 +243,20 @@ namespace Wu.CommTool.Models
                     }
                     return re;
                 case ModbusByteOrder.CDAB:
+                    var temp = val.Reverse().ToArray();
+                    byte[] result = new byte[temp.Length];
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        byte item = temp[i];
+                        if (i % 2 == 1)
+                        {
+                            result[i - 1] = item;
+                        }
+                        else
+                        {
+                            result[i + 1] = item;
+                        }
+                    }
                     return val;
                 case ModbusByteOrder.DCBA:
                     return val.Reverse().ToArray();

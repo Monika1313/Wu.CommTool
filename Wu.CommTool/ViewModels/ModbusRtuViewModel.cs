@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows.Controls;
 using System.Windows.Data;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
@@ -528,21 +529,15 @@ namespace Wu.CommTool.ViewModels
             {
                 ModbusRtuDataDataView.Filter = new Predicate<object>(x => true);
             }
-
-
             //TestDataView = (DataView)CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
             //var cview = CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
             //cview.Filter = new Predicate<object>(x => true);
             //TestDataView = (DataView)cview;
-
-
         }
 
         /// <summary>
         /// 关闭自动读取数据
         /// </summary>
-        /// ++
-        /// +
         private void CloseAutoRead()
         {
             try
@@ -875,7 +870,7 @@ namespace Wu.CommTool.ViewModels
                 msg = msg.Replace('-', ' ');
                 ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
 
-                //TODO 搜索时将验证通过的添加至搜索到的设备列表
+                //搜索时将验证通过的添加至搜索到的设备列表
                 if (SearchDeviceState == 1)
                 {
                     System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
@@ -887,15 +882,11 @@ namespace Wu.CommTool.ViewModels
                     HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", viewName);
                 }
 
-                //计算总接收数据量
-                ReceiveBytesCount += list.Count;
-
+                ReceiveBytesCount += list.Count;         //计算总接收数据量
                 //若暂停更新接收数据 则不显示
                 if (IsPause)
                     return;
-
                 WaitUartReceived.Set();//置位数据接收完成标志
-
                 //oTime.Stop();
                 //ShowMessage($"接收数据用时{oTime.Elapsed.TotalMilliseconds} ms");
             }
@@ -1631,6 +1622,8 @@ namespace Wu.CommTool.ViewModels
                     //对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
 
+                    #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
+                    //TODO 将接收的数据帧根据功能码进行分隔展示 例如03功能码将数据按位合并展示
                     if (IsPause)
                     {
                         //若暂停更新显示则不输出
@@ -1646,8 +1639,10 @@ namespace Wu.CommTool.ViewModels
                     {
                         ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
+                    #endregion
 
-                    //自动应答
+
+                    #region 自动应答
                     if (IsAutoResponse)
                     {
                         //验证匹配哪一条规则
@@ -1657,12 +1652,14 @@ namespace Wu.CommTool.ViewModels
                             ShowMessage($"自动应答匹配: {xx.Name}");
                             PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
                         }
-                    }
+                    } 
+                    #endregion
 
                     List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
-                    int slaveId = frameList[0]; //从站地址
-                    int func = frameList[1];    //功能码
+                    int slaveId = frameList[0];                 //从站地址
+                    int func = frameList[1];                    //功能码
 
+                    #region 对接收的数据分功能码展示
                     //03功能码 字节数量奇数为响应帧 字节数量=8请求帧    错误码0x83
                     if (func == 0x03)
                     {
@@ -1687,14 +1684,14 @@ namespace Wu.CommTool.ViewModels
                                 //}
                             }
                         }
+
+                        //ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
-
                     //0x10功能码 多字节写入  错误码 0x90
-                    if (func == 0x10)
+                    else if (func == 0x10)
                     {
+                        //ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                         //请求帧为奇数字节
-
-
                         //响应帧8字节
                         if (frameList.Count == 8)
                         {
@@ -1702,12 +1699,73 @@ namespace Wu.CommTool.ViewModels
                             ShowMessage("数据写入成功");
                         }
                     }
+                    //else
+                    //{
+                    //    ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
+                    //}
+                    #endregion
                 }
                 catch (Exception ex)
                 {
                     ShowErrorMessage(ex.Message);
                 }
             }
+        }
+
+        /// <summary>
+        /// 判断ModbusCrc校验是否通过
+        /// </summary>
+        /// <returns></returns>
+        public bool IsModbusCrcVerifyPass(byte[] frame)
+        {
+            //对接收的消息直接进行crc校验
+            var crc = Wu.Utils.Crc.Crc16Modbus(frame);   //校验码 校验通过的为0000
+            //若校验结果不为0000则校验失败
+            if (crc == null || !crc[0].Equals(0) || !crc[1].Equals(0))
+                return false;
+            //校验成功
+            else
+                return true;
+        }
+
+        /// <summary>
+        /// 格式化Modbus数据帧
+        /// </summary>
+        /// <returns></returns>
+        private string ModbusFrameFormat(byte[] frame)
+        {
+            //验证数据帧的校验码是否正确
+            var re = IsModbusCrcVerifyPass(frame);
+            if (!re)
+            {
+                return frame.ToString()!.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...";
+            }
+            //判断功能码
+            List<byte> frameList = frame.ToList();//数据帧转换为字节列表
+            int slaveId = frameList[0];      //从站地址
+            int func = frameList[1];         //功能码
+
+            //TODO根据数据帧格式化消息
+
+            //判断内容为请求帧还是应答帧
+            //03功能码 字节数量奇数为应答帧 字节数量=8请求帧    错误码0x83
+            if (func == 0x03)
+            {
+                if (frameList.Count == 8)
+                {
+                    //return frame.ToString().
+                }
+                //判断字节数量是否为奇数
+                if (frameList.Count % 2 == 1)
+                {
+                }
+                return string.Empty;
+            }
+            else
+            {
+                return frame.ToString()!.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...";
+            }
+            return string.Empty;
         }
 
         /// <summary>
