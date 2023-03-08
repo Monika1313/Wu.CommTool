@@ -1629,7 +1629,7 @@ namespace Wu.CommTool.ViewModels
                         //若暂停更新显示则不输出
                     }
                     //若校验结果不为0000则校验失败
-                    else if (crc == null || !crc[0].Equals(0) || !crc[1].Equals(0))
+                    else if (!IsModbusCrcVerifyPass(frame.GetBytes()))
                     {
                         ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...");
                         continue;
@@ -1637,10 +1637,18 @@ namespace Wu.CommTool.ViewModels
                     //校验成功
                     else
                     {
-                        ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
+                        try
+                        {
+                            var mrFrame = new ModbusRtuFrame(frame.GetBytes());
+                            ShowReceiveMessage(mrFrame.ToString());
+                        }
+                        catch (Exception ex)
+                        {
+                            ShowErrorMessage(ex.Message);
+                        }
+                        //ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
                     }
                     #endregion
-
 
                     #region 自动应答
                     if (IsAutoResponse)
@@ -1734,6 +1742,8 @@ namespace Wu.CommTool.ViewModels
         /// <returns></returns>
         private string ModbusFrameFormat(byte[] frame)
         {
+            //TODO 帧格式化
+
             //验证数据帧的校验码是否正确
             var re = IsModbusCrcVerifyPass(frame);
             if (!re)
