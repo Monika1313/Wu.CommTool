@@ -382,31 +382,31 @@ namespace Wu.CommTool.ViewModels
 
             try
             {
-                var msg = SendMessage.Replace("-", string.Empty).GetBytes();
-                List<byte> crc = new();
-                //根据选择进行CRC校验
-                switch (CrcMode)
-                {
-                    //无校验
-                    case CrcMode.None:
-                        break;
+                //var msg = SendMessage.Replace("-", string.Empty).GetBytes();
+                //List<byte> crc = new();
+                ////根据选择进行CRC校验
+                //switch (CrcMode)
+                //{
+                //    //无校验
+                //    case CrcMode.None:
+                //        break;
 
-                    //Modebus校验
-                    case CrcMode.Modbus:
-                        var code = Wu.Utils.Crc.Crc16Modbus(msg);
-                        Array.Reverse(code);
-                        crc.AddRange(code);
-                        break;
-                    default:
-                        break;
-                }
-                //合并数组
-                List<byte> list = new List<byte>();
-                list.AddRange(msg);
-                list.AddRange(crc);
-                var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
-                //PublishFrameQueue.Enqueue(data);          //将待发送的消息添加进队列
-                PublishFrameEnqueue(data);                  //将待发送的消息添加进队列
+                //    //Modebus校验
+                //    case CrcMode.Modbus:
+                //        var code = Wu.Utils.Crc.Crc16Modbus(msg);
+                //        Array.Reverse(code);
+                //        crc.AddRange(code);
+                //        break;
+                //    default:
+                //        break;
+                //}
+                ////合并数组
+                //List<byte> list = new List<byte>();
+                //list.AddRange(msg);
+                //list.AddRange(crc);
+                //var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
+
+                PublishFrameEnqueue(GetCrcedStrWithSelect(SendMessage));                  //将待发送的消息添加进队列
             }
             catch (Exception ex)
             {
@@ -416,11 +416,11 @@ namespace Wu.CommTool.ViewModels
 
 
         /// <summary>
-        /// 对字符串进行crc校验
+        /// 根据选择 对字符串进行crc校验
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
-        public string GetCrcedStr(string msg)
+        public string GetCrcedStrWithSelect(string msg)
         {
             var msg2 = msg.Replace("-", string.Empty).GetBytes();
             List<byte> crc = new();
@@ -447,6 +447,29 @@ namespace Wu.CommTool.ViewModels
             var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
             return data;
         }
+
+        /// <summary>
+        /// 根据选择 对字符串进行crc校验
+        /// </summary>
+        /// <param name="msg"></param>
+        /// <returns></returns>
+        public string GetModbusCrcedStr(string msg)
+        {
+            var msg2 = msg.Replace("-", string.Empty).GetBytes();
+            List<byte> crc = new();
+            //根据选择ModbusCRC校验
+            var code = Wu.Utils.Crc.Crc16Modbus(msg2);
+            Array.Reverse(code);
+            crc.AddRange(code);
+            //合并数组
+            List<byte> list = new List<byte>();
+            list.AddRange(msg2);
+            list.AddRange(crc);
+            var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
+            return data;
+        }
+
+
 
         /// <summary>
         /// 关闭自动应答
@@ -620,7 +643,8 @@ namespace Wu.CommTool.ViewModels
             {
                 timer.Stop();
                 string msg = DataMonitorConfig.DataFrame[..^4];
-                PublishMessage(GetCrcedStr(msg));
+                PublishMessage(GetModbusCrcedStr(msg));
+                ////PublishMessage(DataMonitorConfig.DataFrame);
             }
             catch (Exception ex)
             {
@@ -794,7 +818,8 @@ namespace Wu.CommTool.ViewModels
                         SendBytesCount += data.Length;                    //统计发送数据总数
 
                         if (!IsPause)
-                            ShowMessage(BitConverter.ToString(data).Replace("-", "").Replace(" ", "").InsertFormat(4, " "), MessageType.Send);
+                            ShowSendMessage(new ModbusRtuFrame(data).ToString());
+                            //ShowMessage(BitConverter.ToString(data).Replace("-", "").Replace(" ", "").InsertFormat(4, " "), MessageType.Send);
                         return true;
                     }
                     catch (Exception ex)
@@ -1463,7 +1488,7 @@ namespace Wu.CommTool.ViewModels
                             //串口关闭时或不处于搜索状态
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
-                            PublishFrameEnqueue(GetCrcedStr(unCrcMsg), ComConfig.SearchInterval);//发送消息入队
+                            PublishFrameEnqueue(GetModbusCrcedStr(unCrcMsg), ComConfig.SearchInterval);//发送消息入队
                             await Task.Delay(ComConfig.SearchInterval);           //间隔80ms后再请求下一个
                         }
                         if (ComConfig.IsOpened == false)
@@ -1837,7 +1862,7 @@ namespace Wu.CommTool.ViewModels
                 ShowMessage("数据写入...");
 
                 //请求发送数据帧 由于会失败, 请求多次
-                PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
+                PublishFrameEnqueue(GetModbusCrcedStr(unCrcFrame), 1000);
                 //PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
                 //PublishFrameQueue.Enqueue(unCrcFrame);
                 ////PublishFrameQueue.Enqueue(unCrcFrame);
