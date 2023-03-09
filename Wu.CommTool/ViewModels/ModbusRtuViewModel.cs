@@ -422,6 +422,12 @@ namespace Wu.CommTool.ViewModels
         /// <returns></returns>
         public string GetCrcedStrWithSelect(string msg)
         {
+            string reMsg = msg.Replace("-", string.Empty).Replace(" ",string.Empty);
+            if (reMsg.Length%2 == 1)
+            {
+                ShowErrorMessage("发送字符数量不符, 应为2的整数倍");
+                return null;
+            }
             var msg2 = msg.Replace("-", string.Empty).GetBytes();
             List<byte> crc = new();
             //根据选择进行CRC校验
@@ -1579,6 +1585,10 @@ namespace Wu.CommTool.ViewModels
         /// <param name="delay">发送完成后等待的时间,期间不会发送消息</param>
         private void PublishFrameEnqueue(string msg, int delay = 10)
         {
+            if (msg == null)
+            {
+                return;
+            }
             PublishFrameQueue.Enqueue((msg, delay));       //发布消息入队
             WaitPublishFrameEnqueue.Set();                 //置位发布消息入队标志
         }
@@ -1812,12 +1822,17 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
+                //todo 使用正则验证值为数值
+                if (obj.WriteValue == null)
+                {
+                    ShowErrorMessage("写入值不能为空...");
+                    return;
+                }
                 string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
                 string fun = "10";                                                    //0x10 写入多个寄存器
                 string startAddr = obj.Addr.ToString("X4");                     //起始地址
                 string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");     //寄存器数量
                 string quantity = (obj.DataTypeByteLength).ToString("X2");      //字节数量
-
                 double wValue = double.Parse(obj.WriteValue) / obj.Rate;              //对值的倍率做处理
                 string dataStr = "";
                 dynamic data = "";
