@@ -1,1 +1,1 @@
-﻿{"ClientId":"ClientId","UserName":"UserName","Password":"Password","SubscribeTopics":["+/#"],"PublishTopic":"","QosLevel":1,"ServerIp":"127.0.0.1","ServerPort":1883}
+﻿{"ClientId":"ClientId","UserName":"UserName","Password":"Password","SubscribeTopics":[{"Topic":"+/#"}],"PublishTopic":"","QosLevel":1,"ServerIp":"127.0.0.1","ServerPort":1883,"ReceivePaylodType":0,"SendPaylodType":0}
