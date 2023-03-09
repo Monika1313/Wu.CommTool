@@ -37,7 +37,7 @@ namespace Wu.CommTool.Models
             //Crc校验
             if (!IsCrcPassed)
             {
-                Type = ModburRtuFrameType.校验失败;
+                Type = ModbusRtuFrameType.校验失败;
                 ErrMessage = "Crc校验错误";
                 return;
             }
@@ -54,7 +54,7 @@ namespace Wu.CommTool.Models
                     StartAddr = Frame.Skip(2).Take(2).ToArray();
                     RegisterNum = Frame.Skip(4).Take(2).ToArray();
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
-                    Type = ModburRtuFrameType.请求帧0x03;
+                    Type = ModbusRtuFrameType.请求帧0x03;
                 }
                 //应答帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
                 else if(Frame.Length>=7 && Frame.Length%2==1)
@@ -62,7 +62,7 @@ namespace Wu.CommTool.Models
                     BytesNum = Frame[2];
                     RegisterValues = Frame.Skip(3).Take(Frame.Length - 5).ToArray();
                     CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
-                    Type = ModburRtuFrameType.应答帧0x03;
+                    Type = ModbusRtuFrameType.应答帧0x03;
                 }
             }
             //0x03的差错码0x83
@@ -87,7 +87,7 @@ namespace Wu.CommTool.Models
                             break;
                     }
                     CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
-                    Type = ModburRtuFrameType.差错帧0x83;
+                    Type = ModbusRtuFrameType.差错帧0x83;
                 }
             }
             //0x10功能码
@@ -99,7 +99,7 @@ namespace Wu.CommTool.Models
                     StartAddr = Frame.Skip(2).Take(2).ToArray();
                     RegisterNum = Frame.Skip(4).Take(2).ToArray();
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
-                    Type = ModburRtuFrameType.应答帧0x10;
+                    Type = ModbusRtuFrameType.应答帧0x10;
                 }
                 //请求帧   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
                 else if(Frame.Length >=9 && Frame.Length % 2 == 1)
@@ -109,7 +109,7 @@ namespace Wu.CommTool.Models
                     BytesNum = Frame[6];
                     RegisterValues = Frame.Skip(7).Take(Frame.Length - 9).ToArray();
                     CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
-                    Type = ModburRtuFrameType.请求帧0x10;
+                    Type = ModbusRtuFrameType.请求帧0x10;
                 }
             }
             //0x10的错误码0x90
@@ -134,7 +134,7 @@ namespace Wu.CommTool.Models
                             ErrMessage = "写多个寄存器失败";
                             break;
                     }
-                    Type = ModburRtuFrameType.差错帧0x90;
+                    Type = ModbusRtuFrameType.差错帧0x90;
                 }
             }
         }
@@ -202,8 +202,8 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// 帧类型
         /// </summary>
-        public ModburRtuFrameType Type { get => _Type; set => SetProperty(ref _Type, value); }
-        private ModburRtuFrameType _Type = ModburRtuFrameType.校验失败;
+        public ModbusRtuFrameType Type { get => _Type; set => SetProperty(ref _Type, value); }
+        private ModbusRtuFrameType _Type = ModbusRtuFrameType.校验失败;
 
         private string DatasFormat(byte[] input)
         {
@@ -241,25 +241,25 @@ namespace Wu.CommTool.Models
             try
             {
                 //没有解析或无法解析的不格式化
-                if (Type.Equals(ModburRtuFrameType.校验失败) || Type.Equals(ModburRtuFrameType.解析失败))
+                if (Type.Equals(ModbusRtuFrameType.校验失败) || Type.Equals(ModbusRtuFrameType.解析失败))
                     return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
                 switch (Type)
                 {
-                    case ModburRtuFrameType.校验失败:
+                    case ModbusRtuFrameType.校验失败:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
-                    case ModburRtuFrameType.解析失败:
+                    case ModbusRtuFrameType.解析失败:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
-                    case ModburRtuFrameType.请求帧0x03:
+                    case ModbusRtuFrameType.请求帧0x03:
                         return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
-                    case ModburRtuFrameType.应答帧0x03:
+                    case ModbusRtuFrameType.应答帧0x03:
                         return $"{SlaveId:X2} {Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
-                    case ModburRtuFrameType.差错帧0x83:
+                    case ModbusRtuFrameType.差错帧0x83:
                         return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
-                    case ModburRtuFrameType.请求帧0x10:
+                    case ModbusRtuFrameType.请求帧0x10:
                         return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
-                    case ModburRtuFrameType.应答帧0x10:
+                    case ModbusRtuFrameType.应答帧0x10:
                         return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
-                    case ModburRtuFrameType.差错帧0x90:
+                    case ModbusRtuFrameType.差错帧0x90:
                         return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
                     default:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");

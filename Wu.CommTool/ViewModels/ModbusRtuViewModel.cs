@@ -22,6 +22,7 @@ using System.Timers;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Wu.CommTool.Common;
+using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.CommTool.Views;
@@ -422,8 +423,8 @@ namespace Wu.CommTool.ViewModels
         /// <returns></returns>
         public string GetCrcedStrWithSelect(string msg)
         {
-            string reMsg = msg.Replace("-", string.Empty).Replace(" ",string.Empty);
-            if (reMsg.Length%2 == 1)
+            string reMsg = msg.Replace("-", string.Empty).Replace(" ", string.Empty);
+            if (reMsg.Length % 2 == 1)
             {
                 ShowErrorMessage("发送字符数量不符, 应为2的整数倍");
                 return null;
@@ -825,7 +826,7 @@ namespace Wu.CommTool.ViewModels
 
                         if (!IsPause)
                             ShowSendMessage(new ModbusRtuFrame(data).ToString());
-                            //ShowMessage(BitConverter.ToString(data).Replace("-", "").Replace(" ", "").InsertFormat(4, " "), MessageType.Send);
+                        //ShowMessage(BitConverter.ToString(data).Replace("-", "").Replace(" ", "").InsertFormat(4, " "), MessageType.Send);
                         return true;
                     }
                     catch (Exception ex)
@@ -1654,36 +1655,29 @@ namespace Wu.CommTool.ViewModels
                     {
                         continue;
                     }
+                    //实例化ModbusRtu帧
+                    var mFrame = new ModbusRtuFrame(frame.GetBytes());
+
                     //对接收的消息直接进行crc校验
                     var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
 
                     #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
-                    //TODO 将接收的数据帧根据功能码进行分隔展示 例如03功能码将数据按位合并展示
                     if (IsPause)
                     {
                         //若暂停更新显示则不输出
                     }
-                    //若校验结果不为0000则校验失败
-                    else if (!IsModbusCrcVerifyPass(frame.GetBytes()))
+                    else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
                     {
-                        ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...");
+                        ShowReceiveMessage(mFrame.ToString());
                         continue;
                     }
                     //校验成功
                     else
                     {
-                        try
-                        {
-                            var mrFrame = new ModbusRtuFrame(frame.GetBytes());
-                            ShowReceiveMessage(mrFrame.ToString());
-                        }
-                        catch (Exception ex)
-                        {
-                            ShowErrorMessage(ex.Message);
-                        }
-                        //ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
+                        ShowReceiveMessage(mFrame.ToString());
                     }
                     #endregion
+
 
                     #region 自动应答
                     if (IsAutoResponse)
@@ -1695,7 +1689,7 @@ namespace Wu.CommTool.ViewModels
                             ShowMessage($"自动应答匹配: {xx.Name}");
                             PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
                         }
-                    } 
+                    }
                     #endregion
 
                     List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
@@ -1703,49 +1697,26 @@ namespace Wu.CommTool.ViewModels
                     int func = frameList[1];                    //功能码
 
                     #region 对接收的数据分功能码展示
-                    //03功能码 字节数量奇数为响应帧 字节数量=8请求帧    错误码0x83
-                    if (func == 0x03)
-                    {
-                        //判断字节数量是否为奇数
-                        if (frameList.Count % 2 == 1)
-                        {
-                            //若自动读取开启则解析接收的数据
-                            if (DataMonitorConfig.IsOpened)
-                            {
-                                //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
-                                if (frameList[0] == DataMonitorConfig.SlaveId && frameList[2] == DataMonitorConfig.Quantity * 2)
-                                {
-                                    Analyse(frameList);
-                                }
 
-                                //frame = frame.Replace(" ", "");
-                                //if (Convert.ToInt32(frame[..2], 16) == DataMonitorConfig.SlaveId && Convert.ToInt32(frame[2..4], 16) == DataMonitorConfig.Function && Convert.ToInt32(frame[4..6], 16) == DataMonitorConfig.Quantity * 2)
-                                //{
-                                //    //将数据帧转换为list
-                                //    List<byte> list = frame.GetBytes().ToList();
-                                //    Analyse(list);
-                                //}
+                    //03功能码
+                    if (mFrame.Type.Equals(ModbusRtuFrameType.应答帧0x03))
+                    {
+                        //若自动读取开启则解析接收的数据
+                        if (DataMonitorConfig.IsOpened)
+                        {
+                            //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
+                            if (frameList[0] == DataMonitorConfig.SlaveId && frameList[2] == DataMonitorConfig.Quantity * 2)
+                            {
+                                Analyse(frameList);
                             }
                         }
+                    }
 
-                        //ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
-                    }
-                    //0x10功能码 多字节写入  错误码 0x90
-                    else if (func == 0x10)
+                    //0x10功能码
+                    else if (mFrame.Type.Equals(ModbusRtuFrameType.应答帧0x10))
                     {
-                        //ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
-                        //请求帧为奇数字节
-                        //响应帧8字节
-                        if (frameList.Count == 8)
-                        {
-                            //todo验证写入是否成功
-                            ShowMessage("数据写入成功");
-                        }
+                        ShowMessage("数据写入成功");
                     }
-                    //else
-                    //{
-                    //    ShowReceiveMessage(frame.Replace(" ", "").InsertFormat(4, " "));
-                    //}
                     #endregion
                 }
                 catch (Exception ex)
@@ -1771,47 +1742,6 @@ namespace Wu.CommTool.ViewModels
                 return true;
         }
 
-        /// <summary>
-        /// 格式化Modbus数据帧
-        /// </summary>
-        /// <returns></returns>
-        private string ModbusFrameFormat(byte[] frame)
-        {
-            //TODO 帧格式化
-
-            //验证数据帧的校验码是否正确
-            var re = IsModbusCrcVerifyPass(frame);
-            if (!re)
-            {
-                return frame.ToString()!.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...";
-            }
-            //判断功能码
-            List<byte> frameList = frame.ToList();//数据帧转换为字节列表
-            int slaveId = frameList[0];      //从站地址
-            int func = frameList[1];         //功能码
-
-            //TODO根据数据帧格式化消息
-
-            //判断内容为请求帧还是应答帧
-            //03功能码 字节数量奇数为应答帧 字节数量=8请求帧    错误码0x83
-            if (func == 0x03)
-            {
-                if (frameList.Count == 8)
-                {
-                    //return frame.ToString().
-                }
-                //判断字节数量是否为奇数
-                if (frameList.Count % 2 == 1)
-                {
-                }
-                return string.Empty;
-            }
-            else
-            {
-                return frame.ToString()!.Replace(" ", "").InsertFormat(4, " ") + "\n校验失败...";
-            }
-            return string.Empty;
-        }
 
         /// <summary>
         /// ModbusRtu数据写入

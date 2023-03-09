@@ -9,7 +9,7 @@ namespace Wu.CommTool.Enums
     /// <summary>
     /// ModbusRtu数据帧类型
     /// </summary>
-    public enum ModburRtuFrameType
+    public enum ModbusRtuFrameType
     {
         校验失败,
         解析失败,
