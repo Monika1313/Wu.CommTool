@@ -1,8 +1,15 @@
+using Wu.CommTool.Enums;
 namespace Test
 {
     [TestClass]
     public class UnitTest1
     {
+
+        [TestMethod]
+        public void TestEnums()
+        {
+            Console.WriteLine(ModbusRtuFunctionCode._0x01.ToString());
+        }
 
         #region switch 数据类型
         //[TestMethod]

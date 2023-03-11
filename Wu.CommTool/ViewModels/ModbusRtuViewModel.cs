@@ -1699,7 +1699,7 @@ namespace Wu.CommTool.ViewModels
                     #region 对接收的数据分功能码展示
 
                     //03功能码
-                    if (mFrame.Type.Equals(ModbusRtuFrameType.应答帧0x03))
+                    if (mFrame.Type.Equals(ModbusRtuFrameType._0x03响应帧))
                     {
                         //若自动读取开启则解析接收的数据
                         if (DataMonitorConfig.IsOpened)
@@ -1713,7 +1713,7 @@ namespace Wu.CommTool.ViewModels
                     }
 
                     //0x10功能码
-                    else if (mFrame.Type.Equals(ModbusRtuFrameType.应答帧0x10))
+                    else if (mFrame.Type.Equals(ModbusRtuFrameType._0x10响应帧))
                     {
                         ShowMessage("数据写入成功");
                     }
