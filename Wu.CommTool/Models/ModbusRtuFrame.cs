@@ -192,7 +192,7 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x8F错误帧:
                     case ModbusRtuFrameType._0x90错误帧:
                     case ModbusRtuFrameType._0x97错误帧:
-                        return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
+                        return $"{SlaveId:X2} {(byte)Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
 
                     case ModbusRtuFrameType._0x06请求帧:
                     case ModbusRtuFrameType._0x06响应帧:
@@ -271,7 +271,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function-0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址或起始地址+寄存器数量不符合。寄存器数量范围应∈[0x0001,0x07D0]";
@@ -314,7 +314,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址或起始地址+输入数量不符合。寄存器数量范围应∈[0x0001,0x07D0]";
@@ -357,7 +357,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址或起始地址+寄存器数量不符合。寄存器数量范围应∈[0x0001,0x007D]";
@@ -399,7 +399,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址或起始地址+寄存器数量不符合。寄存器数量范围应∈[0x0001,0x007D]";
@@ -442,7 +442,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "输出地址无效";
@@ -478,7 +478,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "寄存器地址无效";
@@ -522,7 +522,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址或起始地址+输出数量无效";
@@ -567,7 +567,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址或寄存器数量不符合。寄存器数量范围应∈[0x0001,0x07B0]";
@@ -605,7 +605,7 @@ namespace Wu.CommTool.Models
                         switch (ErrCode)
                         {
                             case 1:
-                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                ErrMessage = $"不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
                                 break;
                             case 2:
                                 ErrMessage = "起始地址+读的数量无效 或 写起始地址+写的数量 无效";
