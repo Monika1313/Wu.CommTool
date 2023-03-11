@@ -51,7 +51,7 @@ namespace Wu.CommTool.Models
             {
                 SetProperty(ref _StartAddr, value);
 
-                _StartAddrHex = value.ToString("x");
+                _StartAddrHex = value.ToString("X4");
                 RaisePropertyChanged(nameof(StartAddrHex));
 
                 RaisePropertyChanged(nameof(DataFrame));
