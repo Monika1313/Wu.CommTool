@@ -593,10 +593,33 @@ namespace Wu.CommTool.Models
                     break;
                 case ModbusRtuFunctionCode._0x96:
                     break;
+
                 case ModbusRtuFunctionCode._0x17:
                     break;
                 case ModbusRtuFunctionCode._0x97:
+                    if (Frame.Length.Equals(5))
+                    {
+                        ErrCode = Frame[2];
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        switch (ErrCode)
+                        {
+                            case 1:
+                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                break;
+                            case 2:
+                                ErrMessage = "起始地址+读的数量无效 或 写起始地址+写的数量 无效";
+                                break;
+                            case 3:
+                                ErrMessage = "读的数量应∈[0x0001,0x007D] 且 写的数量∈[0x0001,0x0079] 且 字节数=写的数量×2";
+                                break;
+                            case 4:
+                                ErrMessage = "读/写多个寄存器失败";
+                                break;
+                        }
+                        Type = ModbusRtuFrameType._0x90错误帧;
+                    }
                     break;
+
                 case ModbusRtuFunctionCode._0x2B:
                     break;
                 case ModbusRtuFunctionCode._0xAB:
