@@ -401,6 +401,14 @@
                                                                 Style="{StaticResource MessageTextBox}"
                                                                 Text="{Binding Content}"
                                                                 TextWrapping="Wrap" />
+                                                            
+                                                            <!--<TextBlock
+                                                                VerticalAlignment="Center"
+                                                                FontSize="12"
+                                                                FontWeight="Bold"
+                                                                Style="{StaticResource MessageTextBlock}"
+                                                                Text="{Binding Content}"
+                                                                TextWrapping="Wrap" />-->
                                                         </WrapPanel>
                                                     </Border>
                                                 </DataTemplate>

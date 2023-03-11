@@ -540,8 +540,19 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         private void OperateFilter()
         {
-            DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
-            RefreshModbusRtuDataDataView();
+            try
+            {
+                DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
+
+                //todo 验证过滤后是否有值 没有值则提示无法过滤
+                var y = DataMonitorConfig.ModbusRtuDatas.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Name));
+
+                RefreshModbusRtuDataDataView();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
         }
 
         /// <summary>
