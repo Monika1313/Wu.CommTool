@@ -184,8 +184,8 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 页面消息
         /// </summary>
-        public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
-        private ObservableCollection<MessageData> _Messages = new();
+        public ObservableCollection<ModbusRtuMessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
+        private ObservableCollection<ModbusRtuMessageData> _Messages = new();
 
         /// <summary>
         /// 发送的消息
@@ -1118,7 +1118,29 @@ namespace Wu.CommTool.ViewModels
         }
 
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
-        protected void ShowReceiveMessage(string message) => ShowMessage(message, MessageType.Receive);
+        protected void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
+        {
+            //ShowMessage(message, MessageType.Receive);
+            try
+            {
+                void action()
+                {
+                    var msg = new ModbusRtuMessageData(/*$"{message}"*/"", DateTime.Now, MessageType.Receive);
+                    foreach (var item in messageSubContents)
+                    {
+                        msg.MessageSubContents.Add(item);
+                    }
+                    Messages.Add(msg);
+                    while (Messages.Count > 500)
+                    {
+                        Messages.RemoveAt(0);
+                    }
+                }
+                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+            }
+            catch (Exception) { }
+        }
+
         protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
 
         /// <summary>
@@ -1132,7 +1154,7 @@ namespace Wu.CommTool.ViewModels
             {
                 void action()
                 {
-                    Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    Messages.Add(new ModbusRtuMessageData($"{message}", DateTime.Now, type));
                     while (Messages.Count > 500)
                     {
                         Messages.RemoveAt(0);
@@ -1148,7 +1170,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(MessageData msg)
+        protected void ShowMessage(ModbusRtuMessageData msg)
         {
             try
             {
@@ -1679,13 +1701,13 @@ namespace Wu.CommTool.ViewModels
                     }
                     else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
                     {
-                        ShowReceiveMessage(mFrame.ToString());
+                        ShowReceiveMessage(mFrame.ToString(),mFrame.GetmessageWithErrMsg());
                         continue;
                     }
                     //校验成功
                     else
                     {
-                        ShowReceiveMessage(mFrame.ToString());
+                        ShowReceiveMessage(mFrame.ToString(),mFrame.GetmessageWithErrMsg());
                     }
                     #endregion
 

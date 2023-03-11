@@ -1,8 +1,10 @@
 ﻿using ImTools;
 using Prism.Mvvm;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Wu.CommTool.Enums;
 using Wu.Extensions;
 
@@ -140,6 +142,137 @@ namespace Wu.CommTool.Models
                 return true;
         }
 
+        private Brush SlaceIdBrush = Brushes.Blue;
+        private Brush FunctionBrush = Brushes.BlueViolet;
+        private Brush StartAddrBrush = Brushes.OrangeRed;
+        private Brush BytesNumBursh = Brushes.RoyalBlue;
+        private Brush RegisterNumBursh = Brushes.Chocolate;
+        private Brush RegisterValuesBursh = Brushes.LimeGreen;
+        private Brush ErrCodeBursh = Brushes.Red;
+        private Brush CrcCodeBrush = Brushes.Purple;
+
+
+        //private Brush SlaceIdBrush = Brushes.Blue;
+        //private Brush FunctionBrush = Brushes.Magenta;
+        //private Brush StartAddrBrush = Brushes.DarkTurquoise;
+        //private Brush BytesNumBursh = Brushes.SteelBlue;
+        //private Brush RegisterNumBursh = Brushes.Peru;
+        //private Brush RegisterValuesBursh = Brushes.LimeGreen;
+        //private Brush ErrCodeBursh = Brushes.Red;
+        //private Brush CrcCodeBrush = Brushes.Purple;
+
+        public List<MessageSubContent> GetMessage()
+        {
+            List<MessageSubContent> messages = new List<MessageSubContent>();
+            try
+            {
+                switch (Type)
+                {
+                    case ModbusRtuFrameType.校验失败:
+                    case ModbusRtuFrameType.解析失败:
+                        messages.Add(new MessageSubContent() { Brush = Brushes.Red, Content = BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ") });
+                        break;
+
+                    case ModbusRtuFrameType._0x01请求帧:
+                    case ModbusRtuFrameType._0x02请求帧:
+                    case ModbusRtuFrameType._0x03请求帧:
+                    case ModbusRtuFrameType._0x04请求帧:
+                    case ModbusRtuFrameType._0x05请求帧:
+                    case ModbusRtuFrameType._0x05响应帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} "});
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = StartAddrBrush, Content = $"{DatasFormat(StartAddr)} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterNumBursh, Content = $"{DatasFormat(RegisterNum)} " });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+
+                    case ModbusRtuFrameType._0x01响应帧:
+                    case ModbusRtuFrameType._0x02响应帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = BytesNumBursh, Content = $"{BytesNum:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterValuesBursh, Content = $"{DatasFormat(RegisterValues,2)} " });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+
+                    case ModbusRtuFrameType._0x03响应帧:
+                    case ModbusRtuFrameType._0x04响应帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = BytesNumBursh, Content = $"{BytesNum:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterValuesBursh, Content = $"{DatasFormat(RegisterValues)} " });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+
+                    case ModbusRtuFrameType._0x0F请求帧:
+                    case ModbusRtuFrameType._0x10请求帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = StartAddrBrush, Content = $"{DatasFormat(StartAddr)} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterNumBursh, Content = $"{DatasFormat(RegisterNum)} " });
+                        messages.Add(new MessageSubContent() { Brush = BytesNumBursh, Content = $"{BytesNum:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterValuesBursh, Content = $"{DatasFormat(RegisterValues)} " });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+
+
+                    case ModbusRtuFrameType._0x0F响应帧:
+                    case ModbusRtuFrameType._0x10响应帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = StartAddrBrush, Content = $"{DatasFormat(StartAddr)} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterNumBursh, Content = $"{DatasFormat(RegisterNum)} " });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+
+                    case ModbusRtuFrameType._0x81错误帧:
+                    case ModbusRtuFrameType._0x82错误帧:
+                    case ModbusRtuFrameType._0x83错误帧:
+                    case ModbusRtuFrameType._0x84错误帧:
+                    case ModbusRtuFrameType._0x85错误帧:
+                    case ModbusRtuFrameType._0x86错误帧:
+                    case ModbusRtuFrameType._0x8F错误帧:
+                    case ModbusRtuFrameType._0x90错误帧:
+                    case ModbusRtuFrameType._0x97错误帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = ErrCodeBursh, Content = $"{ErrCodeBursh:X2}" });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+
+                    case ModbusRtuFrameType._0x06请求帧:
+                    case ModbusRtuFrameType._0x06响应帧:
+                        messages.Add(new MessageSubContent() { Brush = SlaceIdBrush, Content = $"{SlaveId:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = FunctionBrush, Content = $"{(byte)Function:X2} " });
+                        messages.Add(new MessageSubContent() { Brush = StartAddrBrush, Content = $"{DatasFormat(StartAddr)} " });
+                        messages.Add(new MessageSubContent() { Brush = RegisterValuesBursh, Content = $"{DatasFormat(RegisterValues)} " });
+                        messages.Add(new MessageSubContent() { Brush = CrcCodeBrush, Content = $"{DatasFormat(CrcCode)}" });
+                        break;
+                    
+                    default:
+                        messages.Add(new MessageSubContent() { Brush = Brushes.Red, Content = BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ") });
+                        break;
+                }
+            }
+            catch
+            {
+                messages.Add(new MessageSubContent() { Brush = Brushes.Red, Content = BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ") });
+            }
+
+            return messages;
+        }
+
+        public List<MessageSubContent> GetmessageWithErrMsg()
+        {
+            List<MessageSubContent> messages = GetMessage();
+            if (!string.IsNullOrWhiteSpace(ErrMessage))
+            {
+                messages.Add(new MessageSubContent() { Brush = Brushes.Red,Content= $"    {ErrMessage}"});
+            }
+            return messages;
+        }
+
+
         /// <summary>
         /// 获取格式化的帧字符串
         /// </summary>
@@ -149,9 +282,6 @@ namespace Wu.CommTool.Models
             //TODO 数据帧功能不同 格式化
             try
             {
-                //没有解析或无法解析的不格式化
-                if (Type.Equals(ModbusRtuFrameType.校验失败) || Type.Equals(ModbusRtuFrameType.解析失败))
-                    return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
                 //Todo 目前仅处理帧格式, 不解析帧内容是否符合要求
                 switch (Type)
                 {
@@ -169,7 +299,7 @@ namespace Wu.CommTool.Models
 
                     case ModbusRtuFrameType._0x01响应帧:
                     case ModbusRtuFrameType._0x02响应帧:
-                        return $"{SlaveId:X2} {(byte)Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues, 1)} {DatasFormat(CrcCode)}";
+                        return $"{SlaveId:X2} {(byte)Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues, 2)} {DatasFormat(CrcCode)}";
 
                     case ModbusRtuFrameType._0x03响应帧:
                     case ModbusRtuFrameType._0x04响应帧:
@@ -189,6 +319,7 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x83错误帧:
                     case ModbusRtuFrameType._0x84错误帧:
                     case ModbusRtuFrameType._0x85错误帧:
+                    case ModbusRtuFrameType._0x86错误帧:
                     case ModbusRtuFrameType._0x8F错误帧:
                     case ModbusRtuFrameType._0x90错误帧:
                     case ModbusRtuFrameType._0x97错误帧:
@@ -197,8 +328,7 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x06请求帧:
                     case ModbusRtuFrameType._0x06响应帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
-                    case ModbusRtuFrameType._0x86错误帧:
-                        break;
+                    
 
                     default:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");

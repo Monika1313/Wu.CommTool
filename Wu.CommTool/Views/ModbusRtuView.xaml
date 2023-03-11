@@ -401,6 +401,24 @@
                                                                 Style="{StaticResource MessageTextBox}"
                                                                 Text="{Binding Content}"
                                                                 TextWrapping="Wrap" />
+
+                                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <StackPanel Orientation="Horizontal" />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock
+                                                                            VerticalAlignment="Center"
+                                                                            FontWeight="Bold"
+                                                                            Foreground="{Binding Brush}"
+                                                                            Text="{Binding Content}" />
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+
                                                         </WrapPanel>
                                                     </Border>
                                                 </DataTemplate>
@@ -880,6 +898,23 @@
                                                                     Style="{StaticResource MessageTextBox}"
                                                                     Text="{Binding Content}"
                                                                     TextWrapping="Wrap" />
+
+                                                                <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                                    <ItemsControl.ItemsPanel>
+                                                                        <ItemsPanelTemplate>
+                                                                            <StackPanel Orientation="Horizontal" />
+                                                                        </ItemsPanelTemplate>
+                                                                    </ItemsControl.ItemsPanel>
+                                                                    <ItemsControl.ItemTemplate>
+                                                                        <DataTemplate>
+                                                                            <TextBlock
+                                                                                VerticalAlignment="Center"
+                                                                                FontWeight="Bold"
+                                                                                Foreground="{Binding Brush}"
+                                                                                Text="{Binding Content}" />
+                                                                        </DataTemplate>
+                                                                    </ItemsControl.ItemTemplate>
+                                                                </ItemsControl>
                                                             </WrapPanel>
                                                         </Border>
                                                     </DataTemplate>
@@ -1206,6 +1241,22 @@
                                                                 Style="{StaticResource MessageTextBox}"
                                                                 Text="{Binding Content}"
                                                                 TextWrapping="Wrap" />
+                                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <StackPanel Orientation="Horizontal" />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock
+                                                                            VerticalAlignment="Center"
+                                                                            FontWeight="Bold"
+                                                                            Foreground="{Binding Brush}"
+                                                                            Text="{Binding Content}" />
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
                                                         </WrapPanel>
                                                     </Border>
                                                 </DataTemplate>
@@ -1983,6 +2034,23 @@
                                                                 Style="{StaticResource MessageTextBox}"
                                                                 Text="{Binding Content}"
                                                                 TextWrapping="Wrap" />
+
+                                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <StackPanel Orientation="Horizontal" />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock
+                                                                            VerticalAlignment="Center"
+                                                                            FontWeight="Bold"
+                                                                            Foreground="{Binding Brush}"
+                                                                            Text="{Binding Content}" />
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
                                                         </WrapPanel>
                                                     </Border>
                                                 </DataTemplate>
