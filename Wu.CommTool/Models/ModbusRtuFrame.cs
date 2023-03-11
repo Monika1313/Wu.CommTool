@@ -191,6 +191,7 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x85错误帧:
                     case ModbusRtuFrameType._0x8F错误帧:
                     case ModbusRtuFrameType._0x90错误帧:
+                    case ModbusRtuFrameType._0x97错误帧:
                         return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
 
                     case ModbusRtuFrameType._0x06请求帧:
