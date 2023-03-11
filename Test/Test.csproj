@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Wu.CommTool\Wu.CommTool.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="新文件夹\" />
+  </ItemGroup>
+
 </Project>

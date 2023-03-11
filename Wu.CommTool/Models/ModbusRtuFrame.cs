@@ -29,10 +29,10 @@ namespace Wu.CommTool.Models
 
 
 
-        
+
 
         #region **************************************************  字段  **************************************************
-        
+
         #endregion
 
 
@@ -50,7 +50,7 @@ namespace Wu.CommTool.Models
         private ModbusRtuFunctionCode _Function;
 
         /// <summary>
-        /// 起始地址 2字节
+        /// 起始地址/输出地址 2字节
         /// </summary>
         public byte[] StartAddr { get => _StartAddr; set => SetProperty(ref _StartAddr, value); }
         private byte[] _StartAddr;
@@ -164,6 +164,8 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x02请求帧:
                     case ModbusRtuFrameType._0x03请求帧:
                     case ModbusRtuFrameType._0x04请求帧:
+                    case ModbusRtuFrameType._0x05请求帧:
+                    case ModbusRtuFrameType._0x05响应帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
 
                     case ModbusRtuFrameType._0x01响应帧:
@@ -177,7 +179,7 @@ namespace Wu.CommTool.Models
 
                     case ModbusRtuFrameType._0x10请求帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
-                    
+
                     case ModbusRtuFrameType._0x10响应帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
 
@@ -186,10 +188,15 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x82错误帧:
                     case ModbusRtuFrameType._0x83错误帧:
                     case ModbusRtuFrameType._0x84错误帧:
+                    case ModbusRtuFrameType._0x85错误帧:
                     case ModbusRtuFrameType._0x90错误帧:
                         return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
-                    
-                    
+
+                    case ModbusRtuFrameType._0x06请求帧:
+                    case ModbusRtuFrameType._0x06响应帧:
+                        return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+                    case ModbusRtuFrameType._0x86错误帧:
+                        break;
                     default:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
                 }
@@ -405,14 +412,86 @@ namespace Wu.CommTool.Models
                         Type = ModbusRtuFrameType._0x84错误帧;
                     }
                     break;
+                //写单个线圈
                 case ModbusRtuFunctionCode._0x05:
+                    //请求帧和应答帧格式相同 请求帧的输出值只能为0x0000
+                    //请求帧   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
+                    if (Frame.Length.Equals(8) && Frame[4] == 0 && Frame[5]==0)
+                    {
+                        StartAddr = Frame.Skip(2).Take(2).ToArray();
+                        RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                        CrcCode = Frame.Skip(6).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x05请求帧;
+                    }
+                    //响应帧   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
+                    else if (Frame.Length.Equals(8))
+                    {
+                        StartAddr = Frame.Skip(2).Take(2).ToArray();
+                        RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                        CrcCode = Frame.Skip(6).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x05响应帧;
+                    }
                     break;
                 case ModbusRtuFunctionCode._0x85:
+                    if (Frame.Length.Equals(5))
+                    {
+                        ErrCode = Frame[2];
+                        switch (ErrCode)
+                        {
+                            case 1:
+                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                break;
+                            case 2:
+                                ErrMessage = "输出地址无效";
+                                break;
+                            case 3:
+                                ErrMessage = "输出值应为0x0000或0xFF00";
+                                break;
+                            case 4:
+                                ErrMessage = "写单个输出失败";
+                                break;
+                        }
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x83错误帧;
+                    }
                     break;
+
+                //写单个寄存器
                 case ModbusRtuFunctionCode._0x06:
+                    //请求帧与响应帧格式完全相同
+                    //响应帧/请求帧   从站ID(1) 功能码(1) 寄存器地址(2) 寄存器值(2) 校验码(2)
+                    if (Frame.Length.Equals(8))
+                    {
+                        StartAddr = Frame.Skip(2).Take(2).ToArray();
+                        RegisterValues = Frame.Skip(4).Take(2).ToArray();
+                        CrcCode = Frame.Skip(6).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x06请求帧;
+                    }
                     break;
                 case ModbusRtuFunctionCode._0x86:
+                    if (Frame.Length.Equals(5))
+                    {
+                        ErrCode = Frame[2];
+                        switch (ErrCode)
+                        {
+                            case 1:
+                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                break;
+                            case 2:
+                                ErrMessage = "寄存器地址无效";
+                                break;
+                            case 3:
+                                ErrMessage = "寄存器地址范围应∈[0x0000,0xFFFF]";
+                                break;
+                            case 4:
+                                ErrMessage = "写单个寄存器失败";
+                                break;
+                        }
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x83错误帧;
+                    }
                     break;
+
                 case ModbusRtuFunctionCode._0x0F:
                     break;
                 case ModbusRtuFunctionCode._0x8F:
