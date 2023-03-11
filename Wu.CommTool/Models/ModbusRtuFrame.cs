@@ -34,6 +34,8 @@ namespace Wu.CommTool.Models
         #region **************************************************  字段  **************************************************
         
         #endregion
+
+
         #region **************************************************  属性  **************************************************
         /// <summary>
         /// 从站ID 1字节
@@ -54,7 +56,7 @@ namespace Wu.CommTool.Models
         private byte[] _StartAddr;
 
         /// <summary>
-        /// 寄存器数量/线圈数量 2字节 单位word
+        /// 寄存器数量/线圈数量(读输出线圈)/输入数量(读离散输入) 2字节 单位word
         /// </summary>
         public byte[] RegisterNum { get => _RegisterNum; set => SetProperty(ref _RegisterNum, value); }
         private byte[] _RegisterNum;
@@ -104,7 +106,7 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// Crc校验结果
         /// </summary>
-        public bool IsCrcPassed => IsModbusCrcPassed(Frame);
+        public bool IsCrcPassed => ModbusRtuFrame.IsModbusCrcPassed(Frame);
         #endregion
 
 
@@ -116,7 +118,7 @@ namespace Wu.CommTool.Models
         /// <param name="input"></param>
         /// <param name="interval"></param>
         /// <returns></returns>
-        private string DatasFormat(byte[] input, int interval = 4)
+        private static string DatasFormat(byte[] input, int interval = 4)
         {
             return BitConverter.ToString(input).Replace("-", "").InsertFormat(interval, " ");
         }
@@ -126,7 +128,7 @@ namespace Wu.CommTool.Models
         /// 判断ModbusCrc校验是否通过
         /// </summary>
         /// <returns></returns>
-        public bool IsModbusCrcPassed(byte[] frame)
+        public static bool IsModbusCrcPassed(byte[] frame)
         {
             //对接收的消息直接进行crc校验
             var crc = Wu.Utils.Crc.Crc16Modbus(frame);   //校验码 校验通过的为0000
@@ -150,6 +152,7 @@ namespace Wu.CommTool.Models
                 //没有解析或无法解析的不格式化
                 if (Type.Equals(ModbusRtuFrameType.校验失败) || Type.Equals(ModbusRtuFrameType.解析失败))
                     return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
+                //Todo 目前仅处理帧格式, 不解析帧内容是否符合要求
                 switch (Type)
                 {
                     case ModbusRtuFrameType.校验失败:
@@ -158,33 +161,35 @@ namespace Wu.CommTool.Models
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
 
                     case ModbusRtuFrameType._0x01请求帧:
-                        return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
-                    case ModbusRtuFrameType._0x01响应帧:
-                        return $"{SlaveId:X2} {Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues, 1)} {DatasFormat(CrcCode)}";
-
+                    case ModbusRtuFrameType._0x02请求帧:
                     case ModbusRtuFrameType._0x03请求帧:
-                        return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
-                    case ModbusRtuFrameType._0x03响应帧:
-                        return $"{SlaveId:X2} {Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
-
                     case ModbusRtuFrameType._0x04请求帧:
-                        return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
+                        return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
+
+                    case ModbusRtuFrameType._0x01响应帧:
+                    case ModbusRtuFrameType._0x02响应帧:
+                        return $"{SlaveId:X2} {(byte)Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues, 1)} {DatasFormat(CrcCode)}";
+
+                    case ModbusRtuFrameType._0x03响应帧:
                     case ModbusRtuFrameType._0x04响应帧:
-                        return $"{SlaveId:X2} {Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+                        return $"{SlaveId:X2} {(byte)Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+
 
                     case ModbusRtuFrameType._0x10请求帧:
-                        return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+                        return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+                    
                     case ModbusRtuFrameType._0x10响应帧:
-                        return $"{SlaveId:X2} {Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
-
+                        return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
 
 
                     case ModbusRtuFrameType._0x81错误帧:
+                    case ModbusRtuFrameType._0x82错误帧:
                     case ModbusRtuFrameType._0x83错误帧:
                     case ModbusRtuFrameType._0x84错误帧:
                     case ModbusRtuFrameType._0x90错误帧:
                         return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
-
+                    
+                    
                     default:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
                 }
@@ -272,9 +277,48 @@ namespace Wu.CommTool.Models
                         Type = ModbusRtuFrameType._0x81错误帧;
                     }
                     break;
+                //读取离散输入
                 case ModbusRtuFunctionCode._0x02:
+                    //若帧总字节数为8,且第三个字节的值不为3，则大概率为响应帧, 由于无法判断此时是请求帧还是响应帧, 则全视为响应帧。
+                    //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输入数量(2) 校验码(2)
+                    if (Frame.Length.Equals(8) && !Frame[2].Equals(3))
+                    {
+                        StartAddr = Frame.Skip(2).Take(2).ToArray();
+                        RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                        CrcCode = Frame.Skip(6).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x02请求帧;
+                    }
+                    //响应帧   从站ID(1) 功能码(1) 字节数(1)  线圈状态(N*) 校验码(2)
+                    else if (Frame.Length >= 6)
+                    {
+                        BytesNum = Frame[2];
+                        RegisterValues = Frame.Skip(3).Take(Frame.Length - 5).ToArray();
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x02响应帧;
+                    }
                     break;
                 case ModbusRtuFunctionCode._0x82:
+                    if (Frame.Length.Equals(5))
+                    {
+                        ErrCode = Frame[2];
+                        switch (ErrCode)
+                        {
+                            case 1:
+                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                break;
+                            case 2:
+                                ErrMessage = "起始地址或起始地址+输入数量不符合。寄存器数量范围应∈[0x0001,0x07D0]";
+                                break;
+                            case 3:
+                                ErrMessage = "输入数量范围应∈[0x0001,0x07D0]";
+                                break;
+                            case 4:
+                                ErrMessage = "读取离散输入失败";
+                                break;
+                        }
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x81错误帧;
+                    }
                     break;
                 //读保持寄存器
                 case ModbusRtuFunctionCode._0x03:
