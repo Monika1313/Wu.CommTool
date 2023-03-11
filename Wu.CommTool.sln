@@ -14,9 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决�
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{3BC16164-D552-45D4-A500-4262CF548710}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleTools", "ModuleTools\ModuleTools.csproj", "{9E80B8BD-5579-4D1E-813E-0FFAE60EF586}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleConvertTools", "ModuleConvertTools\ModuleConvertTools.csproj", "{B62D70D1-0CE5-4D37-B45E-52D2200F4335}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModuleConvertTools", "ModuleConvertTools\ModuleConvertTools.csproj", "{B62D70D1-0CE5-4D37-B45E-52D2200F4335}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,10 +30,6 @@ Global
 		{895331C5-327A-4327-9B36-310072CA94CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{895331C5-327A-4327-9B36-310072CA94CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{895331C5-327A-4327-9B36-310072CA94CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9E80B8BD-5579-4D1E-813E-0FFAE60EF586}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E80B8BD-5579-4D1E-813E-0FFAE60EF586}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E80B8BD-5579-4D1E-813E-0FFAE60EF586}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E80B8BD-5579-4D1E-813E-0FFAE60EF586}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B62D70D1-0CE5-4D37-B45E-52D2200F4335}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B62D70D1-0CE5-4D37-B45E-52D2200F4335}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B62D70D1-0CE5-4D37-B45E-52D2200F4335}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,7 +39,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9E80B8BD-5579-4D1E-813E-0FFAE60EF586} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{B62D70D1-0CE5-4D37-B45E-52D2200F4335} = {3BC16164-D552-45D4-A500-4262CF548710}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
