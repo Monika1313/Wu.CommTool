@@ -156,7 +156,6 @@ namespace Wu.CommTool.Models
                 switch (Type)
                 {
                     case ModbusRtuFrameType.校验失败:
-                        return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
                     case ModbusRtuFrameType.解析失败:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
 
@@ -176,10 +175,11 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x04响应帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
 
-
+                    case ModbusRtuFrameType._0x0F请求帧:
                     case ModbusRtuFrameType._0x10请求帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
 
+                    case ModbusRtuFrameType._0x0F响应帧:
                     case ModbusRtuFrameType._0x10响应帧:
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
 
@@ -189,6 +189,7 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x83错误帧:
                     case ModbusRtuFrameType._0x84错误帧:
                     case ModbusRtuFrameType._0x85错误帧:
+                    case ModbusRtuFrameType._0x8F错误帧:
                     case ModbusRtuFrameType._0x90错误帧:
                         return $"{SlaveId:X2} {Function:X2} {ErrCode:X2} {DatasFormat(CrcCode)}";
 
@@ -197,6 +198,7 @@ namespace Wu.CommTool.Models
                         return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
                     case ModbusRtuFrameType._0x86错误帧:
                         break;
+
                     default:
                         return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
                 }
@@ -493,9 +495,49 @@ namespace Wu.CommTool.Models
                     break;
 
                 case ModbusRtuFunctionCode._0x0F:
+                    //响应帧   从站ID(1) 功能码(1) 起始地址(2) 输出数量(2) 校验码(2)
+                    if (Frame.Length.Equals(8))
+                    {
+                        StartAddr = Frame.Skip(2).Take(2).ToArray();
+                        RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                        CrcCode = Frame.Skip(6).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x10响应帧;
+                    }
+                    //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输出数量(2) 字节数(1) 输出值(N*) 校验码(2)
+                    else if (Frame.Length >= 12)
+                    {
+                        StartAddr = Frame.Skip(2).Take(2).ToArray();
+                        RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                        BytesNum = Frame[6];
+                        RegisterValues = Frame.Skip(7).Take(Frame.Length - 9).ToArray();
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x10请求帧;
+                    }
                     break;
                 case ModbusRtuFunctionCode._0x8F:
+                    if (Frame.Length.Equals(5))
+                    {
+                        ErrCode = Frame[2];
+                        switch (ErrCode)
+                        {
+                            case 1:
+                                ErrMessage = $"不支持{Function.ToString().TrimStart('_')}功能码";
+                                break;
+                            case 2:
+                                ErrMessage = "起始地址或起始地址+输出数量无效";
+                                break;
+                            case 3:
+                                ErrMessage = "输出数量范围应∈[0x0001,0x07B0]";
+                                break;
+                            case 4:
+                                ErrMessage = "写多个输出失败";
+                                break;
+                        }
+                        CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                        Type = ModbusRtuFrameType._0x83错误帧;
+                    }
                     break;
+
                 case ModbusRtuFunctionCode._0x10:
                     //响应帧   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 校验码(2)
                     if (Frame.Length.Equals(8))
