@@ -542,11 +542,18 @@ namespace Wu.CommTool.ViewModels
         {
             try
             {
+                //验证过滤后是否有值 没有值则提示无法过滤
+                if (!DataMonitorConfig.IsFilter)
+                {
+                    var y = DataMonitorConfig.ModbusRtuDatas.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Name));
+                    if (y == null)
+                    {
+                        HcGrowlExtensions.Warning("请配置数据名称再开启过滤器...");
+                        return;
+                    }
+                }
+
                 DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
-
-                //todo 验证过滤后是否有值 没有值则提示无法过滤
-                var y = DataMonitorConfig.ModbusRtuDatas.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Name));
-
                 RefreshModbusRtuDataDataView();
             }
             catch (Exception ex)
@@ -624,7 +631,6 @@ namespace Wu.CommTool.ViewModels
                 DataMonitorConfig.IsOpened = true;
                 ShowMessage("开启数据监控...");
                 IsDrawersOpen.IsRightDrawerOpen = false;
-
 
                 //生成列表
                 if (DataMonitorConfig.ModbusRtuDatas.Count != DataMonitorConfig.Quantity)
@@ -836,7 +842,8 @@ namespace Wu.CommTool.ViewModels
                         SendBytesCount += data.Length;                    //统计发送数据总数
 
                         if (!IsPause)
-                            ShowSendMessage(new ModbusRtuFrame(data).ToString());
+                            ShowSendMessage("", new ModbusRtuFrame(data).GetmessageWithErrMsg());
+                        //ShowSendMessage(new ModbusRtuFrame(data).ToString(), mFrame.GetmessageWithErrMsg());
                         //ShowMessage(BitConverter.ToString(data).Replace("-", "").Replace(" ", "").InsertFormat(4, " "), MessageType.Send);
                         return true;
                     }
@@ -1120,12 +1127,11 @@ namespace Wu.CommTool.ViewModels
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
         protected void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
         {
-            //ShowMessage(message, MessageType.Receive);
             try
             {
                 void action()
                 {
-                    var msg = new ModbusRtuMessageData(/*$"{message}"*/"", DateTime.Now, MessageType.Receive);
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive);
                     foreach (var item in messageSubContents)
                     {
                         msg.MessageSubContents.Add(item);
@@ -1141,7 +1147,28 @@ namespace Wu.CommTool.ViewModels
             catch (Exception) { }
         }
 
-        protected void ShowSendMessage(string message) => ShowMessage(message, MessageType.Send);
+        protected void ShowSendMessage(string message, List<MessageSubContent> messageSubContents)
+        {
+            //ShowMessage(message, MessageType.Send);
+            try
+            {
+                void action()
+                {
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send);
+                    foreach (var item in messageSubContents)
+                    {
+                        msg.MessageSubContents.Add(item);
+                    }
+                    Messages.Add(msg);
+                    while (Messages.Count > 260)
+                    {
+                        Messages.RemoveAt(0);
+                    }
+                }
+                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+            }
+            catch (Exception) { }
+        }
 
         /// <summary>
         /// 界面显示数据
@@ -1155,7 +1182,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(new ModbusRtuMessageData($"{message}", DateTime.Now, type));
-                    while (Messages.Count > 500)
+                    while (Messages.Count > 260)
                     {
                         Messages.RemoveAt(0);
                     }
@@ -1177,7 +1204,7 @@ namespace Wu.CommTool.ViewModels
                 void action()
                 {
                     Messages.Add(msg);
-                    while (Messages.Count > 10000)
+                    while (Messages.Count > 260)
                     {
                         Messages.RemoveAt(0);
                     }
@@ -1701,13 +1728,13 @@ namespace Wu.CommTool.ViewModels
                     }
                     else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
                     {
-                        ShowReceiveMessage(mFrame.ToString(),mFrame.GetmessageWithErrMsg());
+                        ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
                         continue;
                     }
                     //校验成功
                     else
                     {
-                        ShowReceiveMessage(mFrame.ToString(),mFrame.GetmessageWithErrMsg());
+                        ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
                     }
                     #endregion
 
