@@ -142,27 +142,15 @@ namespace Wu.CommTool.Models
                 return true;
         }
 
+        //private Brush SlaveIdBrush = Brushes.RoyalBlue;
+        //private static Brush FunctionBrush = Brushes.OrangeRed;
+        //private static Brush StartAddrBrush = Brushes.Purple;
+        //private static Brush BytesNumBursh = Brushes.DeepPink;
+        //private static Brush RegisterNumBursh = Brushes.Chocolate;
+        //private static Brush RegisterValuesBursh = Brushes.LimeGreen;
+        //private static Brush ErrCodeBursh = Brushes.Red;
+        //private static Brush CrcCodeBrush = Brushes.BlueViolet;
 
-        //private Brush _SlaceIdBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFFF1F0"));
-        private Brush SlaveIdBrush = Brushes.RoyalBlue;
-        private static Brush FunctionBrush = Brushes.OrangeRed;
-        private static Brush StartAddrBrush = Brushes.Purple;
-        private static Brush BytesNumBursh = Brushes.DeepPink;
-        private static Brush RegisterNumBursh = Brushes.Chocolate;
-        private static Brush RegisterValuesBursh = Brushes.LimeGreen;
-        private static Brush ErrCodeBursh = Brushes.Red;
-        private static Brush CrcCodeBrush = Brushes.BlueViolet;
-
-
-
-        //private Brush SlaceIdBrush = Brushes.Blue;
-        //private Brush FunctionBrush = Brushes.Magenta;
-        //private Brush StartAddrBrush = Brushes.DarkTurquoise;
-        //private Brush BytesNumBursh = Brushes.SteelBlue;
-        //private Brush RegisterNumBursh = Brushes.Peru;
-        //private Brush RegisterValuesBursh = Brushes.LimeGreen;
-        //private Brush ErrCodeBursh = Brushes.Red;
-        //private Brush CrcCodeBrush = Brushes.Purple;
 
         public List<MessageSubContent> GetMessage()
         {
@@ -239,7 +227,7 @@ namespace Wu.CommTool.Models
                     case ModbusRtuFrameType._0x97错误帧:
                         messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
                         messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
-                        messages.Add(new MessageSubContent($"{ErrCodeBursh:X2}", ModbusRtuMessageType.ErrCode));
+                        messages.Add(new MessageSubContent($"{ErrCode:X2}", ModbusRtuMessageType.ErrCode));
                         messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                         break;
 
@@ -270,7 +258,7 @@ namespace Wu.CommTool.Models
             List<MessageSubContent> messages = GetMessage();
             if (!string.IsNullOrWhiteSpace(ErrMessage))
             {
-                messages.Add(new MessageSubContent($"    {ErrMessage}", ModbusRtuMessageType.ErrMsg));
+                messages.Add(new MessageSubContent($"错误: {ErrMessage}", ModbusRtuMessageType.ErrMsg));
             }
             return messages;
         }
@@ -282,7 +270,6 @@ namespace Wu.CommTool.Models
         /// <returns></returns>
         public string GetFormatFrame()
         {
-            //TODO 数据帧功能不同 格式化
             try
             {
                 //Todo 目前仅处理帧格式, 不解析帧内容是否符合要求
@@ -366,7 +353,7 @@ namespace Wu.CommTool.Models
             if (!IsCrcPassed)
             {
                 Type = ModbusRtuFrameType.校验失败;
-                ErrMessage = "Crc校验失败";
+                ErrMessage = "Crc校验失败...";
                 return;
             }
 
@@ -374,6 +361,7 @@ namespace Wu.CommTool.Models
             Function = (ModbusRtuFunctionCode)Frame[1];     //功能码
 
             //Todo 仅实现了部分功能码
+            //todo 根据消息内容判断消息的有效性, 
             switch (Function)
             {
                 //0x01读线圈
@@ -760,6 +748,11 @@ namespace Wu.CommTool.Models
                     break;
                 default:
                     break;
+            }
+
+            if (CrcCode == null)
+            {
+                ErrMessage = "无法解析...";
             }
         }
         #endregion

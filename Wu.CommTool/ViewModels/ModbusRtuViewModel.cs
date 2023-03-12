@@ -1802,7 +1802,7 @@ namespace Wu.CommTool.ViewModels
                     }
 
                     //0x10功能码
-                    else if (mFrame.Type.Equals(ModbusRtuFrameType._0x10响应帧))
+                    else if (mFrame.Type.Equals(ModbusRtuFrameType._0x10响应帧) && DataMonitorConfig.IsOpened)
                     {
                         ShowMessage("数据写入成功");
                     }

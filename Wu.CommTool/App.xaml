@@ -162,7 +162,7 @@
                         <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="7">
-                        <Setter Property="Foreground" Value="{StaticResource Cyan_Foreground}" />
+                        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="10">
                         <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
