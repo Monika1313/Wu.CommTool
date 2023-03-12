@@ -4,6 +4,8 @@ using log4net;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections;
@@ -19,6 +21,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Wu.CommTool.Common;
@@ -68,7 +71,7 @@ namespace Wu.CommTool.ViewModels
             ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
             ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
             OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
-
+            CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
             //更新串口列表
             GetComPorts();
 
@@ -303,6 +306,11 @@ namespace Wu.CommTool.ViewModels
         /// 打开自动应答编辑界面
         /// </summary>
         public DelegateCommand<ModbusRtuAutoResponseData> OpenMosbusRtuAutoResponseDataEditViewCommand { get; private set; }
+
+        /// <summary>
+        /// 复制Modbus帧信息
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
         #endregion
 
 
@@ -1652,6 +1660,27 @@ namespace Wu.CommTool.ViewModels
             }
             PublishFrameQueue.Enqueue((msg, delay));       //发布消息入队
             WaitPublishFrameEnqueue.Set();                 //置位发布消息入队标志
+        }
+
+        /// <summary>
+        /// 复制Modbus数据帧
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+        {
+            try
+            {
+                string xx = string.Empty;
+                foreach (var item in obj.MessageSubContents)
+                {
+                    xx += $"{item.Content} ";
+                }
+                Clipboard.SetDataObject(xx);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         #endregion
 

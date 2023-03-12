@@ -370,7 +370,7 @@
                                 <!--  页面消息  -->
                                 <ContentControl
                                     Margin="4,0"
-                                    DockPanel.Dock="Left"
+                                    DockPanel.Dock="Top"
                                     Style="{StaticResource Effect2Control}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
@@ -381,7 +381,16 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border Style="{StaticResource MessageBorder}">
+                                                    <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Border.ContextMenu>
+                                                            <ContextMenu>
+                                                                <!--  MenuItem绑定命令  -->
+                                                                <MenuItem
+                                                                    Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                    CommandParameter="{Binding}"
+                                                                    Header="复制Modbus数据帧" />
+                                                            </ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <WrapPanel Orientation="Horizontal">
                                                             <TextBlock
                                                                 Margin="3"
@@ -405,7 +414,7 @@
                                                             <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
-                                                                        <StackPanel Orientation="Horizontal" />
+                                                                        <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
                                                                     </ItemsPanelTemplate>
                                                                 </ItemsControl.ItemsPanel>
                                                                 <ItemsControl.ItemTemplate>
@@ -415,7 +424,8 @@
                                                                             VerticalAlignment="Center"
                                                                             FontWeight="Bold"
                                                                             Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                                            Text="{Binding Content}" />
+                                                                            Text="{Binding Content}"
+                                                                            TextWrapping="Wrap" />
                                                                     </DataTemplate>
                                                                 </ItemsControl.ItemTemplate>
                                                             </ItemsControl>
@@ -903,7 +913,7 @@
                                                                 <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
-                                                                            <StackPanel Orientation="Horizontal" />
+                                                                            <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
                                                                         </ItemsPanelTemplate>
                                                                     </ItemsControl.ItemsPanel>
                                                                     <ItemsControl.ItemTemplate>
@@ -1270,10 +1280,11 @@
                                     <!--  页面消息  -->
                                     <ContentControl
                                         Width="700"
-                                        DockPanel.Dock="Bottom"
+                                        Margin="4,0"
+                                        DockPanel.Dock="Top"
                                         Style="{StaticResource Effect2Control}">
                                         <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
+                                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
                                                         <StackPanel />
@@ -1281,7 +1292,16 @@
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate>
-                                                        <Border Style="{StaticResource MessageBorder}">
+                                                        <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                            <Border.ContextMenu>
+                                                                <ContextMenu>
+                                                                    <!--  MenuItem绑定命令  -->
+                                                                    <MenuItem
+                                                                        Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                        CommandParameter="{Binding}"
+                                                                        Header="复制Modbus数据帧" />
+                                                                </ContextMenu>
+                                                            </Border.ContextMenu>
                                                             <WrapPanel Orientation="Horizontal">
                                                                 <TextBlock
                                                                     Margin="3"
@@ -1301,10 +1321,11 @@
                                                                     Style="{StaticResource MessageTextBox}"
                                                                     Text="{Binding Content}"
                                                                     TextWrapping="Wrap" />
+
                                                                 <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
-                                                                            <StackPanel Orientation="Horizontal" />
+                                                                            <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
                                                                         </ItemsPanelTemplate>
                                                                     </ItemsControl.ItemsPanel>
                                                                     <ItemsControl.ItemTemplate>
@@ -1314,10 +1335,12 @@
                                                                                 VerticalAlignment="Center"
                                                                                 FontWeight="Bold"
                                                                                 Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                                                Text="{Binding Content}" />
+                                                                                Text="{Binding Content}"
+                                                                                TextWrapping="Wrap" />
                                                                         </DataTemplate>
                                                                     </ItemsControl.ItemTemplate>
                                                                 </ItemsControl>
+
                                                             </WrapPanel>
                                                         </Border>
                                                     </DataTemplate>
@@ -2014,10 +2037,10 @@
                                 <!--  页面消息  -->
                                 <ContentControl
                                     Margin="4,0"
-                                    DockPanel.Dock="Right"
+                                    DockPanel.Dock="Top"
                                     Style="{StaticResource Effect2Control}">
                                     <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages, IsAsync=True}">
+                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel />
@@ -2025,7 +2048,16 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border Style="{StaticResource MessageBorder}">
+                                                    <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                                        <Border.ContextMenu>
+                                                            <ContextMenu>
+                                                                <!--  MenuItem绑定命令  -->
+                                                                <MenuItem
+                                                                    Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                    CommandParameter="{Binding}"
+                                                                    Header="复制Modbus数据帧" />
+                                                            </ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <WrapPanel Orientation="Horizontal">
                                                             <TextBlock
                                                                 Margin="3"
@@ -2049,7 +2081,7 @@
                                                             <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
-                                                                        <StackPanel Orientation="Horizontal" />
+                                                                        <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
                                                                     </ItemsPanelTemplate>
                                                                 </ItemsControl.ItemsPanel>
                                                                 <ItemsControl.ItemTemplate>
@@ -2059,10 +2091,12 @@
                                                                             VerticalAlignment="Center"
                                                                             FontWeight="Bold"
                                                                             Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                                            Text="{Binding Content}" />
+                                                                            Text="{Binding Content}"
+                                                                            TextWrapping="Wrap" />
                                                                     </DataTemplate>
                                                                 </ItemsControl.ItemTemplate>
                                                             </ItemsControl>
+
                                                         </WrapPanel>
                                                     </Border>
                                                 </DataTemplate>
