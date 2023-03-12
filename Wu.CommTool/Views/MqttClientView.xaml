@@ -222,7 +222,7 @@
                                             <ItemsControl Background="Transparent" ItemsSource="{Binding MqttClientConfig.SubscribeTopics}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <StackPanel />
+                                                        <VirtualizingStackPanel />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
@@ -310,7 +310,7 @@
                                             <ItemsControl Background="Transparent" ItemsSource="{Binding MqttClientConfig.SubscribeSucceeds}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <StackPanel Orientation="Vertical" />
+                                                        <VirtualizingStackPanel />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
@@ -330,7 +330,9 @@
                                                                     DockPanel.Dock="Right"
                                                                     Style="{StaticResource Red_CircleButton}" />
                                                                 <TextBox
-                                                                    Margin="4"
+                                                                    Margin="1"
+                                                                    Background="Transparent"
+                                                                    BorderThickness="0"
                                                                     Foreground="{StaticResource Green_Foreground}"
                                                                     IsReadOnly="True"
                                                                     Text="{Binding Path=., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -558,7 +560,7 @@
                                 ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel />
+                                        <VirtualizingStackPanel />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
 

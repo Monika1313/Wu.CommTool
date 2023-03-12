@@ -376,7 +376,7 @@
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <StackPanel />
+                                                    <VirtualizingStackPanel />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
@@ -883,7 +883,7 @@
                                             <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <StackPanel />
+                                                        <VirtualizingStackPanel />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
 
@@ -1287,7 +1287,7 @@
                                             <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                                 <ItemsControl.ItemsPanel>
                                                     <ItemsPanelTemplate>
-                                                        <StackPanel />
+                                                        <VirtualizingStackPanel />
                                                     </ItemsPanelTemplate>
                                                 </ItemsControl.ItemsPanel>
                                                 <ItemsControl.ItemTemplate>
@@ -1518,6 +1518,7 @@
                                             Background="Transparent"
                                             BorderThickness="0"
                                             CanUserSortColumns="False"
+                                            EnableRowVirtualization="True"
                                             FrozenColumnCount="4"
                                             ItemsSource="{Binding ModbusRtuDataDataView, IsAsync=True}"
                                             RowHeaderWidth="60"
@@ -1976,6 +1977,7 @@
                                         Background="Transparent"
                                         BorderThickness="0"
                                         CanUserSortColumns="False"
+                                        EnableRowVirtualization="True"
                                         FrozenColumnCount="2"
                                         ItemsSource="{Binding MosbusRtuAutoResponseDatas, IsAsync=True}"
                                         RowHeaderWidth="60"
@@ -1987,7 +1989,6 @@
                                                 <i:InvokeCommandAction Command="{Binding DataContext.OpenMosbusRtuAutoResponseDataEditViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
                                             </i:EventTrigger>
                                         </i:Interaction.Triggers>
-
 
                                         <DataGrid.Columns>
                                             <DataGridTemplateColumn Header="名称">
@@ -2043,7 +2044,7 @@
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <StackPanel />
+                                                    <VirtualizingStackPanel />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>

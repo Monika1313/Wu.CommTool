@@ -409,7 +409,7 @@
                             <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <StackPanel />
+                                        <VirtualizingStackPanel />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
 
