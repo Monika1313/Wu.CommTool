@@ -411,7 +411,10 @@
                                                                 Text="{Binding Content}"
                                                                 TextWrapping="Wrap" />
 
-                                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                            <ItemsControl
+                                                                Background="Transparent"
+                                                                ItemsSource="{Binding MessageSubContents}"
+                                                                Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -910,7 +913,10 @@
                                                                     Text="{Binding Content}"
                                                                     TextWrapping="Wrap" />
 
-                                                                <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                                <ItemsControl
+                                                                    Background="Transparent"
+                                                                    ItemsSource="{Binding MessageSubContents}"
+                                                                    Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
                                                                             <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -1323,7 +1329,10 @@
                                                                     Text="{Binding Content}"
                                                                     TextWrapping="Wrap" />
 
-                                                                <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                                <ItemsControl
+                                                                    Background="Transparent"
+                                                                    ItemsSource="{Binding MessageSubContents}"
+                                                                    Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
                                                                             <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -2080,7 +2089,10 @@
                                                                 Text="{Binding Content}"
                                                                 TextWrapping="Wrap" />
 
-                                                            <ItemsControl Background="Transparent" ItemsSource="{Binding MessageSubContents}">
+                                                            <ItemsControl
+                                                                Background="Transparent"
+                                                                ItemsSource="{Binding MessageSubContents}"
+                                                                Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
