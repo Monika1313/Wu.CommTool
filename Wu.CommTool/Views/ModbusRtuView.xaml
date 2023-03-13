@@ -923,7 +923,8 @@
                                                                                 VerticalAlignment="Center"
                                                                                 FontWeight="Bold"
                                                                                 Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                                                Text="{Binding Content}" />
+                                                                                Text="{Binding Content}"
+                                                                                TextWrapping="Wrap" />
                                                                         </DataTemplate>
                                                                     </ItemsControl.ItemTemplate>
                                                                 </ItemsControl>
