@@ -12,7 +12,15 @@ namespace Wu.CommTool.Models
         /// <summary>
         /// Com口
         /// </summary>
-        public KeyValuePair<string, string> Port { get => _Port; set => SetProperty(ref _Port, value); }
+        public KeyValuePair<string, string> Port
+        {
+            get => _Port;
+            set
+            {
+                _Port = value;
+                RaisePropertyChanged(nameof(Port));
+            }
+        }
         private KeyValuePair<string, string> _Port;
 
         /// <summary>

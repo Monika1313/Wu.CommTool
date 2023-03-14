@@ -1121,6 +1121,9 @@ namespace Wu.CommTool.ViewModels
                     {
                         //没有usb设备则选中第一个
                         ComConfig.Port = ComPorts[0];
+                        //SetProperty(ref ComConfig.Port, ComPorts[0]);
+                        //RaisePropertyChanged(ComConfig.Port);
+                        
                     }
                 }
                 string str = $"获取串口成功, 共{ComPorts.Count}个。";
