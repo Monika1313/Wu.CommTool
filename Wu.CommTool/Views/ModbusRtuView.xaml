@@ -414,7 +414,7 @@
                                                             <ItemsControl
                                                                 Background="Transparent"
                                                                 ItemsSource="{Binding MessageSubContents}"
-                                                                Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
+                                                                Visibility="{Binding MessageSubContents.Count, Converter={wucvt:Zero2Collapsed}}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -916,7 +916,7 @@
                                                                 <ItemsControl
                                                                     Background="Transparent"
                                                                     ItemsSource="{Binding MessageSubContents}"
-                                                                    Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
+                                                                    Visibility="{Binding MessageSubContents.Count, Converter={wucvt:Zero2Collapsed}}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
                                                                             <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -1332,7 +1332,7 @@
                                                                 <ItemsControl
                                                                     Background="Transparent"
                                                                     ItemsSource="{Binding MessageSubContents}"
-                                                                    Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
+                                                                    Visibility="{Binding MessageSubContents.Count, Converter={wucvt:Zero2Collapsed}}">
                                                                     <ItemsControl.ItemsPanel>
                                                                         <ItemsPanelTemplate>
                                                                             <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -2092,7 +2092,7 @@
                                                             <ItemsControl
                                                                 Background="Transparent"
                                                                 ItemsSource="{Binding MessageSubContents}"
-                                                                Visibility="{Binding MessageSubContents, Converter={wucvt:Zero2Collapsed}}">
+                                                                Visibility="{Binding MessageSubContents.Count, Converter={wucvt:Zero2Collapsed}}">
                                                                 <ItemsControl.ItemsPanel>
                                                                     <ItemsPanelTemplate>
                                                                         <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
