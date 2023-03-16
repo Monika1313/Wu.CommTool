@@ -32,6 +32,13 @@
                 Text="961501261" />
             <TextBox
                 Margin="5"
+                hc:TitleElement.Title="QQ群"
+                hc:TitleElement.TitleWidth="60"
+                IsReadOnly="True"
+                Style="{StaticResource FormTextBox}"
+                Text="746533921" />
+            <TextBox
+                Margin="5"
                 hc:Poptip.Content="在这里下载源码"
                 hc:TitleElement.Title="GitHub"
                 hc:TitleElement.TitleWidth="60"
