@@ -75,14 +75,14 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面
         }
 
-        /// <summary>
-        /// 目录加载模块
-        /// </summary>
-        /// <returns></returns>
-        protected override IModuleCatalog CreateModuleCatalog()
-        {
-            return new DirectoryModuleCatalog() { ModulePath = @".\Modules" };
-        }
+        ///// <summary>
+        ///// 目录加载模块
+        ///// </summary>
+        ///// <returns></returns>
+        //protected override IModuleCatalog CreateModuleCatalog()
+        //{
+        //    return new DirectoryModuleCatalog() { ModulePath = @".\Modules" };
+        //}
 
         /// <summary>
         /// 初始化完成
