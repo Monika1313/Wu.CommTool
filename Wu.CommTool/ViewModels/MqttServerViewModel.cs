@@ -11,7 +11,6 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Net;

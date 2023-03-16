@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Wu.CommTool.Enums
+﻿namespace Wu.CommTool.Enums
 {
     /// <summary>
     /// ModbusRtu数据帧类型

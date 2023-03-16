@@ -18,7 +18,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
@@ -236,7 +235,7 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(MqttClientConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                HcGrowlExtensions.Success("配置导出完成",viewName);
+                HcGrowlExtensions.Success("配置导出完成", viewName);
                 RefreshQuickImportList();
             }
             catch (Exception ex)

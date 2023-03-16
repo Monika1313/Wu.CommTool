@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Wu.CommTool.Enums
+﻿namespace Wu.CommTool.Enums
 {
     /// <summary>
     /// Modbus Rtu 的功能码和错误码

@@ -1,5 +1,4 @@
-﻿using HandyControl.Controls;
-using MaterialDesignThemes.Wpf;
+﻿using MaterialDesignThemes.Wpf;
 using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Ioc;

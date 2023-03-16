@@ -1,11 +1,8 @@
-﻿using HandyControl.Controls;
-using ImTools;
+﻿using ImTools;
 using log4net;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections;
@@ -22,7 +19,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using Wu.CommTool.Common;
 using Wu.CommTool.Enums;
@@ -1123,7 +1119,7 @@ namespace Wu.CommTool.ViewModels
                         ComConfig.Port = ComPorts[0];
                         //SetProperty(ref ComConfig.Port, ComPorts[0]);
                         //RaisePropertyChanged(ComConfig.Port);
-                        
+
                     }
                 }
                 string str = $"获取串口成功, 共{ComPorts.Count}个。";

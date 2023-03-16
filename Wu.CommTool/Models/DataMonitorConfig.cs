@@ -79,7 +79,7 @@ namespace Wu.CommTool.Models
 
                     RaisePropertyChanged(nameof(DataFrame));
                 }
-                catch (Exception ) {}
+                catch (Exception) { }
 
             }
         }
