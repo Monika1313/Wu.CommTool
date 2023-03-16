@@ -98,7 +98,9 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public void Configure()
         {
-            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
+            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("ViewA");//导航至页面
+            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate("PrismUserControl2View");//导航至页面
+            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
             //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(MqttServerView));//导航至页面
         }
 

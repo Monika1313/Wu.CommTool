@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Newtonsoft.Json;
 using Prism.Ioc;
+using Prism.Modularity;
 using System;
 using System.IO;
 using System.Windows;
@@ -75,6 +76,15 @@ namespace Wu.CommTool
         }
 
         /// <summary>
+        /// 目录加载模块
+        /// </summary>
+        /// <returns></returns>
+        protected override IModuleCatalog CreateModuleCatalog()
+        {
+            return new DirectoryModuleCatalog() { ModulePath = @".\Modules" };
+        }
+
+        /// <summary>
         /// 初始化完成
         /// </summary>
         protected override void OnInitialized()
@@ -89,6 +99,7 @@ namespace Wu.CommTool
 
             base.OnInitialized();
         }
+
 
 
     }

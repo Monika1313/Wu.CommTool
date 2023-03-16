@@ -11,19 +11,17 @@ using Wu.Wpf.Common;
 
 namespace ModuleConvertTools.ViewModels
 {
-    public class TimestampViewModelViewModel : NavigationViewModel, IDialogHostAware
+    public class TimestampViewModelViewModel : NavigationViewModel
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
-        private readonly IDialogHostService dialogHost;
         public string DialogHostName { get; set; }
         #endregion
 
         public TimestampViewModelViewModel() { }
-        public TimestampViewModelViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public TimestampViewModelViewModel(IContainerProvider provider)
         {
             this.provider = provider;
-            this.dialogHost = dialogHost;
 
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);

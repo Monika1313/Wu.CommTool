@@ -2,10 +2,15 @@
   <PropertyGroup>
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWPF>true</UseWPF>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+	<PostBuildEvent>xcopy "$(TargetDir)$(TargetName)*$(TargetExt)" "$(SolutionDir)\Wu.CommTool\bin\Debug\net6.0-windows\Modules\" /Y /S</PostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
     <PackageReference Include="Wu" Version="1.0.6" />
     <PackageReference Include="Wu.Wpf" Version="1.0.6" />
   </ItemGroup>
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="xcopy &quot;$(TargetDir)$(TargetName)*$(TargetExt)&quot; &quot;$(SolutionDir)\Wu.CommTool\bin\Debug\net6.0-windows\Modules\&quot; /Y /S" />
+  </Target>-->
 </Project>
