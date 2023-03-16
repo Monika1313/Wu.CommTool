@@ -396,7 +396,6 @@ namespace Wu.CommTool.ViewModels
         /// 客户端登录验证
         /// </summary>
         /// <param name="obj"></param>
-        /// <exception cref="NotImplementedException"></exception>
         private void LoginVerify(MqttConnectionValidatorContext obj)
         {
             try
