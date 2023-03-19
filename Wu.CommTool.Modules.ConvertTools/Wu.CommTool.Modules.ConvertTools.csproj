@@ -1,12 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <!--<TargetFramework>net6.0-windows</TargetFramework>-->
+	 <TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
-    <PackageReference Include="Wu" Version="1.0.6" />
-    <PackageReference Include="Wu.Wpf" Version="1.0.6" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />

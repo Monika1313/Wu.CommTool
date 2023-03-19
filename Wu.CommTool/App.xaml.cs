@@ -1,6 +1,7 @@
 ﻿using log4net;
 using Newtonsoft.Json;
 using Prism.Ioc;
+using Prism.Modularity;
 using System;
 using System.IO;
 using System.Windows;
@@ -11,6 +12,8 @@ using Wu.CommTool.ViewModels;
 using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
 using Wu.CommTool.Views.Dialogs;
+using Wu.CommTool.Models;
+using Wu.CommTool.Modules.ConvertTools;
 
 namespace Wu.CommTool
 {
@@ -53,6 +56,10 @@ namespace Wu.CommTool
             return Container.Resolve<MainWindow>();
         }
 
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="containerRegistry"></param>
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             //注册自定义对话主机服务
@@ -90,6 +97,10 @@ namespace Wu.CommTool
             base.OnInitialized();
         }
 
+        protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
+        {
+            moduleCatalog.AddModule<ConvertToolsModule>();
+        }
 
     }
 }

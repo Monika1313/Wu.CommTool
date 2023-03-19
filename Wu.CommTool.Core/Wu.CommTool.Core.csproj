@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!--<TargetFramework>net6.0-windows</TargetFramework>-->
+	 <TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
+    <!--<Nullable>enable</Nullable>-->
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Wu.Wpf" Version="1.0.6" />
+  </ItemGroup>
+
+</Project>
