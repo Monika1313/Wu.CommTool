@@ -3,15 +3,34 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:core="clr-namespace:Wu.CommTool.Core;assembly=Wu.CommTool.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ConvertTools.ViewModels.DesignViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    MinWidth="100"
-    MinHeight="100"
-    prism:ViewModelLocator.AutoWireViewModel="True">
-    <DockPanel Background="AliceBlue">
-        <StackPanel DockPanel.Dock="Left">
-            <TextBlock Text="转换工具" />
-            <Button Command="{Binding ExecuteCommand}" CommandParameter="Test1" />
-        </StackPanel>
-        <!--<ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ConvertToolsViewRegionName}" DockPanel.Dock="Right" />-->
+    d:DataContext="{x:Static dvm:ConvertToolsDesignViewModel.Instance}"
+    d:Height="400"
+    d:Width="700"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+
+    <!--<UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/Wu.CommTool.Core;component/Resources/GlobalResource.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>-->
+
+    <DockPanel>
+        <ContentControl DockPanel.Dock="Left" Style="{StaticResource Effect2Control}">
+            <StackPanel Cursor="" DockPanel.Dock="Left">
+                <TextBlock Style="{StaticResource TitleTextBlock}" Text="转换工具 开发中..." />
+                <!--<Button
+                    Command="{Binding ExecuteCommand}"
+                    CommandParameter="Test1"
+                    Style="{StaticResource GreenButton}" />-->
+            </StackPanel>
+        </ContentControl>
+        <ContentControl prism:RegionManager.RegionName="{x:Static core:PrismRegionNames.ConvertToolsViewRegionName}" DockPanel.Dock="Right" />
     </DockPanel>
 </UserControl>

@@ -84,6 +84,7 @@
 		<Folder Include="Properties\" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Modules.ConvertTools\Wu.CommTool.Modules.ConvertTools.csproj" />
 	</ItemGroup>
 	<ProjectExtensions>

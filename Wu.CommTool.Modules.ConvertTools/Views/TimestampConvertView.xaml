@@ -4,7 +4,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-        <TextBlock Text="时间戳转换" />
-    </Grid>
+    <ContentControl Style="{StaticResource Effect2Control}">
+        <DockPanel>
+            <TextBlock Style="{StaticResource TitleTextBlock}" Text="时间戳转换" />
+        </DockPanel>
+    </ContentControl>
 </UserControl>

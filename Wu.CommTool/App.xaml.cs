@@ -75,7 +75,6 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
             containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();                                           //关于
-            containerRegistry.RegisterForNavigation<ConvertToolView, ConvertToolViewModel>();                               //小工具界面
             containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             //弹窗界面
             containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面

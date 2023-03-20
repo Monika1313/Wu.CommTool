@@ -2,19 +2,24 @@
     x:Class="Wu.CommTool.Views.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="clr-namespace:Wu.CommTool.Core;assembly=Wu.CommTool.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
     xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:Wu.CommTool.ViewModels"
     Width="1250"
     Height="700"
     MinWidth="1000"
     MinHeight="700"
+    d:DataContext="{x:Static dvm:MainWindowDesignViewModel.Instance}"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    WindowStartupLocation="CenterScreen">
+    WindowStartupLocation="CenterScreen"
+    mc:Ignorable="d">
     <Window.Resources>
         <!--  最大化时增加边距, 避免由于WindowChrome导致的页面显示不全  -->
         <Style x:Key="MainWindowGrid" TargetType="{x:Type Grid}">
@@ -163,7 +168,7 @@
                             </DockPanel>
                         </Grid>
                     </md:ColorZone>
-                    <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static ext:PrismManager.MainViewRegionName}" />
+                    <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static core:PrismRegionNames.MainViewRegionName}" />
                     <ScrollViewer
                         Grid.Row="1"
                         HorizontalAlignment="Right"

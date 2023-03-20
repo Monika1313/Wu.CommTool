@@ -5,6 +5,7 @@ using Prism.Regions;
 using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
+using Wu.CommTool.Core;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.CommTool.Views;
@@ -98,13 +99,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public void Configure()
         {
-            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
-            this.regionManager.RegisterViewWithRegion(PrismManager.MainViewRegionName, nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView));
-
-
-
-            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
-            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView));//导航至页面
+            this.regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
         }
 
         /// <summary>
@@ -117,11 +112,10 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "LanConnect", Title = "Modbus-Rtu", NameSpace = nameof(ModbusRtuView) },
                 new MenuBar() { Icon = "LadyBug", Title = "Mqtt-Server", NameSpace = nameof(MqttServerView) },
                 new MenuBar() { Icon = "Bug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) },
-                //new MenuBar() { Icon = "TOOLS", Title = "转换工具", NameSpace = nameof(ConvertToolView) },
                 new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = nameof(JsonToolView) },
                 new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
                 //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
-                new MenuBar() { Icon = "Clyde", Title = "模块测试", NameSpace = nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView)}
+                new MenuBar() { Icon = "Clyde", Title = "转换工具", NameSpace = nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView)}
             };
         }
 
@@ -137,7 +131,7 @@ namespace Wu.CommTool.ViewModels
             {
                 App.AppConfig.DefaultView = obj.NameSpace;
                 log.Info($"切换界面{obj.NameSpace}");
-                regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(obj.NameSpace, back =>
+                regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(obj.NameSpace, back =>
                 {
                     journal = back.Context.NavigationService.Journal;
                     if (back.Error != null)

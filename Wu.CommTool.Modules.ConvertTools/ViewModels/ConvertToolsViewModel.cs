@@ -9,14 +9,19 @@ using System.Linq;
 using Wu.CommTool.Core;
 using Wu.CommTool.Core.Mvvm;
 using Wu.CommTool.Modules.ConvertTools.Views;
+using Wu.ViewModels;
 
 namespace Wu.CommTool.Modules.ConvertTools.ViewModels
 {
-    public class ConvertToolsViewModel : RegionViewModelBase
+    public class ConvertToolsViewModel : NavigationViewModel
     {
         private readonly IRegionManager regionManager;
 
-        public ConvertToolsViewModel(IRegionManager regionManager) : base(regionManager)
+        public ConvertToolsViewModel()
+        {
+
+        }
+        public ConvertToolsViewModel(IContainerProvider provider, IRegionManager regionManager) : base(provider)
         {
             this.regionManager = regionManager;
             ExecuteCommand = new DelegateCommand<string>(Execute);
@@ -34,7 +39,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
 
         private void Test1()
         {
-            this.regionManager.RequestNavigate(RegionNames.ConvertToolsViewRegionName, nameof(TimestampConvertView), back =>
+            this.regionManager.RequestNavigate(PrismRegionNames.ConvertToolsViewRegionName, nameof(TimestampConvertView), back =>
             {
                 if (back.Error != null)
                 {
@@ -45,13 +50,13 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //this.regionManager.RequestNavigate(RegionNames.ConvertToolsViewRegionName, nameof(TimestampConvertView), back =>
-            //{
-            //    if (back.Error != null)
-            //    {
+            this.regionManager.RequestNavigate(PrismRegionNames.ConvertToolsViewRegionName, nameof(TimestampConvertView), back =>
+            {
+                if (back.Error != null)
+                {
 
-            //    }
-            //});
+                }
+            });
         }
 
 
