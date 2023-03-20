@@ -98,7 +98,12 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public void Configure()
         {
-            this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
+            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
+            this.regionManager.RegisterViewWithRegion(PrismManager.MainViewRegionName, nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView));
+
+
+
+            //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
             //this.regionManager.Regions[PrismManager.MainViewRegionName].RequestNavigate(nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView));//导航至页面
         }
 
@@ -116,6 +121,7 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = nameof(JsonToolView) },
                 new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
                 //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
+                new MenuBar() { Icon = "Clyde", Title = "模块测试", NameSpace = nameof(Wu.CommTool.Modules.ConvertTools.Views.ConvertToolsView)}
             };
         }
 

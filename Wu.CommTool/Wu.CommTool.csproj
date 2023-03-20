@@ -11,6 +11,12 @@
 		<ApplicationIcon>Images\logo.ico</ApplicationIcon>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="publish\**" />
+	  <EmbeddedResource Remove="publish\**" />
+	  <None Remove="publish\**" />
+	  <Page Remove="publish\**" />
+	</ItemGroup>
+	<ItemGroup>
 		<None Remove="Configs\ModbusRtuAutoResponseConfig\Default.jsonARC" />
 		<None Remove="Configs\ModbusRtuAutoResponseConfig\Test.jsonARC" />
 		<None Remove="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC" />

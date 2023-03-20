@@ -12,6 +12,6 @@
             <TextBlock Text="转换工具" />
             <Button Command="{Binding ExecuteCommand}" CommandParameter="Test1" />
         </StackPanel>
-        <ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ConvertToolsViewRegionName}" DockPanel.Dock="Right" />
+        <!--<ContentControl prism:RegionManager.RegionName="{x:Static core:RegionNames.ConvertToolsViewRegionName}" DockPanel.Dock="Right" />-->
     </DockPanel>
 </UserControl>

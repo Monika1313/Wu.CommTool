@@ -45,13 +45,13 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            this.regionManager.RequestNavigate(RegionNames.ConvertToolsViewRegionName, nameof(TimestampConvertView), back =>
-            {
-                if (back.Error != null)
-                {
+            //this.regionManager.RequestNavigate(RegionNames.ConvertToolsViewRegionName, nameof(TimestampConvertView), back =>
+            //{
+            //    if (back.Error != null)
+            //    {
 
-                }
-            });
+            //    }
+            //});
         }
 
 
