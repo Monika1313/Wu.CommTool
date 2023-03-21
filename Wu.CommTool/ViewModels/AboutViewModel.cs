@@ -79,7 +79,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Search();
+            //Search();
         }
 
         /// <summary>
@@ -87,15 +87,15 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public async void OnDialogOpend(IDialogParameters parameters)
         {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-            }
+            //if (parameters != null && parameters.ContainsKey("Value"))
+            //{
+            //    //var oldDto = parameters.GetValue<Dto>("Value");
+            //    //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
+            //    //if(getResult != null && getResult.Status)
+            //    //{
+            //    //    CurrentDto = getResult.Result;
+            //    //}
+            //}
         }
 
 

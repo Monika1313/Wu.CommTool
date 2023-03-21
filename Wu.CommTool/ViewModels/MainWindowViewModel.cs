@@ -99,7 +99,8 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         public void Configure()
         {
-            this.regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
+            this.regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(nameof(ModbusTcpView));//导航至页面
+            //this.regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
         }
 
         /// <summary>
