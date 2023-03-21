@@ -1,7 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using Wu.CommTool.Modules.About.Views;
+//using Wu.CommTool.Modules.About.Views;
 
 namespace Wu.CommTool.Modules.About
 {
