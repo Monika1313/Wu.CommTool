@@ -14,4 +14,7 @@
     <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
     <ProjectReference Include="..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
 </Project>
