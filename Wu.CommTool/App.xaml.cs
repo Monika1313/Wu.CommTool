@@ -12,7 +12,6 @@ using Wu.CommTool.ViewModels;
 using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
 using Wu.CommTool.Views.Dialogs;
-using Wu.CommTool.Models;
 using Wu.CommTool.Modules.ConvertTools;
 
 namespace Wu.CommTool
@@ -96,9 +95,13 @@ namespace Wu.CommTool
             base.OnInitialized();
         }
 
+        /// <summary>
+        /// 模块加载
+        /// </summary>
+        /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<ConvertToolsModule>();
+            moduleCatalog.AddModule<ConvertToolsModule>();//转换工具模块
         }
 
     }
