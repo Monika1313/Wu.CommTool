@@ -61,11 +61,24 @@ namespace Wu.CommTool.ViewModels
             }
         }
 
+        /// <summary>
+        /// 打开Github链接
+        /// </summary>
         private void ShowGitHub()
         {
             try
             {
-                System.Diagnostics.Process.Start("explorer.exe", @"https://github.com/Monika1313/Wu.CommTool");
+                if (@"https://github.com/Monika1313/Wu.CommTool" is string link)
+                {
+                    link = link.Replace("&", "^&");
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd", $"/c start {link}")
+                    {
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    });
+                }
+
+                //System.Diagnostics.Process.Start("explorer.exe", @"https://github.com/Monika1313/Wu.CommTool");
             }
             catch (Exception)
             {
