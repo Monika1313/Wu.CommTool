@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using ImTools;
+using Newtonsoft.Json;
 using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
@@ -49,10 +50,12 @@ namespace Wu.CommTool.Models
             get => _StartAddr;
             set
             {
+                if (value > 65535)
+                {
+                    value = 65535;
+                }
                 SetProperty(ref _StartAddr, value);
-
-                _StartAddrHex = value.ToString("X4");
-                RaisePropertyChanged(nameof(StartAddrHex));
+                SetProperty(ref _StartAddrHex, value.ToString("X4"), nameof(StartAddrHex));
 
                 RaisePropertyChanged(nameof(DataFrame));
             }
@@ -68,14 +71,16 @@ namespace Wu.CommTool.Models
             get => _StartAddrHex;
             set
             {
-                SetProperty(ref _StartAddrHex, value);
-
                 try
                 {
-                    if (string.IsNullOrWhiteSpace(value))
-                        return;
-                    _StartAddr = Convert.ToInt32(value, 16);
-                    RaisePropertyChanged(nameof(StartAddr));
+                    if (string.IsNullOrWhiteSpace(value)) return;
+                    int i = Convert.ToInt32(value, 16);
+                    if (i > 0xFFFF)
+                    {
+                        value = "FFFF";
+                    }
+                    SetProperty(ref _StartAddrHex, value);
+                    SetProperty(ref _StartAddr, Convert.ToInt32(value, 16), nameof(StartAddr));
 
                     RaisePropertyChanged(nameof(DataFrame));
                 }
