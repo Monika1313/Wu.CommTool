@@ -10,8 +10,6 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     d:DataContext="{x:Static dvm:TimestampConvertDesignViewModel.Instance}"
-    d:Height="300"
-    d:Width="500"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <ContentControl Style="{StaticResource Effect2Control}">
@@ -21,13 +19,15 @@
                 Style="{StaticResource TitleTextBlock}"
                 Text="时间戳转换" />
             <TextBlock
+                Margin="20"
                 HorizontalAlignment="Center"
-                DockPanel.Dock="Bottom"
+                DockPanel.Dock="Top"
                 Text="      时间戳是指格林威治时间1970年01月01日00时00分00秒(北京时间1970年01月01日08时00分00秒)起至现在的总秒数"
                 TextWrapping="Wrap" />
 
 
             <ContentControl
+                Width="350"
                 HorizontalAlignment="Center"
                 DockPanel.Dock="Top"
                 Style="{StaticResource Effect2Control}">
@@ -42,9 +42,15 @@
                         HorizontalAlignment="Center"
                         DockPanel.Dock="Top">
                         <TextBlock
-                            Width="60"
+                            Width="65"
                             VerticalAlignment="Center"
-                            Text="时间戳s" />
+                            Text="时间戳 秒" />
+                        <Button
+                            Margin="2"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="CopyCurrentTimestamp"
+                            Content="复制"
+                            DockPanel.Dock="Right" />
                         <!--<ComboBox
                             Margin="5"
                             DockPanel.Dock="Right"
@@ -56,18 +62,17 @@
                             DockPanel.Dock="Left"
                             Text="{Binding CurrentTimestamp}" />
                     </DockPanel>
-                    <DockPanel
-                        Width="300"
-                        HorizontalAlignment="Center"
-                        DockPanel.Dock="Top">
+                    <DockPanel DockPanel.Dock="Top">
                         <TextBlock
-                            Width="60"
+                            Width="65"
                             VerticalAlignment="Center"
-                            Text="时间戳ms" />
-                        <!--<ComboBox
-                            Margin="5"
-                            DockPanel.Dock="Right"
-                            ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type enums:TimestampUnit}}}" />-->
+                            Text="时间戳 毫秒" />
+                        <Button
+                            Margin="2"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="CopyCurrentTimestampMs"
+                            Content="复制"
+                            DockPanel.Dock="Right" />
                         <TextBlock
                             Margin="5"
                             VerticalAlignment="Center"
@@ -75,14 +80,18 @@
                             DockPanel.Dock="Left"
                             Text="{Binding CurrentTimestampMs}" />
                     </DockPanel>
-                    <DockPanel
-                        Width="300"
-                        HorizontalAlignment="Center"
-                        DockPanel.Dock="Top">
+                    <DockPanel DockPanel.Dock="Top">
                         <TextBlock
-                            Width="60"
+                            Width="65"
                             VerticalAlignment="Center"
-                            Text="时间" />
+                            Text="北京时间" />
+                        <Button
+                            Margin="2"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="CopyCurrentTime"
+                            Content="复制"
+                            Cursor="Hand"
+                            DockPanel.Dock="Right" />
                         <TextBlock
                             Margin="5"
                             VerticalAlignment="Center"
@@ -95,7 +104,66 @@
                     </DockPanel>
                 </DockPanel>
             </ContentControl>
-            <StackPanel />
+
+            <ContentControl
+                Width="350"
+                DockPanel.Dock="Top"
+                Style="{StaticResource Effect2Control}">
+                <DockPanel Margin="10">
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        DockPanel.Dock="Top"
+                        FontSize="18"
+                        Text="转换" />
+                    <StackPanel>
+                        <DockPanel>
+                            <Button
+                                Margin="2"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="CopyTimestampS"
+                                Content="复制"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right" />
+                            <TextBox
+                                hc:TitleElement.Title="时间戳 秒"
+                                Style="{StaticResource FormTextBox}"
+                                Text="{Binding ConvertTimestampS, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        </DockPanel>
+
+                        <DockPanel>
+                            <Button
+                                Margin="2"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="CopyCurrentTime"
+                                Content="复制"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right" />
+                            <TextBox
+                                hc:TitleElement.Title="时间戳 毫秒"
+                                Style="{StaticResource FormTextBox}"
+                                Text="{Binding ConvertTimestampMs, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                        <DockPanel>
+                            <TextBlock
+                                Width="70"
+                                Margin="5"
+                                VerticalAlignment="Center"
+                                Text="北京时间" />
+                            <Button
+                                Margin="2"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="CopyTime"
+                                Content="复制"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right" />
+                            <hc:DateTimePicker Margin="5" SelectedDateTime="{Binding ConvertTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DockPanel>
+                    </StackPanel>
+                </DockPanel>
+            </ContentControl>
+
+            <Grid />
         </DockPanel>
     </ContentControl>
 </UserControl>

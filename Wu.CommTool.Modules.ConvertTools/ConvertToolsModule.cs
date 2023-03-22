@@ -29,6 +29,7 @@ namespace Wu.CommTool.Modules.ConvertTools
         {
             containerRegistry.RegisterForNavigation<ConvertToolsView, ConvertToolsViewModel>();         //注册转换工具主界面
             containerRegistry.RegisterForNavigation<TimestampConvertView, TimestampConvertViewModel>(); //注册时间戳转换页面
+            containerRegistry.RegisterForNavigation<ValueConvertView, ValueConvertViewModel>();         //注册值转换页面
         }
     }
 }

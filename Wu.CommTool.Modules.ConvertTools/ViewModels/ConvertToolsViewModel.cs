@@ -40,8 +40,8 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
         public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
         private ObservableCollection<MenuBar> _MenuBars = new()
             {
-                new MenuBar() { Icon = "Number1", Title = "时间戳工具", NameSpace = "0" },
-                new MenuBar() { Icon = "Number2", Title = "值转换", NameSpace = "1" },
+                new MenuBar() { Icon = "Number1", Title = "时间戳工具", NameSpace = nameof(TimestampConvertView) },
+                new MenuBar() { Icon = "Number2", Title = "值转换", NameSpace = nameof(ValueConvertView) },
             };
 
 
@@ -116,21 +116,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
         {
             try
             {
-                switch (obj.NameSpace)
-                {
-                    case "0":
-                        SelectedIndex = 0;
-                        break;
-                    case "1":
-                        SelectedIndex = 1;
-                        break;
-                    case "2":
-                        SelectedIndex = 2;
-                        break;
-                    case "3":
-                        SelectedIndex = 3;
-                        break;
-                }
+                regionManager.RequestNavigate(PrismRegionNames.ConvertToolsViewRegionName, obj.NameSpace);
             }
             catch { }
         }
