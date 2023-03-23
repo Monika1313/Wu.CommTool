@@ -47,7 +47,7 @@
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/Mqtt客户端.png)
 
 ## 如何下载
-- 进入 [Release](https://github.com/Monika1313/Wu.CommTool/releases) 页面下载
+- 进入 [Release](https://github.com/Monika1313/Wu.CommTool/releases) 页面下载，下载WuCommTool.zip
 
 ## 联系作者
 - QQ：961501261
