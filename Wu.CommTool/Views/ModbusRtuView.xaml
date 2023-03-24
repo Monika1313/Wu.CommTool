@@ -6,6 +6,7 @@
     xmlns:cvt="clr-namespace:Wu.CommTool.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+    xmlns:enums="clr-namespace:Wu.CommTool.Enums"
     xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
@@ -1620,7 +1621,7 @@
                                                             <ComboBox
                                                                 MinWidth="135"
                                                                 Margin="0"
-                                                                ItemsSource="{Binding Source={StaticResource ValueDataType}}"
+                                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type enums:DataType}}}"
                                                                 SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                         </DataTemplate>
                                                     </DataGridTemplateColumn.CellTemplate>
