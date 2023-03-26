@@ -2,7 +2,60 @@
     x:Class="Wu.CommTool.Modules.About.Views.AboutView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
     prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid />
+    <md:DialogHost
+        x:Name="AboutView111"
+        DialogTheme="Inherit"
+        Identifier="AboutView11">
+        <md:DrawerHost>
+            <DockPanel LastChildFill="False">
+                <Grid Height="40" DockPanel.Dock="Top">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="关于" />
+                </Grid>
+
+                <Image
+                    Width="200"
+                    DockPanel.Dock="Top"
+                    Source="/Wu通讯调试工具;component/Images/AI.png" />
+                <StackPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="TOP ">
+                    <TextBox
+                        Margin="5"
+                        hc:Poptip.Content="联系作者"
+                        hc:TitleElement.Title="作者QQ"
+                        hc:TitleElement.TitleWidth="60"
+                        IsReadOnly="True"
+                        Style="{StaticResource FormTextBox}"
+                        Text="961501261" />
+                    <TextBox
+                        Margin="5"
+                        hc:TitleElement.Title="QQ群"
+                        hc:TitleElement.TitleWidth="60"
+                        IsReadOnly="True"
+                        Style="{StaticResource FormTextBox}"
+                        Text="746533921" />
+                    <TextBox
+                        Margin="5"
+                        hc:Poptip.Content="在这里下载源码"
+                        hc:TitleElement.Title="GitHub"
+                        hc:TitleElement.TitleWidth="60"
+                        IsReadOnly="True"
+                        Style="{StaticResource FormTextBox}"
+                        Text="https://github.com/Monika1313/Wu.CommTool">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="GotFocus">
+                                <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://github.com/Monika1313/Wu.CommTool" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                </StackPanel>
+            </DockPanel>
+        </md:DrawerHost>
+    </md:DialogHost>
 </UserControl>

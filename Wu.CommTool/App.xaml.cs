@@ -13,6 +13,7 @@ using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
 using Wu.CommTool.Views.Dialogs;
 using Wu.CommTool.Modules.ConvertTools;
+using Wu.CommTool.Modules.About;
 
 namespace Wu.CommTool
 {
@@ -73,7 +74,6 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();                                             //Mqtt
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
-            containerRegistry.RegisterForNavigation<AboutView, AboutViewModel>();                                           //关于
             containerRegistry.RegisterForNavigation<ModbusTcpView, ModbusTcpViewModel>();                                   //ModbusTcp
             containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             //弹窗界面
@@ -102,7 +102,8 @@ namespace Wu.CommTool
         /// <param name="moduleCatalog"></param>
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<ConvertToolsModule>();//转换工具模块
+            moduleCatalog.AddModule<ConvertToolsModule>();  //转换工具模块
+            moduleCatalog.AddModule<AboutModule>();         //关于模块
         }
 
     }
