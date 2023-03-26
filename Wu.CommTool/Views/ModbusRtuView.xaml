@@ -377,7 +377,12 @@
                                         <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
-                                                    <VirtualizingStackPanel />
+                                                    <VirtualizingStackPanel
+                                                        VirtualizingPanel.CacheLength="2"
+                                                        VirtualizingPanel.CacheLengthUnit="Page"
+                                                        VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                                                        VirtualizingPanel.ScrollUnit="Item"
+                                                        VirtualizingPanel.VirtualizationMode="Recycling" />
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
