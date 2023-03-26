@@ -64,15 +64,15 @@
     </ObjectDataProvider>
 
 
-    <!--  校验位  -->
-    <ObjectDataProvider
+    <!--  数据类型  -->
+    <!--<ObjectDataProvider
         x:Key="ValueDataType"
         MethodName="GetValues"
         ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="enums:DataType" />
         </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    </ObjectDataProvider>-->
 
     <!--  ModbusRtu字节序  -->
     <ObjectDataProvider
