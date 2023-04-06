@@ -2,9 +2,85 @@
     x:Class="Wu.CommTool.Modules.ConvertTools.Views.ValueConvertView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ConvertTools.ViewModels.DesignViewModels"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    prism:ViewModelLocator.AutoWireViewModel="True">
-    <Grid>
-        <TextBlock Style="{StaticResource TitleTextBlock}" Text="开发中..." />
-    </Grid>
+    d:DataContext="{x:Static dvm:ConvertToolsDesignViewModel.Instance}"
+    d:Height="400"
+    d:Width="600"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="10" />
+        </Style>
+
+        <Style x:Key="rowTitle" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="20,10" />
+        </Style>
+    </UserControl.Resources>
+    <DockPanel>
+        <TextBlock
+            DockPanel.Dock="Top"
+            Style="{StaticResource TitleTextBlock}"
+            Text="值转换" />
+        <Border HorizontalAlignment="Center" VerticalAlignment="Center">
+            <ContentControl Style="{StaticResource Effect2Control}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="字节序" />
+                    <TextBlock
+                        Grid.Column="1"
+                        Style="{StaticResource rowTitle}"
+                        Text="ABCD" />
+                    <TextBlock
+                        Grid.Column="2"
+                        Style="{StaticResource rowTitle}"
+                        Text="BADC" />
+                    <TextBlock
+                        Grid.Column="3"
+                        Style="{StaticResource rowTitle}"
+                        Text="DCBA" />
+                    <TextBlock
+                        Grid.Column="4"
+                        Style="{StaticResource rowTitle}"
+                        Text="CDAB" />
+
+                    <TextBlock Grid.Row="1" Text="16进制" />
+                    <TextBlock Grid.Row="2" Text="16位无符号整型" />
+                    <TextBlock Grid.Row="3" Text="16位有符号整型" />
+                    <TextBlock Grid.Row="4" Text="32位无符号整型" />
+                    <TextBlock Grid.Row="5" Text="32位有符号整型" />
+                    <TextBlock Grid.Row="6" Text="32位浮点型" />
+                    <TextBlock Grid.Row="7" Text="64位无符号整型" />
+                    <TextBlock Grid.Row="8" Text="64位有符号整型" />
+                    <TextBlock Grid.Row="9" Text="64位浮点型" />
+                </Grid>
+            </ContentControl>
+        </Border>
+    </DockPanel>
 </UserControl>

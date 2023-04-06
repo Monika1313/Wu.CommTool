@@ -26,7 +26,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
                 {
                     timer.Stop();
                 }
-                catch{}
+                catch { }
                 return false;
             }
         }
@@ -41,7 +41,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
 
             ConvertTime = DateTime.Now;
             ConvertTimestampMs = Time2Timestamp(ConvertTime, TimestampUnit.毫秒);
-            ConvertTimestampS = ConvertTimestampMs/1000;
+            ConvertTimestampS = ConvertTimestampMs / 1000;
         }
 
         private void Timer_Elapsed(object sender, ElapsedEventArgs e)
@@ -56,7 +56,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
             {
 
             }
-            
+
         }
 
 
@@ -70,7 +70,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
             {
                 SetProperty(ref _CurrentTime, value);
                 CurrentTimestampMs = Time2Timestamp(CurrentTime, TimestampUnit.毫秒);
-                CurrentTimestamp = CurrentTimestampMs/1000;
+                CurrentTimestamp = CurrentTimestampMs / 1000;
             }
         }
         private DateTime _CurrentTime = DateTime.Now;
@@ -92,11 +92,12 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
         /// </summary>
         public long ConvertTimestampS
         {
-            get => _ConvertTimestampS; set
+            get => _ConvertTimestampS;
+            set
             {
                 if (_ConvertTimestampS.Equals(value)) return;
                 SetProperty(ref _ConvertTimestampS, value);
-                SetProperty(ref _ConvertTimestampMs, _ConvertTimestampS * 1000,nameof(ConvertTimestampMs));
+                SetProperty(ref _ConvertTimestampMs, _ConvertTimestampS * 1000, nameof(ConvertTimestampMs));
                 SetProperty(ref _ConvertTime, Timestamp2Time(_ConvertTimestampS, TimestampUnit.秒), nameof(ConvertTime));
             }
         }
@@ -107,12 +108,13 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
         /// </summary>
         public long ConvertTimestampMs
         {
-            get => _ConvertTimestampMs; set
+            get => _ConvertTimestampMs;
+            set
             {
                 if (_ConvertTimestampMs.Equals(value)) return;
                 SetProperty(ref _ConvertTimestampMs, value);
-                SetProperty(ref _ConvertTime, Timestamp2Time(_ConvertTimestampMs, TimestampUnit.毫秒),nameof(ConvertTime));
-                SetProperty(ref _ConvertTimestampS, _ConvertTimestampMs/1000,nameof(ConvertTimestampS));
+                SetProperty(ref _ConvertTime, Timestamp2Time(_ConvertTimestampMs, TimestampUnit.毫秒), nameof(ConvertTime));
+                SetProperty(ref _ConvertTimestampS, _ConvertTimestampMs / 1000, nameof(ConvertTimestampS));
             }
         }
         private long _ConvertTimestampMs;
@@ -162,7 +164,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
         /// <param name="dt"></param>
         /// <param name="unit"></param>
         /// <returns></returns>
-        public static long Time2Timestamp(DateTime dt,TimestampUnit unit)
+        public static long Time2Timestamp(DateTime dt, TimestampUnit unit)
         {
             if (unit.Equals(TimestampUnit.毫秒))
                 // 使用当前时间计时周期数 减去 1970年01月01日计时周期数（621355968000000000）除去后面4位计数（后四位计时单位小于毫秒）再取整（去小数点）。
@@ -197,7 +199,7 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
                 case "CopyCurrentTime": Clipboard.SetDataObject(CurrentTime.ToString("yyyy/MM/dd HH:mm:ss")); ; break;
                 case "CopyCurrentTimestamp": Clipboard.SetDataObject(CurrentTimestamp.ToString()); ; break;
                 case "CopyCurrentTimestampMs": Clipboard.SetDataObject(CurrentTimestampMs.ToString()); ; break;
-                case "CopyTime": Clipboard.SetDataObject(ConvertTime.ToString("yyyy/MM/dd HH:mm:ss"));break;
+                case "CopyTime": Clipboard.SetDataObject(ConvertTime.ToString("yyyy/MM/dd HH:mm:ss")); break;
                 case "CopyTimestampS": Clipboard.SetDataObject(ConvertTimestampS.ToString()); ; break;
                 case "CopyTimestampMs": Clipboard.SetDataObject(ConvertTimestampMs.ToString()); ; break;
                 default: break;
