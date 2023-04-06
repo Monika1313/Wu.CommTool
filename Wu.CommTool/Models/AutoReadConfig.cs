@@ -2,6 +2,7 @@
 using Prism.Mvvm;
 using System.Text;
 using Wu.CommTool.Enums;
+using Wu.CommTool.Shared.Enums;
 using Wu.Extensions;
 
 namespace Wu.CommTool.Models

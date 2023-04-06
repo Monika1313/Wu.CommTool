@@ -3,6 +3,7 @@ using Prism.Mvvm;
 using System;
 using System.Linq;
 using Wu.CommTool.Enums;
+using Wu.CommTool.Shared.Enums;
 
 namespace Wu.CommTool.Models
 {
@@ -168,33 +169,24 @@ namespace Wu.CommTool.Models
         /// <returns></returns>
         public static int GetDataTypeLength(DataType dataType)
         {
-            switch (dataType)
+            return dataType switch
             {
                 //case DataType.Byte:
                 //    return 1;
                 //case DataType.Sint:
                 //    return 1;
-                case DataType.uShort:
-                    return 2;
-                case DataType.Short:
-                    return 2;
-                case DataType.uInt:
-                    return 4;
-                case DataType.Int:
-                    return 4;
-                case DataType.uLong:
-                    return 8;
-                case DataType.Long:
-                    return 8;
-                case DataType.Float:
-                    return 4;
-                case DataType.Double:
-                    return 8;
+                DataType.uShort => 2,
+                DataType.Short => 2,
+                DataType.uInt => 4,
+                DataType.Int => 4,
+                DataType.uLong => 8,
+                DataType.Long => 8,
+                DataType.Float => 4,
+                DataType.Double => 8,
                 //case DataType.Bool:
                 //    return 1;
-                default:
-                    return 1;
-            }
+                _ => 1,
+            };
         }
 
         ///// <summary>

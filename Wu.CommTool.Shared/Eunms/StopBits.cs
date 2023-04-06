@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel;
-using Wu.CommTool.Converters;
+using Wu.Wpf.Converters;
 
-namespace Wu.CommTool.Models
+namespace Wu.CommTool.Shared.Enums
 {
+    /// <summary>
+    /// Modbus停止位
+    /// </summary>
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum StopBits
     {

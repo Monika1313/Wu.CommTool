@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Prism.Mvvm;
 using System.Collections.Generic;
+using Wu.CommTool.Shared.Enums;
 
 namespace Wu.CommTool.Models
 {

@@ -6,6 +6,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Modules.ConvertTools.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 
@@ -36,6 +37,12 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// 值转换
+        /// </summary>
+        public ValueCvt ValueCvt { get => _ValueCvt; set => SetProperty(ref _ValueCvt, value); }
+        private ValueCvt _ValueCvt = new();
         #endregion
 
 

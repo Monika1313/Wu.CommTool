@@ -509,7 +509,7 @@
                                 hc:TitleElement.Title="消息质量："
                                 hc:TitleElement.TitleWidth="70"
                                 DockPanel.Dock="Right"
-                                ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:QosLevel}}}"
+                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type model:QosLevel}}}"
                                 SelectedItem="{Binding MqttClientConfig.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource FormComboBox}" />
 

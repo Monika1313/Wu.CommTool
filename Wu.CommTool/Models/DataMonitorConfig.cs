@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Text;
 using Wu.CommTool.Enums;
+using Wu.CommTool.Shared.Enums;
 using Wu.Extensions;
 
 namespace Wu.CommTool.Models

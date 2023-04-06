@@ -24,6 +24,7 @@ using Wu.CommTool.Common;
 using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+using Wu.CommTool.Shared.Enums;
 using Wu.CommTool.Views;
 using Wu.CommTool.Views.Dialogs;
 using Wu.Extensions;
@@ -73,7 +74,7 @@ namespace Wu.CommTool.ViewModels
 
             //默认选中9600无校验
             SelectedBaudRates.Add(BaudRate._9600);
-            SelectedParitys.Add(Models.Parity.None);
+            SelectedParitys.Add(Shared.Enums.Parity.None);
 
             //数据监控过滤器
             RefreshModbusRtuDataDataView();
@@ -138,8 +139,8 @@ namespace Wu.CommTool.ViewModels
         ///// <summary>
         ///// 选中的校验方式
         ///// </summary>
-        public IList<Wu.CommTool.Models.Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
-        private IList<Wu.CommTool.Models.Parity> _SelectedParitys = new List<Wu.CommTool.Models.Parity>();
+        public IList<Wu.CommTool.Shared.Enums.Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
+        private IList<Wu.CommTool.Shared.Enums.Parity> _SelectedParitys = new List<Wu.CommTool.Shared.Enums.Parity>();
 
         /// <summary>
         /// definity
@@ -1450,7 +1451,7 @@ namespace Wu.CommTool.ViewModels
         private void ParitySelectionChanged(object obj)
         {
             IList items = (IList)obj;
-            var collection = items.Cast<Wu.CommTool.Models.Parity>();
+            var collection = items.Cast<Wu.CommTool.Shared.Enums.Parity>();
             SelectedParitys = collection.ToList();
         }
 

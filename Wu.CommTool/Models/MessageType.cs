@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using Wu.CommTool.Converters;
+using Wu.Wpf.Converters;
 
 namespace Wu.CommTool.Models
 {

@@ -14,14 +14,14 @@
 
 
     <!--  波特率枚举  -->
-    <ObjectDataProvider
+    <!--<ObjectDataProvider
         x:Key="ValueBaudRate"
         MethodName="GetValues"
         ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:BaudRate" />
         </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    </ObjectDataProvider>-->
     <!--<ObjectDataProvider x:Key="NameBaudRate"
                         MethodName="GetNames"
                         ObjectType="{x:Type sys:Enum}">
@@ -33,35 +33,35 @@
 
 
     <!--  校验位  -->
-    <ObjectDataProvider
+    <!--<ObjectDataProvider
         x:Key="ValueParity"
         MethodName="GetValues"
         ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:Parity" />
         </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    </ObjectDataProvider>-->
 
     <!--  停止位  -->
-    <ObjectDataProvider
+    <!--<ObjectDataProvider
         x:Key="ValueStopBits"
         MethodName="GetValues"
         ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:StopBits" />
         </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    </ObjectDataProvider>-->
 
 
     <!--  CRC校验模式  -->
-    <ObjectDataProvider
+    <!--<ObjectDataProvider
         x:Key="ValueCrcMode"
         MethodName="GetValues"
         ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="model:CrcMode" />
         </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    </ObjectDataProvider>-->
 
 
     <!--  数据类型  -->
@@ -75,13 +75,13 @@
     </ObjectDataProvider>-->
 
     <!--  ModbusRtu字节序  -->
-    <ObjectDataProvider
+    <!--<ObjectDataProvider
         x:Key="ValueModbusByteOrder"
         MethodName="GetValues"
         ObjectType="{x:Type sys:Enum}">
         <ObjectDataProvider.MethodParameters>
             <x:Type TypeName="enums:ModbusByteOrder" />
         </ObjectDataProvider.MethodParameters>
-    </ObjectDataProvider>
+    </ObjectDataProvider>-->
 
 </ResourceDictionary>

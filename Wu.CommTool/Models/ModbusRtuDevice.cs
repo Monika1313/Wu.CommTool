@@ -1,4 +1,5 @@
 ﻿using Prism.Mvvm;
+using Wu.CommTool.Shared.Enums;
 
 namespace Wu.CommTool.Models
 {

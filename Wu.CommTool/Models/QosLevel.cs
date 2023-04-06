@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel;
 using Wu.CommTool.Converters;
+using Wu.Wpf.Converters;
 
 namespace Wu.CommTool.Models
 {
     /// <summary>
-    /// Qos
+    /// Mqtt Qos消息质量等级
     /// </summary>
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum QosLevel

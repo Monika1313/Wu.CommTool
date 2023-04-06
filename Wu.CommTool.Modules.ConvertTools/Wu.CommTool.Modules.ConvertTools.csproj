@@ -5,6 +5,7 @@
 	 <TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
 	 <LangVersion>latestMajor</LangVersion>
      <UseWPF>true</UseWPF>
+     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
     <!--<PackageReference Include="Prism.DryIoc" Version="8.1.97" />-->
@@ -13,8 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
     <ProjectReference Include="..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Models\" />
   </ItemGroup>
 </Project>

@@ -16,9 +16,10 @@ using System.Threading.Tasks;
 using Wu.CommTool.Common;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+using Wu.CommTool.Shared.Enums;
 using Wu.Extensions;
 using Wu.ViewModels;
-using Parity = Wu.CommTool.Models.Parity;
+using Parity = Wu.CommTool.Shared.Enums.Parity;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels
 {

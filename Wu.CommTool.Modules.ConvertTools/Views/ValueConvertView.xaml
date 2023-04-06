@@ -6,8 +6,8 @@
     xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ConvertTools.ViewModels.DesignViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
-    d:DataContext="{x:Static dvm:ConvertToolsDesignViewModel.Instance}"
-    d:Height="400"
+    d:DataContext="{x:Static dvm:ValueConvertDesignViewModel.Instance}"
+    d:Height="500"
     d:Width="600"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
@@ -23,17 +23,26 @@
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="Margin" Value="20,10" />
         </Style>
+        <Style BasedOn="{StaticResource TextBoxBaseStyle}" TargetType="TextBox">
+            <Setter Property="Margin" Value="5" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
     </UserControl.Resources>
     <DockPanel>
         <TextBlock
             DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlock}"
             Text="值转换" />
+        <TextBlock
+            DockPanel.Dock="Top"
+            Style="{StaticResource TitleTextBlock}"
+            Text="开发中...未完成..." />
         <Border HorizontalAlignment="Center" VerticalAlignment="Center">
             <ContentControl Style="{StaticResource Effect2Control}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="2*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -79,6 +88,43 @@
                     <TextBlock Grid.Row="7" Text="64位无符号整型" />
                     <TextBlock Grid.Row="8" Text="64位有符号整型" />
                     <TextBlock Grid.Row="9" Text="64位浮点型" />
+
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_16Jz, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_16Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="4"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_32Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="5"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_32Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="6"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="7"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_64Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="8"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_64Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="9"
+                        Grid.Column="1"
+                        Text="{Binding ValueCvt.ABCD_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
             </ContentControl>
         </Border>

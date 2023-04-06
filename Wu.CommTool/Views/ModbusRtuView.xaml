@@ -15,6 +15,7 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:model="clr-namespace:Wu.CommTool.Models"
     xmlns:port="clr-namespace:System.IO.Ports;assembly=System.IO.Ports"
+    xmlns:senums="clr-namespace:Wu.CommTool.Shared.Enums;assembly=Wu.CommTool.Shared"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
@@ -138,7 +139,7 @@
                                                 hc:InfoElement.Placeholder="请选择波特率..."
                                                 hc:InfoElement.Title="波特率"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
+                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:BaudRate}}}"
                                                 SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
 
@@ -146,7 +147,7 @@
                                                 hc:InfoElement.Placeholder="请选择校验位..."
                                                 hc:InfoElement.Title="校验位"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding Source={StaticResource ValueParity}}"
+                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:Parity}}}"
                                                 SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
 
@@ -161,7 +162,7 @@
                                                 hc:InfoElement.Placeholder="请选择停止位..."
                                                 hc:InfoElement.Title="停止位"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
+                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:StopBits}}}"
                                                 SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
 
@@ -340,7 +341,7 @@
                                             hc:InfoElement.Placeholder="请选择校验模式..."
                                             hc:InfoElement.Title="自动校验模式: "
                                             hc:InfoElement.TitleWidth="90"
-                                            ItemsSource="{Binding Source={StaticResource ValueCrcMode}}"
+                                            ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:CrcMode}}}"
                                             SelectedItem="{Binding CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                             Style="{StaticResource FormComboBox}" />
                                         <Button
@@ -572,7 +573,7 @@
                                                     hc:InfoElement.Title="停止位"
                                                     hc:InfoElement.TitleWidth="45"
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                    ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:StopBits}}}"
                                                     SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     Style="{StaticResource FormComboBox}" />
 
@@ -587,7 +588,7 @@
                                                     hc:InfoElement.TitlePlacement="Left"
                                                     hc:Poptip.Content="波特率可多选, 搜索根据选择先后"
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                    ItemsSource="{Binding Source={StaticResource ValueBaudRate}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:BaudRate}}}"
                                                     SelectedIndex="5"
                                                     ShowSelectAllButton="True"
                                                     Style="{StaticResource FormCheckComboBox}">
@@ -608,7 +609,7 @@
                                                     hc:Poptip.Content="校验方式可多选, 搜索根据选择先后"
                                                     hc:TitleElement.Title="校验方式"
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                    ItemsSource="{Binding Source={StaticResource ValueParity}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:Parity}}}"
                                                     SelectedIndex="0"
                                                     ShowSelectAllButton="True"
                                                     Style="{StaticResource FormCheckComboBox}">
@@ -1092,7 +1093,7 @@
                                                     hc:InfoElement.Placeholder="请选择校验位..."
                                                     hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                                                     hc:TitleElement.Title="字节序"
-                                                    ItemsSource="{Binding Source={StaticResource ValueModbusByteOrder}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:ModbusByteOrder}}}"
                                                     SelectedItem="{Binding DataMonitorConfig.ByteOrder}"
                                                     Style="{StaticResource FormComboBox}" />
                                                 <TextBox
@@ -1162,7 +1163,7 @@
                                                     hc:InfoElement.Placeholder="请选择波特率..."
                                                     hc:InfoElement.Title="波特率"
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                    ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:BaudRate}}}"
                                                     SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     Style="{StaticResource FormComboBox}" />
 
@@ -1170,7 +1171,7 @@
                                                     hc:InfoElement.Placeholder="请选择校验位..."
                                                     hc:InfoElement.Title="校验位"
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                    ItemsSource="{Binding Source={StaticResource ValueParity}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:Parity}}}"
                                                     SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     Style="{StaticResource FormComboBox}" />
 
@@ -1185,7 +1186,7 @@
                                                     hc:InfoElement.Placeholder="请选择停止位..."
                                                     hc:InfoElement.Title="停止位"
                                                     IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                    ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
+                                                    ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:StopBits}}}"
                                                     SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                     Style="{StaticResource FormComboBox}" />
                                                 <TextBox
@@ -1717,7 +1718,7 @@
                                                 hc:InfoElement.Placeholder="请选择波特率..."
                                                 hc:InfoElement.Title="波特率"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding Source={cvt:EnumBindingSource {x:Type model:BaudRate}}}"
+                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:BaudRate}}}"
                                                 SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
 
@@ -1725,7 +1726,7 @@
                                                 hc:InfoElement.Placeholder="请选择校验位..."
                                                 hc:InfoElement.Title="校验位"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding Source={StaticResource ValueParity}}"
+                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:Parity}}}"
                                                 SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
 
@@ -1740,7 +1741,7 @@
                                                 hc:InfoElement.Placeholder="请选择停止位..."
                                                 hc:InfoElement.Title="停止位"
                                                 IsEnabled="{Binding ComConfig.IsOpened, Converter={wucvt:ReverseBool}}"
-                                                ItemsSource="{Binding Source={StaticResource ValueStopBits}}"
+                                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type senums:StopBits}}}"
                                                 SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 Style="{StaticResource FormComboBox}" />
                                             <TextBox
