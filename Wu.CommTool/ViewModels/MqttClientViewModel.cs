@@ -22,6 +22,7 @@ using Wu.CommTool.Common;
 using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
+using Wu.CommTool.Shared.Enums;
 using Wu.CommTool.Views.Dialogs;
 using Wu.Extensions;
 using Wu.ViewModels;

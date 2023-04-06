@@ -11,8 +11,4 @@
     <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
-
 </Project>
