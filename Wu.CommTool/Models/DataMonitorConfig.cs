@@ -89,7 +89,7 @@ namespace Wu.CommTool.Models
 
             }
         }
-        private string _StartAddrHex = "0";
+        private string _StartAddrHex = "0000";
 
         /// <summary>
         /// 读取数量

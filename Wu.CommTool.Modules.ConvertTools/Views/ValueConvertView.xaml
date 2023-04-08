@@ -7,8 +7,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
     d:DataContext="{x:Static dvm:ValueConvertDesignViewModel.Instance}"
-    d:Height="500"
-    d:Width="600"
+    d:Height="1000"
+    d:Width="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     mc:Ignorable="d">
     <UserControl.Resources>
@@ -29,7 +29,7 @@
             <Setter Property="HorizontalContentAlignment" Value="Center" />
         </Style>
     </UserControl.Resources>
-    <DockPanel>
+    <DockPanel LastChildFill="False">
         <TextBlock
             DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlock}"
@@ -38,95 +38,182 @@
             DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlock}"
             Text="开发中...未完成..." />
-        <Border HorizontalAlignment="Center" VerticalAlignment="Center">
-            <ContentControl Style="{StaticResource Effect2Control}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
 
-                    <TextBlock Text="字节序" />
-                    <TextBlock
-                        Grid.Column="1"
-                        Style="{StaticResource rowTitle}"
-                        Text="ABCD" />
-                    <TextBlock
-                        Grid.Column="2"
-                        Style="{StaticResource rowTitle}"
-                        Text="BADC" />
-                    <TextBlock
-                        Grid.Column="3"
-                        Style="{StaticResource rowTitle}"
-                        Text="DCBA" />
-                    <TextBlock
-                        Grid.Column="4"
-                        Style="{StaticResource rowTitle}"
-                        Text="CDAB" />
+        <ContentControl
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Top"
+            Style="{StaticResource Effect2Control}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="1" Text="16进制" />
-                    <TextBlock Grid.Row="2" Text="16位无符号整型" />
-                    <TextBlock Grid.Row="3" Text="16位有符号整型" />
-                    <TextBlock Grid.Row="4" Text="32位无符号整型" />
-                    <TextBlock Grid.Row="5" Text="32位有符号整型" />
-                    <TextBlock Grid.Row="6" Text="32位浮点型" />
-                    <TextBlock Grid.Row="7" Text="64位无符号整型" />
-                    <TextBlock Grid.Row="8" Text="64位有符号整型" />
-                    <TextBlock Grid.Row="9" Text="64位浮点型" />
+                <TextBlock Text="字节序" />
+                <TextBlock
+                    Grid.Column="1"
+                    Style="{StaticResource rowTitle}"
+                    Text="ABCD" />
+                <TextBlock
+                    Grid.Column="2"
+                    Style="{StaticResource rowTitle}"
+                    Text="BADC" />
+                <TextBlock
+                    Grid.Column="3"
+                    Style="{StaticResource rowTitle}"
+                    Text="DCBA" />
+                <TextBlock
+                    Grid.Column="4"
+                    Style="{StaticResource rowTitle}"
+                    Text="CDAB" />
 
-                    <TextBox
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_16Jz, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="2"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_16Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="3"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="4"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_32Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="5"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_32Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="6"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="7"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_64Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="8"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_64Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox
-                        Grid.Row="9"
-                        Grid.Column="1"
-                        Text="{Binding ValueCvt.ABCD_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                </Grid>
-            </ContentControl>
-        </Border>
+                <TextBlock Grid.Row="1" Text="16进制" />
+                <TextBlock Grid.Row="2" Text="16位无符号整型" />
+                <TextBlock Grid.Row="3" Text="16位有符号整型" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_16wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_16Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </ContentControl>
+        <ContentControl
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Top"
+            Style="{StaticResource Effect2Control}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="字节序" />
+                <TextBlock
+                    Grid.Column="1"
+                    Style="{StaticResource rowTitle}"
+                    Text="ABCD" />
+                <TextBlock
+                    Grid.Column="2"
+                    Style="{StaticResource rowTitle}"
+                    Text="BADC" />
+                <TextBlock
+                    Grid.Column="3"
+                    Style="{StaticResource rowTitle}"
+                    Text="DCBA" />
+                <TextBlock
+                    Grid.Column="4"
+                    Style="{StaticResource rowTitle}"
+                    Text="CDAB" />
+
+                <TextBlock Grid.Row="1" Text="32位16进制" />
+                <TextBlock Grid.Row="2" Text="32位无符号整型" />
+                <TextBlock Grid.Row="3" Text="32位有符号整型" />
+                <TextBlock Grid.Row="4" Text="32位浮点型" />
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_32wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_32Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_32Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </ContentControl>
+
+        <ContentControl
+            HorizontalAlignment="Center"
+            DockPanel.Dock="Top"
+            Style="{StaticResource Effect2Control}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="字节序" />
+                <TextBlock
+                    Grid.Column="1"
+                    Style="{StaticResource rowTitle}"
+                    Text="ABCD" />
+                <TextBlock
+                    Grid.Column="2"
+                    Style="{StaticResource rowTitle}"
+                    Text="BADC" />
+                <TextBlock
+                    Grid.Column="3"
+                    Style="{StaticResource rowTitle}"
+                    Text="DCBA" />
+                <TextBlock
+                    Grid.Column="4"
+                    Style="{StaticResource rowTitle}"
+                    Text="CDAB" />
+                <TextBlock Grid.Row="1" Text="64位16进制" />
+                <TextBlock Grid.Row="2" Text="64位无符号整型" />
+                <TextBlock Grid.Row="3" Text="64位有符号整型" />
+                <TextBlock Grid.Row="4" Text="64位浮点型" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_64wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_64Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_64Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Text="{Binding ValueCvt.ABCD_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+        </ContentControl>
     </DockPanel>
 </UserControl>

@@ -1,13 +1,5 @@
-﻿using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
+﻿using Prism.Mvvm;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Wu.CommTool.Modules.ConvertTools.Models
 {
@@ -18,30 +10,99 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
     {
         #region ABCD
         /// <summary>
-        /// ABCD 16进制
+        /// ABCD 16位16进制
         /// </summary>
-        public string? ABCD_16Jz
+        public string? ABCD_16wHex
         {
-            get => _ABCD_16Jz;
+            get => _ABCD_16wHex;
             set
             {
-                SetProperty(ref _ABCD_16Jz, value);
-                //验证是否为16进制字符串
-                //
+                if (string.IsNullOrWhiteSpace(value) || !Shared.Common.Utils.IsHexString(value.Replace(" ","")) )
+                {
+                    SetProperty(ref _ABCD_16wHex, value);
+                    SetProperty(ref _ABCD_16Uint, null, nameof(ABCD_16Uint));
+                    SetProperty(ref _ABCD_16Int, null, nameof(ABCD_16Int));
+                    return;
+                }
+                if (value.Replace(" ", string.Empty).Length > 4 || Convert.ToUInt16(value, 16) > 0xFFFF)
+                    value = "FFFF";
+                SetProperty(ref _ABCD_16wHex, value);
+                SetProperty(ref _ABCD_16Uint, Convert.ToUInt16(value, 16), nameof(ABCD_16Uint));
+                SetProperty(ref _ABCD_16Int, Convert.ToInt16(value, 16), nameof(ABCD_16Int));
             }
         }
-        private string? _ABCD_16Jz;
+        private string? _ABCD_16wHex = "0000";
+
+        /// <summary>
+        /// ABCD 32位16进制
+        /// </summary>
+        public string? ABCD_32wHex
+        {
+            get => _ABCD_32wHex;
+            set
+            {
+                //验证是否为32进制字符串
+                if (string.IsNullOrWhiteSpace(value)) return;
+                int i = Convert.ToInt32(value, 16);
+                if (i > 0xFFFF)
+                {
+                    value = "FFFFFFFF";
+                }
+                SetProperty(ref _ABCD_32wHex, value);
+            }
+        }
+        private string? _ABCD_32wHex = "00000000";
+
+        /// <summary>
+        /// ABCD 64位16进制
+        /// </summary>
+        public string? ABCD_64wHex
+        {
+            get => _ABCD_64wHex;
+            set
+            {
+                //验证是否为64进制字符串
+                if (string.IsNullOrWhiteSpace(value)) return;
+                var i = Convert.ToInt64(value, 16);
+                if (i > 0xFFFF)
+                {
+                    value = "FFFF";
+                }
+                SetProperty(ref _ABCD_64wHex, value);
+            }
+        }
+        private string? _ABCD_64wHex = "00000000";
 
         /// <summary>
         /// ABCD 16进制无符号整型
         /// </summary>
-        public ushort? ABCD_16Uint { get => _ABCD_16Uint; set => SetProperty(ref _ABCD_16Uint, value); }
+        public ushort? ABCD_16Uint
+        {
+            get => _ABCD_16Uint;
+            set
+            {
+                SetProperty(ref _ABCD_16Uint, value);
+                byte[] xx = BitConverter.GetBytes((ushort)value!);
+                Array.Reverse(xx);
+                ABCD_16wHex = BitConverter.ToString(xx,0).Replace("-", "");
+            }
+        }
         private ushort? _ABCD_16Uint;
 
         /// <summary>
         /// ABCD 16进制有符号整型
         /// </summary>
-        public short? ABCD_16Int { get => _ABCD_16Int; set => SetProperty(ref _ABCD_16Int, value); }
+        public short? ABCD_16Int
+        {
+            get => _ABCD_16Int;
+            set
+            {
+                SetProperty(ref _ABCD_16Int, value);
+                byte[] xx = BitConverter.GetBytes((short)value!);
+                Array.Reverse(xx);
+                ABCD_16wHex = BitConverter.ToString(xx, 0).Replace("-", "");
+            }
+        }
         private short? _ABCD_16Int;
 
         /// <summary>
