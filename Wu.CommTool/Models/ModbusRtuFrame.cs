@@ -624,7 +624,7 @@ namespace Wu.CommTool.Models
                         Type = ModbusRtuFrameType._0x10响应帧;
                     }
                     //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输出数量(2) 字节数(1) 输出值(N*) 校验码(2)
-                    else if (Frame.Length >= 12)
+                    else if (Frame.Length >= 10)
                     {
                         StartAddr = Frame.Skip(2).Take(2).ToArray();
                         RegisterNum = Frame.Skip(4).Take(2).ToArray();
