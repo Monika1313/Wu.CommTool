@@ -86,6 +86,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.About\Wu.CommTool.Modules.About.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ConvertTools\Wu.CommTool.Modules.ConvertTools.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.JsonTool\Wu.CommTool.Modules.JsonTool.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.Message\Wu.CommTool.Modules.Message.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Modules.About\Wu.CommTool.Modules.About.csproj" />
