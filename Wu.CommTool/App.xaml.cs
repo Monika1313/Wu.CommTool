@@ -6,7 +6,6 @@ using System;
 using System.IO;
 using System.Windows;
 using Wu.CommTool.Common;
-using Wu.CommTool.Dialogs.Views;
 using Wu.CommTool.Models;
 using Wu.CommTool.ViewModels;
 using Wu.CommTool.ViewModels.DialogViewModels;
@@ -69,12 +68,9 @@ namespace Wu.CommTool
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             //注册页面
-            containerRegistry.RegisterForNavigation<IndexView, IndexViewModel>();                                           //首页
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
-            containerRegistry.RegisterForNavigation<ModbusRtuAutoSearchDeviceView, ModbusRtuAutoSearchDeviceViewModel>();   //消息提示窗口
             containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
-            containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();                                             //Mqtt
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
             containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
