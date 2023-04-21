@@ -8,6 +8,9 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using System.Net.Sockets;
+using NModbus;
+using System.Net;
 
 namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
 {
@@ -68,6 +71,15 @@ namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             //Search();
+        }
+
+        /// <summary>
+        /// 打开ModbusTcp客户端
+        /// </summary>
+        public void OnModbusTcpClient()
+        {
+            TcpClient client = new TcpClient("192.168.1.10", 502);
+            //IModbusMaster master = ModbusIpMaster.CreateIp(client);
         }
 
         /// <summary>
