@@ -15,6 +15,8 @@ using Wu.CommTool.Views.Dialogs;
 using Wu.CommTool.Modules.ConvertTools;
 using Wu.CommTool.Modules.About;
 using Wu.CommTool.Modules.ModbusTcp;
+using Wu.CommTool.Modules.JsonTool;
+using Wu.CommTool.Modules.Message;
 
 namespace Wu.CommTool
 {
@@ -105,6 +107,8 @@ namespace Wu.CommTool
             moduleCatalog.AddModule<ConvertToolsModule>();  //转换工具模块
             moduleCatalog.AddModule<AboutModule>();         //关于模块
             moduleCatalog.AddModule<ModbusTcpModule>();     //ModbusTcp模块
+            moduleCatalog.AddModule<JsonToolModule>();      //Json工具模块
+            moduleCatalog.AddModule<MessageModule>();       //弹窗消息模块
         }
 
     }

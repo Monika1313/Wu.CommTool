@@ -8,7 +8,11 @@
 		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
-		<ProjectReference Include="..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
+	  <ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+	  <ProjectReference Include="..\..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="ViewModels\Designs\" />
+	  <Folder Include="Views\" />
 	</ItemGroup>
 </Project>
