@@ -1,13 +1,15 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using Wu.CommTool.Common;
+using System.Collections.ObjectModel;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
 
-namespace Wu.CommTool.ViewModels
+namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
 {
     public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
     {

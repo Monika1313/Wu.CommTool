@@ -1,9 +1,9 @@
 ﻿using System.Windows.Controls;
 
-namespace Wu.CommTool.Views
+namespace Wu.CommTool.Modules.ModbusTcp.Views
 {
     /// <summary>
-    /// ModbusTcpView.xaml 的交互逻辑
+    /// Interaction logic for ModbusTcpView
     /// </summary>
     public partial class ModbusTcpView : UserControl
     {

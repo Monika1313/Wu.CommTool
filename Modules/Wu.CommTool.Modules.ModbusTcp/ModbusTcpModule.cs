@@ -14,7 +14,7 @@ namespace Wu.CommTool.Modules.ModbusTcp
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<ModbusTcpView>();   //ModbusTcp主界面 
         }
     }
 }

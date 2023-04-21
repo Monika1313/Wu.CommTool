@@ -14,6 +14,7 @@ using Wu.CommTool.Views;
 using Wu.CommTool.Views.Dialogs;
 using Wu.CommTool.Modules.ConvertTools;
 using Wu.CommTool.Modules.About;
+using Wu.CommTool.Modules.ModbusTcp;
 
 namespace Wu.CommTool
 {
@@ -74,7 +75,6 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<MqttView, MqttViewModel>();                                             //Mqtt
             containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
             containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
-            containerRegistry.RegisterForNavigation<ModbusTcpView, ModbusTcpViewModel>();                                   //ModbusTcp
             containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             //弹窗界面
             containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面
@@ -104,6 +104,7 @@ namespace Wu.CommTool
         {
             moduleCatalog.AddModule<ConvertToolsModule>();  //转换工具模块
             moduleCatalog.AddModule<AboutModule>();         //关于模块
+            moduleCatalog.AddModule<ModbusTcpModule>();     //ModbusTcp模块
         }
 
     }
