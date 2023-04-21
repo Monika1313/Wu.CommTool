@@ -176,7 +176,6 @@ namespace Wu.CommTool.ViewModels
         {
             switch (obj)
             {
-                case "Search": Search(); break;
                 case "Clear": Clear(); break;
                 case "Pause": Pause(); break;
                 case "OpenMqttServer": OpenMqttServer(); break;                              //打开服务器
@@ -335,7 +334,7 @@ namespace Wu.CommTool.ViewModels
 
                 //创建服务器
                 server = new MqttFactory().CreateMqttServer();
-
+                
                 //客户端断开连接处理
                 server.UseClientDisconnectedHandler(c =>
                 {
@@ -363,7 +362,7 @@ namespace Wu.CommTool.ViewModels
 
                 //开启服务器
                 await server.StartAsync(optionBuilder.Build());
-
+                
                 MqttServerConfig.IsOpened = true;
                 ShowMessage($"IP: {MqttServerConfig.ServerIp}  Port:{MqttServerConfig.ServerPort}  服务器开启成功");
             }
@@ -528,17 +527,9 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpend(IDialogParameters parameters)
+        public void OnDialogOpend(IDialogParameters parameters)
         {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-            }
+
         }
 
 
@@ -550,8 +541,10 @@ namespace Wu.CommTool.ViewModels
             if (!DialogHost.IsDialogOpen(DialogHostName))
                 return;
             //添加返回的参数
-            DialogParameters param = new DialogParameters();
-            param.Add("Value", CurrentDto);
+            DialogParameters param = new()
+            {
+                { "Value", CurrentDto }
+            };
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
@@ -584,28 +577,6 @@ namespace Wu.CommTool.ViewModels
 
             }
         }
-
-        /// <summary>
-        /// 查询数据
-        /// </summary>
-        private async void Search()
-        {
-            try
-            {
-                UpdateLoading(true);
-
-            }
-            catch (Exception ex)
-            {
-                aggregator.SendMessage($"{ex.Message}", "Main");
-            }
-            finally
-            {
-                UpdateLoading(false);
-            }
-        }
-
-
 
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
         protected void ShowReceiveMessage(string message, string title = "") => ShowMessage(message, MessageType.Receive, title);

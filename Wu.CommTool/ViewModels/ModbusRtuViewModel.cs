@@ -876,7 +876,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private async void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {

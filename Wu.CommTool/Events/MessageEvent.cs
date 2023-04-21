@@ -21,6 +21,4 @@ namespace Wu.CommTool.Events
         /// </summary>
         public string Message { get; set; }
     }
-
-
 }
