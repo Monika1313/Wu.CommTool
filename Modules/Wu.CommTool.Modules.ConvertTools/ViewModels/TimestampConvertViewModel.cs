@@ -49,7 +49,8 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
             try
             {
                 timer.Stop();
-                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => { CurrentTime = DateTime.Now; });
+                //Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(() => { CurrentTime = DateTime.Now; });
+                Wpf.Utils.ExecuteFunBeginInvoke(() => { CurrentTime = DateTime.Now; });
                 timer.Start();
             }
             catch (Exception ex)

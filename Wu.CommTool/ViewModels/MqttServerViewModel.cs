@@ -601,7 +601,7 @@ namespace Wu.CommTool.ViewModels
                         Messages.RemoveAt(0);
                     }
                 }
-                Wu.Wpf.Common.Utils.ExecuteFun(action);
+                Wu.Wpf.Utils.ExecuteFun(action);
             }
             catch (Exception) { }
         }

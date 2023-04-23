@@ -1150,7 +1150,7 @@ namespace Wu.CommTool.ViewModels
                         Messages.RemoveAt(0);
                     }
                 }
-                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
             catch (Exception) { }
         }
@@ -1173,7 +1173,7 @@ namespace Wu.CommTool.ViewModels
                         Messages.RemoveAt(0);
                     }
                 }
-                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
             catch (Exception) { }
         }
@@ -1195,7 +1195,7 @@ namespace Wu.CommTool.ViewModels
                         Messages.RemoveAt(0);
                     }
                 }
-                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
             catch (Exception) { }
         }
@@ -1217,7 +1217,7 @@ namespace Wu.CommTool.ViewModels
                         Messages.RemoveAt(0);
                     }
                 }
-                Wu.Wpf.Common.Utils.ExecuteFunBeginInvoke(action);
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
             catch (Exception) { }
         }
