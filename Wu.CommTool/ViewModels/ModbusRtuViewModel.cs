@@ -1077,59 +1077,51 @@ namespace Wu.CommTool.ViewModels
             //清空列表
             ComPorts.Clear();
             //查找Com口
-            using (ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'"))
+            using ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
+            var hardInfos = searcher.Get();
+            foreach (var hardInfo in hardInfos)
             {
-                var hardInfos = searcher.Get();
-                foreach (var hardInfo in hardInfos)
+                if (hardInfo.Properties["Name"].Value != null)
                 {
-                    if (hardInfo.Properties["Name"].Value != null)
+                    string deviceName = hardInfo.Properties["Name"].Value.ToString()!;         //获取名称
+                    List<string> dList = new();                                                 //从名称中截取串口
+                    foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
                     {
-                        //获取名称
-                        string deviceName = hardInfo.Properties["Name"].Value.ToString()!;
-                        //从名称中截取串口
-                        List<string> dList = new();
-                        foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
-                        {
-                            string x = mch.Value.Trim();
-                            dList.Add(x);
-                        }
-
-                        int startIndex = deviceName.IndexOf("(");
-                        //int endIndex = deviceName.IndexOf(")");
-                        //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
-                        string key = dList[0];
-                        string name = deviceName[..(startIndex - 1)];
-                        //添加进列表
-                        ComPorts.Add(new KeyValuePair<string, string>(key, name));
-
+                        string x = mch.Value.Trim();
+                        dList.Add(x);
                     }
+                    int startIndex = deviceName.IndexOf("(");
+                    //int endIndex = deviceName.IndexOf(")");
+                    //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
+                    string key = dList[0];
+                    string name = deviceName[..(startIndex - 1)];
+                    ComPorts.Add(new KeyValuePair<string, string>(key, name));       //添加进列表
                 }
-                if (ComPorts.Count != 0)
-                {
-                    //查找第一个USB设备
-                    var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
-                    //搜索结果不为空
-                    if (usbDevice.Key != null)
-                    {
-                        //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
-                        ComConfig.Port = usbDevice;
-                    }
-                    else
-                    {
-                        //没有usb设备则选中第一个
-                        ComConfig.Port = ComPorts[0];
-                        //SetProperty(ref ComConfig.Port, ComPorts[0]);
-                        //RaisePropertyChanged(ComConfig.Port);
-
-                    }
-                }
-                string str = $"获取串口成功, 共{ComPorts.Count}个。";
-                foreach (var item in ComPorts)
-                {
-                    str += $"   {item.Key}: {item.Value};";
-                }
-                ShowMessage(str);
             }
+            if (ComPorts.Count != 0)
+            {
+                //查找第一个USB设备
+                var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
+                //搜索结果不为空
+                if (usbDevice.Key != null)
+                {
+                    //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
+                    ComConfig.Port = usbDevice;
+                }
+                else
+                {
+                    //没有usb设备则选中第一个
+                    ComConfig.Port = ComPorts[0];
+                    //SetProperty(ref ComConfig.Port, ComPorts[0]);
+                    //RaisePropertyChanged(ComConfig.Port);
+                }
+            }
+            string str = $"获取串口成功, 共{ComPorts.Count}个。";
+            foreach (var item in ComPorts)
+            {
+                str += $"   {item.Key}: {item.Value};";
+            }
+            ShowMessage(str);
         }
 
         protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
