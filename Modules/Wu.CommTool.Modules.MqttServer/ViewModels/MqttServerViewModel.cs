@@ -30,7 +30,7 @@
 //        private readonly IDialogHostService dialogHost;
 //        //public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 //        public string DialogHostName { get; set; } = "MqttServerView";
-//        private IMqttServer server;                                 //Mqtt服务器
+//        private MQTTnet.Server.MqttServer server;                                 //Mqtt服务器
 //        //private List<MqttUser> Users = new List<MqttUser>();     //用户列表
 //        private static string viewName = "MqttServerView";
 //        #endregion
