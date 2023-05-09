@@ -14,9 +14,12 @@
 //using System.Net;
 //using System.Text;
 //using System.Windows;
+//using Wu.CommTool.Shared.Eunms;
+//using Wu.CommTool.Shared.Models;
 //using Wu.Extensions;
 //using Wu.ViewModels;
 //using Wu.Wpf.Common;
+//using Wu.Wpf.Models;
 
 //namespace Wu.CommTool.Modules.MqttServer.ViewModels
 //{
@@ -25,7 +28,7 @@
 //        #region **************************************** 字段 ****************************************
 //        private readonly IContainerProvider provider;
 //        private readonly IDialogHostService dialogHost;
-//        public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+//        //public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 //        public string DialogHostName { get; set; } = "MqttServerView";
 //        private IMqttServer server;                                 //Mqtt服务器
 //        //private List<MqttUser> Users = new List<MqttUser>();     //用户列表
@@ -116,8 +119,8 @@
 //        /// <summary>
 //        /// 打开抽屉
 //        /// </summary>
-//        public IsDrawersOpen IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
-//        private IsDrawersOpen _IsDrawersOpen = new();
+//        public OpenDrawers IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
+//        private OpenDrawers _IsDrawersOpen = new();
 
 //        /// <summary>
 //        /// Mqtt服务器配置
@@ -174,8 +177,8 @@
 //                case "Pause": Pause(); break;
 //                case "OpenMqttServer": OpenMqttServer(); break;                              //打开服务器
 //                case "CloseMqttServer": CloseMqttServer(); break;                              //打开服务器
-//                case "OpenLeftDrawer": IsDrawersOpen.IsLeftDrawerOpen = true; break;
-//                case "OpenRightDrawer": IsDrawersOpen.IsRightDrawerOpen = true; break;
+//                case "OpenLeftDrawer": IsDrawersOpen.LeftDrawer = true; break;
+//                case "OpenRightDrawer": IsDrawersOpen.RightDrawer = true; break;
 //                case "OpenDialogView": OpenDialogView(); break;
 //                case "ImportConfig": ImportConfig(); break;
 //                case "ExportConfig": ExportConfig(); break;
@@ -328,7 +331,7 @@
 
 //                //创建服务器
 //                server = new MqttFactory().CreateMqttServer();
-                
+
 //                //客户端断开连接处理
 //                server.UseClientDisconnectedHandler(c =>
 //                {
@@ -356,7 +359,7 @@
 
 //                //开启服务器
 //                await server.StartAsync(optionBuilder.Build());
-                
+
 //                MqttServerConfig.IsOpened = true;
 //                ShowMessage($"IP: {MqttServerConfig.ServerIp}  Port:{MqttServerConfig.ServerPort}  服务器开启成功");
 //            }
@@ -589,7 +592,7 @@
 //                void action()
 //                {
 //                    Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
-//                    log.Info(message);
+//                    //log.Info(message);
 //                    while (Messages.Count > 100)
 //                    {
 //                        Messages.RemoveAt(0);

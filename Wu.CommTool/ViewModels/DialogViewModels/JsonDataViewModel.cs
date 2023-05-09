@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Wu.CommTool.Common;
 using Wu.CommTool.Models;
 using Wu.CommTool.Models.JsonModels;
+using Wu.CommTool.Shared.Models;
 using Wu.ViewModels;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels
