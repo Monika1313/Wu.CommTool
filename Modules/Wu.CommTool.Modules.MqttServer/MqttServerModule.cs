@@ -14,7 +14,7 @@ namespace Wu.CommTool.Modules.MqttServer
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<MqttServerView>();   //MqttServerView 
         }
     }
 }
