@@ -1751,6 +1751,19 @@ namespace Wu.CommTool.ViewModels
                     else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
                     {
                         ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
+                        //todo 临时添加 自由口协议自动应答, 该协议不是modbus 校验不会通过
+                        #region 自动应答
+                        if (IsAutoResponse)
+                        {
+                            //验证匹配哪一条规则
+                            var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
+                            if (xx != null)
+                            {
+                                ShowMessage($"自动应答匹配: {xx.Name}");
+                                PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
+                            }
+                        }
+                        #endregion
                         continue;
                     }
                     //校验成功
