@@ -63,17 +63,12 @@
 		<Resource Include="Images\XX.png" />
 	</ItemGroup>
 	<ItemGroup>
-		<PackageReference Include="HandyControl" Version="3.4.0" />
 		<PackageReference Include="log4net" Version="2.0.15" />
-		<PackageReference Include="MaterialDesignThemes" Version="4.7.1" />
 		<PackageReference Include="MQTTnet" Version="3.1.2" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Prism.DryIoc" Version="8.1.97" />
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
 		<PackageReference Include="System.Management" Version="7.0.0" />
-		<PackageReference Include="Wu" Version="1.0.6" />
-		<PackageReference Include="Wu.Wpf" Version="1.0.6" />
-		<PackageReference Include="Wu.Wpf.ControlLibrary" Version="1.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Configs\Log4netConfig\log4net.config">
@@ -84,9 +79,12 @@
 		<Folder Include="Properties\" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.About\Wu.CommTool.Modules.About.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ConvertTools\Wu.CommTool.Modules.ConvertTools.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.JsonTool\Wu.CommTool.Modules.JsonTool.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.Message\Wu.CommTool.Modules.Message.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
-	  <ProjectReference Include="..\Wu.CommTool.Modules.About\Wu.CommTool.Modules.About.csproj" />
-	  <ProjectReference Include="..\Wu.CommTool.Modules.ConvertTools\Wu.CommTool.Modules.ConvertTools.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
 	</ItemGroup>
 	<ProjectExtensions>

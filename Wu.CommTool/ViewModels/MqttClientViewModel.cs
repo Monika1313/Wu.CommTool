@@ -23,6 +23,8 @@ using Wu.CommTool.Enums;
 using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.CommTool.Shared.Enums;
+using Wu.CommTool.Shared.Eunms;
+using Wu.CommTool.Shared.Models;
 using Wu.CommTool.Views.Dialogs;
 using Wu.Extensions;
 using Wu.ViewModels;
@@ -191,7 +193,6 @@ namespace Wu.CommTool.ViewModels
         {
             switch (obj)
             {
-                case "Search": Search(); break;
                 case "Open": OpenMqttClient(); break;
                 case "Close": CloseMqttClient(); break;
                 case "Clear": Clear(); break;
@@ -568,7 +569,7 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task DisConnected(MqttClientDisconnectedEventArgs arg)
+        private void DisConnected(MqttClientDisconnectedEventArgs arg)
         {
             if (arg == null)
                 return;
@@ -708,7 +709,7 @@ namespace Wu.CommTool.ViewModels
                         Messages.RemoveAt(0);
                     }
                 }
-                Wu.Wpf.Common.Utils.ExecuteFun(action);
+                Wu.Wpf.Utils.ExecuteFun(action);
             }
             catch (Exception) { }
         }
@@ -720,7 +721,7 @@ namespace Wu.CommTool.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            Search();
+
         }
 
         /// <summary>
@@ -780,26 +781,6 @@ namespace Wu.CommTool.ViewModels
             catch (Exception ex)
             {
 
-            }
-        }
-
-        /// <summary>
-        /// 查询数据
-        /// </summary>
-        private async void Search()
-        {
-            try
-            {
-                UpdateLoading(true);
-
-            }
-            catch (Exception ex)
-            {
-                aggregator.SendMessage($"{ex.Message}", "Main");
-            }
-            finally
-            {
-                UpdateLoading(false);
             }
         }
 

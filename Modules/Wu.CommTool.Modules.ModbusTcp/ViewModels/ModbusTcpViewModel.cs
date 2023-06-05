@@ -1,16 +1,20 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
+using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using Wu.CommTool.Common;
-using Wu.CommTool.Extensions;
+using System.Collections.ObjectModel;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
+using System.Net.Sockets;
+using NModbus;
+using System.Net;
 
-namespace Wu.CommTool.ViewModels
+namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
 {
-    public class MqttViewModel : NavigationViewModel, IDialogHostAware
+    public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -18,8 +22,8 @@ namespace Wu.CommTool.ViewModels
         public string DialogHostName { get; set; }
         #endregion
 
-        public MqttViewModel() { }
-        public MqttViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public ModbusTcpViewModel() { }
+        public ModbusTcpViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -67,6 +71,15 @@ namespace Wu.CommTool.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             //Search();
+        }
+
+        /// <summary>
+        /// 打开ModbusTcp客户端
+        /// </summary>
+        public void OnModbusTcpClient()
+        {
+            TcpClient client = new TcpClient("192.168.1.10", 502);
+            //IModbusMaster master = ModbusIpMaster.CreateIp(client);
         }
 
         /// <summary>
@@ -141,7 +154,7 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception ex)
             {
-                aggregator.SendMessage($"{ex.Message}", "Main");
+                //aggregator.SendMessage($"{ex.Message}", "Main");
             }
             finally
             {

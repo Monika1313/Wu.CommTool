@@ -1,10 +1,11 @@
 ﻿using Prism.Mvvm;
 using System;
+using Wu.CommTool.Shared.Eunms;
 
-namespace Wu.CommTool.Models
+namespace Wu.CommTool.Shared.Models
 {
     /// <summary>
-    /// 消息数据
+    /// 用于页面展示的消息数据
     /// </summary>
     public class MessageData : BindableBase
     {

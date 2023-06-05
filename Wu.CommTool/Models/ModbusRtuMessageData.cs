@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Shared.Eunms;
+using Wu.CommTool.Shared.Models;
 
 namespace Wu.CommTool.Models
 {

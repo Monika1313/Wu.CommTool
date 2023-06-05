@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MQTTnet" Version="4.2.0.706" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+    <ProjectReference Include="..\..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
+  </ItemGroup>
+</Project>
