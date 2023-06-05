@@ -36,6 +36,12 @@
             Text="值转换" />
         <TextBlock
             DockPanel.Dock="Top"
+            FontSize="14"
+            Foreground="Red"
+            Style="{StaticResource TitleTextBlock}"
+            Text="2个字符表示1字节" />
+        <TextBlock
+            DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlock}"
             Text="开发中...未完成..." />
 
@@ -92,6 +98,45 @@
                     Grid.Row="3"
                     Grid.Column="1"
                     Text="{Binding ValueCvt.ABCD_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_16wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_16Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_16wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_16Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_16wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_16Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_16Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </ContentControl>
         <ContentControl

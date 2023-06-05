@@ -1,5 +1,8 @@
 ﻿using Prism.Mvvm;
 using System;
+using Wu.CommTool.Shared.Enums;
+using Wu.Extensions;
+using Wu.CommTool.Shared.Common;
 
 namespace Wu.CommTool.Modules.ConvertTools.Models
 {
@@ -8,6 +11,47 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
     /// </summary>
     public class ValueCvt : BindableBase
     {
+
+        /// <summary>
+        /// 将相关的16位值赋值null
+        /// </summary>
+        private void Set16wNull()
+        {
+            SetProperty(ref _ABCD_16wHex, null, nameof(ABCD_16Int));
+            SetProperty(ref _ABCD_16Int, null, nameof(ABCD_16Int));
+            SetProperty(ref _ABCD_16Uint, null, nameof(ABCD_16Uint));
+
+            SetProperty(ref _DCBA_16wHex, null, nameof(DCBA_16wHex));
+            SetProperty(ref _DCBA_16Int, null, nameof(DCBA_16Int));
+            SetProperty(ref _DCBA_16Uint, null, nameof(DCBA_16Uint));
+
+            SetProperty(ref _BADC_16wHex, null, nameof(BADC_16wHex));
+            SetProperty(ref _BADC_16Int, null, nameof(BADC_16Int));
+            SetProperty(ref _BADC_16Uint, null, nameof(BADC_16Uint));
+
+            SetProperty(ref _CDAB_16wHex, null, nameof(CDAB_16wHex));
+            SetProperty(ref _CDAB_16Int, null, nameof(CDAB_16Int));
+            SetProperty(ref _CDAB_16Uint, null, nameof(CDAB_16Uint));
+        }
+
+        /// <summary>
+        /// 根据16进制字符串更新相关数值 (需要将相应的16进制字符串先更新再调用该方法)
+        /// </summary>
+        public void Set16wValue()
+        {
+            SetProperty(ref _ABCD_16Int, Convert.ToInt16(_ABCD_16wHex, 16), nameof(ABCD_16Int));
+            SetProperty(ref _ABCD_16Uint, Convert.ToUInt16(_ABCD_16wHex, 16), nameof(ABCD_16Uint));
+
+            SetProperty(ref _DCBA_16Int, Convert.ToInt16(_DCBA_16wHex, 16), nameof(DCBA_16Int));
+            SetProperty(ref _DCBA_16Uint, Convert.ToUInt16(_DCBA_16wHex, 16), nameof(DCBA_16Uint));
+
+            SetProperty(ref _BADC_16Int, Convert.ToInt16(_BADC_16wHex, 16), nameof(BADC_16Int));
+            SetProperty(ref _BADC_16Uint, Convert.ToUInt16(_BADC_16wHex, 16), nameof(BADC_16Uint));
+
+            SetProperty(ref _CDAB_16Int, Convert.ToInt16(_CDAB_16wHex, 16), nameof(CDAB_16Int));
+            SetProperty(ref _CDAB_16Uint, Convert.ToUInt16(_CDAB_16wHex, 16), nameof(CDAB_16Uint));
+        }
+
         #region ABCD
         /// <summary>
         /// ABCD 16位16进制
@@ -17,18 +61,34 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _ABCD_16wHex;
             set
             {
-                if (string.IsNullOrWhiteSpace(value) || !Shared.Common.Utils.IsHexString(value.Replace(" ","")) )
+                var val = value?.RemoveSpace().TrimStart('0');//移除空格 移除左侧的0
+                if (string.IsNullOrEmpty(val))
                 {
-                    SetProperty(ref _ABCD_16wHex, value);
-                    SetProperty(ref _ABCD_16Uint, null, nameof(ABCD_16Uint));
-                    SetProperty(ref _ABCD_16Int, null, nameof(ABCD_16Int));
+                    val = "0000";
+                }
+                //含非合法16进制字符
+                else if (!Shared.Common.Utils.IsHexString(val))
+                {
+                    Set16wNull();//将相关的值赋null
+                    SetProperty(ref _ABCD_16wHex, val); //当前值保留 可供修改
                     return;
                 }
-                if (value.Replace(" ", string.Empty).Length > 4 || Convert.ToUInt16(value, 16) > 0xFFFF)
-                    value = "FFFF";
-                SetProperty(ref _ABCD_16wHex, value);
-                SetProperty(ref _ABCD_16Uint, Convert.ToUInt16(value, 16), nameof(ABCD_16Uint));
-                SetProperty(ref _ABCD_16Int, Convert.ToInt16(value, 16), nameof(ABCD_16Int));
+                //字符串符合16进制字符
+                else
+                {
+                    //若位数不够则高位补0
+                    if (val.Length < 4)
+                        val = val.PadLeft(4, '0');//高位补0
+                    //若位数超过4位则判断值是否超过FFFF
+                    else if (val.Length > 4)
+                        val = "FFFF";
+                }
+
+                SetProperty(ref _ABCD_16wHex, val);
+                SetProperty(ref _DCBA_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA), nameof(DCBA_16wHex));
+                SetProperty(ref _BADC_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC), nameof(BADC_16wHex));
+                SetProperty(ref _CDAB_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB), nameof(CDAB_16wHex));
+                Set16wValue();//根据16进制字符串更新其他数值
             }
         }
         private string? _ABCD_16wHex = "0000";
@@ -71,7 +131,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 SetProperty(ref _ABCD_64wHex, value);
             }
         }
-        private string? _ABCD_64wHex = "00000000";
+        private string? _ABCD_64wHex = "0000000000000000";
 
         /// <summary>
         /// ABCD 16进制无符号整型
@@ -84,7 +144,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 SetProperty(ref _ABCD_16Uint, value);
                 byte[] xx = BitConverter.GetBytes((ushort)value!);
                 Array.Reverse(xx);
-                ABCD_16wHex = BitConverter.ToString(xx,0).Replace("-", "");
+                ABCD_16wHex = BitConverter.ToString(xx, 0).Replace("-", "");
             }
         }
         private ushort? _ABCD_16Uint;
@@ -146,8 +206,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// DCBA 16进制
         /// </summary>
-        public string? DCBA_16Jz { get => _DCBA_16Jz; set => SetProperty(ref _DCBA_16Jz, value); }
-        private string? _DCBA_16Jz;
+        public string? DCBA_16wHex { get => _DCBA_16wHex; set => SetProperty(ref _DCBA_16wHex, value); }
+        private string? _DCBA_16wHex;
 
         /// <summary>
         /// DCBA 16进制无符号整型
@@ -202,8 +262,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// BADC 16进制
         /// </summary>
-        public string? BADC_16Jz { get => _BADC_16Jz; set => SetProperty(ref _BADC_16Jz, value); }
-        private string? _BADC_16Jz;
+        public string? BADC_16wHex { get => _BADC_16wHex; set => SetProperty(ref _BADC_16wHex, value); }
+        private string? _BADC_16wHex;
 
         /// <summary>
         /// BADC 16进制无符号整型
@@ -258,8 +318,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// CDAB 16进制
         /// </summary>
-        public string? CDAB_16Jz { get => _CDAB_16Jz; set => SetProperty(ref _CDAB_16Jz, value); }
-        private string? _CDAB_16Jz;
+        public string? CDAB_16wHex { get => _CDAB_16wHex; set => SetProperty(ref _CDAB_16wHex, value); }
+        private string? _CDAB_16wHex;
 
         /// <summary>
         /// CDAB 16进制无符号整型
