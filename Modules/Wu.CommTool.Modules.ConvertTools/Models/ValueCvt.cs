@@ -52,6 +52,43 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             SetProperty(ref _CDAB_16Uint, Convert.ToUInt16(_CDAB_16wHex, 16), nameof(CDAB_16Uint));
         }
 
+
+        /// <summary>
+        /// 检查16位的16进制字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>检查并转换后的值,字符串是否有效</returns>
+        public static Tuple<string,bool> Check16wHex(string? value)
+        {
+            var val = value?.RemoveSpace().TrimStart('0') ?? string.Empty;//移除空格 移除左侧的0
+            //Tuple<string, bool> tuple = new Tuple<string, bool>("", true);
+
+            if (string.IsNullOrEmpty(val))
+            {
+                val = "0000";
+                return Tuple.Create(val!, true);
+            }
+            //含非合法16进制字符
+            else if (!Shared.Common.Utils.IsHexString(val))
+            {
+                return Tuple.Create(val!, false);//该值是错误的值
+            }
+            //字符串符合16进制字符
+            else
+            {
+                //若位数不够则高位补0
+                if (val.Length < 4)
+                    val = val.PadLeft(4, '0');//高位补0
+                else if (val.Length > 4)//若位数超过4位则判断值是否超过FFFF
+                    val = "FFFF";
+                return Tuple.Create(val!, true);
+            }
+        }
+
+
+
+
+
         #region ABCD
         /// <summary>
         /// ABCD 16位16进制
@@ -61,27 +98,13 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _ABCD_16wHex;
             set
             {
-                var val = value?.RemoveSpace().TrimStart('0');//移除空格 移除左侧的0
-                if (string.IsNullOrEmpty(val))
+                var result = Check16wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
                 {
-                    val = "0000";
-                }
-                //含非合法16进制字符
-                else if (!Shared.Common.Utils.IsHexString(val))
-                {
-                    Set16wNull();//将相关的值赋null
-                    SetProperty(ref _ABCD_16wHex, val); //当前值保留 可供修改
+                    Set16wNull();                                  //将相关的值赋null
+                    SetProperty(ref _ABCD_16wHex, val);            //当前值保留 可供修改
                     return;
-                }
-                //字符串符合16进制字符
-                else
-                {
-                    //若位数不够则高位补0
-                    if (val.Length < 4)
-                        val = val.PadLeft(4, '0');//高位补0
-                    //若位数超过4位则判断值是否超过FFFF
-                    else if (val.Length > 4)
-                        val = "FFFF";
                 }
 
                 SetProperty(ref _ABCD_16wHex, val);
