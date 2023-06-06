@@ -185,6 +185,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             {
                 //TODO 用正则判断是否为有效的16位无符号整型
                 //若无效 则全部清楚,当前值赋值错误的值
+
                 SetProperty(ref _ABCD_16Uint, value);
                 byte[] xx = BitConverter.GetBytes((ushort)value!);
                 Array.Reverse(xx);
