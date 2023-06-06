@@ -12,6 +12,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
     public class ValueCvt : BindableBase
     {
 
+        #region 方法
         /// <summary>
         /// 将相关的16位值赋值null
         /// </summary>
@@ -37,8 +38,31 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// 根据16进制字符串更新相关数值 (需要将相应的16进制字符串先更新再调用该方法)
         /// </summary>
-        public void Set16wValue()
+        public void Set16wValue(string val, ModbusByteOrder byteOrder)
         {
+            //根据字节序给ABCD赋值 其他值都根据该值转换
+            switch (byteOrder)
+            {
+                case ModbusByteOrder.ABCD:
+                    SetProperty(ref _ABCD_16wHex, val, nameof(ABCD_16wHex));
+                    break;
+                case ModbusByteOrder.BADC:
+                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC), nameof(ABCD_16wHex));
+                    break;
+                case ModbusByteOrder.CDAB:
+                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB), nameof(ABCD_16wHex));
+                    break;
+                case ModbusByteOrder.DCBA:
+                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA), nameof(ABCD_16wHex));
+                    break;
+            }
+            //先赋值各参数的16进制符号
+            //SetProperty(ref _ABCD_16wHex, val, nameof(ABCD_16wHex));
+            SetProperty(ref _DCBA_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA), nameof(DCBA_16wHex));
+            SetProperty(ref _BADC_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC), nameof(BADC_16wHex));
+            SetProperty(ref _CDAB_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB), nameof(CDAB_16wHex));
+
+            //在根据16进制值转换
             SetProperty(ref _ABCD_16Int, Convert.ToInt16(_ABCD_16wHex, 16), nameof(ABCD_16Int));
             SetProperty(ref _ABCD_16Uint, Convert.ToUInt16(_ABCD_16wHex, 16), nameof(ABCD_16Uint));
 
@@ -52,13 +76,12 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             SetProperty(ref _CDAB_16Uint, Convert.ToUInt16(_CDAB_16wHex, 16), nameof(CDAB_16Uint));
         }
 
-
         /// <summary>
         /// 检查16位的16进制字符串
         /// </summary>
         /// <param name="value"></param>
         /// <returns>检查并转换后的值,字符串是否有效</returns>
-        public static Tuple<string,bool> Check16wHex(string? value)
+        public static Tuple<string, bool> Check16wHex(string? value)
         {
             var val = value?.RemoveSpace().TrimStart('0') ?? string.Empty;//移除空格 移除左侧的0
             //Tuple<string, bool> tuple = new Tuple<string, bool>("", true);
@@ -84,6 +107,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 return Tuple.Create(val!, true);
             }
         }
+        #endregion
 
 
 
@@ -106,12 +130,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                     SetProperty(ref _ABCD_16wHex, val);            //当前值保留 可供修改
                     return;
                 }
-
-                SetProperty(ref _ABCD_16wHex, val);
-                SetProperty(ref _DCBA_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA), nameof(DCBA_16wHex));
-                SetProperty(ref _BADC_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC), nameof(BADC_16wHex));
-                SetProperty(ref _CDAB_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB), nameof(CDAB_16wHex));
-                Set16wValue();//根据16进制字符串更新其他数值
+                Set16wValue(val, ModbusByteOrder.ABCD);//根据16进制字符串更新其他数值
             }
         }
         private string? _ABCD_16wHex = "0000";
@@ -164,6 +183,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _ABCD_16Uint;
             set
             {
+                //TODO 用正则判断是否为有效的16位无符号整型
+                //若无效 则全部清楚,当前值赋值错误的值
                 SetProperty(ref _ABCD_16Uint, value);
                 byte[] xx = BitConverter.GetBytes((ushort)value!);
                 Array.Reverse(xx);
@@ -229,7 +250,22 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// DCBA 16进制
         /// </summary>
-        public string? DCBA_16wHex { get => _DCBA_16wHex; set => SetProperty(ref _DCBA_16wHex, value); }
+        public string? DCBA_16wHex
+        {
+            get => _DCBA_16wHex;
+            set
+            {
+                var result = Check16wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
+                {
+                    Set16wNull();                                  //将相关的值赋null
+                    SetProperty(ref _ABCD_16wHex, val);            //当前值保留 可供修改
+                    return;
+                }
+                Set16wValue(val, ModbusByteOrder.DCBA);//根据16进制字符串更新其他数值
+            }
+        }
         private string? _DCBA_16wHex;
 
         /// <summary>
@@ -285,7 +321,22 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// BADC 16进制
         /// </summary>
-        public string? BADC_16wHex { get => _BADC_16wHex; set => SetProperty(ref _BADC_16wHex, value); }
+        public string? BADC_16wHex
+        {
+            get => _BADC_16wHex;
+            set
+            {
+                var result = Check16wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
+                {
+                    Set16wNull();                                  //将相关的值赋null
+                    SetProperty(ref _ABCD_16wHex, val);            //当前值保留 可供修改
+                    return;
+                }
+                Set16wValue(val, ModbusByteOrder.BADC);//根据16进制字符串更新其他数值
+            }
+        }
         private string? _BADC_16wHex;
 
         /// <summary>
@@ -341,7 +392,22 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// CDAB 16进制
         /// </summary>
-        public string? CDAB_16wHex { get => _CDAB_16wHex; set => SetProperty(ref _CDAB_16wHex, value); }
+        public string? CDAB_16wHex
+        {
+            get => _CDAB_16wHex;
+            set
+            {
+                var result = Check16wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
+                {
+                    Set16wNull();                                  //将相关的值赋null
+                    SetProperty(ref _ABCD_16wHex, val);            //当前值保留 可供修改
+                    return;
+                }
+                Set16wValue(val, ModbusByteOrder.CDAB);//根据16进制字符串更新其他数值
+            }
+        }
         private string? _CDAB_16wHex;
 
         /// <summary>
