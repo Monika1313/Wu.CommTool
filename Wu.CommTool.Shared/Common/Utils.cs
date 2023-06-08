@@ -120,7 +120,7 @@ namespace Wu.CommTool.Shared.Common
                             result[i + 1] = item;
                         }
                     }
-                    return val;
+                    return result;
                 case ModbusByteOrder.DCBA:
                     return val.Reverse().ToArray();
                 default:

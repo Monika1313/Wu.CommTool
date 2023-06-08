@@ -3,6 +3,7 @@ using System;
 using Wu.CommTool.Shared.Enums;
 using Wu.Extensions;
 using Wu.CommTool.Shared.Common;
+using System.Windows.Media;
 
 namespace Wu.CommTool.Modules.ConvertTools.Models
 {
@@ -17,6 +18,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         public ValueCvt()
         {
             ABCD_16wHex = "0000";
+            ABCD_32wHex = "00000000";
+            ABCD_64wHex = "0000000000000000";
         }
 
         #region 16位方法
@@ -51,36 +54,36 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             switch (byteOrder)
             {
                 case ModbusByteOrder.ABCD:
-                    SetProperty(ref _ABCD_16wHex, val, nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, val.InsertFormat(2," "), nameof(ABCD_16wHex));
                     break;
                 case ModbusByteOrder.BADC:
-                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC), nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
                 case ModbusByteOrder.CDAB:
-                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB), nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
                 case ModbusByteOrder.DCBA:
-                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA), nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
             }
             //先赋值各参数的16进制符号
             //SetProperty(ref _ABCD_16wHex, val, nameof(ABCD_16wHex));
-            SetProperty(ref _DCBA_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA), nameof(DCBA_16wHex));
-            SetProperty(ref _BADC_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC), nameof(BADC_16wHex));
-            SetProperty(ref _CDAB_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB), nameof(CDAB_16wHex));
+            SetProperty(ref _DCBA_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA).InsertFormat(2," "), nameof(DCBA_16wHex));
+            SetProperty(ref _BADC_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC).InsertFormat(2," "), nameof(BADC_16wHex));
+            SetProperty(ref _CDAB_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_16wHex));
 
             //在根据16进制值转换
-            SetProperty(ref _ABCD_16Int, Convert.ToInt16(_ABCD_16wHex, 16), nameof(ABCD_16Int));
-            SetProperty(ref _ABCD_16Uint, Convert.ToUInt16(_ABCD_16wHex, 16), nameof(ABCD_16Uint));
+            SetProperty(ref _ABCD_16Int, Convert.ToInt16(_ABCD_16wHex!.RemoveSpace(), 16), nameof(ABCD_16Int));
+            SetProperty(ref _ABCD_16Uint, Convert.ToUInt16(_ABCD_16wHex!.RemoveSpace(), 16), nameof(ABCD_16Uint));
 
-            SetProperty(ref _DCBA_16Int, Convert.ToInt16(_DCBA_16wHex, 16), nameof(DCBA_16Int));
-            SetProperty(ref _DCBA_16Uint, Convert.ToUInt16(_DCBA_16wHex, 16), nameof(DCBA_16Uint));
+            SetProperty(ref _DCBA_16Int, Convert.ToInt16(_DCBA_16wHex!.RemoveSpace(), 16), nameof(DCBA_16Int));
+            SetProperty(ref _DCBA_16Uint, Convert.ToUInt16(_DCBA_16wHex!.RemoveSpace(), 16), nameof(DCBA_16Uint));
 
-            SetProperty(ref _BADC_16Int, Convert.ToInt16(_BADC_16wHex, 16), nameof(BADC_16Int));
-            SetProperty(ref _BADC_16Uint, Convert.ToUInt16(_BADC_16wHex, 16), nameof(BADC_16Uint));
+            SetProperty(ref _BADC_16Int, Convert.ToInt16(_BADC_16wHex!.RemoveSpace(), 16), nameof(BADC_16Int));
+            SetProperty(ref _BADC_16Uint, Convert.ToUInt16(_BADC_16wHex!.RemoveSpace(), 16), nameof(BADC_16Uint));
 
-            SetProperty(ref _CDAB_16Int, Convert.ToInt16(_CDAB_16wHex, 16), nameof(CDAB_16Int));
-            SetProperty(ref _CDAB_16Uint, Convert.ToUInt16(_CDAB_16wHex, 16), nameof(CDAB_16Uint));
+            SetProperty(ref _CDAB_16Int, Convert.ToInt16(_CDAB_16wHex!.RemoveSpace(), 16), nameof(CDAB_16Int));
+            SetProperty(ref _CDAB_16Uint, Convert.ToUInt16(_CDAB_16wHex!.RemoveSpace(), 16), nameof(CDAB_16Uint));
         }
 
         /// <summary>
@@ -149,18 +152,22 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             SetProperty(ref _ABCD_32wHex, null, nameof(ABCD_32Int));
             SetProperty(ref _ABCD_32Int, null, nameof(ABCD_32Int));
             SetProperty(ref _ABCD_32Uint, null, nameof(ABCD_32Uint));
+            SetProperty(ref _ABCD_Float, null, nameof(ABCD_Float));
 
             SetProperty(ref _DCBA_32wHex, null, nameof(DCBA_32wHex));
             SetProperty(ref _DCBA_32Int, null, nameof(DCBA_32Int));
             SetProperty(ref _DCBA_32Uint, null, nameof(DCBA_32Uint));
+            SetProperty(ref _DCBA_Float, null, nameof(DCBA_Float));
 
             SetProperty(ref _BADC_32wHex, null, nameof(BADC_32wHex));
             SetProperty(ref _BADC_32Int, null, nameof(BADC_32Int));
             SetProperty(ref _BADC_32Uint, null, nameof(BADC_32Uint));
+            SetProperty(ref _BADC_Float,null, nameof(BADC_Float));
 
             SetProperty(ref _CDAB_32wHex, null, nameof(CDAB_32wHex));
             SetProperty(ref _CDAB_32Int, null, nameof(CDAB_32Int));
             SetProperty(ref _CDAB_32Uint, null, nameof(CDAB_32Uint));
+            SetProperty(ref _CDAB_Float, null, nameof(CDAB_Float));
         }
 
         /// <summary>
@@ -172,35 +179,39 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             switch (byteOrder)
             {
                 case ModbusByteOrder.ABCD:
-                    SetProperty(ref _ABCD_32wHex, val, nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, val.InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
                 case ModbusByteOrder.BADC:
-                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.BADC), nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
                 case ModbusByteOrder.CDAB:
-                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.CDAB), nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
                 case ModbusByteOrder.DCBA:
-                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.DCBA), nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
             }
             //先赋值各参数的16进制符号
-            SetProperty(ref _DCBA_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.DCBA), nameof(DCBA_32wHex));
-            SetProperty(ref _BADC_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.BADC), nameof(BADC_32wHex));
-            SetProperty(ref _CDAB_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.CDAB), nameof(CDAB_32wHex));
+            SetProperty(ref _DCBA_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_32wHex));
+            SetProperty(ref _BADC_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_32wHex));
+            SetProperty(ref _CDAB_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_32wHex));
 
-            //在根据16进制值转换
-            SetProperty(ref _ABCD_32Int, Convert.ToInt32(_ABCD_32wHex, 32), nameof(ABCD_32Int));
-            SetProperty(ref _ABCD_32Uint, Convert.ToUInt32(_ABCD_32wHex, 32), nameof(ABCD_32Uint));
+            //再根据16进制值转换
+            SetProperty(ref _ABCD_32Int, Convert.ToInt32(_ABCD_32wHex!.RemoveSpace(), 16), nameof(ABCD_32Int));
+            SetProperty(ref _ABCD_32Uint, Convert.ToUInt32(_ABCD_32wHex!.RemoveSpace(), 16), nameof(ABCD_32Uint));
+            SetProperty(ref _ABCD_Float, BitConverter.ToSingle(BitConverter.GetBytes((uint)_ABCD_32Uint!),0), nameof(ABCD_Float));
 
-            SetProperty(ref _DCBA_32Int, Convert.ToInt32(_DCBA_32wHex, 32), nameof(DCBA_32Int));
-            SetProperty(ref _DCBA_32Uint, Convert.ToUInt32(_DCBA_32wHex, 32), nameof(DCBA_32Uint));
+            SetProperty(ref _DCBA_32Int, Convert.ToInt32(_DCBA_32wHex!.RemoveSpace(), 16), nameof(DCBA_32Int));
+            SetProperty(ref _DCBA_32Uint, Convert.ToUInt32(_DCBA_32wHex!.RemoveSpace(), 16), nameof(DCBA_32Uint));
+            SetProperty(ref _DCBA_Float, BitConverter.ToSingle(BitConverter.GetBytes((uint)_DCBA_32Uint!), 0), nameof(DCBA_Float));
+            
+            SetProperty(ref _BADC_32Int, Convert.ToInt32(_BADC_32wHex!.RemoveSpace(), 16), nameof(BADC_32Int));
+            SetProperty(ref _BADC_32Uint, Convert.ToUInt32(_BADC_32wHex!.RemoveSpace(), 16), nameof(BADC_32Uint));
+            SetProperty(ref _BADC_Float, BitConverter.ToSingle(BitConverter.GetBytes((uint)_BADC_32Uint!), 0), nameof(BADC_Float));
 
-            SetProperty(ref _BADC_32Int, Convert.ToInt32(_BADC_32wHex, 32), nameof(BADC_32Int));
-            SetProperty(ref _BADC_32Uint, Convert.ToUInt32(_BADC_32wHex, 32), nameof(BADC_32Uint));
-
-            SetProperty(ref _CDAB_32Int, Convert.ToInt32(_CDAB_32wHex, 32), nameof(CDAB_32Int));
-            SetProperty(ref _CDAB_32Uint, Convert.ToUInt32(_CDAB_32wHex, 32), nameof(CDAB_32Uint));
+            SetProperty(ref _CDAB_32Int, Convert.ToInt32(_CDAB_32wHex!.RemoveSpace(), 16), nameof(CDAB_32Int));
+            SetProperty(ref _CDAB_32Uint, Convert.ToUInt32(_CDAB_32wHex!.RemoveSpace(), 16), nameof(CDAB_32Uint));
+            SetProperty(ref _CDAB_Float, BitConverter.ToSingle(BitConverter.GetBytes((uint)_CDAB_32Uint!), 0), nameof(CDAB_Float));
         }
 
         /// <summary>
@@ -215,7 +226,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
 
             if (string.IsNullOrEmpty(val))
             {
-                val = "0000";
+                val = "00000000";
                 return Tuple.Create(val!, true);
             }
             //含非合法16进制字符
@@ -227,16 +238,42 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             else
             {
                 //若位数不够则高位补0
-                if (val.Length < 4)
-                    val = val.PadLeft(4, '0');//高位补0
-                else if (val.Length > 4)//若位数超过4位则判断值是否超过FFFF
-                    val = "FFFF";
+                if (val.Length < 8)
+                    val = val.PadLeft(8, '0');//高位补0
+                else if (val.Length > 8)//若位数超过4位则判断值是否超过FFFF
+                    val = "FFFFFFFF";
                 return Tuple.Create(val!, true);
             }
         }
         #endregion
 
+        #region 64位方法
+        /// <summary>
+        /// 将相关的16位值赋值null
+        /// </summary>
+        private void Set64wNull()
+        {
+            SetProperty(ref _ABCD_64wHex, null, nameof(ABCD_64Int));
+            SetProperty(ref _ABCD_64Int, null, nameof(ABCD_64Int));
+            SetProperty(ref _ABCD_64Uint, null, nameof(ABCD_64Uint));
+            SetProperty(ref _ABCD_Double, null, nameof(ABCD_Float));
 
+            SetProperty(ref _DCBA_64wHex, null, nameof(DCBA_64wHex));
+            SetProperty(ref _DCBA_64Int, null, nameof(DCBA_64Int));
+            SetProperty(ref _DCBA_64Uint, null, nameof(DCBA_64Uint));
+            SetProperty(ref _DCBA_Double, null, nameof(DCBA_Float));
+
+            SetProperty(ref _BADC_64wHex, null, nameof(BADC_64wHex));
+            SetProperty(ref _BADC_64Int, null, nameof(BADC_64Int));
+            SetProperty(ref _BADC_64Uint, null, nameof(BADC_64Uint));
+            SetProperty(ref _BADC_Double, null, nameof(BADC_Float));
+
+            SetProperty(ref _CDAB_64wHex, null, nameof(CDAB_64wHex));
+            SetProperty(ref _CDAB_64Int, null, nameof(CDAB_64Int));
+            SetProperty(ref _CDAB_64Uint, null, nameof(CDAB_64Uint));
+            SetProperty(ref _CDAB_Double, null, nameof(CDAB_Float));
+        }
+        #endregion
 
 
         #region ABCD
@@ -269,17 +306,18 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _ABCD_32wHex;
             set
             {
-                //验证是否为32进制字符串
-                if (string.IsNullOrWhiteSpace(value)) return;
-                int i = Convert.ToInt32(value, 16);
-                if (i > 0xFFFF)
+                var result = Check32wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
                 {
-                    value = "FFFFFFFF";
+                    Set32wNull();                                  //将相关的值赋null
+                    SetProperty(ref _ABCD_32wHex, val);            //当前值保留 可供修改
+                    return;
                 }
-                SetProperty(ref _ABCD_32wHex, value);
+                Set32wValue(val, ModbusByteOrder.ABCD);//根据16进制字符串更新其他数值
             }
         }
-        private string? _ABCD_32wHex = "00000000";
+        private string? _ABCD_32wHex;
 
         /// <summary>
         /// ABCD 64位16进制
@@ -299,7 +337,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 SetProperty(ref _ABCD_64wHex, value);
             }
         }
-        private string? _ABCD_64wHex = "0000000000000000";
+        private string? _ABCD_64wHex;
 
         /// <summary>
         /// ABCD 16进制无符号整型
@@ -454,6 +492,26 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         private float? _DCBA_Float;
 
         /// <summary>
+        /// DCBA 64位16进制
+        /// </summary>
+        public string? DCBA_64wHex
+        {
+            get => _DCBA_64wHex;
+            set
+            {
+                //验证是否为64进制字符串
+                if (string.IsNullOrWhiteSpace(value)) return;
+                var i = Convert.ToInt64(value, 16);
+                if (i > 0xFFFF)
+                {
+                    value = "FFFF";
+                }
+                SetProperty(ref _DCBA_64wHex, value);
+            }
+        }
+        private string? _DCBA_64wHex;
+
+        /// <summary>
         /// DCBA 64进制无符号整型
         /// </summary>
         public ushort? DCBA_64Uint { get => _DCBA_64Uint; set => SetProperty(ref _DCBA_64Uint, value); }
@@ -562,6 +620,26 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         private float? _BADC_Float;
 
         /// <summary>
+        /// BADC 64位16进制
+        /// </summary>
+        public string? BADC_64wHex
+        {
+            get => _BADC_64wHex;
+            set
+            {
+                //验证是否为64进制字符串
+                if (string.IsNullOrWhiteSpace(value)) return;
+                var i = Convert.ToInt64(value, 16);
+                if (i > 0xFFFF)
+                {
+                    value = "FFFF";
+                }
+                SetProperty(ref _BADC_64wHex, value);
+            }
+        }
+        private string? _BADC_64wHex;
+
+        /// <summary>
         /// BADC 64进制无符号整型
         /// </summary>
         public ushort? BADC_64Uint { get => _BADC_64Uint; set => SetProperty(ref _BADC_64Uint, value); }
@@ -668,6 +746,26 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// </summary>
         public float? CDAB_Float { get => _CDAB_Float; set => SetProperty(ref _CDAB_Float, value); }
         private float? _CDAB_Float;
+
+        /// <summary>
+        /// CDAB 64位16进制
+        /// </summary>
+        public string? CDAB_64wHex
+        {
+            get => _CDAB_64wHex;
+            set
+            {
+                //验证是否为64进制字符串
+                if (string.IsNullOrWhiteSpace(value)) return;
+                var i = Convert.ToInt64(value, 16);
+                if (i > 0xFFFF)
+                {
+                    value = "FFFF";
+                }
+                SetProperty(ref _CDAB_64wHex, value);
+            }
+        }
+        private string? _CDAB_64wHex;
 
         /// <summary>
         /// CDAB 64进制无符号整型
