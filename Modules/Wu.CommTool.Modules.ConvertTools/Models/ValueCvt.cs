@@ -222,7 +222,6 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         public static Tuple<string, bool> Check32wHex(string? value)
         {
             var val = value?.RemoveSpace().TrimStart('0') ?? string.Empty;//移除空格 移除左侧的0
-            //Tuple<string, bool> tuple = new Tuple<string, bool>("", true);
 
             if (string.IsNullOrEmpty(val))
             {
@@ -370,7 +369,15 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// ABCD 32进制无符号整型
         /// </summary>
-        public uint? ABCD_32Uint { get => _ABCD_32Uint; set => SetProperty(ref _ABCD_32Uint, value); }
+        public uint? ABCD_32Uint
+        {
+            get => _ABCD_32Uint;
+            set
+            {
+                SetProperty(ref _ABCD_32Uint, value);
+                ABCD_32wHex = Uint2Hex(value ?? 0);
+            }
+        }
         private uint? _ABCD_32Uint;
 
         /// <summary>
