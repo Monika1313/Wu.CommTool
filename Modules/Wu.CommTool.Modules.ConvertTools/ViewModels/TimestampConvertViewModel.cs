@@ -184,11 +184,11 @@ namespace Wu.CommTool.Modules.ConvertTools.ViewModels
             DateTime startTime = new DateTime(1970, 1, 1);
             if (unit == TimestampUnit.毫秒)
             {
-                return startTime.AddTicks(TimeStamp * 10000);
+                return startTime.AddTicks(TimeStamp * 10000).AddHours(8);
             }
             else
             {
-                return startTime.AddTicks(TimeStamp * 10000000);
+                return startTime.AddTicks(TimeStamp * 10000000).AddHours(8);
             }
         }
 
