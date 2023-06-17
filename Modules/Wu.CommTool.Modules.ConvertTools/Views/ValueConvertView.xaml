@@ -36,12 +36,6 @@
             Text="值转换" />
         <TextBlock
             DockPanel.Dock="Top"
-            FontSize="14"
-            Foreground="Red"
-            Style="{StaticResource TitleTextBlock}"
-            Text="2个字符表示1字节" />
-        <TextBlock
-            DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlock}"
             Text="开发中...未完成..." />
 
@@ -197,6 +191,57 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Text="{Binding ValueCvt.ABCD_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_32wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_32Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_32Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_32wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_32Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_32Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_32wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_32Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_32Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_Float, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </ContentControl>
 
@@ -258,6 +303,57 @@
                     Grid.Row="4"
                     Grid.Column="1"
                     Text="{Binding ValueCvt.ABCD_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_64wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_64Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_64Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Text="{Binding ValueCvt.BADC_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_64wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_64Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_64Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="3"
+                    Text="{Binding ValueCvt.DCBA_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                <TextBox
+                    Grid.Row="1"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_64wHex, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="2"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_64Uint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="3"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_64Int, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    Grid.Row="4"
+                    Grid.Column="4"
+                    Text="{Binding ValueCvt.CDAB_Double, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </Grid>
         </ContentControl>
     </DockPanel>
