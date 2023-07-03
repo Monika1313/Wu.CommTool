@@ -251,7 +251,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
-        public static string Uint2Hex(short input)
+        public static string Uint2Hex(uint input)
         {
             //TODO
             byte[] temp = BitConverter.GetBytes(input);
