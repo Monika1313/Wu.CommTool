@@ -244,6 +244,20 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 return Tuple.Create(val!, true);
             }
         }
+
+        
+        /// <summary>
+        /// 将short转换为16进制字符串
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string Uint2Hex(short input)
+        {
+            //TODO
+            byte[] temp = BitConverter.GetBytes(input);
+            Array.Reverse(temp);
+            return BitConverter.ToString(temp, 0).Replace("-", "");
+        }
         #endregion
 
         #region 64位方法
