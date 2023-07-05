@@ -5,7 +5,7 @@
     /// </summary>
     public static class PrismRegionNames
     {
-        public static string ContentRegion = "ContentRegion";
+        public const string ContentRegion = "ContentRegion";
 
         /// <summary>
         /// 首页区域  首页的主菜单
