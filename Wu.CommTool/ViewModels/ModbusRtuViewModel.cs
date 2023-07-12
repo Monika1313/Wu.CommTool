@@ -1314,13 +1314,12 @@ namespace Wu.CommTool.ViewModels
                 var content = JsonConvert.SerializeObject(DataMonitorConfig);
                 //保存文件
                 Common.Utils.WriteJsonFile(sfd.FileName, content);
-                //ShowMessage("导出自动应答配置完成");
-                HcGrowlExtensions.Success("导出自动应答配置完成", viewName);
+                HcGrowlExtensions.Success("导出数据监控配置完成", viewName);
                 RefreshQuickImportList();//更新列表
             }
             catch (Exception ex)
             {
-                HcGrowlExtensions.Warning("导出自动应答配置失败", viewName);
+                HcGrowlExtensions.Warning("导出数据监控配置失败", viewName);
                 ShowErrorMessage(ex.Message);
             }
         }
