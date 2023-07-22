@@ -35,6 +35,7 @@
 
     <WindowChrome.WindowChrome>
         <WindowChrome
+            CaptionHeight="3"
             CornerRadius="0"
             GlassFrameThickness="1"
             NonClientFrameEdges="None"

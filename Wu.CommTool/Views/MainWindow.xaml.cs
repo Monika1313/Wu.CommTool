@@ -105,10 +105,17 @@ namespace Wu.CommTool.Views
                 drawerHost.IsLeftDrawerOpen = false;
             };
         }
-        protected override void OnClosing(CancelEventArgs e)
+
+        protected override void OnClosed(EventArgs e)
         {
-            e.Cancel = true;
+            base.OnClosed(e);
+            Environment.Exit(0);
         }
+
+        //protected override void OnClosing(CancelEventArgs e)
+        //{
+        //    e.Cancel = true;
+        //}
 
         protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
         {
