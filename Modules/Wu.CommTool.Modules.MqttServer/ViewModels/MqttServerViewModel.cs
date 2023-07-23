@@ -143,8 +143,8 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                 case "OpenDialogView": OpenDialogView(); break;
                 case "RunMqttServer": RunMqttServer(); break;                              //打开服务器
                 case "StopMqttServer": StopMqttServer(); break;                            //关闭服务器
-                //case "ImportConfig": ImportConfig(); break;
-                //case "ExportConfig": ExportConfig(); break;
+                case "ImportConfig": ImportConfig(); break;
+                case "ExportConfig": ExportConfig(); break;
                 default: break;
             }
         }
@@ -450,73 +450,73 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
 
 
         #region 配置文件
-        ///// <summary>
-        ///// 导出配置文件
-        ///// </summary>
-        //private void ExportConfig()
-        //{
-        //    try
-        //    {
-        //        string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig"); //配置文件目录
-        //        Wu.Utils.IOUtil.Exists(dict);                                                                   //验证文件夹是否存在, 不存在则创建
-        //        SaveFileDialog sfd = new SaveFileDialog()
-        //        {
-        //            Title = "请选择导出配置文件...",                             //对话框标题
-        //            Filter = "json files(*.jsonMSC)|*.jsonMSC",                 //文件格式过滤器
-        //            FilterIndex = 1,                                            //默认选中的过滤器
-        //            FileName = "Default",                                       //默认文件名
-        //            DefaultExt = "jsonMSC",                                     //默认扩展名
-        //            InitialDirectory = dict,                                    //指定初始的目录
-        //            OverwritePrompt = true,                                     //文件已存在警告
-        //            AddExtension = true,                                        //若用户省略扩展名将自动添加扩展名
-        //        };
-        //        if (sfd.ShowDialog() != true)
-        //            return;
-        //        var content = JsonConvert.SerializeObject(MqttServerConfig);    //将当前的配置序列化为json字符串
-        //        Common.Utils.WriteJsonFile(sfd.FileName, content);              //保存文件
-        //        HcGrowlExtensions.Success("配置文件导出成功", viewName);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        HcGrowlExtensions.Warning("配置文件导出失败", viewName);
-        //        ShowErrorMessage(ex.Message);
-        //    }
-        //}
+        /// <summary>
+        /// 导出配置文件
+        /// </summary>
+        private void ExportConfig()
+        {
+            try
+            {
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig"); //配置文件目录
+                Wu.Utils.IOUtil.Exists(dict);                                                                   //验证文件夹是否存在, 不存在则创建
+                SaveFileDialog sfd = new SaveFileDialog()
+                {
+                    Title = "请选择导出配置文件...",                             //对话框标题
+                    Filter = "json files(*.jsonMSC)|*.jsonMSC",                 //文件格式过滤器
+                    FilterIndex = 1,                                            //默认选中的过滤器
+                    FileName = "Default",                                       //默认文件名
+                    DefaultExt = "jsonMSC",                                     //默认扩展名
+                    InitialDirectory = dict,                                    //指定初始的目录
+                    OverwritePrompt = true,                                     //文件已存在警告
+                    AddExtension = true,                                        //若用户省略扩展名将自动添加扩展名
+                };
+                if (sfd.ShowDialog() != true)
+                    return;
+                var content = JsonConvert.SerializeObject(MqttServerConfig);    //将当前的配置序列化为json字符串
+                Shared.Common.Utils.WriteJsonFile(sfd.FileName, content);              //保存文件
+                HcGrowlExtensions.Success("配置文件导出成功", MqttServerView.ViewName);
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning("配置文件导出失败", MqttServerView.ViewName);
+                ShowErrorMessage(ex.Message);
+            }
+        }
 
 
 
-        ///// <summary>
-        ///// 导入配置文件
-        ///// </summary>
-        //private void ImportConfig()
-        //{
-        //    try
-        //    {
-        //        //配置文件目录
-        //        string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
-        //        Wu.Utils.IOUtil.Exists(dict);
-        //        //选中配置文件
-        //        OpenFileDialog dlg = new()
-        //        {
-        //            Title = "请选择导入配置文件...",                                              //对话框标题
-        //            Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
-        //            FilterIndex = 1,                                                         //默认选中的过滤器
-        //            InitialDirectory = dict
-        //        };
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        private void ImportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
+                Wu.Utils.IOUtil.Exists(dict);
+                //选中配置文件
+                OpenFileDialog dlg = new()
+                {
+                    Title = "请选择导入配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    InitialDirectory = dict
+                };
 
-        //        if (dlg.ShowDialog() != true)
-        //            return;
-        //        var xx = Common.Utils.ReadJsonFile(dlg.FileName);
-        //        var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
-        //        MqttServerConfig = x;
-        //        HcGrowlExtensions.Success("配置文件导入成功", viewName);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        HcGrowlExtensions.Warning("配置文件导入失败", viewName);
-        //        ShowErrorMessage(ex.Message);
-        //    }
-        //} 
+                if (dlg.ShowDialog() != true)
+                    return;
+                var xx = Shared.Common.Utils.ReadJsonFile(dlg.FileName);
+                var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
+                MqttServerConfig = x;
+                HcGrowlExtensions.Success("配置文件导入成功", MqttServerView.ViewName);
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning("配置文件导入失败", MqttServerView.ViewName);
+                ShowErrorMessage(ex.Message);
+            }
+        }
         #endregion
 
 
