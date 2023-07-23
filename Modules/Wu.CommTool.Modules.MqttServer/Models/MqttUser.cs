@@ -1,9 +1,9 @@
 ﻿using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
-using Wu.CommTool.Models;
+using Wu.CommTool.Modules.MqttServer.Models;
 
-namespace MqttnetServer.Model
+namespace Wu.CommTool.Modules.MqttServer.Model
 {
     /// <summary>
     /// Mqtt客户端用户

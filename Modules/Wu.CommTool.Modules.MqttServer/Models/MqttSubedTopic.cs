@@ -1,7 +1,7 @@
-﻿using MqttnetServer.Model;
-using Prism.Mvvm;
+﻿using Prism.Mvvm;
+using Wu.CommTool.Modules.MqttServer.Model;
 
-namespace Wu.CommTool.Models
+namespace Wu.CommTool.Modules.MqttServer.Models
 {
     /// <summary>
     /// 订阅的主题

@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="Eunms\Modbus\" />
     <Folder Include="Eunms\Mqtt\" />
+    <Folder Include="Models\Mqtt\" />
   </ItemGroup>
 
 </Project>

@@ -23,6 +23,8 @@ using Wu.Wpf.Models;
 using Wu.Wpf.Common;
 using MQTTnet.Protocol;
 using System.Threading.Tasks;
+using Wu.CommTool.Modules.MqttServer.Models;
+using Wu.CommTool.Modules.MqttServer.Model;
 
 namespace Wu.CommTool.Modules.MqttServer.ViewModels
 {
@@ -46,7 +48,6 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-            TestCommand = new DelegateCommand<object>(Test);
             OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
             //UnsubscribeTopicCommand = new DelegateCommand<MqttSubedTopic>(UnsubscribeTopic);
 
@@ -94,17 +95,17 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
         private bool _IsPause;
 
-        ///// <summary>
-        ///// Mqtt服务器配置
-        ///// </summary>
-        //public MqttServerConfig MqttServerConfig { get => _MqttServerConfig; set => SetProperty(ref _MqttServerConfig, value); }
-        //private MqttServerConfig _MqttServerConfig = new();
+        /// <summary>
+        /// Mqtt服务器配置
+        /// </summary>
+        public MqttServerConfig MqttServerConfig { get => _MqttServerConfig; set => SetProperty(ref _MqttServerConfig, value); }
+        private MqttServerConfig _MqttServerConfig = new();
 
-        ///// <summary>
-        ///// MqttUsers
-        ///// </summary>
-        //public ObservableCollection<MqttUser> MqttUsers { get => _MqttUsers; set => SetProperty(ref _MqttUsers, value); }
-        //private ObservableCollection<MqttUser> _MqttUsers = new();
+        /// <summary>
+        /// MqttUsers
+        /// </summary>
+        public ObservableCollection<MqttUser> MqttUsers { get => _MqttUsers; set => SetProperty(ref _MqttUsers, value); }
+        private ObservableCollection<MqttUser> _MqttUsers = new();
         #endregion
 
 
@@ -117,15 +118,10 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
 
-        /// <summary>
-        /// definity
-        /// </summary>
-        public DelegateCommand<object> TestCommand { get; private set; }
-
         ///// <summary>
         ///// 取消订阅主题
         ///// </summary>
-        //public DelegateCommand<MqttSubedTopic> UnsubscribeTopicCommand { get; private set; }
+        public DelegateCommand<MqttSubedTopic> UnsubscribeTopicCommand { get; private set; }
 
         /// <summary>
         /// 打开json格式化界面
@@ -145,7 +141,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                 case "OpenRightDrawer": IsDrawersOpen.RightDrawer = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
                 case "OpenMqttServer": RunMqttServer(); break;                              //打开服务器
-                case "CloseMqttServer": StopMqttServer(); break;                              //打开服务器
+                case "CloseMqttServer": StopMqttServer(); break;                            //打开服务器
                 //case "ImportConfig": ImportConfig(); break;
                 //case "ExportConfig": ExportConfig(); break;
                 default: break;
@@ -153,12 +149,10 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         }
 
 
-        #region 打开Mqtt服务器
-
+        #region 启动Mqtt服务器
         /// <summary>
         /// 启动Mqtt服务器
         /// </summary>
-        /// <param name="obj"></param>
         private async void RunMqttServer()
         {
             var mqttFactory = new MqttFactory();
