@@ -13,20 +13,15 @@
     xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
     xmlns:wuext="clr-namespace:Wu.Wpf.Extensions;assembly=Wu.Wpf"
+    d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
     d:DesignHeight="600"
     d:DesignWidth="1000"
     mc:Ignorable="d">
 
-    <!--
-        xmlns:enums="clr-namespace:Wu.CommTool.Enums"
-        xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
-        
-        d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
-    -->
 
     <Grid>
         <md:DialogHost Identifier="{x:Static local:MqttServerView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
-            <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
+            <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.LeftDrawer}" IsRightDrawerOpen="{Binding IsDrawersOpen.RightDrawer}">
 
                 <!--  左侧抽屉  -->
 
@@ -74,6 +69,13 @@
                                 Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IpTitle="IP"
                                 TitleWidth="45" />-->
+
+                            <TextBox
+                                hc:TitleElement.Title="IP"
+                                hc:TitleElement.TitleWidth="45"
+                                Style="{StaticResource FormTextBox}"
+                                Text="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
                             <TextBox
                                 hc:TitleElement.Title="Port"
                                 hc:TitleElement.TitleWidth="45"

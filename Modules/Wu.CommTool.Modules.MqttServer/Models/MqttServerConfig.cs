@@ -10,7 +10,7 @@ namespace Wu.CommTool.Modules.MqttServer.Models
         /// IP
         /// </summary>
         public string ServerIp { get => _ServerIp; set => SetProperty(ref _ServerIp, value); }
-        private string _ServerIp = "192.168.1.10";
+        private string _ServerIp = "127.0.0.1";
 
         /// <summary>
         /// 端口
