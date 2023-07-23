@@ -54,7 +54,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
-            //ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
+            ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
 
             MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
 
@@ -80,7 +80,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
 
 
         /// <summary>
-        /// 减少主题
+        /// 退订主题
         /// </summary>
         /// <param name="obj"></param>
         private void SubTopic(MqttTopic obj)
@@ -160,7 +160,6 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
-
 
         /// <summary>
         /// 取消订阅主题
@@ -473,71 +472,83 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// </summary>
         private async Task<bool> OpenMqttClient()
         {
-            return false;
-            //try
-            //{
-            //    if (MqttClientConfig.IsOpened)
-            //    {
-            //        return false;
-            //    }
-            //    var options = new MqttClientOptionsBuilder()
-            //        .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
-            //        .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
-            //        .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password).Build();         //账号
+            try
+            {
+                if (MqttClientConfig.IsOpened)
+                {
+                    return false;
+                }
+                var options = new MqttClientOptionsBuilder()
+                    .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
+                    .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
+                    .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password).Build();         //账号
 
-            //    client = new MqttFactory().CreateMqttClient()
-            //        .UseConnectedHandler(Connected)                        //连接成功事件
-            //        .UseDisconnectedHandler(DisConnected)                  //连接断开事件
-            //        .UseApplicationMessageReceivedHandler(ReceiveMessage); //接收消息事件
+                client = new MqttFactory().CreateMqttClient();
+                client.ConnectedAsync += Client_ConnectedAsync;
+                client.DisconnectedAsync += Client_DisconnectedAsync;
+                client.ApplicationMessageReceivedAsync += Client_ApplicationMessageReceivedAsync;
+                client.InspectPacketAsync += Client_InspectPacketAsync;
+                client.ConnectingAsync += Client_ConnectingAsync;
 
-            //    ShowMessage("连接中...");
-            //    MqttClientConfig.IsOpened = true;//连接时需要直接至位, 否则重复连接期间重复点击连接将导致异常
-            //    await client.ConnectAsync(options);                //启动连接
-            //    return true;
-            //}
-            //catch (Exception ex)
-            //{
-            //    return false;
-            //    //ShowErrorMessage($"{ex.Message}");
-            //}
+                ShowMessage("连接中...");
+                MqttClientConfig.IsOpened = true;//连接时需要直接至位, 否则重复连接期间重复点击连接将导致异常
+                await client.ConnectAsync(options);                //启动连接
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+                //ShowErrorMessage($"{ex.Message}");
+            }
+        }
+
+        private Task Client_ConnectingAsync(MqttClientConnectingEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task Client_InspectPacketAsync(MQTTnet.Diagnostics.InspectMqttPacketEventArgs arg)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// 接收消息事件
+        /// 客户端接收事件
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private void ReceiveMessage(MqttApplicationMessageReceivedEventArgs arg)
+        private Task Client_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
         {
-            //try
-            //{
-            //    if (IsPause)
-            //    {
-            //        return;
-            //    }
+            try
+            {
+                if (IsPause)
+                {
+                    return Task.CompletedTask;
+                }
 
-            //    var payload = arg.ApplicationMessage.Payload ?? Array.Empty<byte>();
-
-            //    switch (MqttClientConfig.ReceivePaylodType)
-            //    {
-            //        case MqttPayloadType.Plaintext:
-            //            ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
-            //            break;
-            //        case MqttPayloadType.Json:
-            //            ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题：{arg.ApplicationMessage.Topic}");
-            //            break;
-            //        case MqttPayloadType.Hex:
-            //            ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
-            //            break;
-            //        case MqttPayloadType.Base64:
-            //            ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
-            //            break;
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    ShowErrorMessage("接收数据解析错误 (请尝试更换数据解析格式) : " + ex.Message);
-            //}
+                var payload = arg.ApplicationMessage.PayloadSegment.ToArray();
+                switch (MqttClientConfig.ReceivePaylodType)
+                {
+                    case MqttPayloadType.Json:
+                    case MqttPayloadType.Plaintext:
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
+                        break;
+                    //case MqttPayloadType.Json:
+                    //    ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题：{arg.ApplicationMessage.Topic}");
+                    //    break;
+                    case MqttPayloadType.Hex:
+                        ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
+                        break;
+                    case MqttPayloadType.Base64:
+                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("接收数据解析错误 (请尝试更换数据解析格式) : " + ex.Message);
+            }
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -545,10 +556,10 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private void DisConnected(MqttClientDisconnectedEventArgs arg)
+        private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
             if (arg == null)
-                return;
+                return Task.CompletedTask;
             //异常导致的掉线
             if (arg.Exception != null)
             {
@@ -569,14 +580,15 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 //清除订阅成功的主题
                 MqttClientConfig.SubscribeSucceeds.Clear();
             });
+            return Task.CompletedTask;
         }
 
         /// <summary>
-        /// 连接成功事件
+        /// 连接成功
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private async Task Connected(MqttClientConnectedEventArgs arg)
+        private async Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
             try
             {
@@ -597,6 +609,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             {
                 ShowErrorMessage($"订阅失败: {ex.Message}");//连接成功 
             }
+            return;
         }
 
 

@@ -18,6 +18,8 @@ using Wu.CommTool.Modules.JsonTool;
 using Wu.CommTool.Modules.Message;
 using Wu.CommTool.Modules.MqttServer;
 using Wu.Wpf.Common;
+using Wu.CommTool.Modules.MqttClient.Views;
+using Wu.CommTool.Modules.MqttClient;
 
 namespace Wu.CommTool
 {
@@ -107,7 +109,8 @@ namespace Wu.CommTool
             moduleCatalog.AddModule<ModbusTcpModule>();     //ModbusTcp模块
             moduleCatalog.AddModule<JsonToolModule>();      //Json工具模块
             moduleCatalog.AddModule<MessageModule>();       //弹窗消息模块
-            moduleCatalog.AddModule<MqttServerModule>();
+            moduleCatalog.AddModule<MqttServerModule>();    //Mqtt服务器模块
+            moduleCatalog.AddModule<MqttClientModule>();    //Mqtt客户端模块
         }
 
     }
