@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
-using Wu.CommTool.Enums;
 using Wu.CommTool.Shared.Enums;
 using Wu.CommTool.Shared.Enums.Mqtt;
 
-namespace Wu.CommTool.Models
+namespace Wu.CommTool.Modules.MqttClient.Models
 {
     public class MqttClientConfig : BindableBase
     {

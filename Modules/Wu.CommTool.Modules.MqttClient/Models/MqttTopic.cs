@@ -1,6 +1,6 @@
 ﻿using Prism.Mvvm;
 
-namespace Wu.CommTool.Models
+namespace Wu.CommTool.Modules.MqttClient.Models
 {
     /// <summary>
     /// Mqtt的主题 需要主题作为属性才能实现修改通知

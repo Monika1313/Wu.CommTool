@@ -53,21 +53,21 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
             OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
             //UnsubscribeTopicCommand = new DelegateCommand<MqttSubedTopic>(UnsubscribeTopic);
 
-            ////从默认配置文件中读取配置
-            //try
-            //{
-            //    string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig\Default.jsonMSC");
-            //    var xx = Common.Utils.ReadJsonFile(p);
-            //    var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
-            //    if (x == null)
-            //        return;
-            //    MqttServerConfig = x;
-            //    ShowMessage("读取配置成功");
-            //}
-            //catch (Exception ex)
-            //{
-            //    ShowErrorMessage("配置文件读取失败");
-            //}
+            //从默认配置文件中读取配置
+            try
+            {
+                string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig\Default.jsonMSC");
+                var xx = Shared.Common.Utils.ReadJsonFile(p);
+                var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
+                if (x == null)
+                    return;
+                MqttServerConfig = x;
+                ShowMessage("读取配置成功");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("配置文件读取失败");
+            }
         }
 
 
