@@ -15,4 +15,9 @@
     <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Eunms\Modbus\" />
+    <Folder Include="Eunms\Mqtt\" />
+  </ItemGroup>
+
 </Project>

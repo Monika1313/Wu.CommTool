@@ -5,8 +5,6 @@ VisualStudioVersion = 17.3.32708.82
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool", "Wu.CommTool\Wu.CommTool.csproj", "{44756F51-56DA-46B4-8240-65B8E77FA818}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{895331C5-327A-4327-9B36-310072CA94CF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "解决方案项", "解决方案项", "{95EC04C0-017D-4017-8891-3B531258A076}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.txt = LICENSE.txt
@@ -30,7 +28,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.Message
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.JsonTool", "Modules\Wu.CommTool.Modules.JsonTool\Wu.CommTool.Modules.JsonTool.csproj", "{988FB9D2-BF3D-4364-8FA4-3D06C0F3D77B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.MqttServer", "Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj", "{8F0A328B-2FA3-47C1-AA4F-16B70C403FED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.MqttServer", "Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj", "{8F0A328B-2FA3-47C1-AA4F-16B70C403FED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,10 +40,6 @@ Global
 		{44756F51-56DA-46B4-8240-65B8E77FA818}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44756F51-56DA-46B4-8240-65B8E77FA818}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44756F51-56DA-46B4-8240-65B8E77FA818}.Release|Any CPU.Build.0 = Release|Any CPU
-		{895331C5-327A-4327-9B36-310072CA94CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{895331C5-327A-4327-9B36-310072CA94CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{895331C5-327A-4327-9B36-310072CA94CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{895331C5-327A-4327-9B36-310072CA94CF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{148FD692-6990-46A1-9659-D48BAC6DC1FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{148FD692-6990-46A1-9659-D48BAC6DC1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{148FD692-6990-46A1-9659-D48BAC6DC1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -83,7 +77,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{895331C5-327A-4327-9B36-310072CA94CF} = {F3EDE274-21EF-4108-B0F8-ACCAF64D4B2B}
 		{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{43ED2DE9-95B7-4F52-BDEE-E1A72F5D611E} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{37690D19-C1AC-4F77-88CC-D26F4407314C} = {3BC16164-D552-45D4-A500-4262CF548710}
