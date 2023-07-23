@@ -10,6 +10,8 @@ using Wu.CommTool.Extensions;
 using Wu.CommTool.Models.JsonModels;
 using Wu.CommTool.Views;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
+using Wu.Wpf.Extensions;
 //using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels
@@ -105,7 +107,6 @@ namespace Wu.CommTool.ViewModels
             }
             catch (Exception ex)
             {
-                //MessageBox.Show(ex.Message);
                 await dialogHost.Question("Json格式化失败", $"{ex.Message}", nameof(JsonToolView));
             }
         }

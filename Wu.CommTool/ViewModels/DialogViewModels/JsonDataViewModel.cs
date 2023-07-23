@@ -11,6 +11,7 @@ using Wu.CommTool.Models;
 using Wu.CommTool.Models.JsonModels;
 using Wu.CommTool.Shared.Models;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels
 {

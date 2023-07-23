@@ -10,7 +10,9 @@ using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.CommTool.Modules.About.Views;
 using Wu.CommTool.Modules.ConvertTools.Views;
+using Wu.CommTool.Modules.MqttServer.Views;
 using Wu.CommTool.Views;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels
 {
@@ -113,7 +115,7 @@ namespace Wu.CommTool.ViewModels
             {
                 new MenuBar() { Icon = "LanConnect", Title = "Modbus-Rtu", NameSpace = nameof(ModbusRtuView) },
                 new MenuBar() { Icon = "LadyBug", Title = "Mqtt-Server", NameSpace = nameof(MqttServerView) },
-                new MenuBar() { Icon = "Bug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) },
+                //new MenuBar() { Icon = "Bug", Title = "Mqtt-Client", NameSpace = nameof(MqttClientView) },
                 new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = nameof(JsonToolView) },
                 new MenuBar() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
                 new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },

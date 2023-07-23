@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Wu.Wpf.Converters;
 
-namespace Wu.CommTool.Enums
+namespace Wu.CommTool.Shared.Enums.Mqtt
 {
     /// <summary>
     /// 数据类型

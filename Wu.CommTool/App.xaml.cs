@@ -16,6 +16,8 @@ using Wu.CommTool.Modules.About;
 using Wu.CommTool.Modules.ModbusTcp;
 using Wu.CommTool.Modules.JsonTool;
 using Wu.CommTool.Modules.Message;
+using Wu.CommTool.Modules.MqttServer;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool
 {
@@ -71,8 +73,8 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
             containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
-            containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
-            containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
+            //containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
+            //containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
             containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             //弹窗界面
             containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面
@@ -105,6 +107,7 @@ namespace Wu.CommTool
             moduleCatalog.AddModule<ModbusTcpModule>();     //ModbusTcp模块
             moduleCatalog.AddModule<JsonToolModule>();      //Json工具模块
             moduleCatalog.AddModule<MessageModule>();       //弹窗消息模块
+            moduleCatalog.AddModule<MqttServerModule>();
         }
 
     }

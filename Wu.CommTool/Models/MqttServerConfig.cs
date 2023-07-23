@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Prism.Mvvm;
 using Wu.CommTool.Enums;
+using Wu.CommTool.Shared.Enums.Mqtt;
 
 namespace Wu.CommTool.Models
 {

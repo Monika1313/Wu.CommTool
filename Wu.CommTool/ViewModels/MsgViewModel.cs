@@ -3,6 +3,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using Prism.Services.Dialogs;
 using Wu.CommTool.Common;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels
 {

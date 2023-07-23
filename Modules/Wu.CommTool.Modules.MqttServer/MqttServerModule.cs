@@ -1,6 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
+using Wu.CommTool.Modules.MqttServer.ViewModels;
 using Wu.CommTool.Modules.MqttServer.Views;
 
 namespace Wu.CommTool.Modules.MqttServer
@@ -14,7 +15,7 @@ namespace Wu.CommTool.Modules.MqttServer
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<MqttServerView>();   //MqttServerView 
+            containerRegistry.RegisterForNavigation<MqttServerView,MqttServerViewModel>();   //MqttServerView 
         }
     }
 }

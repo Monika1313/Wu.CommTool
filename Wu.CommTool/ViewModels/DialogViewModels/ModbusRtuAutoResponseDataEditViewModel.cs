@@ -7,6 +7,7 @@ using System;
 using Wu.CommTool.Common;
 using Wu.CommTool.Models;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool.ViewModels.DialogViewModels
 {

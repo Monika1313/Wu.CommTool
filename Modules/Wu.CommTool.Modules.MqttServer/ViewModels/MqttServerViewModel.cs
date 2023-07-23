@@ -19,8 +19,10 @@ using Wu.CommTool.Shared.Eunms;
 using Wu.CommTool.Shared.Models;
 using Wu.Extensions;
 using Wu.ViewModels;
-using Wu.Wpf.Common;
 using Wu.Wpf.Models;
+using Wu.Wpf.Common;
+using MQTTnet.Protocol;
+using System.Threading.Tasks;
 
 namespace Wu.CommTool.Modules.MqttServer.ViewModels
 {
@@ -142,8 +144,8 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                 case "OpenLeftDrawer": IsDrawersOpen.LeftDrawer = true; break;
                 case "OpenRightDrawer": IsDrawersOpen.RightDrawer = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
-                //case "OpenMqttServer": OpenMqttServer(); break;                              //打开服务器
-                //case "CloseMqttServer": CloseMqttServer(); break;                              //打开服务器
+                case "OpenMqttServer": RunMqttServer(); break;                              //打开服务器
+                case "CloseMqttServer": StopMqttServer(); break;                              //打开服务器
                 //case "ImportConfig": ImportConfig(); break;
                 //case "ExportConfig": ExportConfig(); break;
                 default: break;
@@ -157,16 +159,124 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         /// 启动Mqtt服务器
         /// </summary>
         /// <param name="obj"></param>
-        private async void RunMqttServer(string obj) 
+        private async void RunMqttServer()
         {
             var mqttFactory = new MqttFactory();
-            var mqttServerOptions = 
+            var mqttServerOptions =
                 new MqttServerOptionsBuilder()
                 .WithDefaultEndpoint()
+                //.WithDefaultEndpointBoundIPAddress(IPAddress.Loopback)//指定IP
                 .WithDefaultEndpointPort(1883)//设置端口
                 .Build();
             mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
+            mqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;//客户端连接时验证
+            mqttServer.ClientConnectedAsync += MqttServer_ClientConnectedAsync;//客户端连接成功后
+            mqttServer.ClientDisconnectedAsync += MqttServer_ClientDisconnectedAsync;//客户端断开连接
+            mqttServer.ClientSubscribedTopicAsync += MqttServer_ClientSubscribedTopicAsync;//客户端订阅主题
+            mqttServer.ClientUnsubscribedTopicAsync += MqttServer_ClientUnsubscribedTopicAsync;//客户端取消订阅
+            mqttServer.InterceptingPublishAsync += MqttServer_InterceptingPublishAsync;//拦截用户发布的消息
+            mqttServer.ClientAcknowledgedPublishPacketAsync += MqttServer_ClientAcknowledgedPublishPacketAsync;//
+
+            mqttServer.InterceptingClientEnqueueAsync += MqttServer_InterceptingClientEnqueueAsync;
+            mqttServer.ApplicationMessageNotConsumedAsync += MqttServer_ApplicationMessageNotConsumedAsync;
             await mqttServer.StartAsync();//启动
+
+            ShowMessage($"服务器开启成功");
+        }
+
+        /// <summary>
+        /// 拦截用户发布的消息
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private Task MqttServer_InterceptingPublishAsync(InterceptingPublishEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_ApplicationMessageNotConsumedAsync(ApplicationMessageNotConsumedEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_ClientAcknowledgedPublishPacketAsync(ClientAcknowledgedPublishPacketEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_InterceptingClientEnqueueAsync(InterceptingClientApplicationMessageEnqueueEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 客户端订阅
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private Task MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 连接用户验证
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private Task MqttServer_ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
+        {
+            if (arg.ClientId != "ValidClientId")
+            {
+                arg.ReasonCode = MqttConnectReasonCode.ClientIdentifierNotValid;
+            }
+
+            if (arg.UserName != "ValidUser")
+            {
+                arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+            }
+
+            if (arg.Password != "SecretPassword")
+            {
+                arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+            }
+
+            //用户名不为空即验证成功
+            if (arg.ClientId != string.Empty)
+            {
+                arg.ReasonCode = MqttConnectReasonCode.Success;
+            }
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 客户端取消订阅
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private Task MqttServer_ClientUnsubscribedTopicAsync(ClientUnsubscribedTopicEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 客户端断开连接
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private Task MqttServer_ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 客户端连接成功后
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private Task MqttServer_ClientConnectedAsync(ClientConnectedEventArgs arg)
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -183,13 +293,51 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                 //await server.StopAsync();
                 //MqttServerConfig.IsOpened = false;
                 //MqttUsers.Clear();//清除已登录的用户列表
-                //ShowMessage($"Mqtt服务器关闭");
+                ShowMessage($"Mqtt服务器关闭");
             }
             catch (Exception ex)
             {
                 ShowMessage(ex.Message, MessageType.Error);
             }
         }
+
+
+
+
+        /// <summary>
+        /// Mqtt服务器发布消息
+        /// </summary>
+        /// <returns></returns>
+        public async Task Publish_Message_From_Broker()
+        {
+            var message = new MqttApplicationMessageBuilder().WithTopic("HelloWorld").WithPayload("Test").Build();
+            await mqttServer.InjectApplicationMessage(
+                new InjectedMqttApplicationMessage(message)
+                {
+                    SenderClientId = "SenderClientId"
+                });
+        }
+
+        /// <summary>
+        /// 强制踢客户端
+        /// </summary>
+        /// <returns></returns>
+        public async Task Force_Disconnecting_Client()
+        {
+            var affectedClient = (await mqttServer.GetClientsAsync()).FirstOrDefault(c => c.Id == "MyClient");
+            if (affectedClient != null)
+            {
+                await affectedClient.DisconnectAsync();
+            }
+        }
+
+
+
+
+
+
+
+
 
 
 
@@ -355,7 +503,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
 
 
 
-       
+
 
 
 

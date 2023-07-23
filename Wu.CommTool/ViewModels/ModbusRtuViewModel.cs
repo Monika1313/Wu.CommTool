@@ -30,6 +30,8 @@ using Wu.CommTool.Views;
 using Wu.CommTool.Views.Dialogs;
 using Wu.Extensions;
 using Wu.ViewModels;
+using Wu.Wpf.Common;
+using Wu.Wpf.Extensions;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 
 namespace Wu.CommTool.ViewModels

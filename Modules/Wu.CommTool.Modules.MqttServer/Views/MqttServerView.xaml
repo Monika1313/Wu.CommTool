@@ -8,25 +8,28 @@
     xmlns:local="clr-namespace:Wu.CommTool.Modules.MqttServer.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mqttEnums="clr-namespace:Wu.CommTool.Shared.Enums.Mqtt;assembly=Wu.CommTool.Shared"
     xmlns:senums="clr-namespace:Wu.CommTool.Shared.Enums;assembly=Wu.CommTool.Shared"
     xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     xmlns:wucvt="clr-namespace:Wu.Wpf.Converters;assembly=Wu.Wpf"
-    
+    xmlns:wuext="clr-namespace:Wu.Wpf.Extensions;assembly=Wu.Wpf"
     d:DesignHeight="600"
     d:DesignWidth="1000"
     mc:Ignorable="d">
+
     <!--
         xmlns:enums="clr-namespace:Wu.CommTool.Enums"
         xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
+        
+        d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"
     -->
-    <!--d:DataContext="{x:Static dvm:MqttServerDesignViewModel.Instance}"-->
 
-    <!--<Grid>
+    <Grid>
         <md:DialogHost Identifier="{x:Static local:MqttServerView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
             <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding IsDrawersOpen.IsRightDrawerOpen}">
-    -->
-    <!--  左侧抽屉  -->
-    <!--
+
+                <!--  左侧抽屉  -->
+
                 <md:DrawerHost.LeftDrawerContent>
                     <ContentControl Style="{StaticResource Effect2Control}">
                         <StackPanel Width="240" Orientation="Vertical">
@@ -36,9 +39,9 @@
                                     HorizontalAlignment="Center"
                                     FontSize="18"
                                     Text="服务器配置" />
-    -->
-    <!--  导出配置文件  -->
-    <!--
+
+                                <!--  导出配置文件  -->
+
                                 <Button
                                     Width="30"
                                     Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -50,9 +53,9 @@
                                     Cursor="Hand"
                                     DockPanel.Dock="Right"
                                     Style="{StaticResource Blue_CircleButton}" />
-    -->
-    <!--  导入配置文件  -->
-    <!--
+
+                                <!--  导入配置文件  -->
+
                                 <Button
                                     Width="30"
                                     Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -66,20 +69,20 @@
                                     IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                     Style="{StaticResource Blue_CircleButton}" />
                             </StackPanel>
-                            <ctl:WuIpBox
+                            <!--<ctl:WuIpBox
                                 Margin="5"
                                 Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IpTitle="IP"
-                                TitleWidth="45" />
+                                TitleWidth="45" />-->
                             <TextBox
                                 hc:TitleElement.Title="Port"
                                 hc:TitleElement.TitleWidth="45"
                                 Style="{StaticResource FormTextBox}"
                                 Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-    -->
-    <!--  服务器开关  -->
-    <!--
+
+                            <!--  服务器开关  -->
+
                             <StackPanel
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Top"
@@ -107,9 +110,9 @@
                     </ContentControl>
                 </md:DrawerHost.LeftDrawerContent>
 
-    -->
-    <!--  右侧抽屉  -->
-    <!--
+
+                <!--  右侧抽屉  -->
+
                 <md:DrawerHost.RightDrawerContent>
                     <DockPanel MinWidth="230">
                         <TextBlock
@@ -120,7 +123,7 @@
                             Text="客户端管理" />
                         <Grid>
                             <ContentControl Style="{StaticResource Effect2Control}">
-                                <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                                <hc:ScrollViewer wuext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                                     <ItemsControl Background="Transparent" ItemsSource="{Binding MqttUsers}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
@@ -189,9 +192,7 @@
                                                                                         Content="×"
                                                                                         DockPanel.Dock="Right"
                                                                                         Style="{StaticResource Red_CircleButton}" />
-    -->
-    <!--  CommandParameter="{Binding RelativeSource={RelativeSource Mode=self}}"  -->
-    <!--
+                                                                                    <!--  CommandParameter=&quot;{Binding RelativeSource={RelativeSource Mode=self}}&quot;  -->
                                                                                     <TextBox
                                                                                         Margin="4"
                                                                                         Foreground="{StaticResource Green_Foreground}"
@@ -217,7 +218,7 @@
                                 Margin="5"
                                 HorizontalAlignment="Left"
                                 VerticalAlignment="Center"
-                                Visibility="{Binding MqttUsers.Count, Converter={cvt:MoreThanZero2Collapsed}}">
+                                Visibility="{Binding MqttUsers.Count, Converter={wucvt:MoreThanZero2Collapsed}}">
                                 <Image
                                     Width="240"
                                     Height="240"
@@ -232,17 +233,12 @@
                         </Grid>
                     </DockPanel>
                 </md:DrawerHost.RightDrawerContent>
-
-    -->
-    <!--  主体内容  -->
-    <!--
+                <!--  主体内容  -->
                 <DockPanel>
                     <Grid DockPanel.Dock="Top">
                         <TextBlock Style="{StaticResource TitleTextBlock}" Text="Mqtt服务器" />
                         <DockPanel LastChildFill="False">
-    -->
-    <!--  配置Modbus服务器按钮  -->
-    <!--
+                            <!--  配置Modbus服务器按钮  -->
                             <Button
                                 Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -254,10 +250,7 @@
                                 Cursor="Hand"
                                 DockPanel.Dock="Left"
                                 Style="{StaticResource Blue_CircleButton}" />
-
-    -->
-    <!--  打开Mqtt服务器  -->
-    <!--
+                            <!--  打开Mqtt服务器  -->
                             <Button
                                 Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -273,10 +266,7 @@
                                 Foreground="{StaticResource Green_Foreground}"
                                 IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                 Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
-
-    -->
-    <!--  关闭Mqtt服务器  -->
-    <!--
+                            <!--  关闭Mqtt服务器  -->
                             <Button
                                 Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -289,10 +279,7 @@
                                 Cursor="Hand"
                                 IsEnabled="{Binding MqttServerConfig.IsOpened}"
                                 Style="{StaticResource Red_CircleButton}" />
-
-    -->
-    <!--  暂停界面更新  -->
-    <!--
+                            <!--  暂停界面更新  -->
                             <Button
                                 Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -335,10 +322,7 @@
                                     </Style>
                                 </Button.Style>
                             </Button>
-
-    -->
-    <!--  清空消息按钮  -->
-    <!--
+                            <!--  清空消息按钮  -->
                             <Button
                                 Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -353,14 +337,10 @@
                             <ComboBox
                                 hc:InfoElement.Title="接收消息格式"
                                 hc:InfoElement.TitleWidth="80"
-                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type enums:MqttPayloadType}}}"
+                                ItemsSource="{Binding Source={wucvt:EnumBindingSource {x:Type mqttEnums:MqttPayloadType}}}"
                                 SelectedItem="{Binding MqttServerConfig.ReceivePaylodType}"
                                 Style="{StaticResource FormComboBox}" />
-
-
-    -->
-    <!--  客户端管理  -->
-    <!--
+                            <!--  客户端管理  -->
                             <Button
                                 Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -371,55 +351,52 @@
                                 Content="{md:PackIcon Kind=UserGroup}"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
+                            <!--  接收数据Json格式化  -->
+                            <Button
+                                Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="20,5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="Format"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right">
+                                <md:PackIcon Width="24" Height="24">
+                                    <md:PackIcon.Style>
+                                        <Style TargetType="md:PackIcon">
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Format}" Value="1">
+                                                    <Setter Property="Kind" Value="CodeString" />
+                                                </DataTrigger>
 
-
-    -->
-    <!--  接收数据Json格式化  -->
-    <!--<Button
-                            Width="30"
-                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                            Margin="20,5"
-                            HorizontalAlignment="Left"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Format"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right">
-                            <md:PackIcon Width="24" Height="24">
-                                <md:PackIcon.Style>
-                                    <Style TargetType="md:PackIcon">
+                                                <DataTrigger Binding="{Binding Format}" Value="0">
+                                                    <Setter Property="Kind" Value="CodeJson" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </md:PackIcon.Style>
+                                </md:PackIcon>
+                                <Button.Style>
+                                    <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding Format}" Value="1">
-                                                <Setter Property="Kind" Value="CodeString" />
+                                                <Setter Property="ToolTip" Value="Json格式化显示" />
+                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                             </DataTrigger>
 
                                             <DataTrigger Binding="{Binding Format}" Value="0">
-                                                <Setter Property="Kind" Value="CodeJson" />
+                                                <Setter Property="ToolTip" Value="字符串显示" />
+                                                <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                                <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </md:PackIcon.Style>
-                            </md:PackIcon>
-                            <Button.Style>
-                                <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Format}" Value="1">
-                                            <Setter Property="ToolTip" Value="Json格式化显示" />
-                                            <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                        </DataTrigger>
+                                </Button.Style>
+                            </Button>
 
-                                        <DataTrigger Binding="{Binding Format}" Value="0">
-                                            <Setter Property="ToolTip" Value="字符串显示" />
-                                            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                                            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                                            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>-->
-    <!--
                         </DockPanel>
                     </Grid>
 
@@ -434,10 +411,8 @@
                         <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerPort}" />
                     </DockPanel>
                     <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
-                        <hc:ScrollViewer ext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-    -->
-    <!--  页面消息  -->
-    <!--
+                        <hc:ScrollViewer wuext:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                            <!--  页面消息  -->
                             <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
@@ -456,9 +431,7 @@
                                             Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                             <Border.ContextMenu>
                                                 <ContextMenu>
-    -->
-    <!--  MenuItem绑定命令  -->
-    <!--
+                                                    <!--  MenuItem绑定命令  -->
                                                     <MenuItem
                                                         Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                         CommandParameter="{Binding}"
@@ -505,5 +478,5 @@
                 VerticalAlignment="Top"
                 hc:Growl.Token="{x:Static local:MqttServerView.ViewName}" />
         </ScrollViewer>
-    </Grid>-->
+    </Grid>
 </UserControl>
