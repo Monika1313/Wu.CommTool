@@ -149,7 +149,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         }
 
 
-        #region 启动Mqtt服务器
+        #region Mqtt服务器事件
         /// <summary>
         /// 启动Mqtt服务器
         /// </summary>
@@ -177,6 +177,62 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
 
             ShowMessage($"服务器开启成功");
         }
+
+        /// <summary>
+        /// 关闭Mqtt服务器
+        /// </summary>
+        private async void StopMqttServer()
+        {
+            try
+            {
+                //关闭服务器
+                await mqttServer.StopAsync();
+
+                MqttServerConfig.IsOpened = false;
+                MqttUsers.Clear();//清除已登录的用户列表
+                ShowMessage($"Mqtt服务器关闭");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Error);
+            }
+        }
+
+
+
+        
+
+
+
+
+        /// <summary>
+        /// Mqtt服务器发布消息
+        /// </summary>
+        /// <returns></returns>
+        public async Task Publish_Message_From_Broker()
+        {
+            var message = new MqttApplicationMessageBuilder().WithTopic("HelloWorld").WithPayload("Test").Build();
+            await mqttServer.InjectApplicationMessage(
+                new InjectedMqttApplicationMessage(message)
+                {
+                    SenderClientId = "SenderClientId"
+                });
+        }
+
+        /// <summary>
+        /// 强制踢客户端
+        /// </summary>
+        /// <returns></returns>
+        public async Task Force_Disconnecting_Client()
+        {
+            var affectedClient = (await mqttServer.GetClientsAsync()).FirstOrDefault(c => c.Id == "MyClient");
+            if (affectedClient != null)
+            {
+                await affectedClient.DisconnectAsync();
+            }
+        }
+
+
 
         /// <summary>
         /// 拦截用户发布的消息
@@ -273,60 +329,6 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
             return Task.CompletedTask;
         }
 
-        /// <summary>
-        /// 关闭Mqtt服务器
-        /// </summary>
-        private async void StopMqttServer()
-        {
-            try
-            {
-                //关闭
-                await mqttServer.StopAsync();
-
-                ////关闭服务器
-                //await server.StopAsync();
-                //MqttServerConfig.IsOpened = false;
-                //MqttUsers.Clear();//清除已登录的用户列表
-                ShowMessage($"Mqtt服务器关闭");
-            }
-            catch (Exception ex)
-            {
-                ShowMessage(ex.Message, MessageType.Error);
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// Mqtt服务器发布消息
-        /// </summary>
-        /// <returns></returns>
-        public async Task Publish_Message_From_Broker()
-        {
-            var message = new MqttApplicationMessageBuilder().WithTopic("HelloWorld").WithPayload("Test").Build();
-            await mqttServer.InjectApplicationMessage(
-                new InjectedMqttApplicationMessage(message)
-                {
-                    SenderClientId = "SenderClientId"
-                });
-        }
-
-        /// <summary>
-        /// 强制踢客户端
-        /// </summary>
-        /// <returns></returns>
-        public async Task Force_Disconnecting_Client()
-        {
-            var affectedClient = (await mqttServer.GetClientsAsync()).FirstOrDefault(c => c.Id == "MyClient");
-            if (affectedClient != null)
-            {
-                await affectedClient.DisconnectAsync();
-            }
-        }
-
-
-
 
 
 
@@ -340,7 +342,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         ///// </summary>
         //private async void OpenMqttServer()
         //{
-        //    //TODO 打开服务器
+        //    //打开服务器
         //    try
         //    {
         //        //Mqtt服务器设置
@@ -393,6 +395,11 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         //    }
         //} 
         #endregion
+
+
+
+
+
 
         ///// <summary>
         ///// 导出配置文件
