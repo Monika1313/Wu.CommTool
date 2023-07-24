@@ -6,7 +6,7 @@
         public static MqttServerDesignViewModel Instance => _Instance ??= new();
         public MqttServerDesignViewModel()
         {
-
+            IsDrawersOpen.LeftDrawer = true;
         }
     }
 }
