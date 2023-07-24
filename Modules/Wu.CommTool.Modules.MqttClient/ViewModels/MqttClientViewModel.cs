@@ -79,21 +79,6 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         }
 
 
-        /// <summary>
-        /// 退订主题
-        /// </summary>
-        /// <param name="obj"></param>
-        private void SubTopic(MqttTopic obj)
-        {
-            try
-            {
-                var xx = MqttClientConfig.SubscribeTopics.Remove(obj);
-            }
-            catch (Exception ex)
-            {
-                ShowErrorMessage(ex.Message);
-            }
-        }
 
         #region **************************************** 属性 ****************************************
         /// <summary>
@@ -367,67 +352,71 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// </summary>
         private async void Publish()
         {
-            //try
-            //{
-            //    if (MqttClientConfig.IsOpened.Equals(false) || client.IsConnected.Equals(false))
-            //    {
-            //        var re = await OpenMqttClient();
-            //        if (re.Equals(false))
-            //        {
-            //            return;
-            //        }
-            //    }
+            try
+            {
+                if (MqttClientConfig.IsOpened.Equals(false) || client.IsConnected.Equals(false))
+                {
+                    var re = await OpenMqttClient();
+                    if (re.Equals(false))
+                    {
+                        return;
+                    }
+                }
 
-            //    //根据选择的消息质量进行设置
-            //    var mqttAMB = new MqttApplicationMessageBuilder();
+                //根据选择的消息质量进行设置
+                var mqttAMB = new MqttApplicationMessageBuilder();
 
-            //    //根据设置的消息质量发布消息
-            //    switch (MqttClientConfig.QosLevel)
-            //    {
-            //        case QosLevel.AtLeastOnce:
-            //            mqttAMB.WithAtLeastOnceQoS();
-            //            break;
-            //        case QosLevel.AtMostOnce:
-            //            mqttAMB.WithAtMostOnceQoS();
-            //            break;
-            //        case QosLevel.ExactlyOnce:
-            //            mqttAMB.WithExactlyOnceQoS();
-            //            break;
-            //        default:
-            //            break;
-            //    }
+                //根据设置的消息质量发布消息
+                switch (MqttClientConfig.QosLevel)
+                {
+                    case QosLevel.AtLeastOnce:
+                        mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
+                        //mqttAMB.WithAtLeastOnceQoS();
+                        break;
+                    case QosLevel.AtMostOnce:
+                        mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
+                        //mqttAMB.WithAtMostOnceQoS();
+                        break;
+                    case QosLevel.ExactlyOnce:
+                        mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
+                        //mqttAMB.WithExactlyOnceQoS();
+                        break;
+                    default:
+                        break;
+                }
 
 
-            //    switch (MqttClientConfig.SendPaylodType)
-            //    {
-            //        case MqttPayloadType.Plaintext:
-            //            mqttAMB.WithPayload(SendMessage);
-            //            break;
-            //        case MqttPayloadType.Base64:
-            //            mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(SendMessage)));
-            //            break;
-            //        case MqttPayloadType.Json:
-            //            mqttAMB.WithPayload(SendMessage.ToJsonString());
-            //            break;
-            //        case MqttPayloadType.Hex:
-            //            mqttAMB.WithPayload(StringExtention.GetBytes(SendMessage.Replace(" ", string.Empty)));
-            //            break;
-            //    }
+                switch (MqttClientConfig.SendPaylodType)
+                {
+                    case MqttPayloadType.Json:
+                    case MqttPayloadType.Plaintext:
+                        mqttAMB.WithPayload(SendMessage);
+                        break;
+                    case MqttPayloadType.Base64:
+                        mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(SendMessage)));
+                        break;
+                    //case MqttPayloadType.Json:
+                    //     mqttAMB.WithPayload(SendMessage.ToJsonString());
+                    //     break;
+                    case MqttPayloadType.Hex:
+                        mqttAMB.WithPayload(StringExtention.GetBytes(SendMessage.Replace(" ", string.Empty)));
+                        break;
+                }
 
-            //    var mam = mqttAMB.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
-            //    //.WithPayload(SendMessage)
-            //    //.WithExactlyOnceQoS()
-            //    .WithRetainFlag()
-            //    .Build();
+                var mam = mqttAMB.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
+                //.WithPayload(SendMessage)
+                //.WithExactlyOnceQoS()
+                .WithRetainFlag()
+                .Build();
 
-            //    //发布
-            //    var result = await client.PublishAsync(mam, CancellationToken.None);
-            //    ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
-            //}
-            //catch (Exception ex)
-            //{
-            //    ShowErrorMessage($"发送失败:{ex.Message}");
-            //}
+                //发布
+                var result = await client.PublishAsync(mam, CancellationToken.None);
+                ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage($"发送失败:{ex.Message}");
+            }
         }
 
         /// <summary>
@@ -497,8 +486,8 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             }
             catch (Exception ex)
             {
+                ShowErrorMessage($"{ex.Message}");
                 return false;
-                //ShowErrorMessage($"{ex.Message}");
             }
         }
 
@@ -600,8 +589,6 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 //订阅主题
                 foreach (var x in MqttClientConfig.SubscribeTopics)
                 {
-                    //await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(x).Build());       //订阅服务端消息
-                    //ShowMessage($"已订阅主题: {x}");
                     await SubscribeTopic(x.Topic);
                 }
             }
@@ -716,17 +703,9 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpend(IDialogParameters parameters)
+        public void OnDialogOpend(IDialogParameters parameters)
         {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-            }
+            
         }
 
 
@@ -808,6 +787,23 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             catch (Exception ex)
             {
 
+            }
+        }
+
+
+        /// <summary>
+        /// 退订主题
+        /// </summary>
+        /// <param name="obj"></param>
+        private void SubTopic(MqttTopic obj)
+        {
+            try
+            {
+                var xx = MqttClientConfig.SubscribeTopics.Remove(obj);
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
             }
         }
         #endregion
