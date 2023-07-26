@@ -41,7 +41,7 @@ namespace Wu.CommTool.Views
                 {
                     //配置文件目录
                     string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
-                    Wu.Utils.IOUtil.Exists(dict);
+                    Wu.Utils.IoUtil.Exists(dict);
 
                     //存储当前配置
                     //if (!App.AppConfig.IsMaximized)

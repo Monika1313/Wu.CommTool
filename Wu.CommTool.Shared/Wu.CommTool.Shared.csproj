@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Wu" Version="1.0.6" />
+    <PackageReference Include="Wu" Version="1.0.7" />
   </ItemGroup>
 
   <ItemGroup>

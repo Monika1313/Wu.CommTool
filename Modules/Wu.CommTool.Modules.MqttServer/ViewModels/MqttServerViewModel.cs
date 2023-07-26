@@ -458,7 +458,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
             try
             {
                 string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig"); //配置文件目录
-                Wu.Utils.IOUtil.Exists(dict);                                                                   //验证文件夹是否存在, 不存在则创建
+                Wu.Utils.IoUtil.Exists(dict);                                                                   //验证文件夹是否存在, 不存在则创建
                 SaveFileDialog sfd = new SaveFileDialog()
                 {
                     Title = "请选择导出配置文件...",                             //对话框标题
@@ -494,7 +494,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
             {
                 //配置文件目录
                 string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
-                Wu.Utils.IOUtil.Exists(dict);
+                Wu.Utils.IoUtil.Exists(dict);
                 //选中配置文件
                 OpenFileDialog dlg = new()
                 {

@@ -1226,7 +1226,7 @@ namespace Wu.CommTool.ViewModels
             {
                 //配置文件目录
                 string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
-                Wu.Utils.IOUtil.Exists(dict);
+                Wu.Utils.IoUtil.Exists(dict);
                 Microsoft.Win32.SaveFileDialog sfd = new()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
@@ -1263,7 +1263,7 @@ namespace Wu.CommTool.ViewModels
             {
                 //配置文件目录
                 string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
-                Wu.Utils.IOUtil.Exists(dict);
+                Wu.Utils.IoUtil.Exists(dict);
                 //选中配置文件
                 OpenFileDialog dlg = new()
                 {
@@ -1298,7 +1298,7 @@ namespace Wu.CommTool.ViewModels
             {
                 //配置文件目录
                 string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
-                Wu.Utils.IOUtil.Exists(dict);
+                Wu.Utils.IoUtil.Exists(dict);
                 Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
                 {
                     Title = "请选择导出配置文件...",                                              //对话框标题
@@ -1335,7 +1335,7 @@ namespace Wu.CommTool.ViewModels
             {
                 //配置文件目录
                 string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
-                Wu.Utils.IOUtil.Exists(dict);
+                Wu.Utils.IoUtil.Exists(dict);
                 //选中配置文件
                 OpenFileDialog dlg = new()
                 {
