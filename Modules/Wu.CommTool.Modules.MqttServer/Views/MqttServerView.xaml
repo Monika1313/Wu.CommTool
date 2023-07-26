@@ -77,7 +77,7 @@
                                         Orientation="Horizontal">
                                 <Button Margin="20"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="OpenMqttServer"
+                                        CommandParameter="RunMqttServer"
                                         Content="打开"
                                         IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wucvt:ReverseBool}}"
                                         Style="{StaticResource GreenButton}" />
@@ -85,7 +85,7 @@
                                 <Button Width="60"
                                         Margin="20"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="CloseMqttServer"
+                                        CommandParameter="StopMqttServer"
                                         Content="关闭"
                                         Cursor="Hand"
                                         DockPanel.Dock="Left"
