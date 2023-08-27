@@ -146,7 +146,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
 
         #region 32位方法
         /// <summary>
-        /// 将相关的16位值赋值null
+        /// 将相关的32位值赋值null
         /// </summary>
         private void Set32wNull()
         {
@@ -172,7 +172,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         }
 
         /// <summary>
-        /// 根据16进制字符串更新相关数值 (需要将相应的16进制字符串先更新再调用该方法)
+        /// 根据32进制字符串更新相关数值 (需要将相应的16进制字符串先更新再调用该方法)
         /// </summary>
         public void Set32wValue(string val, ModbusByteOrder byteOrder)
         {
@@ -216,7 +216,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         }
 
         /// <summary>
-        /// 检查16位的16进制字符串
+        /// 检查32位的16进制字符串
         /// </summary>
         /// <param name="value"></param>
         /// <returns>检查并转换后的值,字符串是否有效</returns>
@@ -310,6 +310,118 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             SetProperty(ref _CDAB_64Uint, null, nameof(CDAB_64Uint));
             SetProperty(ref _CDAB_Double, null, nameof(CDAB_Float));
         }
+
+        /// <summary>
+        /// 检查64位的16进制字符串
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>检查并转换后的值,字符串是否有效</returns>
+        public static Tuple<string, bool> Check64wHex(string? value)
+        {
+            var val = value?.RemoveSpace().TrimStart('0') ?? string.Empty;//移除空格 移除左侧的0
+
+            if (string.IsNullOrEmpty(val))
+            {
+                val = "0000000000000000";
+                return Tuple.Create(val!, true);
+            }
+            //含非合法16进制字符
+            else if (!Shared.Common.Utils.IsHexString(val))
+            {
+                return Tuple.Create(val!, false);//该值是错误的值
+            }
+            //字符串符合16进制字符
+            else
+            {
+                //若位数不够则高位补0
+                if (val.Length < 16)
+                    val = val.PadLeft(16, '0');//高位补0
+                else if (val.Length > 16)//若位数超过4位则判断值是否超过FFFF
+                    val = "FFFFFFFFFFFFFFFF";
+                return Tuple.Create(val!, true);
+            }
+        }
+
+
+        /// <summary>
+        /// 根据32进制字符串更新相关数值 (需要将相应的16进制字符串先更新再调用该方法)
+        /// </summary>
+        public void Set64wValue(string val, ModbusByteOrder byteOrder)
+        {
+            //根据字节序给ABCD赋值 其他值都根据该值转换
+            switch (byteOrder)
+            {
+                case ModbusByteOrder.ABCD:
+                    SetProperty(ref _ABCD_64wHex, val.InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    break;
+                case ModbusByteOrder.BADC:
+                    SetProperty(ref _ABCD_64wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    break;
+                case ModbusByteOrder.CDAB:
+                    SetProperty(ref _ABCD_64wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    break;
+                case ModbusByteOrder.DCBA:
+                    SetProperty(ref _ABCD_64wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    break;
+            }
+            //先赋值各参数的16进制符号
+            SetProperty(ref _DCBA_64wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_64wHex));
+            SetProperty(ref _BADC_64wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_64wHex));
+            SetProperty(ref _CDAB_64wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_64wHex));
+
+            //再根据16进制值转换
+            SetProperty(ref _ABCD_64Int, Convert.ToInt64(_ABCD_64wHex!.RemoveSpace(), 16), nameof(ABCD_64Int));
+            SetProperty(ref _ABCD_64Uint, Convert.ToUInt64(_ABCD_64wHex!.RemoveSpace(), 16), nameof(ABCD_64Uint));
+            SetProperty(ref _ABCD_Double, BitConverter.ToDouble(BitConverter.GetBytes((ulong)_ABCD_64Uint!), 0), nameof(ABCD_Double));
+
+            SetProperty(ref _DCBA_64Int, Convert.ToInt64(_DCBA_64wHex!.RemoveSpace(), 16), nameof(DCBA_64Int));
+            SetProperty(ref _DCBA_64Uint, Convert.ToUInt64(_DCBA_64wHex!.RemoveSpace(), 16), nameof(DCBA_64Uint));
+            SetProperty(ref _DCBA_Double, BitConverter.ToDouble(BitConverter.GetBytes((ulong)_DCBA_64Uint!), 0), nameof(DCBA_Double));
+
+            SetProperty(ref _BADC_64Int, Convert.ToInt64(_BADC_64wHex!.RemoveSpace(), 16), nameof(BADC_64Int));
+            SetProperty(ref _BADC_64Uint, Convert.ToUInt64(_BADC_64wHex!.RemoveSpace(), 16), nameof(BADC_64Uint));
+            SetProperty(ref _BADC_Double, BitConverter.ToDouble(BitConverter.GetBytes((ulong)_BADC_64Uint!), 0), nameof(BADC_Double));
+
+            SetProperty(ref _CDAB_64Int, Convert.ToInt64(_CDAB_64wHex!.RemoveSpace(), 16), nameof(CDAB_64Int));
+            SetProperty(ref _CDAB_64Uint, Convert.ToUInt64(_CDAB_64wHex!.RemoveSpace(), 16), nameof(CDAB_64Uint));
+            SetProperty(ref _CDAB_Double, BitConverter.ToDouble(BitConverter.GetBytes((ulong)_CDAB_64Uint!), 0), nameof(CDAB_Double));
+        }
+
+        /// <summary>
+        /// 将ulong转换为16进制字符串
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string Ulong2Hex(ulong input)
+        {
+            byte[] temp = BitConverter.GetBytes(input);
+            Array.Reverse(temp);
+            return BitConverter.ToString(temp, 0).Replace("-", "");
+        }
+
+        /// <summary>
+        /// 将long转换为16进制字符串
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string Long2Hex(long input)
+        {
+            byte[] temp = BitConverter.GetBytes(input);
+            Array.Reverse(temp);
+            return BitConverter.ToString(temp, 0).Replace("-", "");
+        }
+
+        /// <summary>
+        /// 将double转换为16进制字符串
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string Double2Hex(double input)
+        {
+            byte[] temp = BitConverter.GetBytes(input);
+            Array.Reverse(temp);
+            return BitConverter.ToString(temp, 0).Replace("-", "");
+        }
         #endregion
 
 
@@ -364,14 +476,15 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _ABCD_64wHex;
             set
             {
-                //验证是否为64进制字符串
-                if (string.IsNullOrWhiteSpace(value)) return;
-                var i = Convert.ToInt64(value, 16);
-                if (i > 0xFFFF)
+                var result = Check64wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
                 {
-                    value = "FFFF";
+                    Set64wNull();                                  //将相关的值赋null
+                    SetProperty(ref _ABCD_64wHex, val);            //当前值保留 可供修改
+                    return;
                 }
-                SetProperty(ref _ABCD_64wHex, value);
+                Set64wValue(val, ModbusByteOrder.ABCD);//根据16进制字符串更新其他数值
             }
         }
         private string? _ABCD_64wHex;
@@ -449,19 +562,43 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// ABCD 64进制无符号整型
         /// </summary>
-        public ushort? ABCD_64Uint { get => _ABCD_64Uint; set => SetProperty(ref _ABCD_64Uint, value); }
-        private ushort? _ABCD_64Uint;
+        public ulong? ABCD_64Uint
+        {
+            get => _ABCD_64Uint;
+            set
+            {
+                SetProperty(ref _ABCD_64Uint, value);
+                ABCD_64wHex = Ulong2Hex(value ?? 0);
+            }
+        }
+        private ulong? _ABCD_64Uint;
 
         /// <summary>
         /// ABCD 64进制有符号整型
         /// </summary>
-        public short? ABCD_64Int { get => _ABCD_64Int; set => SetProperty(ref _ABCD_64Int, value); }
-        private short? _ABCD_64Int;
+        public long? ABCD_64Int
+        {
+            get => _ABCD_64Int;
+            set
+            {
+                SetProperty(ref _ABCD_64Int, value);
+                ABCD_64wHex = Long2Hex(value ?? 0);
+            }
+        }
+        private long? _ABCD_64Int;
 
         /// <summary>
         /// ABCD 64位浮点型
         /// </summary>
-        public double? ABCD_Double { get => _ABCD_Double; set => SetProperty(ref _ABCD_Double, value); }
+        public double? ABCD_Double
+        {
+            get => _ABCD_Double;
+            set
+            {
+                SetProperty(ref _ABCD_Double, value);
+                ABCD_64wHex = Double2Hex(value ?? 0);
+            }
+        }
         private double? _ABCD_Double;
         #endregion
 
@@ -583,14 +720,15 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _DCBA_64wHex;
             set
             {
-                //验证是否为64进制字符串
-                if (string.IsNullOrWhiteSpace(value)) return;
-                var i = Convert.ToInt64(value, 16);
-                if (i > 0xFFFF)
+                var result = Check64wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
                 {
-                    value = "FFFF";
+                    Set64wNull();                                  //将相关的值赋null
+                    SetProperty(ref _DCBA_64wHex, val);            //当前值保留 可供修改
+                    return;
                 }
-                SetProperty(ref _DCBA_64wHex, value);
+                Set64wValue(val, ModbusByteOrder.DCBA);//根据16进制字符串更新其他数值
             }
         }
         private string? _DCBA_64wHex;
@@ -598,19 +736,43 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// DCBA 64进制无符号整型
         /// </summary>
-        public ushort? DCBA_64Uint { get => _DCBA_64Uint; set => SetProperty(ref _DCBA_64Uint, value); }
-        private ushort? _DCBA_64Uint;
+        public ulong? DCBA_64Uint
+        {
+            get => _DCBA_64Uint;
+            set
+            {
+                SetProperty(ref _DCBA_64Uint, value);
+                DCBA_64wHex = Ulong2Hex(value ?? 0);
+            }
+        }
+        private ulong? _DCBA_64Uint;
 
         /// <summary>
         /// DCBA 64进制有符号整型
         /// </summary>
-        public short? DCBA_64Int { get => _DCBA_64Int; set => SetProperty(ref _DCBA_64Int, value); }
-        private short? _DCBA_64Int;
+        public long? DCBA_64Int
+        {
+            get => _DCBA_64Int;
+            set
+            {
+                SetProperty(ref _DCBA_64Int, value);
+                DCBA_64wHex = Long2Hex(value ?? 0);
+            }
+        }
+        private long? _DCBA_64Int;
 
         /// <summary>
         /// DCBA 64位浮点型
         /// </summary>
-        public double? DCBA_Double { get => _DCBA_Double; set => SetProperty(ref _DCBA_Double, value); }
+        public double? DCBA_Double 
+        { 
+            get => _DCBA_Double;
+            set
+            {
+                SetProperty(ref _DCBA_Double, value);
+                DCBA_64wHex = Double2Hex(value ?? 0);
+            }
+        }
         private double? _DCBA_Double;
         #endregion
 
@@ -735,14 +897,15 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _BADC_64wHex;
             set
             {
-                //验证是否为64进制字符串
-                if (string.IsNullOrWhiteSpace(value)) return;
-                var i = Convert.ToInt64(value, 16);
-                if (i > 0xFFFF)
+                var result = Check64wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
                 {
-                    value = "FFFF";
+                    Set64wNull();                                  //将相关的值赋null
+                    SetProperty(ref _BADC_64wHex, val);            //当前值保留 可供修改
+                    return;
                 }
-                SetProperty(ref _BADC_64wHex, value);
+                Set64wValue(val, ModbusByteOrder.BADC);//根据16进制字符串更新其他数值
             }
         }
         private string? _BADC_64wHex;
@@ -750,19 +913,43 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// BADC 64进制无符号整型
         /// </summary>
-        public ushort? BADC_64Uint { get => _BADC_64Uint; set => SetProperty(ref _BADC_64Uint, value); }
-        private ushort? _BADC_64Uint;
+        public ulong? BADC_64Uint
+        {
+            get => _BADC_64Uint;
+            set
+            {
+                SetProperty(ref _BADC_64Uint, value);
+                BADC_64wHex = Ulong2Hex(value ?? 0);
+            }
+        }
+        private ulong? _BADC_64Uint;
 
         /// <summary>
         /// BADC 64进制有符号整型
         /// </summary>
-        public short? BADC_64Int { get => _BADC_64Int; set => SetProperty(ref _BADC_64Int, value); }
-        private short? _BADC_64Int;
+        public long? BADC_64Int 
+        { 
+            get => _BADC_64Int;
+            set
+            {
+                SetProperty(ref _BADC_64Int, value);
+                BADC_64wHex = Long2Hex(value ?? 0);
+            }
+        }
+        private long? _BADC_64Int;
 
         /// <summary>
         /// BADC 64位浮点型
         /// </summary>
-        public double? BADC_Double { get => _BADC_Double; set => SetProperty(ref _BADC_Double, value); }
+        public double? BADC_Double 
+        { 
+            get => _BADC_Double;
+            set
+            {
+                SetProperty(ref _BADC_Double, value);
+                BADC_64wHex = Double2Hex(value ?? 0);
+            }
+        }
         private double? _BADC_Double;
         #endregion
 
@@ -886,14 +1073,15 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
             get => _CDAB_64wHex;
             set
             {
-                //验证是否为64进制字符串
-                if (string.IsNullOrWhiteSpace(value)) return;
-                var i = Convert.ToInt64(value, 16);
-                if (i > 0xFFFF)
+                var result = Check64wHex(value);    //检查字符串
+                var val = result.Item1;                      //获取检查后的结果
+                if (result.Item2 == false)                         //字符串非法
                 {
-                    value = "FFFF";
+                    Set64wNull();                                  //将相关的值赋null
+                    SetProperty(ref _CDAB_64wHex, val);            //当前值保留 可供修改
+                    return;
                 }
-                SetProperty(ref _CDAB_64wHex, value);
+                Set64wValue(val, ModbusByteOrder.CDAB);//根据16进制字符串更新其他数值
             }
         }
         private string? _CDAB_64wHex;
@@ -901,19 +1089,43 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// CDAB 64进制无符号整型
         /// </summary>
-        public ushort? CDAB_64Uint { get => _CDAB_64Uint; set => SetProperty(ref _CDAB_64Uint, value); }
-        private ushort? _CDAB_64Uint;
+        public ulong? CDAB_64Uint 
+        { 
+            get => _CDAB_64Uint;
+            set
+            {
+                SetProperty(ref _CDAB_64Uint, value);
+                CDAB_64wHex = Ulong2Hex(value ?? 0);
+            }
+        }
+        private ulong? _CDAB_64Uint;
 
         /// <summary>
         /// CDAB 64进制有符号整型
         /// </summary>
-        public short? CDAB_64Int { get => _CDAB_64Int; set => SetProperty(ref _CDAB_64Int, value); }
-        private short? _CDAB_64Int;
+        public long? CDAB_64Int 
+        { 
+            get => _CDAB_64Int;
+            set
+            {
+                SetProperty(ref _CDAB_64Int, value);
+                CDAB_64wHex = Long2Hex(value ?? 0);
+            }
+        }
+        private long? _CDAB_64Int;
 
         /// <summary>
         /// CDAB 64位浮点型
         /// </summary>
-        public double? CDAB_Double { get => _CDAB_Double; set => SetProperty(ref _CDAB_Double, value); }
+        public double? CDAB_Double
+        {
+            get => _CDAB_Double;
+            set
+            {
+                SetProperty(ref _CDAB_Double, value);
+                CDAB_64wHex = Double2Hex(value ?? 0);
+            }
+        }
         private double? _CDAB_Double;
         #endregion
     }
