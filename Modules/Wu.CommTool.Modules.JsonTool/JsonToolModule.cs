@@ -1,7 +1,8 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
-using Prism.Regions;
-//using Wu.CommTool.Modules.JsonTool.Views;
+using Wu.CommTool.Modules.JsonTool.Views;
+using Wu.CommTool.Modules.JsonTool.ViewModels;
+
 
 namespace Wu.CommTool.Modules.JsonTool
 {
@@ -14,7 +15,7 @@ namespace Wu.CommTool.Modules.JsonTool
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-
+            containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();
         }
     }
 }

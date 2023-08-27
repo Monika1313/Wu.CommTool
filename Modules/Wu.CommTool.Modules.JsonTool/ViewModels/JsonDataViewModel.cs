@@ -1,17 +1,19 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json.Linq;
 using Prism.Commands;
 using Prism.Ioc;
-using Prism.Mvvm;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Modules.JsonTool.Models;
+using Wu.CommTool.Shared.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
+namespace Wu.CommTool.Modules.JsonTool.ViewModels
 {
-    public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
+    public class JsonDataViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -19,8 +21,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         public string DialogHostName { get; set; }
         #endregion
 
-        public ModbusRtuViewModel() { }
-        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public JsonDataViewModel() { }
+        public JsonDataViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -34,8 +36,14 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// CurrentDto
         /// </summary>
-        public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-        private object _CurrentDto = new();
+        public MessageData CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
+        private MessageData _CurrentDto;
+
+        /// <summary>
+        /// Json
+        /// </summary>
+        public ObservableCollection<JsonHeaderLogic> JsonHeaderLogics { get => _JsonHeaderLogics; set => SetProperty(ref _JsonHeaderLogics, value); }
+        private ObservableCollection<JsonHeaderLogic> _JsonHeaderLogics = new();
         #endregion
 
 
@@ -77,12 +85,20 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
+                CurrentDto = parameters.GetValue<MessageData>("Value");
+                if (string.IsNullOrWhiteSpace(CurrentDto.Content))
+                    return;
+                try
+                {
+                    //json字符串转JToken
+                    var jtoken = JToken.Parse(CurrentDto.Content);
+                    var json = JsonHeaderLogic.FromJToken(jtoken);
+                    JsonHeaderLogics.Clear();
+                    JsonHeaderLogics.Add(json);
+                }
+                catch (Exception ex)
+                {
+                }
             }
         }
 
@@ -96,7 +112,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 return;
             //添加返回的参数
             DialogParameters param = new DialogParameters();
-            param.Add("Value", CurrentDto);
+            //param.Add("Value", CurrentDto);
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }
@@ -114,17 +130,20 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 弹窗
         /// </summary>
-        private void OpenDialogView()
+        private async void OpenDialogView()
         {
             try
             {
                 DialogParameters param = new()
                 {
-                    { "Value", CurrentDto }
+                    //{ "Value", CurrentDto }
                 };
                 //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
             }
-            catch { }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         /// <summary>

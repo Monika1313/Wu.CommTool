@@ -34,10 +34,6 @@
             DockPanel.Dock="Top"
             Style="{StaticResource TitleTextBlock}"
             Text="值转换" />
-        <TextBlock
-            DockPanel.Dock="Top"
-            Style="{StaticResource TitleTextBlock}"
-            Text="开发中...未完成..." />
 
         <ContentControl
             HorizontalAlignment="Center"
