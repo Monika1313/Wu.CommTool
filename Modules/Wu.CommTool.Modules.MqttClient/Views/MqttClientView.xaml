@@ -498,6 +498,13 @@
                                 Cursor="Hand"
                                 DockPanel.Dock="Right" />
 
+                            <CheckBox
+                                hc:InfoElement.Placeholder="消息质量"
+                                Content="保留消息"
+                                DockPanel.Dock="Right"
+                                IsChecked="{Binding MqttClientConfig.IsRetain}"
+                                Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}" Cursor="Hand" />
+
                             <ComboBox
                                 MinWidth="120"
                                 Margin="5"

@@ -403,10 +403,19 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                         break;
                 }
 
+                //保留消息
+                if (MqttClientConfig.IsRetain)
+                {
+                    mqttAMB.WithRetainFlag();
+                }
+                else
+                {
+                    mqttAMB.WithRetainFlag(false);
+                }
+
                 var mam = mqttAMB.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
                 //.WithPayload(SendMessage)
                 //.WithExactlyOnceQoS()
-                .WithRetainFlag()
                 .Build();
 
                 //发布

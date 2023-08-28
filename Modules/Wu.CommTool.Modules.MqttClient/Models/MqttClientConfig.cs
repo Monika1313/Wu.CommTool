@@ -52,6 +52,12 @@ namespace Wu.CommTool.Modules.MqttClient.Models
         private QosLevel _QosLevel = QosLevel.AtMostOnce;
 
         /// <summary>
+        /// 是否为保留消息
+        /// </summary>
+        public bool IsRetain { get => _IsRetain; set => SetProperty(ref _IsRetain, value); }
+        private bool _IsRetain;
+
+        /// <summary>
         /// IP
         /// </summary>
         public string ServerIp { get => _ServerIp; set => SetProperty(ref _ServerIp, value); }
