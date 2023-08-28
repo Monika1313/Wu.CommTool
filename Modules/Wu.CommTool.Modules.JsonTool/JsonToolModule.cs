@@ -15,6 +15,7 @@ namespace Wu.CommTool.Modules.JsonTool
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();
         }
     }

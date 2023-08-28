@@ -75,7 +75,7 @@ namespace Wu.CommTool
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
             containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
-            containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
+            //containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             
 
             //containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面
