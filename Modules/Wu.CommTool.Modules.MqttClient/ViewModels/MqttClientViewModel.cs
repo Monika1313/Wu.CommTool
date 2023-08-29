@@ -173,8 +173,8 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         {
             switch (obj)
             {
-                case "Open": OpenMqttClient(); break;
-                case "Close": CloseMqttClient(); break;
+                case "Open": OpenMqttClient(); break;  //开启客户端
+                case "Close": CloseMqttClient(); break;//关闭客户端
                 case "Clear": Clear(); break;
                 case "Pause": Pause(); break;
                 case "Publish": Publish(); break;
@@ -444,6 +444,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             try
             {
                 ManualStopFlag = true;//主动关闭客户端
+
                 if (client.IsConnected)
                 {
                     ShowMessage($"断开连接...");
@@ -489,7 +490,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 client.ConnectingAsync += Client_ConnectingAsync;
 
                 ShowMessage("连接中...");
-                MqttClientConfig.IsOpened = true;//连接时需要直接至位, 否则重复连接期间重复点击连接将导致异常
+                MqttClientConfig.IsOpened = true;//连接时需要直接置位, 否则重复连接期间重复点击连接将导致异常
                 await client.ConnectAsync(options);                //启动连接
                 return true;
             }
