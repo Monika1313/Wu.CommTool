@@ -1,7 +1,9 @@
 ﻿using MaterialDesignThemes.Wpf;
 using Microsoft.Win32;
 using MQTTnet;
+using MQTTnet.Adapter;
 using MQTTnet.Client;
+using MQTTnet.Exceptions;
 using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
@@ -494,6 +496,12 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 await client.ConnectAsync(options);                //启动连接
                 return true;
             }
+            catch (MqttCommunicationException ex)
+            {
+                //在离线事件中处理 不重复处理
+                //ShowErrorMessage($"{ex.Message} {ex.InnerException?.Message}");
+                return false;
+            }
             catch (Exception ex)
             {
                 ShowErrorMessage($"{ex.Message}");
@@ -522,6 +530,13 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             {
                 if (IsPause)
                 {
+                    return Task.CompletedTask;
+                }
+
+                //若接收的数据为空则
+                if (arg.ApplicationMessage.PayloadSegment.Array == null)
+                {
+                    ShowReceiveMessage($"", $"主题：{arg.ApplicationMessage.Topic}");
                     return Task.CompletedTask;
                 }
 
@@ -565,7 +580,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 MqttClientConfig.IsOpened = false;
                 System.Windows.Application.Current.Dispatcher.Invoke(() =>
                 {
-                    ShowErrorMessage(arg.Exception.Message.ToString());
+                    ShowErrorMessage($"{arg.Exception.Message} {arg.Exception.InnerException?.Message}");
                     //ShowErrorMessage("已断开连接");
                 });
             }
@@ -715,7 +730,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// </summary>
         public void OnDialogOpend(IDialogParameters parameters)
         {
-            
+
         }
 
 
@@ -746,20 +761,9 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// <summary>
         /// 弹窗
         /// </summary>
-        private async void OpenDialogView()
+        private void OpenDialogView()
         {
-            try
-            {
-                DialogParameters param = new()
-                {
-                    { "Value", CurrentDto }
-                };
-                //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-            }
-            catch (Exception ex)
-            {
 
-            }
         }
 
         /// <summary>

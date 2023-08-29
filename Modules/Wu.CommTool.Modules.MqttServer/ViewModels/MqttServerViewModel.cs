@@ -257,26 +257,36 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                 if (IsPause)
                     return Task.CompletedTask;
 
-                var payload = arg.ApplicationMessage.PayloadSegment.ToArray();
-                //var payload = arg.ApplicationMessage.Payload ?? Array.Empty<byte>();
 
-                switch (MqttServerConfig.ReceivePaylodType)
+                //处理接收的消息
+                if (arg.ApplicationMessage.PayloadSegment.Array == null)//若接收的数据为空则
                 {
-                    case MqttPayloadType.Json:
-                    case MqttPayloadType.Plaintext:
-                        //接收的数据以UTF8解码
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题:{arg.ApplicationMessage.Topic}");
-                        break;
-                    //case MqttPayloadType.Json:
-                    //    ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题:{arg.ApplicationMessage.Topic}");
-                    //    break;
-                    case MqttPayloadType.Hex:
-                        //接收的数据以16进制字符串解码
-                        ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
-                        break;
-                    case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题:{arg.ApplicationMessage.Topic}");
-                        break;
+                    ShowReceiveMessage($"", $"主题：{arg.ApplicationMessage.Topic}");
+                    return Task.CompletedTask;
+                }
+                else
+                {
+                    var payload = arg.ApplicationMessage.PayloadSegment.ToArray();
+                    //var payload = arg.ApplicationMessage.Payload ?? Array.Empty<byte>();
+
+                    switch (MqttServerConfig.ReceivePaylodType)
+                    {
+                        case MqttPayloadType.Json:
+                        case MqttPayloadType.Plaintext:
+                            //接收的数据以UTF8解码
+                            ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题:{arg.ApplicationMessage.Topic}");
+                            break;
+                        //case MqttPayloadType.Json:
+                        //    ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题:{arg.ApplicationMessage.Topic}");
+                        //    break;
+                        case MqttPayloadType.Hex:
+                            //接收的数据以16进制字符串解码
+                            ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
+                            break;
+                        case MqttPayloadType.Base64:
+                            ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题:{arg.ApplicationMessage.Topic}");
+                            break;
+                    }
                 }
                 return CompletedTask.Instance;
             }
