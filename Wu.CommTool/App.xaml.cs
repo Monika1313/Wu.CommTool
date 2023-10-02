@@ -20,6 +20,7 @@ using Wu.CommTool.Modules.MqttServer;
 using Wu.Wpf.Common;
 using Wu.CommTool.Modules.MqttClient.Views;
 using Wu.CommTool.Modules.MqttClient;
+using Wu.CommTool.Modules.ModbusRtu;
 
 namespace Wu.CommTool
 {
@@ -112,6 +113,7 @@ namespace Wu.CommTool
             moduleCatalog.AddModule<MessageModule>();       //弹窗消息模块
             moduleCatalog.AddModule<MqttServerModule>();    //Mqtt服务器模块
             moduleCatalog.AddModule<MqttClientModule>();    //Mqtt客户端模块
+            moduleCatalog.AddModule<ModbusRtuModule>();    //ModbusRtu模块
         }
 
     }

@@ -120,6 +120,7 @@ namespace Wu.CommTool.ViewModels
                 new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
                 new MenuBar() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
                 new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
+                new MenuBar() { Icon = "Clyde", Title = "ModbusRtu", NameSpace = "ModbusRtuViewNew" }
                 //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
             };
         }

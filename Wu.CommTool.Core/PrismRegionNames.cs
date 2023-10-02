@@ -21,5 +21,10 @@
         /// 转换工具区域
         /// </summary>
         public const string ConvertToolsViewRegionName = "ConvertToolsViewRegion";
+
+        /// <summary>
+        /// 转换工具区域
+        /// </summary>
+        public const string ModbusRtuViewRegionName = "ModbusRtuViewRegion";
     }
 }

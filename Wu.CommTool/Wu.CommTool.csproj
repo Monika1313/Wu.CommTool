@@ -82,6 +82,7 @@
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ConvertTools\Wu.CommTool.Modules.ConvertTools.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.JsonTool\Wu.CommTool.Modules.JsonTool.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.Message\Wu.CommTool.Modules.Message.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ModbusRtu\Wu.CommTool.Modules.ModbusRtu.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj" />

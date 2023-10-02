@@ -8,6 +8,9 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using Wu.CommTool.Core;
+using Wu.CommTool.Modules.ModbusRtu.Views;
+using Wu.CommTool.Shared.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -16,26 +19,47 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
+        private readonly IRegionManager regionManager;
+
         public string DialogHostName { get; set; }
         #endregion
 
         public ModbusRtuViewModel() { }
-        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost,IRegionManager regionManager) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
-
+            this.regionManager = regionManager;
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
         }
 
+        
         #region **************************************** 属性 ****************************************
         /// <summary>
         /// CurrentDto
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// 初始化完成标志
+        /// </summary>
+        public bool InitFlag { get => _InitFlag; set => SetProperty(ref _InitFlag, value); }
+        private bool _InitFlag;
+
+        /// <summary>
+        /// ModbusRtu功能菜单
+        /// </summary>
+        public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
+        private ObservableCollection<MenuBar> _MenuBars = new()
+            {
+                new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = nameof(CustomFrameView) },
+                new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = nameof(SearchDeviceView) },
+                new MenuBar() { Icon = "Number2", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
+                new MenuBar() { Icon = "Number2", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
+            };
         #endregion
 
 
@@ -67,7 +91,18 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Search();
+            //首次导航时, 跳转到初始页面
+            if (!InitFlag)
+            {
+                InitFlag = true;
+                this.regionManager.RequestNavigate(PrismRegionNames.ModbusRtuViewRegionName, nameof(CustomFrameView), back =>
+                {
+                    if (back.Error != null)
+                    {
+
+                    }
+                });
+            }
         }
 
         /// <summary>
