@@ -575,7 +575,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public void OnDialogOpend(IDialogParameters parameters)
+        public void OnDialogOpened(IDialogParameters parameters)
         {
 
         }

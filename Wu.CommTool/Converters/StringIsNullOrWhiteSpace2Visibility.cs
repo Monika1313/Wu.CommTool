@@ -7,7 +7,7 @@ namespace Wu.CommTool.Converters
     /// <summary>
     /// string.IsNullOrWhiteSpace   null或空=不可见
     /// </summary>
-    public class StringIsNullOrWhiteSpace2True : ValueConverterBase<StringIsNullOrWhiteSpace2True>
+    public class StringIsNullOrWhiteSpace2Visibility : ValueConverterBase<StringIsNullOrWhiteSpace2Visibility>
     {
         public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

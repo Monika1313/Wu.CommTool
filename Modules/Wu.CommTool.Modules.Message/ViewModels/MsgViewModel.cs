@@ -31,7 +31,7 @@ namespace Wu.CommTool.Modules.Message.ViewModels
         public DelegateCommand SaveCommand { get; set; }
         public DelegateCommand CancelCommand { get; set; }
 
-        public void OnDialogOpend(IDialogParameters parameters)
+        public void OnDialogOpened(IDialogParameters parameters)
         {
             //接收参数
             if (parameters.ContainsKey(nameof(Title)))

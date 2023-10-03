@@ -33,6 +33,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            SelectedIndexChangedCommand = new DelegateCommand<MenuBar>(SelectedIndexChanged);
         }
 
         
@@ -57,8 +58,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             {
                 new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = nameof(CustomFrameView) },
                 new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = nameof(SearchDeviceView) },
-                new MenuBar() { Icon = "Number2", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
-                new MenuBar() { Icon = "Number2", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
+                new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
+                new MenuBar() { Icon = "Number4", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
             };
         #endregion
 
@@ -71,6 +72,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// 页面切换
+        /// </summary>
+        public DelegateCommand<MenuBar> SelectedIndexChangedCommand { get; private set; }
         #endregion
 
 
@@ -108,7 +114,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpend(IDialogParameters parameters)
+        public async void OnDialogOpened(IDialogParameters parameters)
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
@@ -180,6 +186,22 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             {
                 UpdateLoading(false);
             }
+        }
+        #endregion
+
+
+        #region 方法
+        /// <summary>
+        /// 页面切换
+        /// </summary>
+        /// <param name="obj"></param>
+        private void SelectedIndexChanged(MenuBar obj)
+        {
+            try
+            {
+                regionManager.RequestNavigate(PrismRegionNames.ModbusRtuViewRegionName, obj.NameSpace);
+            }
+            catch { }
         }
         #endregion
     }

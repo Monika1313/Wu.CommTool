@@ -81,7 +81,7 @@ namespace Wu.CommTool.Modules.JsonTool.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpend(IDialogParameters parameters)
+        public async void OnDialogOpened(IDialogParameters parameters)
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
