@@ -1,14 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-	  <TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
-	  <LangVersion>latestMajor</LangVersion>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
-    <ProjectReference Include="..\..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
+		<LangVersion>latestMajor</LangVersion>
+		<UseWPF>true</UseWPF>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
+		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
+		<PackageReference Include="System.Management" Version="7.0.2" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+		<ProjectReference Include="..\..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
+	</ItemGroup>
 </Project>

@@ -6,7 +6,8 @@
         public static CustomFrameDesignViewModel Instance => _Instance ??= new();
         public CustomFrameDesignViewModel()
         {
-
+            ModbusRtuModel = new();
+            OpenDrawers.LeftDrawer = true;
         }
     }
 }

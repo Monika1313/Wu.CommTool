@@ -6,6 +6,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 
@@ -20,10 +21,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         #endregion
 
         public AutoResponseViewModel() { }
-        public AutoResponseViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public AutoResponseViewModel(IContainerProvider provider, IDialogHostService dialogHost, ModbusRtuModel modbusRtuModel) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
+            ModbusRtuModel = modbusRtuModel;
 
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
@@ -36,6 +38,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// ModbusRtuModel
+        /// </summary>
+        public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
+        private ModbusRtuModel _ModbusRtuModel;
         #endregion
 
 

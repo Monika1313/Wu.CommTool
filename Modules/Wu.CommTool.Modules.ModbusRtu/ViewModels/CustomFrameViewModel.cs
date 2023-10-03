@@ -6,8 +6,10 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -16,18 +18,25 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
+
+        
+
         public string DialogHostName { get; set; }
         #endregion
 
         public CustomFrameViewModel() { }
-        public CustomFrameViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        public CustomFrameViewModel(IContainerProvider provider, IDialogHostService dialogHost,ModbusRtuModel modbusRtuModel) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
+            ModbusRtuModel = modbusRtuModel;
 
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+
+            //更新串口列表
+            ModbusRtuModel.GetComPorts();
         }
 
         #region **************************************** 属性 ****************************************
@@ -36,6 +45,18 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        /// <summary>
+        /// ModbusRtuModel
+        /// </summary>
+        public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
+        private ModbusRtuModel _ModbusRtuModel;
+
+        /// <summary>
+        /// 抽屉
+        /// </summary>
+        public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
+        private OpenDrawers _OpenDrawers = new();
         #endregion
 
 
@@ -56,7 +77,17 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
-                case "OpenDialogView": OpenDialogView(); break;
+                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
+                case "OpenDialogView": OpenDialogView(); break;             //打开弹窗
+                case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;//打开左侧抽屉
+                case "Clear": ModbusRtuModel.MessageClear(); break;//清空消息
+                case "OpenCom":
+                    ModbusRtuModel.OpenCom();
+                    OpenDrawers.LeftDrawer = false;//关闭左侧抽屉;
+                    break;
+                case "CloseCom":
+                    ModbusRtuModel.CloseCom();
+                    break;
                 default: break;
             }
         }
@@ -67,7 +98,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Search();
+            
         }
 
         /// <summary>
@@ -75,15 +106,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public async void OnDialogOpened(IDialogParameters parameters)
         {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-            }
+            
         }
 
 
