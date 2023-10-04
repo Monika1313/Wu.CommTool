@@ -117,18 +117,21 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             {
                 //查找第一个USB设备
                 var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
-                //搜索结果不为空
+                //有USB设备优先选择USB
                 if (usbDevice.Key != null)
                 {
                     //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
                     ComConfig.Port = usbDevice;
                 }
+                //其次保持不变
+                else if (ComPorts.FirstOrDefault(x=>x.Key==ComConfig.Port.Key && x.Value == ComConfig.Port.Value).Key != null)//保留原选项
+                {
+                    ComConfig.Port = ComPorts.FirstOrDefault(x => x.Key == ComConfig.Port.Key && x.Value == ComConfig.Port.Value);
+                }
+                //都没有则选中第一个
                 else
                 {
-                    //没有usb设备则选中第一个
                     ComConfig.Port = ComPorts[0];
-                    //SetProperty(ref ComConfig.Port, ComPorts[0]);
-                    //RaisePropertyChanged(ComConfig.Port);
                 }
             }
             string str = $"获取串口成功, 共{ComPorts.Count}个。";

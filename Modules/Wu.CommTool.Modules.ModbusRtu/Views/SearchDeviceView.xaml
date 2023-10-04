@@ -117,26 +117,26 @@
                                     hc:InfoElement.Title="串口"
                                     hc:InfoElement.TitleWidth="45"
                                     DockPanel.Dock="Left"
-                                    IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                    ItemsSource="{Binding ComPorts}"
-                                    SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                    ItemsSource="{Binding ModbusRtuModel.ComPorts}"
+                                    SelectedValue="{Binding ModbusRtuModel.ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource FormComboBox}" />
                             </DockPanel>
                             <ComboBox
                                 hc:InfoElement.Placeholder="请选择数据位..."
                                 hc:InfoElement.Title="数据位"
                                 hc:InfoElement.TitleWidth="45"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 ItemsSource="{StaticResource DataBits}"
-                                SelectedItem="{Binding ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding ModbusRtuModel.ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource FormComboBox}" />
                             <ComboBox
                                 hc:InfoElement.Placeholder="请选择停止位..."
                                 hc:InfoElement.Title="停止位"
                                 hc:InfoElement.TitleWidth="45"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:StopBits}}}"
-                                SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                SelectedItem="{Binding ModbusRtuModel.ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource FormComboBox}" />
 
                             <!--  波特率  -->

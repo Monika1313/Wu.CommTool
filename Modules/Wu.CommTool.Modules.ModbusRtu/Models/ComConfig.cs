@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Prism.Mvvm;
 using System.Collections.Generic;
-using Wu.CommTool.Shared.Enums;
+using Wu.CommTool.Modules.ModbusRtu.Enums;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -10,6 +10,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
     /// </summary>
     public class ComConfig : BindableBase
     {
+
         /// <summary>
         /// Com口
         /// </summary>
