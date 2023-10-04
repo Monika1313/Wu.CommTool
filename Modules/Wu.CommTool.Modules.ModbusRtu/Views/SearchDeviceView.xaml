@@ -452,7 +452,7 @@
                 <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                     <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <!--  页面消息  -->
-                        <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel />

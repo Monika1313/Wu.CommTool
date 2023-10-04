@@ -44,6 +44,7 @@
                                 CommandParameter="GetComPorts"
                                 Content="{md:PackIcon Kind=Search}"
                                 DockPanel.Dock="Left"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 Style="{StaticResource Blue_CircleButton}" />
                         </StackPanel>
                         <ComboBox
@@ -167,7 +168,7 @@
                         Content="{md:PackIcon Kind=Play}"
                         Cursor="Hand"
                         Foreground="{StaticResource Green_Foreground}"
-                        IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
                     <!--  关闭串口  -->
@@ -181,7 +182,7 @@
                         CommandParameter="CloseCom"
                         Content="{md:PackIcon Kind=Stop}"
                         Cursor="Hand"
-                        IsEnabled="{Binding ComConfig.IsOpened}"
+                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
                         Style="{StaticResource Red_CircleButton}" />
 
                     <!--  暂停界面更新  -->
@@ -244,19 +245,22 @@
 
             <!--  发送区域  -->
             <DockPanel Height="130" DockPanel.Dock="Bottom">
-                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <StackPanel
+                    Cursor=""
+                    DockPanel.Dock="Top"
+                    Orientation="Horizontal">
                     <ComboBox
                         MinWidth="190"
                         hc:InfoElement.Placeholder="请选择校验模式..."
                         hc:InfoElement.Title="自动校验模式: "
                         hc:InfoElement.TitleWidth="90"
                         ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CrcMode}}}"
-                        SelectedItem="{Binding CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        SelectedItem="{Binding ModbusRtuModel.CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                         Style="{StaticResource FormComboBox}" />
                     <Button
                         Margin="10,0"
                         Command="{Binding ExecuteCommand}"
-                        CommandParameter="Send"
+                        CommandParameter="SendCustomFrame"
                         Content="发送" />
                 </StackPanel>
                 <ContentControl
@@ -267,7 +271,7 @@
                         VerticalContentAlignment="Top"
                         hc:InfoElement.Placeholder="请输入要发送的内容..."
                         Style="{StaticResource TextBoxExtend}"
-                        Text="{Binding SendMessage}"
+                        Text="{Binding ModbusRtuModel.InputMessage}"
                         TextWrapping="Wrap">
                         <TextBox.InputBindings>
                             <KeyBinding

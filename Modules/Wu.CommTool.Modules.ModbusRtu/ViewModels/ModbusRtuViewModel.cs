@@ -11,6 +11,7 @@ using Wu.Wpf.Common;
 using Wu.CommTool.Core;
 using Wu.CommTool.Modules.ModbusRtu.Views;
 using Wu.CommTool.Shared.Models;
+using Wu.CommTool.Modules.ModbusRtu.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -25,19 +26,27 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         #endregion
 
         public ModbusRtuViewModel() { }
-        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost,IRegionManager regionManager) : base(provider)
+        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost,IRegionManager regionManager,ModbusRtuModel modbusRtuModel) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
             this.regionManager = regionManager;
+            ModbusRtuModel = modbusRtuModel;
+
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             SelectedIndexChangedCommand = new DelegateCommand<MenuBar>(SelectedIndexChanged);
         }
 
-        
+
         #region **************************************** 属性 ****************************************
+        /// <summary>
+        /// ModbusRtuModel
+        /// </summary>
+        public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
+        private ModbusRtuModel _ModbusRtuModel;
+
         /// <summary>
         /// CurrentDto
         /// </summary>

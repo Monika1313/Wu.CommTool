@@ -4,7 +4,7 @@ using System;
 using System.Linq;
 using Wu.CommTool.Modules.ModbusRtu.Enums;
 
-namespace Wu.CommTool.Models
+namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
     /// <summary>
     /// ModbusRtu采集的数据

@@ -8,6 +8,8 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:wu="https://github.com/Monika1313/Wu"
+    xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -42,6 +44,47 @@
                     </DockPanel>
                 </ContentControl>
             </DockPanel>
+
+            <!--  底部区域  -->
+            <StackPanel
+                Height="30"
+                DockPanel.Dock="Bottom"
+                Orientation="Horizontal">
+                <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
+
+                <TextBlock
+                    Margin="0"
+                    VerticalAlignment="Center"
+                    FontWeight="Bold"
+                    Text="{Binding ModbusRtuModel.ComConfig.Port.Key}" />
+                <TextBlock VerticalAlignment="Center" Text=" : " />
+                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Port.Value}" />
+                <TextBlock VerticalAlignment="Center" Text="  " />
+                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
+                <TextBlock VerticalAlignment="Center" Text="  " />
+                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
+                <TextBlock
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
+
+                <wuctrl:BreatheLight
+                    Margin="30,5,5,5"
+                    IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
+                    Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
+                <TextBlock VerticalAlignment="Center" Text="接收: " />
+                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
+                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+
+                <wuctrl:BreatheLight
+                    Margin="30,5,5,5"
+                    IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
+                    Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
+                <TextBlock VerticalAlignment="Center" Text="发送: " />
+                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
+                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+            </StackPanel>
+
             <ContentControl prism:RegionManager.RegionName="ModbusRtuViewRegion" />
         </DockPanel>
     </Grid>

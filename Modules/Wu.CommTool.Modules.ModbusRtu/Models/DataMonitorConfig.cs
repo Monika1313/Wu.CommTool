@@ -153,7 +153,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <summary>
         /// 数据值
         /// </summary>
-        public ObservableCollection<CommTool.Models.ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
-        private ObservableCollection<CommTool.Models.ModbusRtuData> _ModbusRtuDatas = new();
+        public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
+        private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
     }
 }

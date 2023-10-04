@@ -77,16 +77,19 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
-                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
-                case "OpenDialogView": OpenDialogView(); break;             //打开弹窗
                 case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;//打开左侧抽屉
-                case "Clear": ModbusRtuModel.MessageClear(); break;//清空消息
-                case "OpenCom":
+                case "OpenDialogView": OpenDialogView(); break;             //打开弹窗
+
+                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
+                case "Clear": ModbusRtuModel.MessageClear(); break;         //清空消息
+                case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
+                case "SendCustomFrame": ModbusRtuModel.SendCustomFrame(); break;  //发送自定义帧
+                case "OpenCom":                                             //打开串口
                     ModbusRtuModel.OpenCom();
-                    OpenDrawers.LeftDrawer = false;//关闭左侧抽屉;
+                    OpenDrawers.LeftDrawer = false;                         //关闭左侧抽屉;
                     break;
                 case "CloseCom":
-                    ModbusRtuModel.CloseCom();
+                    ModbusRtuModel.CloseCom();                              //关闭串口
                     break;
                 default: break;
             }
@@ -104,7 +107,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpened(IDialogParameters parameters)
+        public void OnDialogOpened(IDialogParameters parameters)
         {
             
         }
@@ -137,7 +140,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 弹窗
         /// </summary>
-        private async void OpenDialogView()
+        private void OpenDialogView()
         {
             try
             {
@@ -156,7 +159,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 查询数据
         /// </summary>
-        private async void Search()
+        private void Search()
         {
             try
             {
