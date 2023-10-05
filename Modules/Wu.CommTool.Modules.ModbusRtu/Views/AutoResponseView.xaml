@@ -15,7 +15,7 @@
     d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <md:DrawerHost IsLeftDrawerOpen="{Binding ModbusRtuReadDrawerOpen.IsLeftDrawerOpen}" IsRightDrawerOpen="{Binding ModbusRtuReadDrawerOpen.IsRightDrawerOpen}">
+    <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
         <!--  左侧抽屉  -->
         <md:DrawerHost.LeftDrawerContent>
             <DockPanel Background="AliceBlue">
@@ -31,9 +31,9 @@
                                 Width="230"
                                 hc:InfoElement.Placeholder="请选择串口..."
                                 hc:InfoElement.Title="串口"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                ItemsSource="{Binding ComPorts}"
-                                SelectedValue="{Binding ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                ItemsSource="{Binding ModbusRtuModel.ComPorts}"
+                                SelectedValue="{Binding ModbusRtuModel.ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Style="{StaticResource FormComboBox}" />
                             <Button
                                 Width="30"
@@ -50,45 +50,45 @@
                         <ComboBox
                             hc:InfoElement.Placeholder="请选择波特率..."
                             hc:InfoElement.Title="波特率"
-                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                            IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                             ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:BaudRate}}}"
-                            SelectedItem="{Binding ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding ModbusRtuModel.ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource FormComboBox}" />
 
                         <ComboBox
                             hc:InfoElement.Placeholder="请选择校验位..."
                             hc:InfoElement.Title="校验位"
-                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                            IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                             ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:Parity}}}"
-                            SelectedValue="{Binding ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedValue="{Binding ModbusRtuModel.ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource FormComboBox}" />
 
                         <ComboBox
                             hc:InfoElement.Placeholder="请选择数据位..."
                             hc:InfoElement.Title="数据位"
-                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                            IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                             ItemsSource="{StaticResource DataBits}"
-                            SelectedItem="{Binding ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding ModbusRtuModel.ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource FormComboBox}" />
                         <ComboBox
                             hc:InfoElement.Placeholder="请选择停止位..."
                             hc:InfoElement.Title="停止位"
-                            IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                            IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                             ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:StopBits}}}"
-                            SelectedItem="{Binding ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            SelectedItem="{Binding ModbusRtuModel.ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                             Style="{StaticResource FormComboBox}" />
                         <TextBox
                             hc:TitleElement.Title="分包超时(ms):"
                             hc:TitleElement.TitleWidth="100"
-                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
+                            IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
                             Style="{StaticResource FormTextBox}"
-                            Text="{Binding ComConfig.TimeOut}" />
+                            Text="{Binding ModbusRtuModel.ComConfig.TimeOut}" />
                         <TextBox
                             hc:TitleElement.Title="分包最大字节:"
                             hc:TitleElement.TitleWidth="100"
-                            IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
+                            IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
                             Style="{StaticResource FormTextBox}"
-                            Text="{Binding ComConfig.MaxLength}" />
+                            Text="{Binding ModbusRtuModel.ComConfig.MaxLength}" />
                         <StackPanel
                             HorizontalAlignment="Center"
                             VerticalAlignment="Top"
@@ -99,7 +99,7 @@
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="OpenComAndAutoResponse"
                                 Content="打开"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 Style="{StaticResource GreenButton}" />
 
                             <Button
@@ -110,7 +110,7 @@
                                 CommandParameter="CloseComAndAutoResponse"
                                 Content="关闭"
                                 DockPanel.Dock="Left"
-                                IsEnabled="{Binding ComConfig.IsOpened}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
                                 Style="{StaticResource RedButton}" />
                         </StackPanel>
                     </StackPanel>
@@ -144,7 +144,7 @@
                         HorizontalAlignment="Left"
                         hc:Poptip.Content="配置串口"
                         Command="{Binding ExecuteCommand}"
-                        CommandParameter="ModbusRtuReadDrawerOpenLeft"
+                        CommandParameter="OpenLeftDrawer"
                         Content="{md:PackIcon Kind=Cog}"
                         Cursor="Hand"
                         Style="{StaticResource Blue_CircleButton}" />
@@ -163,7 +163,7 @@
                         Content="{md:PackIcon Kind=Play}"
                         Cursor="Hand"
                         Foreground="{StaticResource Green_Foreground}"
-                        IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
                     <!--  关闭串口和自动应答  -->
@@ -177,7 +177,7 @@
                         CommandParameter="CloseComAndAutoResponse"
                         Content="{md:PackIcon Kind=Stop}"
                         Cursor="Hand"
-                        IsEnabled="{Binding ComConfig.IsOpened}"
+                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
                         Style="{StaticResource Red_CircleButton}" />
 
 
@@ -208,12 +208,12 @@
                             <md:PackIcon.Style>
                                 <Style TargetType="md:PackIcon">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
                                             <Setter Property="Kind" Value="PlayPause" />
 
                                         </DataTrigger>
 
-                                        <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
                                             <Setter Property="Kind" Value="Pause" />
 
                                         </DataTrigger>
@@ -224,14 +224,14 @@
                         <Button.Style>
                             <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
                                         <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                                         <Setter Property="Background" Value="{StaticResource Green_Background}" />
                                         <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                         <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
                                     </DataTrigger>
 
-                                    <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
                                         <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
                                         <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
                                         <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
@@ -255,7 +255,7 @@
                         CommandParameter="AutoResponseOn"
                         Content="{md:PackIcon Kind=Robot}"
                         Cursor="Hand"
-                        IsEnabled="{Binding IsAutoResponse, Converter={wu:ReverseBool}}"
+                        IsEnabled="{Binding ModbusRtuModel.IsAutoResponse, Converter={wu:ReverseBool}}"
                         Style="{StaticResource Green_CircleButton}" />
 
                     <!--  关闭自动应答  -->
@@ -269,7 +269,7 @@
                         CommandParameter="AutoResponseOff"
                         Content="{md:PackIcon Kind=RobotOff}"
                         Cursor="Hand"
-                        IsEnabled="{Binding IsAutoResponse}"
+                        IsEnabled="{Binding ModbusRtuModel.IsAutoResponse}"
                         Style="{StaticResource Red_CircleButton}" />
 
                     <Border Margin="20" DockPanel.Dock="Left" />
@@ -329,7 +329,7 @@
                     CanUserSortColumns="False"
                     EnableRowVirtualization="True"
                     FrozenColumnCount="2"
-                    ItemsSource="{Binding MosbusRtuAutoResponseDatas, IsAsync=True}"
+                    ItemsSource="{Binding ModbusRtuModel.MosbusRtuAutoResponseDatas, IsAsync=True}"
                     RowHeaderWidth="60"
                     Style="{StaticResource NumDataGrid}">
 
@@ -391,7 +391,7 @@
                 DockPanel.Dock="Top"
                 Style="{StaticResource Effect2Control}">
                 <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                    <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                    <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel />

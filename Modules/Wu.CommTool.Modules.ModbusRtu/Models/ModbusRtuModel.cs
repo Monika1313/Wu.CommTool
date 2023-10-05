@@ -15,6 +15,8 @@ using Wu.Extensions;
 using System.Collections;
 using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
 using System.Windows.Data;
+using Wu.CommTool.Core.Extensions;
+using Wu.CommTool.Modules.ModbusRtu.Views;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -1295,6 +1297,79 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
 
                 DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
                 RefreshModbusRtuDataDataView();
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+        #endregion
+
+        #region 自动应答 方法
+        /// <summary>
+        /// 打开自动响应编辑界面
+        /// </summary>
+        /// <param name="obj"></param>
+        public async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
+        {
+            //try
+            //{
+            //    if (obj == null)
+            //        return;
+            //    //添加参数
+            //    DialogParameters param = new();
+            //    if (obj != null)
+            //        param.Add("Value", obj);
+            //    var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, nameof(ModbusRtuView));
+
+            //    //TODO 将修改后的内容写入
+            //    if (dialogResult.Result == ButtonResult.OK)
+            //    {
+            //        try
+            //        {
+            //            //UpdateLoading(true);
+            //            //从结果中获取数据
+            //            var resultDto = dialogResult.Parameters.GetValue<ModbusRtuAutoResponseData>("Value");
+            //            if (resultDto == null)
+            //            {
+            //                return;
+            //            }
+            //            obj.Name = resultDto.Name;
+            //            obj.MateTemplate = resultDto.MateTemplate;
+            //            obj.ResponseTemplate = resultDto.ResponseTemplate;
+
+            //            //aggregator.SendMessage($"{updateResult.Result.InformationNum}已修改完成");
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            aggregator.SendMessage($"{ex.Message}");
+            //        }
+            //        finally
+            //        {
+            //            //UpdateLoading(false);
+            //        }
+            //    }
+            //    else if (dialogResult.Result == ButtonResult.Abort)
+            //    {
+            //        //Delete(model);
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    aggregator.SendMessage(ex.Message);
+            //}
+        }
+
+        /// <summary>
+        /// 启用自动应答
+        /// </summary>
+        private void AutoResponseOn()
+        {
+            try
+            {
+                IsAutoResponse = true;
+                ShowMessage("启用自动应答...");
+                HcGrowlExtensions.Success("启用自动应答...", nameof(ModbusRtuView));
             }
             catch (Exception ex)
             {

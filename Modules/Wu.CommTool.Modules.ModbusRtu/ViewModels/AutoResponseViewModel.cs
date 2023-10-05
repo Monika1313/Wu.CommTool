@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -30,6 +31,13 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
+
+        }
+
+        private void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData data)
+        {
+            ModbusRtuModel.OpenMosbusRtuAutoResponseDataEditView(data);
         }
 
         #region **************************************** 属性 ****************************************
@@ -44,6 +52,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
         private ModbusRtuModel _ModbusRtuModel;
+
+        /// <summary>
+        /// OpenDrawers
+        /// </summary>
+        public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
+        private OpenDrawers _OpenDrawers = new();
         #endregion
 
 
@@ -55,6 +69,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// 打开自动应答编辑界面
+        /// </summary>
+        public DelegateCommand<ModbusRtuAutoResponseData> OpenMosbusRtuAutoResponseDataEditViewCommand { get; private set; }
+
         #endregion
 
 
@@ -65,6 +85,15 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             {
                 case "Search": Search(); break;
                 case "OpenDialogView": OpenDialogView(); break;
+                case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
+                case "Clear": ModbusRtuModel.MessageClear(); break;
+                case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
+                case "OpenCom":                                             //打开串口
+                    ModbusRtuModel.OpenCom();
+                    break;
+                case "CloseCom":
+                    ModbusRtuModel.CloseCom();                              //关闭串口
+                    break;
                 default: break;
             }
         }
