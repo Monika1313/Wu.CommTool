@@ -6,7 +6,7 @@
         public static SearchDeviceDesignViewModel Instance => _Instance ??= new();
         public SearchDeviceDesignViewModel()
         {
-
+            ModbusRtuModel = new();
         }
     }
 }

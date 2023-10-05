@@ -6,7 +6,7 @@
         public static DataMonitorDesignViewModel Instance => _Instance ??= new();
         public DataMonitorDesignViewModel()
         {
-
+            ModbusRtuModel = new();
         }
     }
 }

@@ -33,10 +33,10 @@
                         <md:PackIcon.Style>
                             <Style TargetType="md:PackIcon">
                                 <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
                                         <Setter Property="Kind" Value="PlayPause" />
                                     </DataTrigger>
-                                    <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
                                         <Setter Property="Kind" Value="Pause" />
                                     </DataTrigger>
                                 </Style.Triggers>
@@ -46,13 +46,13 @@
                     <Button.Style>
                         <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsPause}" Value="true">
+                                <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
                                     <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
                                     <Setter Property="Background" Value="{StaticResource Green_Background}" />
                                     <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                     <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding IsPause}" Value="false">
+                                <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
                                     <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
                                     <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
                                     <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
@@ -149,7 +149,7 @@
                                 hc:InfoElement.Title="波特率"
                                 hc:InfoElement.TitlePlacement="Left"
                                 hc:Poptip.Content="波特率可多选, 搜索根据选择先后"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:BaudRate}}}"
                                 SelectedIndex="5"
                                 ShowSelectAllButton="True"
@@ -170,7 +170,7 @@
                                 hc:InfoElement.TitlePlacement="Left"
                                 hc:Poptip.Content="校验方式可多选, 搜索根据选择先后"
                                 hc:TitleElement.Title="校验方式"
-                                IsEnabled="{Binding ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:Parity}}}"
                                 SelectedIndex="0"
                                 ShowSelectAllButton="True"
@@ -185,9 +185,9 @@
                             <TextBox
                                 hc:TitleElement.Title="搜索间隔(ms):"
                                 hc:TitleElement.TitleWidth="100"
-                                IsEnabled="{Binding DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 Style="{StaticResource FormTextBox}"
-                                Text="{Binding ComConfig.SearchInterval}" />
+                                Text="{Binding ModbusRtuModel.ComConfig.SearchInterval}" />
 
                             <StackPanel
                                 HorizontalAlignment="Center"
@@ -203,7 +203,7 @@
                                         <Style BasedOn="{StaticResource GreenButton}" TargetType="Button">
                                             <Setter Property="IsEnabled" Value="True" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                                <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="1">
                                                     <Setter Property="IsEnabled" Value="False" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -222,7 +222,7 @@
                                         <Style BasedOn="{StaticResource RedButton}" TargetType="Button">
                                             <Setter Property="IsEnabled" Value="False" />
                                             <Style.Triggers>
-                                                <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                                <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="1">
                                                     <Setter Property="IsEnabled" Value="True" />
                                                 </DataTrigger>
                                             </Style.Triggers>
@@ -254,14 +254,14 @@
                             <Image.Style>
                                 <Style TargetType="Image">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="0">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="0">
                                             <Setter Property="Source" Value="/Images/En.png" />
-                                            <Setter Property="Visibility" Value="{Binding ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
+                                            <Setter Property="Visibility" Value="{Binding ModbusRtuModel.ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="1">
                                             <Setter Property="Source" Value="/Images/Kun.png" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="2">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="2">
                                             <Setter Property="Source" Value="/Images/Ww.png" />
                                             <Setter Property="Visibility" Value="{Binding ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
                                         </DataTrigger>
@@ -276,16 +276,16 @@
                             <TextBlock.Style>
                                 <Style TargetType="TextBlock">
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="0">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="0">
                                             <Setter Property="Text" Value="请配置搜索项..." />
-                                            <Setter Property="Visibility" Value="{Binding ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
+                                            <Setter Property="Visibility" Value="{Binding ModbusRtuModel.ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="1">
                                             <Setter Property="Text" Value="搜索中..." />
                                         </DataTrigger>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="2">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="2">
                                             <Setter Property="Text" Value="未搜索到设备..." />
-                                            <Setter Property="Visibility" Value="{Binding ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
+                                            <Setter Property="Visibility" Value="{Binding ModbusRtuModel.ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
@@ -296,7 +296,7 @@
                                 <Style BasedOn="{StaticResource LoadingCircleBaseStyle}" TargetType="hc:LoadingCircle">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                        <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="1">
                                             <Setter Property="Visibility" Value="Visible" />
                                         </DataTrigger>
                                     </Style.Triggers>
@@ -313,7 +313,7 @@
                             Text="搜索到的设备" />
                         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                             <!--  搜索到的设备  -->
-                            <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuDevices, IsAsync=True}">
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.ModbusRtuDevices, IsAsync=True}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <StackPanel Orientation="Vertical" />
@@ -398,13 +398,13 @@
                     <ContentControl.Style>
                         <Style BasedOn="{StaticResource Effect2Control}" TargetType="ContentControl">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding SearchDeviceState}" Value="0">
+                                <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="0">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding SearchDeviceState}" Value="1">
+                                <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="1">
                                     <Setter Property="Visibility" Value="Visible" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding SearchDeviceState}" Value="2">
+                                <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="2">
                                     <Setter Property="Visibility" Value="Collapsed" />
                                 </DataTrigger>
                             </Style.Triggers>
@@ -421,31 +421,31 @@
                             Margin="5,0,10,0"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource Green_Foreground}"
-                            Text="{Binding CurrentDevice.BaudRate}" />
+                            Text="{Binding ModbusRtuModel.CurrentDevice.BaudRate}" />
                         <TextBlock VerticalAlignment="Center" Text="校验位:" />
                         <TextBlock
                             Margin="5,0,10,0"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource Green_Foreground}"
-                            Text="{Binding CurrentDevice.Parity}" />
+                            Text="{Binding ModbusRtuModel.CurrentDevice.Parity}" />
                         <TextBlock VerticalAlignment="Center" Text="数据位: " />
                         <TextBlock
                             Margin="5,0,10,0"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource Green_Foreground}"
-                            Text="{Binding CurrentDevice.DataBits}" />
+                            Text="{Binding ModbusRtuModel.CurrentDevice.DataBits}" />
                         <TextBlock VerticalAlignment="Center" Text="停止位: " />
                         <TextBlock
                             Margin="5,0,10,0"
                             VerticalAlignment="Center"
                             Foreground="{StaticResource Green_Foreground}"
-                            Text="{Binding CurrentDevice.StopBits}" />
+                            Text="{Binding ModbusRtuModel.CurrentDevice.StopBits}" />
                         <TextBlock VerticalAlignment="Center" Text=" 地址:" />
                         <TextBlock
                             VerticalAlignment="Center"
                             d:Text="1"
                             Foreground="{StaticResource Green_Foreground}"
-                            Text="{Binding CurrentDevice.Address}" />
+                            Text="{Binding ModbusRtuModel.CurrentDevice.Address}" />
                     </StackPanel>
                 </ContentControl>
                 <!--  页面消息  -->

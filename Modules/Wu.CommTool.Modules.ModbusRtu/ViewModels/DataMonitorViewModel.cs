@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -30,7 +31,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
         }
+
+      
 
         #region **************************************** 属性 ****************************************
         /// <summary>
@@ -44,6 +48,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
         private ModbusRtuModel _ModbusRtuModel;
+
+        /// <summary>
+        /// OpenDrawers
+        /// </summary>
+        public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
+        private OpenDrawers _OpenDrawers =new();
         #endregion
 
 
@@ -55,6 +65,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// ModburRtu数据写入
+        /// </summary>
+        public DelegateCommand<ModbusRtuData> ModburRtuDataWriteCommand { get; private set; }
         #endregion
 
 
@@ -64,9 +79,29 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
+                case "Clear": ModbusRtuModel.MessageClear(); break;
+                case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
+                case "OpenRightDrawer": OpenDrawers.RightDrawer = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
+
+                case "OpenAutoRead": ModbusRtuModel.OpenAutoRead(); break;
+                case "CloseAutoRead": ModbusRtuModel.CloseAutoRead(); break;
+
+                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
+                case "OpenCom":                                             //打开串口
+                    ModbusRtuModel.OpenCom();
+                    break;
+                case "CloseCom":
+                    ModbusRtuModel.CloseCom();                              //关闭串口
+                    break;
+                case "OperateFilter": OperateFilter(); break;
                 default: break;
             }
+        }
+
+        private void OperateFilter()
+        {
+            ModbusRtuModel.OperateFilter();
         }
 
         /// <summary>
@@ -81,7 +116,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpened(IDialogParameters parameters)
+        public void OnDialogOpened(IDialogParameters parameters)
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
@@ -122,7 +157,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <summary>
         /// 弹窗
         /// </summary>
-        private async void OpenDialogView()
+        private void OpenDialogView()
         {
             try
             {
@@ -156,6 +191,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             {
                 UpdateLoading(false);
             }
+        }
+
+        private void ModburRtuDataWrite(ModbusRtuData data)
+        {
+            ModbusRtuModel.ModburRtuDataWrite(data);
         }
         #endregion
     }

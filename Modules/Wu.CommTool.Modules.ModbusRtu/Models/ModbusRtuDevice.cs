@@ -1,5 +1,5 @@
 ﻿using Prism.Mvvm;
-using Wu.CommTool.Shared.Enums;
+using Wu.CommTool.Modules.ModbusRtu.Enums;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {

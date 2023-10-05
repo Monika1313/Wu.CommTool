@@ -30,6 +30,19 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
+            ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
+
+        }
+
+        private void ParitySelectionChanged(object obj)
+        {
+            ModbusRtuModel.ParitySelectionChanged(obj);
+        }
+
+        private void BaudRateSelectionChanged(object obj)
+        {
+            ModbusRtuModel.BaudRateSelectionChanged(obj);
         }
 
         #region **************************************** 属性 ****************************************
@@ -55,6 +68,16 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// 波特率选框选项改变
+        /// </summary>
+        public DelegateCommand<object> BaudRateSelectionChangedCommand { get; private set; }
+
+        /// <summary>
+        /// 校验位选框选项修改
+        /// </summary>
+        public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
         #endregion
 
 
@@ -64,6 +87,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
+                case "SearchDevices": ModbusRtuModel.SearchDevices(); break;
+                case "StopSearchDevices": ModbusRtuModel.StopSearchDevices(); break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
             }
