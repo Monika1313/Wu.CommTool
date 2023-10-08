@@ -17,6 +17,7 @@ using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
 using System.Windows.Data;
 using Wu.CommTool.Core.Extensions;
 using Wu.CommTool.Modules.ModbusRtu.Views;
+using System.Windows.Controls;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -1363,13 +1364,30 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <summary>
         /// 启用自动应答
         /// </summary>
-        private void AutoResponseOn()
+        public void AutoResponseOn()
         {
             try
             {
                 IsAutoResponse = true;
                 ShowMessage("启用自动应答...");
                 HcGrowlExtensions.Success("启用自动应答...", nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 关闭自动应答
+        /// </summary>
+        public void AutoResponseOff()
+        {
+            try
+            {
+                IsAutoResponse = false;
+                ShowMessage("关闭自动应答...");
+                HcGrowlExtensions.Warning("关闭自动应答...", nameof(ModbusRtuView));
             }
             catch (Exception ex)
             {
