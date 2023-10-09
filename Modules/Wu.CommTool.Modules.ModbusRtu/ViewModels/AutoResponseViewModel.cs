@@ -88,6 +88,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
                 case "Clear": ModbusRtuModel.MessageClear(); break;
                 case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
+                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
                 case "AutoResponseOff":                             //关闭自动应答
                     ModbusRtuModel.AutoResponseOff();
                     break;

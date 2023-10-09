@@ -45,6 +45,7 @@
                                 CommandParameter="GetComPorts"
                                 Content="{md:PackIcon Kind=Search}"
                                 DockPanel.Dock="Left"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                 Style="{StaticResource Blue_CircleButton}" />
                         </StackPanel>
                         <ComboBox

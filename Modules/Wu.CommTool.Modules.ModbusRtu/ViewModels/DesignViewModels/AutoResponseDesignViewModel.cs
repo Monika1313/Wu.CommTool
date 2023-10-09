@@ -6,7 +6,7 @@
         public static AutoResponseDesignViewModel Instance => _Instance ??= new();
         public AutoResponseDesignViewModel()
         {
-
+            ModbusRtuModel = new Models.ModbusRtuModel();
         }
     }
 }

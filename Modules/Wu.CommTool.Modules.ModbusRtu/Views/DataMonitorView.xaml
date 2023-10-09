@@ -61,10 +61,10 @@
                                         <Border Margin="4" CornerRadius="4">
                                             <WrapPanel Orientation="Horizontal">
                                                 <Button
-                                                    Command="{Binding DataContext.ImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    Command="{Binding DataContext.QuickImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                     CommandParameter="{Binding}"
                                                     Content="{Binding Name}"
-                                                    IsEnabled="{Binding DataContext.DataMonitorConfig.IsOpened, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={wu:ReverseBool}}"
+                                                    IsEnabled="{Binding DataContext.ModbusRtuModel.DataMonitorConfig.IsOpened, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={wu:ReverseBool}}"
                                                     Style="{StaticResource MaterialDesignRaisedSecondaryButton}" />
                                             </WrapPanel>
                                         </Border>

@@ -18,6 +18,8 @@ using System.Windows.Data;
 using Wu.CommTool.Core.Extensions;
 using Wu.CommTool.Modules.ModbusRtu.Views;
 using System.Windows.Controls;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -57,6 +59,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         public EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
         public EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
         protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
+        private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
+
+
+
+
 
         #region 属性
         /// <summary>
@@ -1302,6 +1309,124 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             catch (Exception ex)
             {
                 ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 导出配置文件
+        /// </summary>
+        public void ExportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
+                Wu.Utils.IoUtil.Exists(dict);
+                Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
+                {
+                    Title = "请选择导出配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    FileName = "Default",                                           //默认文件名
+                    DefaultExt = "jsonDMC",                                     //默认扩展名
+                    InitialDirectory = dict,                //指定初始的目录
+                    OverwritePrompt = true,                                                  //文件已存在警告
+                    AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                };
+                if (sfd.ShowDialog() != true)
+                    return;
+                //将当前的配置序列化为json字符串
+                var content = JsonConvert.SerializeObject(DataMonitorConfig);
+                //保存文件
+                Wu.CommTool.Shared.Common.Utils.WriteJsonFile(sfd.FileName, content);
+                HcGrowlExtensions.Success("导出数据监控配置完成", nameof(ModbusRtuView));
+                RefreshQuickImportList();//更新列表
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning("导出数据监控配置失败", nameof(ModbusRtuView));
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 导入配置文件
+        /// </summary>
+        public void ImportConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
+                Wu.Utils.IoUtil.Exists(dict);
+                //选中配置文件
+                OpenFileDialog dlg = new()
+                {
+                    Title = "请选择导入配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    InitialDirectory = dict
+                };
+
+                if (dlg.ShowDialog() != true)
+                    return;
+                var xx = Shared.Common.Utils.ReadJsonFile(dlg.FileName);
+                DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
+                RefreshModbusRtuDataDataView();//更新数据视图
+                //ShowMessage("导入配置完成");
+                HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入完成", nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning("自动应答配置导入失败", nameof(ModbusRtuView));
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 快速导入配置文件
+        /// </summary>
+        /// <param name="obj"></param>
+        public void QuickImportConfig(ConfigFile obj)
+        {
+            try
+            {
+                var xx = Shared.Common.Utils.ReadJsonFile(obj.FullName);
+                DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
+                if (DataMonitorConfig == null)
+                {
+                    ShowErrorMessage("读取配置文件失败");
+                    return;
+                }
+                RefreshModbusRtuDataDataView();//更新数据视图
+                HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(obj.FullName)}\"导入完成", nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning("自动应答配置导入失败", nameof(ModbusRtuView));
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 更新快速导入配置列表
+        /// </summary>
+        public void RefreshQuickImportList()
+        {
+            try
+            {
+                DirectoryInfo Folder = new DirectoryInfo(ModbusRtuConfigDict);
+                //var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsondmc"));
+                var a = Folder.GetFiles().Select(item => new ConfigFile(item));
+                ConfigFiles.Clear();
+                foreach (var item in a)
+                {
+                    ConfigFiles.Add(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage("读取配置文件夹异常: " + ex.Message);
             }
         }
         #endregion

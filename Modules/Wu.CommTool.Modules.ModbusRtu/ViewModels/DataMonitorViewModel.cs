@@ -32,9 +32,16 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
+            QuickImportConfigCommand = new DelegateCommand<ConfigFile>(QuickImportConfig);
+
         }
 
-      
+        private void QuickImportConfig(ConfigFile file)
+        {
+            ModbusRtuModel.QuickImportConfig(file);
+        }
+
+
 
         #region **************************************** 属性 ****************************************
         /// <summary>
@@ -70,6 +77,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// ModburRtu数据写入
         /// </summary>
         public DelegateCommand<ModbusRtuData> ModburRtuDataWriteCommand { get; private set; }
+
+        /// <summary>
+        /// 快速导入数据监控配置
+        /// </summary>
+        public DelegateCommand<ConfigFile> QuickImportConfigCommand { get; private set; }
         #endregion
 
 
@@ -79,11 +91,16 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
+
+                case "ExportConfig": ModbusRtuModel.ExportConfig(); break;
+                case "ImportConfig": ModbusRtuModel.ImportConfig(); break;
+                case "RefreshQuickImportList": ModbusRtuModel.RefreshQuickImportList(); break;
+
                 case "Clear": ModbusRtuModel.MessageClear(); break;
                 case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
                 case "OpenRightDrawer": OpenDrawers.RightDrawer = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
-
+                case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
                 case "OpenAutoRead": ModbusRtuModel.OpenAutoRead(); break;
                 case "CloseAutoRead": ModbusRtuModel.CloseAutoRead(); break;
 
@@ -110,7 +127,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Search();
+            ModbusRtuModel.RefreshQuickImportList();
         }
 
         /// <summary>
