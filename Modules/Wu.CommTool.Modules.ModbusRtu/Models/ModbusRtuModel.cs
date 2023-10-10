@@ -48,10 +48,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             {
                 DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData());
             }
+            RefreshModbusRtuDataDataView();
         }
 
         private readonly SerialPort SerialPort = new();              //串口
-
         private readonly Queue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
         private readonly Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
         readonly Task publishHandleTask; //发布消息处理线程
@@ -61,9 +61,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
         private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
         public readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
-
-
-
 
 
         #region 属性
@@ -646,7 +643,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
                         ModbusRtuDevices.Add(CurrentDevice);
                     }));
-                    //HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", viewName);
+                    HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
                 }
 
                 ReceiveBytesCount += list.Count;         //计算总接收数据量
@@ -983,7 +980,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //若数据监控功能开启中则关闭
                 if (DataMonitorConfig.IsOpened)
                 {
-                    //HcGrowlExtensions.Warning("数据监控功能关闭...", viewName);
+                    HcGrowlExtensions.Warning("数据监控功能关闭...", ModbusRtuView.ViewName);
                     CloseAutoRead();
                 }
 
@@ -1006,7 +1003,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     OpenCom();
                 }
 
-                //HcGrowlExtensions.Info("开始搜索...", viewName);
+                HcGrowlExtensions.Info("开始搜索...", ModbusRtuView.ViewName);
 
                 ComConfig.TimeOut = 20;//搜索时设置帧超时时间为20
                 SearchDeviceState = 1;//标记状态为搜索设备中
@@ -1299,7 +1296,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     var y = DataMonitorConfig.ModbusRtuDatas.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Name));
                     if (y == null)
                     {
-                        //HcGrowlExtensions.Warning("请配置数据名称再开启过滤器...");
+                        HcGrowlExtensions.Warning("请配置数据名称再开启过滤器...",ModbusRtuView.ViewName);
                         return;
                     }
                 }

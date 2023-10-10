@@ -9,6 +9,8 @@ using System;
 using System.Collections.ObjectModel;
 using System.IO;
 using Wu.CommTool.Modules.ModbusRtu.Models;
+using Wu.CommTool.Modules.ModbusRtu.Views;
+using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 using Wu.Wpf.Models;
@@ -49,9 +51,40 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             }
         }
 
-        private void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData data)
+        private async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
         {
-            ModbusRtuModel.OpenMosbusRtuAutoResponseDataEditView(data);
+            //ModbusRtuModel.OpenMosbusRtuAutoResponseDataEditView(data);
+
+            try
+            {
+                if (obj == null)
+                    return;
+                //添加参数
+                DialogParameters param = new();
+                if (obj != null)
+                    param.Add("Value", obj);
+                var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, ModbusRtuView.ViewName);
+
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    var resultDto = dialogResult.Parameters.GetValue<ModbusRtuAutoResponseData>("Value");
+                    if (resultDto == null)
+                    {
+                        return;
+                    }
+                    obj.Name = resultDto.Name;
+                    obj.MateTemplate = resultDto.MateTemplate;
+                    obj.ResponseTemplate = resultDto.ResponseTemplate;
+                }
+                else if (dialogResult.Result == ButtonResult.Abort)
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+
         }
 
         #region **************************************** 属性 ****************************************

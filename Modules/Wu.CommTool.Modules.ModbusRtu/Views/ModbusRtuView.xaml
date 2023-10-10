@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -16,77 +17,85 @@
     d:DesignWidth="800"
     mc:Ignorable="d">
     <Grid>
-        <DockPanel>
-            <DockPanel DockPanel.Dock="Left">
-                <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
-                    <DockPanel>
-                        <ListBox
-                            Background="Transparent"
-                            BorderThickness="0"
-                            ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
-                            ItemsSource="{Binding MenuBars}">
-                            <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="SelectionChanged">
-                                    <i:InvokeCommandAction Command="{Binding SelectedIndexChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
-                                </i:EventTrigger>
-                            </i:Interaction.Triggers>
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Background="Transparent" Orientation="Horizontal">
-                                        <md:PackIcon Margin="5,0" Kind="{Binding Icon}" />
-                                        <TextBlock
-                                            Margin="0,0,15,0"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding Title}" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                    </DockPanel>
-                </ContentControl>
+        <md:DialogHost Identifier="{x:Static local:ModbusRtuView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+            <DockPanel>
+                <DockPanel DockPanel.Dock="Left">
+                    <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
+                        <DockPanel>
+                            <ListBox
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
+                                ItemsSource="{Binding MenuBars}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="SelectionChanged">
+                                        <i:InvokeCommandAction Command="{Binding SelectedIndexChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Background="Transparent" Orientation="Horizontal">
+                                            <md:PackIcon Margin="5,0" Kind="{Binding Icon}" />
+                                            <TextBlock
+                                                Margin="0,0,15,0"
+                                                VerticalAlignment="Center"
+                                                Text="{Binding Title}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </ContentControl>
+                </DockPanel>
+
+                <!--  底部区域  -->
+                <StackPanel
+                    Height="30"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+                    <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
+
+                    <TextBlock
+                        Margin="0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="{Binding ModbusRtuModel.ComConfig.Port.Key}" />
+                    <TextBlock VerticalAlignment="Center" Text=" : " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Port.Value}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
+
+                    <wuctrl:BreatheLight
+                        Margin="30,5,5,5"
+                        IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
+                        Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
+                    <TextBlock VerticalAlignment="Center" Text="接收: " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
+                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+
+                    <wuctrl:BreatheLight
+                        Margin="30,5,5,5"
+                        IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
+                        Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
+                    <TextBlock VerticalAlignment="Center" Text="发送: " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
+                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                </StackPanel>
+
+                <ContentControl prism:RegionManager.RegionName="ModbusRtuViewRegion" />
             </DockPanel>
-
-            <!--  底部区域  -->
+        </md:DialogHost>
+        <ScrollViewer HorizontalAlignment="Right" VerticalScrollBarVisibility="Hidden">
             <StackPanel
-                Height="30"
-                DockPanel.Dock="Bottom"
-                Orientation="Horizontal">
-                <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
-
-                <TextBlock
-                    Margin="0"
-                    VerticalAlignment="Center"
-                    FontWeight="Bold"
-                    Text="{Binding ModbusRtuModel.ComConfig.Port.Key}" />
-                <TextBlock VerticalAlignment="Center" Text=" : " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Port.Value}" />
-                <TextBlock VerticalAlignment="Center" Text="  " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
-                <TextBlock VerticalAlignment="Center" Text="  " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
-                <TextBlock
-                    Margin="5,0"
-                    VerticalAlignment="Center"
-                    Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
-
-                <wuctrl:BreatheLight
-                    Margin="30,5,5,5"
-                    IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
-                    Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
-                <TextBlock VerticalAlignment="Center" Text="接收: " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
-                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-
-                <wuctrl:BreatheLight
-                    Margin="30,5,5,5"
-                    IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
-                    Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
-                <TextBlock VerticalAlignment="Center" Text="发送: " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
-                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-            </StackPanel>
-
-            <ContentControl prism:RegionManager.RegionName="ModbusRtuViewRegion" />
-        </DockPanel>
+                Margin="0,10,10,10"
+                VerticalAlignment="Top"
+                hc:Growl.Token="{x:Static local:ModbusRtuView.ViewName}" />
+        </ScrollViewer>
     </Grid>
 </UserControl>

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Wu.CommTool.Views.Dialogs
+namespace Wu.CommTool.Modules.ModbusRtu.Views.DialogViews
 {
     /// <summary>
     /// ModbusRtuAutoResponseDataEditView.xaml 的交互逻辑

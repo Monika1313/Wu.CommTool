@@ -8,9 +8,7 @@ using System.Windows;
 using Wu.CommTool.Common;
 using Wu.CommTool.Models;
 using Wu.CommTool.ViewModels;
-using Wu.CommTool.ViewModels.DialogViewModels;
 using Wu.CommTool.Views;
-using Wu.CommTool.Views.Dialogs;
 using Wu.CommTool.Modules.ConvertTools;
 using Wu.CommTool.Modules.About;
 using Wu.CommTool.Modules.ModbusTcp;
@@ -73,8 +71,8 @@ namespace Wu.CommTool
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             //注册页面
-            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
-            containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
+            //containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
+            //containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
             //containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
             

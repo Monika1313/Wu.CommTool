@@ -4,12 +4,11 @@ using Prism.Ioc;
 using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
-using Wu.CommTool.Common;
-using Wu.CommTool.Models;
+using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 
-namespace Wu.CommTool.ViewModels.DialogViewModels
+namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 {
     public class ModbusRtuAutoResponseDataEditViewModel : NavigationViewModel, IDialogHostAware
     {

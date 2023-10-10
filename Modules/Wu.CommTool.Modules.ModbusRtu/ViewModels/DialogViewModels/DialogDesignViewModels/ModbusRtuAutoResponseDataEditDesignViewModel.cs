@@ -1,4 +1,4 @@
-﻿namespace Wu.CommTool.ViewModels.DialogViewModels.DialogDesignViewModels
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels
 {
     public class ModbusRtuAutoResponseDataEditDesignViewModel : ModbusRtuAutoResponseDataEditViewModel
     {

@@ -19,7 +19,8 @@ namespace Wu.CommTool.Modules.ModbusRtu
         {
             containerRegistry.RegisterSingleton<ModbusRtuModel>();
 
-            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>("ModbusRtuViewNew");
+            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();
+            //containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>("ModbusRtuViewNew");
             containerRegistry.RegisterForNavigation<CustomFrameView, CustomFrameViewModel>();
             containerRegistry.RegisterForNavigation<SearchDeviceView, SearchDeviceViewModel>();
             containerRegistry.RegisterForNavigation<DataMonitorView, DataMonitorViewModel>();

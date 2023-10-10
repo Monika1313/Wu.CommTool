@@ -10,6 +10,7 @@ using Wu.CommTool.Extensions;
 using Wu.CommTool.Models;
 using Wu.CommTool.Modules.About.Views;
 using Wu.CommTool.Modules.ConvertTools.Views;
+using Wu.CommTool.Modules.ModbusRtu.Views;
 using Wu.CommTool.Modules.MqttClient.Views;
 using Wu.CommTool.Modules.MqttServer.Views;
 using Wu.CommTool.Views;
@@ -102,27 +103,24 @@ namespace Wu.CommTool.ViewModels
         /// <summary>
         /// 初始化配置
         /// </summary>
-        public void Configure()
-        {
-            this.regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
-        }
+        public void Configure() => regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(App.AppConfig.DefaultView);//导航至页面
 
         /// <summary>
         /// 创建主菜单
         /// </summary>
         void CreateMenuBar()
         {
-            MenuBars = new ObservableCollection<MenuBar>
-            {
-                new MenuBar() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
-                new MenuBar() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
-                new MenuBar() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
-                new MenuBar() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
-                new MenuBar() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
-                new MenuBar() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
-                new MenuBar() { Icon = "Clyde", Title = "ModbusRtu", NameSpace = "ModbusRtuViewNew" }
+            MenuBars =
+            [
+                new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
+                new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
+                new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
+                new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
+                new() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
+                new() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
+                //new MenuBar() { Icon = "Clyde", Title = "ModbusRtu", NameSpace = "ModbusRtuViewNew" }
                 //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
-            };
+            ];
         }
 
         /// <summary>
