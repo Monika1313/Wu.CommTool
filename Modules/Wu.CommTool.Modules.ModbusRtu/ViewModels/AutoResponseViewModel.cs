@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -6,6 +7,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.IO;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
@@ -33,6 +35,18 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
 
+
+            //导入默认自动应答配置
+            try
+            {
+                var xx = Shared.Common.Utils.ReadJsonFile(Path.Combine(ModbusRtuModel.ModbusRtuAutoResponseConfigDict, "Default.jsonARC"));
+                ModbusRtuModel.MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
+                ModbusRtuModel.RefreshModbusRtuDataDataView();//更新数据视图
+            }
+            catch (Exception ex)
+            {
+                ModbusRtuModel.ShowErrorMessage(ex.Message);
+            }
         }
 
         private void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData data)
@@ -89,6 +103,9 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 case "Clear": ModbusRtuModel.MessageClear(); break;
                 case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
                 case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
+                case "AddMosbusRtuAutoResponseData": ModbusRtuModel.AddMosbusRtuAutoResponseData(); break;         //添加新的应答模板
+                case "ExportAutoResponseConfig": ModbusRtuModel.ExportAutoResponseConfig(); break;
+                case "ImportAutoResponseConfig": ModbusRtuModel.ImportAutoResponseConfig(); break;
                 case "AutoResponseOff":                             //关闭自动应答
                     ModbusRtuModel.AutoResponseOff();
                     break;

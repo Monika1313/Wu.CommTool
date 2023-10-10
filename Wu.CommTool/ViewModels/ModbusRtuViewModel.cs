@@ -334,7 +334,7 @@ namespace Wu.CommTool.ViewModels
                     case "SearchDevices": SearchDevices(); break;                                   //搜索ModbusRtu设备
                     case "StopSearchDevices": StopSearchDevices(); break;                           //停止搜索ModbusRtu设备
                     case "RefreshQuickImportList": RefreshQuickImportList(); break;                 //刷新快速导入配置列表
-                    case "AddMosbusRtuAutoResponseData": AddMosbusRtuAutoResponseData(); break;         //刷新快速导入配置列表
+                    case "AddMosbusRtuAutoResponseData": AddMosbusRtuAutoResponseData(); break;         //添加新的应答模板
 
                     case "AutoResponseOn": AutoResponseOn(); break;                                     //开启自动应答
                     case "AutoResponseOff": AutoResponseOff(); break;                                   //关闭自动应答

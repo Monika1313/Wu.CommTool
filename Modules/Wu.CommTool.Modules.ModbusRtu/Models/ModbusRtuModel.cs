@@ -60,6 +60,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         public EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
         protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
         private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
+        public readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
 
 
 
@@ -393,7 +394,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
 
 
         #region******************************  页面消息  ******************************
-        protected void ShowErrorMessage(string message) => ShowMessage(message, Enums.MessageType.Error);
+        public void ShowErrorMessage(string message) => ShowMessage(message, Enums.MessageType.Error);
         protected void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
         {
             try
@@ -1516,6 +1517,91 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             }
             catch (Exception ex)
             {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 添加新的响应
+        /// </summary>
+        public void AddMosbusRtuAutoResponseData()
+        {
+            try
+            {
+                MosbusRtuAutoResponseDatas.Add(new());
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 导出自动应答配置文件
+        /// </summary>
+        public void ExportAutoResponseConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+                Wu.Utils.IoUtil.Exists(dict);
+                Microsoft.Win32.SaveFileDialog sfd = new()
+                {
+                    Title = "请选择导出配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    FileName = "Default",                                           //默认文件名
+                    DefaultExt = "jsonARC",                                     //默认扩展名
+                    InitialDirectory = dict,                //指定初始的目录
+                    OverwritePrompt = true,                                                  //文件已存在警告
+                    AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                };
+                if (sfd.ShowDialog() != true)
+                    return;
+                //将当前的配置序列化为json字符串
+                var content = JsonConvert.SerializeObject(MosbusRtuAutoResponseDatas);
+                //保存文件
+                Shared.Common.Utils.WriteJsonFile(sfd.FileName, content);
+                HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(sfd.FileName)}\"导出成功", ModbusRtuView.ViewName);
+                RefreshQuickImportList();//更新列表
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning($"自动应答配置导出失败", ModbusRtuView.ViewName);
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 导入自动应答配置文件
+        /// </summary>
+        public void ImportAutoResponseConfig()
+        {
+            try
+            {
+                //配置文件目录
+                string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+                Wu.Utils.IoUtil.Exists(dict);
+                //选中配置文件
+                OpenFileDialog dlg = new()
+                {
+                    Title = "请选择导入自动应答配置文件...",                                              //对话框标题
+                    Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
+                    FilterIndex = 1,                                                         //默认选中的过滤器
+                    InitialDirectory = dict
+                };
+
+                if (dlg.ShowDialog() != true)
+                    return;
+                var xx = Shared.Common.Utils.ReadJsonFile(dlg.FileName);
+                MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
+                RefreshModbusRtuDataDataView();//更新数据视图
+                HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", ModbusRtuView.ViewName);
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning($"自动应答配置导入成功", ModbusRtuView.ViewName);
                 ShowErrorMessage(ex.Message);
             }
         }

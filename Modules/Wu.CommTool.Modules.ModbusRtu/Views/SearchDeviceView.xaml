@@ -263,7 +263,7 @@
                                         </DataTrigger>
                                         <DataTrigger Binding="{Binding ModbusRtuModel.SearchDeviceState}" Value="2">
                                             <Setter Property="Source" Value="/Images/Ww.png" />
-                                            <Setter Property="Visibility" Value="{Binding ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
+                                            <Setter Property="Visibility" Value="{Binding ModbusRtuModel.ModbusRtuDevices.Count, Converter={wu:MoreThanZero2Collapsed}, IsAsync=True}" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
