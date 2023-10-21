@@ -20,6 +20,8 @@ using Wu.CommTool.Modules.ModbusRtu.Views;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using System.Windows.Interop;
+using System.Windows.Documents;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -228,7 +230,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     ComConfig.Port = usbDevice;
                 }
                 //其次保持不变
-                else if (ComPorts.Any(x=>x.Key==ComConfig.Port.Key && x.Value == ComConfig.Port.Value))//保留原选项
+                else if (ComPorts.Any(x => x.Key == ComConfig.Port.Key && x.Value == ComConfig.Port.Value))//保留原选项
                 {
                     ComConfig.Port = ComPorts.FirstOrDefault(x => x.Key == ComConfig.Port.Key && x.Value == ComConfig.Port.Value);
                 }
@@ -276,7 +278,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 {
                     ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
                     return;
-                } 
+                }
             }
             catch (Exception ex)
             {
@@ -585,7 +587,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// <exception cref="NotImplementedException"></exception>
-        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        private void 旧的ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
             try
             {
@@ -661,6 +663,105 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 WaitUartReceived.Set();//置位数据接收完成标志
                 //oTime.Stop();
                 //ShowMessage($"接收数据用时{oTime.Elapsed.TotalMilliseconds} ms");
+            }
+            catch (Exception ex)
+            {
+                ShowMessage(ex.Message, MessageType.Receive);
+            }
+            finally
+            {
+                ComConfig.IsReceiving = false;
+            }
+        }
+
+        private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+        {
+            try
+            {
+                //若串口未开启则返回
+                if (!SerialPort.IsOpen)
+                {
+                    SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
+                    return;
+                }
+
+                ComConfig.IsReceiving = true;
+
+                #region 接收数据
+
+                //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
+                //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
+                //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
+
+
+
+                //接收的数据缓存
+                List<byte> frameCache = new List<byte>();//接收数据二次缓冲 串口接收数据先缓存至此
+                List<byte> frame = new List<byte>();//接收的数据帧
+
+                if (ComConfig.IsOpened == false)
+                    return;
+                string msg = string.Empty;
+                int times = 0;//计算次数 连续数ms无数据判断为一帧结束
+                do
+                {
+                    if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
+                    {
+                        times = 0;
+                        int dataCount = SerialPort.BytesToRead;          //获取数据量
+                        byte[] tempBuffer = new byte[dataCount];         //声明数组
+                        SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
+                        frameCache.AddRange(tempBuffer);                       //添加进接收的数据列表
+                                                                               //若frame数据量小于8则从frameCache转移一部分至8字节
+                        
+                        //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
+                        if (frameCache.Count >= 8)
+                        {
+                            //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
+                            frame = frameCache.Take(8).ToList();
+                            var code = Wu.Utils.Crc.Crc16Modbus(frame.ToArray());
+                            //校验通过
+                            if (code.All(x=>x==0))
+                            {
+                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                frameCache.RemoveRange(0, 8);  //从缓存中移除已处理的8字节
+                                ReceiveBytesCount += frame.Count;         //计算总接收数据量
+                            }
+                        }
+
+                        //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
+                        if (frameCache.Count > ComConfig.MaxLength)
+                            break;
+                    }
+                    else
+                    {
+                        times++;
+                        Thread.Sleep(1);
+                    }
+                } while (times < ComConfig.TimeOut);
+                #endregion
+
+                msg = BitConverter.ToString(frameCache.ToArray());
+                msg = msg.Replace('-', ' ');
+                ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
+
+                //搜索时将验证通过的添加至搜索到的设备列表
+                if (SearchDeviceState == 1)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                    {
+                        CurrentDevice.ReceiveMessage = msg;
+                        CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
+                        ModbusRtuDevices.Add(CurrentDevice);
+                    }));
+                    HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
+                }
+
+                ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
+                //若暂停更新接收数据 则不显示
+                if (IsPause)
+                    return;
+                WaitUartReceived.Set();//置位数据接收完成标志
             }
             catch (Exception ex)
             {
@@ -1304,7 +1405,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     var y = DataMonitorConfig.ModbusRtuDatas.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Name));
                     if (y == null)
                     {
-                        HcGrowlExtensions.Warning("请配置数据名称再开启过滤器...",ModbusRtuView.ViewName);
+                        HcGrowlExtensions.Warning("请配置数据名称再开启过滤器...", ModbusRtuView.ViewName);
                         return;
                     }
                 }
