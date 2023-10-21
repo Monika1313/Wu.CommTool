@@ -693,11 +693,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
                 //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
-
-
-                //接收的数据缓存
-                List<byte> frameCache = new List<byte>();//接收数据二次缓冲 串口接收数据先缓存至此
-                List<byte> frame = new List<byte>();//接收的数据帧
+                
+                List<byte> frameCache = [];//接收数据二次缓冲 串口接收数据先缓存至此
+                List<byte> frame = [];//接收的数据帧
+                bool isNot = false;//前8字节不是一帧标志 不做标记将导致对响应帧多次重复校验
 
                 if (ComConfig.IsOpened == false)
                     return;
@@ -712,10 +711,9 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         byte[] tempBuffer = new byte[dataCount];         //声明数组
                         SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
                         frameCache.AddRange(tempBuffer);                       //添加进接收的数据列表
-                                                                               //若frame数据量小于8则从frameCache转移一部分至8字节
                         
                         //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
-                        if (frameCache.Count >= 8)
+                        if (!isNot && frameCache.Count >= 8)
                         {
                             //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
                             frame = frameCache.Take(8).ToList();
@@ -726,6 +724,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
                                 frameCache.RemoveRange(0, 8);  //从缓存中移除已处理的8字节
                                 ReceiveBytesCount += frame.Count;         //计算总接收数据量
+                            }
+                            //验证失败,标记并不再重复校验
+                            else
+                            {
+                                isNot = true;
                             }
                         }
 
