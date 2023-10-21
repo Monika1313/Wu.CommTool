@@ -53,8 +53,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 
         private async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
         {
-            //ModbusRtuModel.OpenMosbusRtuAutoResponseDataEditView(data);
-
             try
             {
                 if (obj == null)
