@@ -451,7 +451,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     break;
                 //读保持寄存器
                 case ModbusRtuFunctionCode._0x03:
-                    //请求帧   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 校验码(2)
+                    //请求帧8字节   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 校验码(2)
                     if (Frame.Length.Equals(8))
                     {
                         StartAddr = Frame.Skip(2).Take(2).ToArray();
@@ -494,7 +494,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     break;
                 //0x04读输入寄存器
                 case ModbusRtuFunctionCode._0x04:
-                    //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输入寄存器数量(2) 校验码(2)
+                    //请求帧8字节   从站ID(1) 功能码(1) 起始地址(2) 输入寄存器数量(2) 校验码(2)
                     if (Frame.Length.Equals(8))
                     {
                         StartAddr = Frame.Skip(2).Take(2).ToArray();
@@ -537,7 +537,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //写单个线圈
                 case ModbusRtuFunctionCode._0x05:
                     //请求帧和应答帧格式相同 请求帧的输出值只能为0x0000
-                    //请求帧   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
+                    //请求帧总8字节   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
                     if (Frame.Length.Equals(8) && Frame[4] == 0 && Frame[5] == 0)
                     {
                         StartAddr = Frame.Skip(2).Take(2).ToArray();
@@ -581,7 +581,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //写单个寄存器
                 case ModbusRtuFunctionCode._0x06:
                     //请求帧与响应帧格式完全相同
-                    //响应帧/请求帧   从站ID(1) 功能码(1) 寄存器地址(2) 寄存器值(2) 校验码(2)
+                    //响应帧/请求帧 8字节   从站ID(1) 功能码(1) 寄存器地址(2) 寄存器值(2) 校验码(2)
                     if (Frame.Length.Equals(8))
                     {
                         StartAddr = Frame.Skip(2).Take(2).ToArray();

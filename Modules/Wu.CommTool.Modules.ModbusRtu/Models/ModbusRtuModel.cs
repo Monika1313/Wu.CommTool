@@ -602,11 +602,19 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //oTime.Start();                         //开始计时 
 
                 #region 接收数据
+
+                //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
+                //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
+                //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
+
+
+
                 //接收的数据缓存
                 List<byte> list = new();
                 if (ComConfig.IsOpened == false)
                     return;
-                string msg = string.Empty;
+                string msg = string.Empty;//
+                //string tempMsg = string.Empty;//接收数据二次缓冲 串口接收数据先缓存至此
                 int times = 0;//计算次数 连续数ms无数据判断为一帧结束
                 do
                 {
@@ -615,7 +623,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         times = 0;
                         int dataCount = SerialPort.BytesToRead;          //获取数据量
                         byte[] tempBuffer = new byte[dataCount];         //声明数组
-                        SerialPort.Read(tempBuffer, 0, dataCount); //从第0个读取n个字节, 写入tempBuffer 
+                        SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
                         list.AddRange(tempBuffer);                       //添加进接收的数据列表
                         msg += BitConverter.ToString(tempBuffer);
                         //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
@@ -1429,7 +1437,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         }
         #endregion
 
-        #region 自动应答 方法
+        #region ******************************  自动应答 方法  ******************************
         /// <summary>
         /// 打开自动响应编辑界面
         /// </summary>
