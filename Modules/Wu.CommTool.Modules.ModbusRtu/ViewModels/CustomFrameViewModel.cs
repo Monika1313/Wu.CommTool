@@ -6,6 +6,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
@@ -34,6 +35,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
 
             //更新串口列表
             ModbusRtuModel.GetComPorts();
@@ -68,6 +70,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// 复制Modbus帧信息
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
         #endregion
 
 
@@ -173,6 +180,27 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             finally
             {
                 UpdateLoading(false);
+            }
+        }
+
+        /// <summary>
+        /// 复制Modbus数据帧
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+        {
+            try
+            {
+                string xx = string.Empty;
+                foreach (var item in obj.MessageSubContents)
+                {
+                    xx += $"{item.Content} ";
+                }
+                Clipboard.SetDataObject(xx);
+            }
+            catch (Exception ex)
+            {
+
             }
         }
         #endregion
