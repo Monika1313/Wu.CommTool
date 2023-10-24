@@ -110,8 +110,8 @@ namespace Wu.CommTool.ViewModels
         /// </summary>
         void CreateMenuBar()
         {
-            MenuBars =
-            [
+            MenuBars =new ObservableCollection<MenuBar>()
+            {
                 new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
                 new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
                 new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
@@ -120,7 +120,8 @@ namespace Wu.CommTool.ViewModels
                 new() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
                 //new MenuBar() { Icon = "Clyde", Title = "ModbusRtu", NameSpace = "ModbusRtuViewNew" }
                 //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
-            ];
+
+            };
         }
 
         /// <summary>

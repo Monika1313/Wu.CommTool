@@ -690,12 +690,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 #region 接收数据
 
                 //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
-                //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
+                //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
                 //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
-                
-                List<byte> frameCache = [];//接收数据二次缓冲 串口接收数据先缓存至此
-                List<byte> frame = [];//接收的数据帧
+
+                List<byte> frameCache = new List<byte>();//接收数据二次缓冲 串口接收数据先缓存至此
+                List<byte> frame = new();//接收的数据帧
                 bool isNot = false;//前8字节不是一帧标志 不做标记将导致对响应帧多次重复校验
 
                 if (ComConfig.IsOpened == false)
