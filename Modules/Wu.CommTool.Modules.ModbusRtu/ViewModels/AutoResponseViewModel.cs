@@ -8,6 +8,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.CommTool.Modules.ModbusRtu.Views;
 using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
@@ -36,6 +37,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
             OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
+            CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
 
 
             //导入默认自动应答配置
@@ -51,39 +53,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             }
         }
 
-        private async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
-        {
-            try
-            {
-                if (obj == null)
-                    return;
-                //添加参数
-                DialogParameters param = new();
-                if (obj != null)
-                    param.Add("Value", obj);
-                var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, ModbusRtuView.ViewName);
-
-                if (dialogResult.Result == ButtonResult.OK)
-                {
-                    var resultDto = dialogResult.Parameters.GetValue<ModbusRtuAutoResponseData>("Value");
-                    if (resultDto == null)
-                    {
-                        return;
-                    }
-                    obj.Name = resultDto.Name;
-                    obj.MateTemplate = resultDto.MateTemplate;
-                    obj.ResponseTemplate = resultDto.ResponseTemplate;
-                }
-                else if (dialogResult.Result == ButtonResult.Abort)
-                {
-                }
-            }
-            catch (Exception ex)
-            {
-            }
-
-
-        }
 
         #region **************************************** 属性 ****************************************
         /// <summary>
@@ -120,6 +89,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public DelegateCommand<ModbusRtuAutoResponseData> OpenMosbusRtuAutoResponseDataEditViewCommand { get; private set; }
 
+        /// <summary>
+        /// 复制Modbus帧信息
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
         #endregion
 
 
@@ -248,6 +221,62 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             {
                 UpdateLoading(false);
             }
+        }
+
+        /// <summary>
+        /// 复制Modbus数据帧
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+        {
+            try
+            {
+                string xx = string.Empty;
+                foreach (var item in obj.MessageSubContents)
+                {
+                    xx += $"{item.Content} ";
+                }
+                Clipboard.SetDataObject(xx);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+
+        private async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
+        {
+            try
+            {
+                if (obj == null)
+                    return;
+                //添加参数
+                DialogParameters param = new();
+                if (obj != null)
+                    param.Add("Value", obj);
+                var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, ModbusRtuView.ViewName);
+
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    var resultDto = dialogResult.Parameters.GetValue<ModbusRtuAutoResponseData>("Value");
+                    if (resultDto == null)
+                    {
+                        return;
+                    }
+                    obj.Name = resultDto.Name;
+                    obj.MateTemplate = resultDto.MateTemplate;
+                    obj.ResponseTemplate = resultDto.ResponseTemplate;
+                }
+                else if (dialogResult.Result == ButtonResult.Abort)
+                {
+                }
+            }
+            catch (Exception ex)
+            {
+            }
+
+
         }
         #endregion
     }
