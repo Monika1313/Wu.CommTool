@@ -711,18 +711,32 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         byte[] tempBuffer = new byte[dataCount];         //声明数组
                         SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
                         frameCache.AddRange(tempBuffer);                       //添加进接收的数据列表
-                        
+
                         //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
                         if (!isNot && frameCache.Count >= 8)
                         {
                             //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
                             frame = frameCache.Take(8).ToList();
+
+                            //若是0x10请求帧, 则帧长度需要根据帧的实际情况计算
+                            //0x10请求帧 长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
+                            if (frame[1] == 0x10 && frameCache.Count >= (2 * frame[6] + 9))
+                            {
+                                frame = frameCache.Take(2 * frame[6] + 9).ToList();
+                            }
+                            else if (frame[1] == 0x10)
+                            {
+                                continue;
+                            }
+
                             var code = Wu.Utils.Crc.Crc16Modbus(frame.ToArray());
+
+
                             //校验通过
-                            if (code.All(x=>x==0))
+                            if (code.All(x => x == 0))
                             {
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                                frameCache.RemoveRange(0, 8);  //从缓存中移除已处理的8字节
+                                frameCache.RemoveRange(0, frame.Count);  //从缓存中移除已处理的8字节
                                 ReceiveBytesCount += frame.Count;         //计算总接收数据量
                             }
                             //验证失败,标记并不再重复校验
