@@ -743,25 +743,34 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
 
                             var crcOk = IsModbusCrcOk(frame);//先验证前8字节是否能校验成功
 
-                            //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
-                            if (!crcOk && frame[1] == 0x10 && frameCache.Count >= (frame[6] + 9))
+                            //若8字节校验未通过, 则根据功能码再次解析
+                            if (!crcOk)
                             {
-                                frame = frameCache.Take(frame[6] + 9).ToList();
-                            }
-                            else if (!crcOk && frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
-                            {
-                                continue;
+                                //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
+                                if (frame[1] == 0x10 && frameCache.Count >= (frame[6] + 9))
+                                {
+                                    frame = frameCache.Take(frame[6] + 9).ToList();
+                                }
+                                else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
+                                {
+                                    continue;
+                                }
+
+                                //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
+                                if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
+                                {
+                                    frame = frameCache.Take(frame[2] + 5).ToList();
+                                }
+                                else if (frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
+                                {
+                                    continue;
+                                }
+
+                                //TODO 0x03和0x10粘包问题已处理 其他功能码的未做
+
                             }
 
-                            //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
-                            if (!crcOk && frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
-                            {
-                                frame = frameCache.Take(frame[2] + 5).ToList();
-                            }
-                            else if(!crcOk && frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
-                            {
-                                continue;
-                            }
+
 
 
                             //若前面8字节验证失败, 则根据功能码截取不同帧长度后 再次验证
