@@ -74,7 +74,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// 分包超时时间
         /// </summary>
         public int TimeOut { get => _TimeOut; set => SetProperty(ref _TimeOut, value); }
-        private int _TimeOut = 30;
+        private int _TimeOut = 25;
 
         /// <summary>
         /// 分包最大字节

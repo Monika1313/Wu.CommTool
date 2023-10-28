@@ -676,6 +676,29 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             }
         }
 
+
+
+        public bool IsModbusCrcOk(List<byte> frame)
+        {
+            return IsModbusCrcOk(frame.ToArray());
+        }
+
+        /// <summary>
+        /// 返回该数组是否Modbus校验通过
+        /// </summary>
+        /// <param name="frame"></param>
+        /// <returns></returns>
+        public bool IsModbusCrcOk(byte[] frame)
+        {
+            var code = Wu.Utils.Crc.Crc16Modbus(frame);
+
+            //校验通过
+            if (code.All(x => x == 0))
+                return true;
+            else
+                return false;
+        }
+
         private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
         {
             try
@@ -720,26 +743,58 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                             //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
                             frame = frameCache.Take(8).ToList();
 
-                            //若是0x10请求帧, 则帧长度需要根据帧的实际情况计算
-                            //0x10请求帧 长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
-                            if (frame[1] == 0x10 && frameCache.Count >= (2 * frame[6] + 9))
+                            var crcOk = IsModbusCrcOk(frame);//先验证前8字节是否能校验成功
+
+                            //若8字节校验未通过, 则根据功能码再次解析
+                            if (!crcOk)
                             {
-                                frame = frameCache.Take(2 * frame[6] + 9).ToList();
-                            }
-                            else if (frame[1] == 0x10)
-                            {
-                                continue;
+                                //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
+                                if (frame[1] == 0x10 && frameCache.Count >= (frame[6] + 9))
+                                {
+                                    frame = frameCache.Take(frame[6] + 9).ToList();
+                                }
+                                else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
+                                {
+                                    continue;
+                                }
+
+                                //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
+                                if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
+                                {
+                                    frame = frameCache.Take(frame[2] + 5).ToList();
+                                }
+                                else if (frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
+                                {
+                                    continue;
+                                }
+
+                                //TODO 0x03和0x10粘包问题已处理 其他功能码的未做
+
                             }
 
-                            var code = Wu.Utils.Crc.Crc16Modbus(frame.ToArray());
 
+
+
+                            //若前面8字节验证失败, 则根据功能码截取不同帧长度后 再次验证
+                            if (!crcOk)
+                            {
+                                crcOk = IsModbusCrcOk(frame);
+                            }
 
                             //校验通过
-                            if (code.All(x => x == 0))
+                            if (crcOk)
                             {
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
                                 frameCache.RemoveRange(0, frame.Count);  //从缓存中移除已处理的8字节
                                 ReceiveBytesCount += frame.Count;         //计算总接收数据量
+                            }
+                            else if (!crcOk && frame[1] == 0x03)
+                            {
+                                isNot = true;
+                            }
+                            else if (!crcOk && frame[1] == 0x10)
+                            {
+                                isNot = true;
                             }
                             //验证失败,标记并不再重复校验
                             else
