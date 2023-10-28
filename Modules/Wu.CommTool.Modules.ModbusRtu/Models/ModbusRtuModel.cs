@@ -276,6 +276,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 }
                 catch (Exception ex)
                 {
+                    HcGrowlExtensions.Warning($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", nameof(ModbusRtuView));
                     ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
                     return;
                 }
@@ -341,6 +342,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     }
                     catch (Exception ex)
                     {
+                        HcGrowlExtensions.Warning($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", nameof(ModbusRtuView));
                         ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
                         return;
                     }
