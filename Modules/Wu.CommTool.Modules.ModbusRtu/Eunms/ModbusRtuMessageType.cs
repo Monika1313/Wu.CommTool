@@ -5,14 +5,14 @@
     /// </summary>
     public enum ModbusRtuMessageType
     {
-        SlaveId = 0,
-        Function = 1,
-        StartAddr = 2,
-        RegisterNum = 3,
-        BytesNum = 4,
-        RegisterValues = 5,
-        CrcCode = 6,
-        ErrCode = 7,
-        ErrMsg = 10
+        SlaveId = 0,        //从站ID
+        Function = 1,       //功能码
+        StartAddr = 2,      //起始地址
+        RegisterNum = 3,    //寄存器数量
+        BytesNum = 4,       //字节数
+        RegisterValues = 5, //寄存器值
+        CrcCode = 6,        //crc校验码
+        ErrCode = 7,        //错误码
+        ErrMsg = 10         //错误消息
     }
 }

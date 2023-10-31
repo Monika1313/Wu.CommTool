@@ -395,18 +395,41 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
 
 
         #region******************************  页面消息  ******************************
-        public void ShowErrorMessage(string message) => ShowMessage(message, Enums.MessageType.Error);
+        public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+
+        protected void ShowReceiveMessage(ModbusRtuFrame frame)
+        {
+            try
+            {
+                void action()
+                {
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive)
+                    {
+                        MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetMessage())
+                    };
+                    Messages.Add(msg);
+                    while (Messages.Count > 500)
+                    {
+                        Messages.RemoveAt(0);
+                    }
+                }
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+            }
+            catch (Exception) { }
+        }
+
+
         protected void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
         {
             try
             {
                 void action()
                 {
-                    var msg = new ModbusRtuMessageData("", DateTime.Now, Enums.MessageType.Receive);
-                    foreach (var item in messageSubContents)
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive)
                     {
-                        msg.MessageSubContents.Add(item);
-                    }
+                        MessageSubContents = new ObservableCollection<MessageSubContent>(messageSubContents)
+                    };
+
                     Messages.Add(msg);
                     while (Messages.Count > 500)
                     {
@@ -420,12 +443,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
 
         protected void ShowSendMessage(string message, List<MessageSubContent> messageSubContents)
         {
-            //ShowMessage(message, MessageType.Send);
             try
             {
                 void action()
                 {
-                    var msg = new ModbusRtuMessageData("", System.DateTime.Now, Enums.MessageType.Send);
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send);
                     foreach (var item in messageSubContents)
                     {
                         msg.MessageSubContents.Add(item);
@@ -446,7 +468,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(string message, Enums.MessageType type = Enums.MessageType.Info)
+        protected void ShowMessage(string message, MessageType type = Enums.MessageType.Info)
         {
             try
             {
@@ -972,7 +994,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     }
                     else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
                     {
-                        ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
+                        ShowReceiveMessage(mFrame);
+
                         //todo 临时添加 自由口协议自动应答, 该协议不是modbus 校验不会通过
                         #region 自动应答
                         if (IsAutoResponse)
@@ -991,7 +1014,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     //校验成功
                     else
                     {
-                        ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
+                        //ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
+                        ShowReceiveMessage(mFrame);
                     }
                     #endregion
 

@@ -8,6 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using Wu.CommTool.Modules.ModbusRtu.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 {
@@ -19,6 +20,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         public string DialogHostName { get; set; }
         #endregion
 
+        #region **************************************** 构造函数 ****************************************
         public AnalyzeFrameViewModel() { }
         public AnalyzeFrameViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
@@ -30,12 +32,36 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             CancelCommand = new DelegateCommand(Cancel);
         }
 
+        /// <summary>
+        /// 导航至该页面触发
+        /// </summary>
+        /// <param name="navigationContext"></param>
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            //Search();
+        }
+
+        /// <summary>
+        /// 打开该弹窗时执行
+        /// </summary>
+        public async void OnDialogOpened(IDialogParameters parameters)
+        {
+            if (parameters != null && parameters.ContainsKey("Value"))
+            {
+                Message = parameters.GetValue<ModbusRtuMessageData>("Value");
+            }
+        }
+        #endregion
+
         #region **************************************** 属性 ****************************************
         /// <summary>
         /// CurrentDto
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+        public ModbusRtuMessageData Message { get => _Message; set => SetProperty(ref _Message, value); }
+        private ModbusRtuMessageData _Message;
         #endregion
 
 
@@ -61,30 +87,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             }
         }
 
-        /// <summary>
-        /// 导航至该页面触发
-        /// </summary>
-        /// <param name="navigationContext"></param>
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            //Search();
-        }
-
-        /// <summary>
-        /// 打开该弹窗时执行
-        /// </summary>
-        public async void OnDialogOpened(IDialogParameters parameters)
-        {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-            }
-        }
+       
 
 
         /// <summary>

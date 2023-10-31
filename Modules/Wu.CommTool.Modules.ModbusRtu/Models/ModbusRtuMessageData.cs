@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using Wu.CommTool.Modules.ModbusRtu.Enums;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -8,9 +9,29 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
     /// </summary>
     public class ModbusRtuMessageData : MessageData
     {
-        public ModbusRtuMessageData(string Content, DateTime dateTime, Enums.MessageType Type = Enums.MessageType.Info, string Title = "") : base(Content, dateTime, Type, Title)
+        #region 构造函数
+        public ModbusRtuMessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info) : base(Content, dateTime, Type, "")
         {
         }
+
+        /// <summary>
+        /// modbusRtu帧
+        /// </summary>
+        /// <param name="Content"></param>
+        /// <param name="dateTime"></param>
+        /// <param name="Type"></param>
+        /// <param name="frame"></param>
+        public ModbusRtuMessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info, ModbusRtuFrame frame = null) : base(Content, dateTime, Type, "")
+        {
+            ModbusRtuFrame = frame;
+        } 
+        #endregion
+
+        /// <summary>
+        /// Modbus帧
+        /// </summary>
+        public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
+        private ModbusRtuFrame _ModbusRtuFrame;
 
         /// <summary>
         /// 子消息
