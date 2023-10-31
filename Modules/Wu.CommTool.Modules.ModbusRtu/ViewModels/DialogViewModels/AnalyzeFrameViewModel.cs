@@ -48,7 +48,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
-                Message = parameters.GetValue<ModbusRtuMessageData>("Value");
+                ModbusRtuFrame = parameters.GetValue<ModbusRtuFrame>("Value");
             }
         }
         #endregion
@@ -62,6 +62,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 
         public ModbusRtuMessageData Message { get => _Message; set => SetProperty(ref _Message, value); }
         private ModbusRtuMessageData _Message;
+
+        /// <summary>
+        /// ModbusRtuFrame
+        /// </summary>
+        public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
+        private ModbusRtuFrame _ModbusRtuFrame;
         #endregion
 
 

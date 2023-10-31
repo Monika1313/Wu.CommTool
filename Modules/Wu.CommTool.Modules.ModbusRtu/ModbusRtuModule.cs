@@ -29,6 +29,8 @@ namespace Wu.CommTool.Modules.ModbusRtu
             containerRegistry.RegisterForNavigation<DataMonitorView, DataMonitorViewModel>();
             containerRegistry.RegisterForNavigation<AutoResponseView, AutoResponseViewModel>();
             containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();
+
+            containerRegistry.RegisterForNavigation<AnalyzeFrameView, AnalyzeFrameViewModel>();
         }
     }
 }
