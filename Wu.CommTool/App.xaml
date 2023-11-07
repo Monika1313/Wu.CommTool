@@ -154,7 +154,7 @@
                         <Setter Property="Foreground" Value="{StaticResource Pink_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="5">
-                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                        <Setter Property="Foreground" Value="{StaticResource Gold_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="6">
                         <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
@@ -168,6 +168,50 @@
                 </Style.Triggers>
             </Style>
 
+            <Style x:Key="ModbusRtuMessageBorder" TargetType="Border">
+                <Setter Property="CornerRadius" Value="4" />
+                <Setter Property="Margin" Value="3" />
+                <Setter Property="Padding" Value="2" />
+                <Setter Property="BorderThickness" Value="1" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Type}" Value="0">
+                        <Setter Property="Background" Value="{StaticResource GeekBlue_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource GeekBlue_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="1">
+                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="2">
+                        <Setter Property="Background" Value="{StaticResource Orange_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Orange_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="3">
+                        <Setter Property="Background" Value="{StaticResource Blue_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="4">
+                        <Setter Property="Background" Value="{StaticResource Pink_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Pink_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="5">
+                        <Setter Property="Background" Value="{StaticResource Gold_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Gold_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="6">
+                        <Setter Property="Background" Value="{StaticResource Purple_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="7">
+                        <Setter Property="Background" Value="{StaticResource Red_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="10">
+                        <Setter Property="Background" Value="{StaticResource Red_Background}" />
+                        <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
         </ResourceDictionary>
 
 

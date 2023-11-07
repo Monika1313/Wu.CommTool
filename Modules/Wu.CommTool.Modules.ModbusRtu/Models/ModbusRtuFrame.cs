@@ -1,7 +1,9 @@
 ﻿using ImTools;
+using Prism.Common;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Wu.CommTool.Modules.ModbusRtu.Enums;
 using Wu.Extensions;
@@ -107,6 +109,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// Crc校验结果
         /// </summary>
         public bool IsCrcPassed => ModbusRtuFrame.IsModbusCrcPassed(Frame);
+
+        /// <summary>
+        /// 子消息集合
+        /// </summary>
+        public ObservableCollection<MessageSubContent> MessageSubContents => new ObservableCollection<MessageSubContent>(GetMessage());
         #endregion
 
 

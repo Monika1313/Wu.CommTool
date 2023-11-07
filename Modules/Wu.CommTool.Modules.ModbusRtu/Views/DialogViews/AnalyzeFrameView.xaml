@@ -17,11 +17,77 @@
     <md:DialogHost Identifier="{x:Static local:AnalyzeFrameView.ViewName}">
         <md:DrawerHost>
             <DockPanel>
-                <DockPanel DockPanel.Dock="Top">
-                    <TextBlock DockPanel.Dock="Left" />
+                <!--<StackPanel
+                    Grid.Row="2"
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,10,0"
+                        Command="{Binding CancelCommand}"
+                        Content="关闭"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </StackPanel>-->
+
+                <DockPanel
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Top">
+                    <TextBlock
+                        Margin="10"
+                        FontSize="16"
+                        Text="{Binding ModbusRtuFrame.Type}" />
+                    <!--<Button
+                        Margin="3"
+                        Padding="10,0"
+                        Command="{Binding CancelCommand}"
+                        Content="×"
+                        FontSize="20"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />-->
+                    <Button
+                        Height="30"
+                        Margin="10,0"
+                        Padding="10,5"
+                        Command="{Binding CancelCommand}"
+                        Content="✕"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </DockPanel>
-                <DockPanel DockPanel.Dock="Bottom" />
-                <Grid />
+
+                <ContentControl
+                    Margin="4"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource Effect2Control}">
+                    <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuFrame.MessageSubContents}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Style="{StaticResource ModbusRtuMessageBorder}">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Width="60"
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource ModbusRtuMessageTextBlock}"
+                                                Text="{Binding Type}" />
+                                            <TextBlock
+                                                Margin="3"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource ModbusRtuMessageTextBlock}"
+                                                Text="{Binding Content}" />
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
+                </ContentControl>
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>

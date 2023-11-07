@@ -38,13 +38,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //Search();
         }
 
         /// <summary>
         /// 打开该弹窗时执行
         /// </summary>
-        public async void OnDialogOpened(IDialogParameters parameters)
+        public void OnDialogOpened(IDialogParameters parameters)
         {
             if (parameters != null && parameters.ContainsKey("Value"))
             {
@@ -59,9 +58,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
-
-        public ModbusRtuMessageData Message { get => _Message; set => SetProperty(ref _Message, value); }
-        private ModbusRtuMessageData _Message;
 
         /// <summary>
         /// ModbusRtuFrame

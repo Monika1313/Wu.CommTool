@@ -6,7 +6,10 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Wu.CommTool.Modules.ModbusRtu.Models;
+using Wu.CommTool.Modules.ModbusRtu.Views;
+using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 using Wu.Wpf.Models;
@@ -33,13 +36,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
             QuickImportConfigCommand = new DelegateCommand<ConfigFile>(QuickImportConfig);
+            OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
+            CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
 
         }
 
-        private void QuickImportConfig(ConfigFile file)
-        {
-            ModbusRtuModel.QuickImportConfig(file);
-        }
+
 
 
 
@@ -82,6 +84,17 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 快速导入数据监控配置
         /// </summary>
         public DelegateCommand<ConfigFile> QuickImportConfigCommand { get; private set; }
+
+        /// <summary>
+        /// 打开帧解析界面
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
+
+        /// <summary>
+        /// 复制Modbus帧信息
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
+
         #endregion
 
 
@@ -213,6 +226,52 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         private void ModburRtuDataWrite(ModbusRtuData data)
         {
             ModbusRtuModel.ModburRtuDataWrite(data);
+        }
+
+        private void QuickImportConfig(ConfigFile file)
+        {
+            ModbusRtuModel.QuickImportConfig(file);
+        }
+
+        /// <summary>
+        /// 打开解析帧页面
+        /// </summary>
+        /// <param name="data"></param>
+        private async void OpenAnalyzeFrameView(ModbusRtuMessageData data)
+        {
+            try
+            {
+                DialogParameters param = new()
+                {
+                    { "Value", data.ModbusRtuFrame }
+                };
+                var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// 复制Modbus数据帧
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+        {
+            try
+            {
+                string xx = string.Empty;
+                foreach (var item in obj.MessageSubContents)
+                {
+                    xx += $"{item.Content} ";
+                }
+                Clipboard.SetDataObject(xx);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
         #endregion
     }

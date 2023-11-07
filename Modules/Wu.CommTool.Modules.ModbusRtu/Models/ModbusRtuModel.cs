@@ -397,18 +397,22 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         #region******************************  页面消息  ******************************
         public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
+        /// <summary>
+        /// 页面展示接收数据消息
+        /// </summary>
+        /// <param name="frame"></param>
         protected void ShowReceiveMessage(ModbusRtuFrame frame)
         {
             try
             {
                 void action()
                 {
-                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive)
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame)
                     {
-                        MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetMessage())
+                        MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
                     };
                     Messages.Add(msg);
-                    while (Messages.Count > 500)
+                    while (Messages.Count > 200)
                     {
                         Messages.RemoveAt(0);
                     }
@@ -416,6 +420,32 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
             catch (Exception) { }
+        }
+
+        /// <summary>
+        /// 页面展示发送数据消息
+        /// </summary>
+        /// <param name="frame"></param>
+        protected void ShowSendMessage(ModbusRtuFrame frame)
+        {
+            try
+            {
+                void action()
+                {
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame)
+                    {
+                        MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
+                    };
+
+                    Messages.Add(msg);
+                    while (Messages.Count > 200)
+                    {
+                        Messages.RemoveAt(0);
+                    }
+                }
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+            }
+            catch (System.Exception) { }
         }
 
 
@@ -447,11 +477,18 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             {
                 void action()
                 {
-                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send);
-                    foreach (var item in messageSubContents)
+                    //var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send);
+                    //foreach (var item in messageSubContents)
+                    //{
+                    //    msg.MessageSubContents.Add(item);
+                    //}
+
+
+                    var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send)
                     {
-                        msg.MessageSubContents.Add(item);
-                    }
+                        MessageSubContents = new ObservableCollection<MessageSubContent>(messageSubContents)
+                    };
+
                     Messages.Add(msg);
                     while (Messages.Count > 260)
                     {
@@ -584,7 +621,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         SendBytesCount += data.Length;                    //统计发送数据总数
 
                         if (!IsPause)
-                            ShowSendMessage("", new ModbusRtuFrame(data).GetmessageWithErrMsg());
+                            ShowSendMessage(new ModbusRtuFrame(data));
                         return true;
                     }
                     catch (Exception ex)
