@@ -1,5 +1,11 @@
 # Wu通讯调试工具
 
+## 软件特色
+- 支持ModbusRtu、Mqtt服务器、Mqtt客户端
+- 界面色彩丰富
+- ModbusRtu自动解析数据帧
+- 智能防粘包，速度快也能解析（有无法校验的帧会出错）
+
 ## 功能介绍
 1. Modbus Rtu 
 - 自动格式化解析和验证数据帧
@@ -19,6 +25,7 @@
 ## Modbus Rtu
 ### Modbus Rtu 自定义帧
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu自定义帧.png)
+![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu解析数据帧.png)
 
 ### Modbus Rtu 搜索设备
 参数设置, 可选择多个波特率与校验方式
