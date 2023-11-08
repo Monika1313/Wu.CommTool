@@ -38,6 +38,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
             CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
+            OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
 
 
             //导入默认自动应答配置
@@ -93,6 +94,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 复制Modbus帧信息
         /// </summary>
         public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
+        
+        /// <summary>
+        /// 打开帧解析界面
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
         #endregion
 
 
@@ -275,8 +281,30 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             catch (Exception ex)
             {
             }
+        }
 
+        /// <summary>
+        /// 打开解析帧页面
+        /// </summary>
+        /// <param name="data"></param>
+        private async void OpenAnalyzeFrameView(ModbusRtuMessageData data)
+        {
+            try
+            {
+                if (data == null || data.ModbusRtuFrame == null)
+                {
+                    return;
+                }
+                DialogParameters param = new()
+                {
+                    { "Value", data.ModbusRtuFrame }
+                };
+                var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
 
+            }
         }
         #endregion
     }

@@ -241,6 +241,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         {
             try
             {
+                if (data == null || data.ModbusRtuFrame == null)
+                {
+                    return;
+                }
                 DialogParameters param = new()
                 {
                     { "Value", data.ModbusRtuFrame }

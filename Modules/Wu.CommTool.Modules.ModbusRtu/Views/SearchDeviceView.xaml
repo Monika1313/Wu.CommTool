@@ -2,6 +2,7 @@
     x:Class="Wu.CommTool.Modules.ModbusRtu.Views.SearchDeviceView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
     xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
@@ -461,7 +462,27 @@
 
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Border Style="{StaticResource MessageBorder}">
+                                    <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <!--  MenuItem绑定命令  -->
+                                                <MenuItem
+                                                    Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="解析数据帧"
+                                                    Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
+                                                <MenuItem
+                                                    Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="复制Modbus数据帧"
+                                                    Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock
                                                 Margin="3"

@@ -137,6 +137,7 @@
 
             <Style x:Key="ModbusRtuMessageTextBlock" TargetType="TextBlock">
                 <Setter Property="Background" Value="#00FFFFFF" />
+                <Setter Property="FontWeight" Value="Bold" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Type}" Value="0">
                         <Setter Property="Foreground" Value="{StaticResource GeekBlue_Foreground}" />

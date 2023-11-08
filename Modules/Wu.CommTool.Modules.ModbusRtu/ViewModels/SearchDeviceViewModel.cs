@@ -7,6 +7,8 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Modules.ModbusRtu.Models;
+using Wu.CommTool.Modules.ModbusRtu.Views;
+using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 
@@ -32,6 +34,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
             BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
             ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
+            OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
 
         }
 
@@ -78,6 +81,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 校验位选框选项修改
         /// </summary>
         public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
+
+        /// <summary>
+        /// 打开帧解析界面
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
         #endregion
 
 
@@ -183,6 +191,30 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             finally
             {
                 UpdateLoading(false);
+            }
+        }
+
+        /// <summary>
+        /// 打开解析帧页面
+        /// </summary>
+        /// <param name="data"></param>
+        private async void OpenAnalyzeFrameView(ModbusRtuMessageData data)
+        {
+            try
+            {
+                if (data == null || data.ModbusRtuFrame == null)
+                {
+                    return;
+                }
+                DialogParameters param = new()
+                {
+                    { "Value", data.ModbusRtuFrame }
+                };
+                var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+
             }
         }
         #endregion
