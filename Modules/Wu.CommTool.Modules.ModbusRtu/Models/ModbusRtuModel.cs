@@ -449,7 +449,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         }
 
 
-        protected void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
+        public void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
         {
             try
             {
@@ -471,7 +471,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             catch (Exception) { }
         }
 
-        protected void ShowSendMessage(string message, List<MessageSubContent> messageSubContents)
+        public void ShowSendMessage(string message, List<MessageSubContent> messageSubContents)
         {
             try
             {
@@ -505,7 +505,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(string message, MessageType type = Enums.MessageType.Info)
+        public void ShowMessage(string message, MessageType type = Enums.MessageType.Info)
         {
             try
             {
@@ -527,7 +527,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        protected void ShowMessage(ModbusRtuMessageData msg)
+        public void ShowMessage(ModbusRtuMessageData msg)
         {
             try
             {
