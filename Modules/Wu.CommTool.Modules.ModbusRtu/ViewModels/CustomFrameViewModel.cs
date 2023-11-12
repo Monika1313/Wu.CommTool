@@ -107,6 +107,9 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 case "CloseCom":
                     ModbusRtuModel.CloseCom();                              //关闭串口
                     break;
+                case "帧生成器":
+                    OpenEditFrameView();
+                    break;
                 default: break;
             }
         }
@@ -230,6 +233,26 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                     { "Value", data.ModbusRtuFrame }
                 };
                 var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// 打开帧生成器页面
+        /// </summary>
+        /// <param name="data"></param>
+        private async void OpenEditFrameView()
+        {
+            try
+            {
+                DialogParameters param = new()
+                {
+                    //{ "Value", data.ModbusRtuFrame }
+                };
+                var dialogResult = await dialogHost.ShowDialog(nameof(EditFrameView), param, nameof(ModbusRtuView));
             }
             catch (Exception ex)
             {

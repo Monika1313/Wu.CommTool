@@ -16,6 +16,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
     public class ModbusRtuFrame : BindableBase
     {
         #region 构造函数
+        public ModbusRtuFrame()
+        {
+
+        }
+
         public ModbusRtuFrame(byte[] frame)
         {
             Frame = frame;//缓存帧
@@ -473,6 +478,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         RegisterValues = Frame.Skip(3).Take(Frame.Length - 5).ToArray();
                         CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
                         Type = ModbusRtuFrameType._0x03响应帧;
+                        if (Frame.Length != 5 + BytesNum)
+                        {
+                            ErrMessage = "寄存器值 数量不符...";
+                        }
                     }
                     break;
                 //0x03的错误帧 0x83

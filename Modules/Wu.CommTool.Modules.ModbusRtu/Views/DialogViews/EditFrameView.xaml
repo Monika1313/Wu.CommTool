@@ -1,12 +1,64 @@
-﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusRtu.Views.DialogViews.EditFrameView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views.DialogViews"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
-    </Grid>
+﻿<UserControl
+    x:Class="Wu.CommTool.Modules.ModbusRtu.Views.DialogViews.EditFrameView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ddvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views.DialogViews"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:wu="https://github.com/Monika1313/Wu"
+    d:DataContext="{x:Static ddvm:EditFrameDesignViewModel.Instance}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <md:DialogHost Identifier="{x:Static local:EditFrameView.ViewName}">
+        <md:DrawerHost>
+            <DockPanel>
+                <DockPanel
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Top"
+                    LastChildFill="False">
+                    <TextBlock
+                        Margin="10"
+                        DockPanel.Dock="Left"
+                        FontSize="16"
+                        Text="帧生成器" />
+
+                    <Button
+                        Height="30"
+                        Margin="10,0"
+                        Padding="10,5"
+                        Command="{Binding CancelCommand}"
+                        Content="✕"
+                        Cursor="Hand"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                </DockPanel>
+
+                <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                    <TextBox
+                        hc:TitleElement.Title="从站ID"
+                        Style="{StaticResource FormTextBox}"
+                        Text="{Binding ModbusRtuFrame.SlaveId}" />
+                    <ComboBox
+                        hc:InfoElement.Placeholder="请选择串口..."
+                        hc:InfoElement.Title="功能码"
+                        hc:InfoElement.TitleWidth="45"
+                        DockPanel.Dock="Left"
+                        ItemsSource="{Binding ModbusRtuFunctionCodes}"
+                        SelectedValue="{Binding SelectedCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        Style="{StaticResource FormComboBox}" />
+                </StackPanel>
+
+                <TextBlock DockPanel.Dock="Top" Text="开发中..." />
+                <ContentControl
+                    Margin="4"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource Effect2Control}" />
+            </DockPanel>
+        </md:DrawerHost>
+    </md:DialogHost>
 </UserControl>

@@ -8,6 +8,8 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
+using Wu.CommTool.Modules.ModbusRtu.Enums;
+using Wu.CommTool.Modules.ModbusRtu.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 {
@@ -29,6 +31,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            ModbusRtuFunctionCodes = new ObservableCollection<ModbusRtuFunctionCode> 
+            {
+                ModbusRtuFunctionCode._0x03,
+                ModbusRtuFunctionCode._0x04, 
+            };
         }
 
         /// <summary>
@@ -63,6 +70,22 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
+
+
+        /// <summary>
+        /// 可生成的功能码列表
+        /// </summary>
+        public ObservableCollection<ModbusRtuFunctionCode> ModbusRtuFunctionCodes { get => _ModbusRtuFunctionCodes; set => SetProperty(ref _ModbusRtuFunctionCodes, value); }
+        private ObservableCollection<ModbusRtuFunctionCode> _ModbusRtuFunctionCodes;
+
+        public ModbusRtuFunctionCode SelectedCode { get => _SelectedCode; set => SetProperty(ref _SelectedCode, value); }
+        private ModbusRtuFunctionCode _SelectedCode = ModbusRtuFunctionCode._0x03;
+
+        /// <summary>
+        /// ModbusRtu帧
+        /// </summary>
+        public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
+        private ModbusRtuFrame _ModbusRtuFrame = new();
         #endregion
 
 

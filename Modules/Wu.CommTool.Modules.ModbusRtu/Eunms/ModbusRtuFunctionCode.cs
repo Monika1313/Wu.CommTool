@@ -1,16 +1,25 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.Enums
+﻿using System.ComponentModel;
+using Wu.Wpf.Converters;
+
+namespace Wu.CommTool.Modules.ModbusRtu.Enums
 {
     /// <summary>
     /// Modbus Rtu 的功能码和错误码
     /// </summary>
+    [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum ModbusRtuFunctionCode
     {
+        [Description("读线圈")]
         _0x01 = 0x01,//读线圈
         _0x81 = 0x81,//0x01的错误码
         _0x02 = 0x02,//读离散输入
         _0x82 = 0x82,//0x02的错误码
+
+        [Description("0x03读保持寄存器")]
         _0x03 = 0x03,//读保持寄存器
         _0x83 = 0x83,//0x03的错误码
+
+        [Description("0x04读输入寄存器")]
         _0x04 = 0x04,//读输入寄存器
         _0x84 = 0x84,//0x04的错误码
         _0x05 = 0x05,//写单个线圈

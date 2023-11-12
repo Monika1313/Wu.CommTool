@@ -247,24 +247,36 @@
 
             <!--  发送区域  -->
             <DockPanel Height="130" DockPanel.Dock="Bottom">
-                <StackPanel
-                    Cursor=""
-                    DockPanel.Dock="Top"
-                    Orientation="Horizontal">
-                    <ComboBox
-                        MinWidth="190"
-                        hc:InfoElement.Placeholder="请选择校验模式..."
-                        hc:InfoElement.Title="自动校验模式: "
-                        hc:InfoElement.TitleWidth="90"
-                        ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CrcMode}}}"
-                        SelectedItem="{Binding ModbusRtuModel.CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                        Style="{StaticResource FormComboBox}" />
-                    <Button
+                <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+
+                    <StackPanel
+                        Cursor=""
+                        DockPanel.Dock="Left"
+                        Orientation="Horizontal">
+                        <ComboBox
+                            MinWidth="190"
+                            hc:InfoElement.Placeholder="请选择校验模式..."
+                            hc:InfoElement.Title="自动校验模式: "
+                            hc:InfoElement.TitleWidth="90"
+                            ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CrcMode}}}"
+                            SelectedItem="{Binding ModbusRtuModel.CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                            Style="{StaticResource FormComboBox}" />
+                        <Button
+                            Margin="10,0"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="SendCustomFrame"
+                            Content="发送" />
+
+                    </StackPanel>
+                    <!--<Button
                         Margin="10,0"
                         Command="{Binding ExecuteCommand}"
-                        CommandParameter="SendCustomFrame"
-                        Content="发送" />
-                </StackPanel>
+                        CommandParameter="帧生成器"
+                        Content="帧生成器"
+                        DockPanel.Dock="Right" />-->
+                </DockPanel>
+
+
                 <ContentControl
                     Margin="4,0"
                     Padding="0"

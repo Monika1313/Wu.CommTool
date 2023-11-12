@@ -922,7 +922,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         }
 
         /// <summary>
-        /// 根据选择 对字符串进行crc校验
+        /// 根据选择 对字符串进行crc校验  
+        /// 若已经是校验过的帧 调用该方法将不进行校验
         /// </summary>
         /// <param name="msg"></param>
         /// <returns></returns>
@@ -946,6 +947,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //Modebus校验
                 case CrcMode.Modbus:
                     var code = Wu.Utils.Crc.Crc16Modbus(msg2);
+                    if (code.Any(x=>x==0))
+                    {
+                        break;
+                    }
                     Array.Reverse(code);
                     crc.AddRange(code);
                     break;
