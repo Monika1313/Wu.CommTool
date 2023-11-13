@@ -40,7 +40,15 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <summary>
         /// 数据类型
         /// </summary>
-        public DataType Type { get => _Type; set => SetProperty(ref _Type, value); }
+        public DataType Type
+        {
+            get => _Type;
+            set
+            {
+                SetProperty(ref _Type, value);
+                Value = GetVal(DataBytes, Type, Rate);
+            }
+        }
         private DataType _Type = DataType.uShort;
 
         /// <summary>
@@ -147,6 +155,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             {
                 return 0;
             }
+            
             return dataType switch
             {
                 DataType.uShort => Math.Round(BitConverter.ToUInt16(databytes, 0) * rate, 3),

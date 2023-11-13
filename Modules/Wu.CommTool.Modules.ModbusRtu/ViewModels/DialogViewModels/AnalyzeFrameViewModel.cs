@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 using Wu.CommTool.Modules.ModbusRtu.Models;
+using System.Linq;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 {
@@ -48,6 +49,26 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             if (parameters != null && parameters.ContainsKey("Value"))
             {
                 ModbusRtuFrame = parameters.GetValue<ModbusRtuFrame>("Value");
+                if (ModbusRtuFrame.RegisterValues?.Length > 0)
+                {
+                    ModbusRtuDatas.AddRange(Enumerable.Range(0, ModbusRtuFrame.RegisterValues.Length / 2).Select(x => new ModbusRtuData()));
+                
+                }
+
+                //将读取的数据写入
+                for (int i = 0; i < ModbusRtuDatas.Count; i++)
+                {
+                    ModbusRtuDatas[i].Location = i * 2;         //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+                    ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(ModbusRtuFrame.RegisterValues, 2 * i);
+                    ModbusRtuDatas[i].OriginBytes = ModbusRtuFrame.RegisterValues;        //源字节数组
+                    ModbusRtuDatas[i].ModbusByteOrder = Enums.ModbusByteOrder.DCBA; //字节序
+
+
+
+                    //ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(ModbusRtuFrame.RegisterValues, 2 * i);
+                    //ModbusRtuDatas[i].ModbusByteOrder = Enums.ModbusByteOrder.ABCD; //字节序
+                }
+
             }
         }
         #endregion
@@ -64,6 +85,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         /// </summary>
         public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
         private ModbusRtuFrame _ModbusRtuFrame;
+
+        /// <summary>
+        /// ModbusRtu的寄存器值
+        /// </summary>
+        public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
+        private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
         #endregion
 
 
@@ -89,7 +116,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             }
         }
 
-       
+
 
 
         /// <summary>

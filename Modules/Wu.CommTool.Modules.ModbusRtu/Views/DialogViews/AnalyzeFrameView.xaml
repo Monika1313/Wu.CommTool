@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:ddvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels"
+    xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
     xmlns:hc="https://handyorg.github.io/handycontrol"
     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views.DialogViews"
@@ -31,9 +32,9 @@
                 </StackPanel>-->
 
                 <DockPanel
-                    HorizontalAlignment="Center"
                     VerticalAlignment="Center"
-                    DockPanel.Dock="Top">
+                    DockPanel.Dock="Top"
+                    LastChildFill="False">
                     <TextBlock
                         Margin="10"
                         FontSize="16"
@@ -57,7 +58,90 @@
 
                 <ContentControl
                     Margin="4"
-                    DockPanel.Dock="Top"
+                    Padding="0"
+                    DockPanel.Dock="Right"
+                    Style="{StaticResource Effect2Control}"
+                    Visibility="{Binding ModbusRtuDatas.Count, Converter={wu:Zero2Collapsed}}">
+                    <DataGrid
+                        Margin="0"
+                        hc:DataGridAttach.ShowRowNumber="True"
+                        AutoGenerateColumns="False"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        CanUserSortColumns="False"
+                        EnableRowVirtualization="True"
+                        ItemsSource="{Binding ModbusRtuDatas}"
+                        RowHeaderWidth="60"
+                        Style="{StaticResource NumDataGrid}">
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn
+                                Binding="{Binding DataHex}"
+                                Header="16进制"
+                                IsReadOnly="True" />
+
+
+
+                            <DataGridTemplateColumn Header="数据类型">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox
+                                            MinWidth="135"
+                                            Margin="0"
+                                            ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:DataType}}}"
+                                            SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="值">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border
+                                            MinWidth="60"
+                                            Padding="8,4"
+                                            BorderThickness="1"
+                                            CornerRadius="4">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                            <Setter Property="Background" Value="{StaticResource Purple_Background}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock FontSize="13" Text="{Binding Value}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                                <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ContentControl>
+
+                <ContentControl
+                    Margin="4"
+                    DockPanel.Dock="Left"
                     Style="{StaticResource Effect2Control}">
                     <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                         <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuFrame.MessageSubContents}">

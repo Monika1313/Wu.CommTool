@@ -46,10 +46,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             SelectedParitys.Add(Parity.None);
 
             //初始化一个10个数据的列表
-            for (int i = 0; i < 10; i++)
-            {
-                DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData());
-            }
+            DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
+
             RefreshModbusRtuDataDataView();
         }
 
@@ -101,6 +99,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// </summary>
         public int SendBytesCount { get => _SendBytesCount; set => SetProperty(ref _SendBytesCount, value); }
         private int _SendBytesCount = 0;
+
+        /// <summary>
+        /// 字节序
+        /// </summary>
+        public ModbusByteOrder ByteOrder { get => _ByteOrder; set => SetProperty(ref _ByteOrder, value); }
+        private ModbusByteOrder _ByteOrder= ModbusByteOrder.DCBA;
         #endregion
 
         #region ******************************  自定义帧模块 属性  ******************************

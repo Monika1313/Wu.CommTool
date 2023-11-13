@@ -150,7 +150,6 @@
                                 Text="{Binding ModbusRtuModel.DataMonitorConfig.Period}" />
                             <ComboBox
                                 MinWidth="135"
-                                hc:InfoElement.Placeholder="请选择校验位..."
                                 hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                                 hc:TitleElement.Title="字节序"
                                 ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:ModbusByteOrder}}}"

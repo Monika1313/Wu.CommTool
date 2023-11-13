@@ -95,6 +95,13 @@
                             Style="{StaticResource FormTextBox}"
                             Text="{Binding ModbusRtuModel.ComConfig.MaxLength}" />
 
+                        <ComboBox
+                            MinWidth="135"
+                            hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
+                            hc:TitleElement.Title="字节序"
+                            ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:ModbusByteOrder}}}"
+                            SelectedItem="{Binding ModbusRtuModel.ByteOrder}"
+                            Style="{StaticResource FormComboBox}" />
 
                         <StackPanel
                             HorizontalAlignment="Center"
