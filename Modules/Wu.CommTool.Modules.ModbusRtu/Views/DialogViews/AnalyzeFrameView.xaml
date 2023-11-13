@@ -74,13 +74,16 @@
                         RowHeaderWidth="60"
                         Style="{StaticResource NumDataGrid}">
 
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow" />
+                        </DataGrid.RowStyle>
+
                         <DataGrid.Columns>
                             <DataGridTextColumn
                                 Binding="{Binding DataHex}"
+                                Foreground="Black"
                                 Header="16进制"
                                 IsReadOnly="True" />
-
-
 
                             <DataGridTemplateColumn Header="数据类型">
                                 <DataGridTemplateColumn.CellTemplate>

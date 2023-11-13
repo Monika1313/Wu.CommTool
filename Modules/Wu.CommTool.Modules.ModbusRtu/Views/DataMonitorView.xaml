@@ -610,13 +610,19 @@
                         ItemsSource="{Binding ModbusRtuModel.ModbusRtuDataDataView, IsAsync=True}"
                         RowHeaderWidth="60"
                         Style="{StaticResource NumDataGrid}">
-                        <!--<DataGrid.RowHeaderTemplate>
-                                            <DataTemplate>
-                                                <Grid Width="40">
-                                                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
-                                                </Grid>
-                                            </DataTemplate>
-                                        </DataGrid.RowHeaderTemplate>-->
+
+                        <DataGrid.RowStyle>
+                            <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="DataGridRow">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Background" Value="Transparent" />
+                                        <Setter Property="Foreground" Value="Black" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>
+
                         <DataGrid.Columns>
                             <DataGridTemplateColumn Header="名称">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -705,10 +711,12 @@
 
                             <DataGridTextColumn
                                 Binding="{Binding Addr, StringFormat={}{0:00}}"
+                                Foreground="Black"
                                 Header="地址Dec"
                                 IsReadOnly="True" />
                             <DataGridTextColumn
                                 Binding="{Binding Addr, StringFormat=0x{0:X2}}"
+                                Foreground="Black"
                                 Header="地址Hex"
                                 IsReadOnly="True" />
 

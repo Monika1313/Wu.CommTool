@@ -342,6 +342,17 @@
                     RowHeaderWidth="60"
                     Style="{StaticResource NumDataGrid}">
 
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <!--<Setter Property="Background" Value="Transparent" />-->
+                        </Style>
+                    </DataGrid.RowStyle>
+                    
+                    <DataGrid.CellStyle>
+                        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                            <!--<Setter Property="Background" Value="Transparent" />-->
+                        </Style>
+                    </DataGrid.CellStyle>
                     <!--  添加触发器,支持点击事件  -->
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="MouseDoubleClick">
