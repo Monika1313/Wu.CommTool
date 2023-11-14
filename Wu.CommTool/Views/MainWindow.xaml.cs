@@ -101,13 +101,13 @@ namespace Wu.CommTool.Views
                         Point cursorPoint = Mouse.GetPosition(this);//当前鼠标的位置
 
                         //设置窗口的当前位置
-                        this.Top = 10;
+                        this.Top = cursorPoint.Y - 25;
                         this.Left = cursorPoint.X - rb.Width / 2;
                     }
 
                     this.DragMove();
                 }
-                    
+
             };
 
             //双击最大化
