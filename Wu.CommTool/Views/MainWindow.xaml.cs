@@ -3,8 +3,10 @@ using Newtonsoft.Json;
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Wu.CommTool.Views
 {
@@ -88,12 +90,35 @@ namespace Wu.CommTool.Views
             //移动
             ColorZone.MouseMove += (s, e) =>
             {
+                if (changeWinState)
+                {
+                    changeWinState = false;
+                    return;
+                }
                 if (e.LeftButton == MouseButtonState.Pressed)
+                {
+                    //若此时是最大化状态,则还原
+                    if (WindowState != WindowState.Normal && changeWinState == false)
+                    {
+                        WindowState = WindowState.Normal;
+
+                        Rect rb = this.RestoreBounds;//获取最大化或最小化前的窗口大小
+                        Point cursorPoint = Mouse.GetPosition(this);//当前鼠标的位置
+
+                        //设置窗口的当前位置
+                        this.Top = 10;
+                        this.Left = cursorPoint.X - rb.Width / 2;
+                    }
+
                     this.DragMove();
+                }
+                    
             };
+
             //双击最大化
-            ColorZone.MouseDoubleClick += (s, e) =>
+            ColorZone.MouseDoubleClick += async (s, e) =>
             {
+                changeWinState = true;
                 if (this.WindowState == WindowState.Maximized)
                     this.WindowState = WindowState.Normal;
                 else
@@ -112,6 +137,7 @@ namespace Wu.CommTool.Views
             Environment.Exit(0);
         }
 
+        private bool changeWinState = false;
         //protected override void OnClosing(CancelEventArgs e)
         //{
         //    e.Cancel = true;
