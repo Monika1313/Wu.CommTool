@@ -90,11 +90,6 @@ namespace Wu.CommTool.Views
             //移动
             ColorZone.MouseMove += (s, e) =>
             {
-                if (changeWinState)
-                {
-                    changeWinState = false;
-                    return;
-                }
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     //若此时是最大化状态,则还原
@@ -123,6 +118,9 @@ namespace Wu.CommTool.Views
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Maximized;
+                //需要延迟一段时间,否则鼠标有移动会触发MouseMove导致窗口还原
+                await Task.Delay(300);
+                changeWinState = false;
             };
 
             menuBar.SelectionChanged += (s, e) =>
