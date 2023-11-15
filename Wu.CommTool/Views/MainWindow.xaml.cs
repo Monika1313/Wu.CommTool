@@ -93,17 +93,17 @@ namespace Wu.CommTool.Views
                 if (e.LeftButton == MouseButtonState.Pressed)
                 {
                     //若此时是最大化状态,则还原
-                    if (WindowState != WindowState.Normal && changeWinState == false)
-                    {
-                        WindowState = WindowState.Normal;
+                    //if (WindowState != WindowState.Normal && changeWinState == false)
+                    //{
+                    //    WindowState = WindowState.Normal;
 
-                        Rect rb = this.RestoreBounds;//获取最大化或最小化前的窗口大小
-                        Point cursorPoint = Mouse.GetPosition(this);//当前鼠标的位置
+                    //    Rect rb = this.RestoreBounds;//获取最大化或最小化前的窗口大小
+                    //    Point cursorPoint = Mouse.GetPosition(this);//当前鼠标的位置
 
-                        //设置窗口的当前位置
-                        this.Top = cursorPoint.Y - 25;
-                        this.Left = cursorPoint.X - rb.Width / 2;
-                    }
+                    //    //设置窗口的当前位置
+                    //    this.Top = cursorPoint.Y - 25;
+                    //    this.Left = cursorPoint.X - rb.Width / 2;
+                    //}
 
                     this.DragMove();
                 }
@@ -113,14 +113,14 @@ namespace Wu.CommTool.Views
             //双击最大化
             ColorZone.MouseDoubleClick += async (s, e) =>
             {
-                changeWinState = true;
+                //changeWinState = true;
                 if (this.WindowState == WindowState.Maximized)
                     this.WindowState = WindowState.Normal;
                 else
                     this.WindowState = WindowState.Maximized;
                 //需要延迟一段时间,否则鼠标有移动会触发MouseMove导致窗口还原
-                await Task.Delay(300);
-                changeWinState = false;
+                //await Task.Delay(300);
+                //changeWinState = false;
             };
 
             menuBar.SelectionChanged += (s, e) =>

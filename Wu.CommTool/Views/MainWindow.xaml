@@ -1,25 +1,24 @@
-﻿<Window
-    x:Class="Wu.CommTool.Views.MainWindow"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:core="clr-namespace:Wu.CommTool.Core;assembly=Wu.CommTool.Core"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
-    xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:prism="http://prismlibrary.com/"
-    xmlns:viewmodels="clr-namespace:Wu.CommTool.ViewModels"
-    Width="1250"
-    Height="700"
-    MinWidth="1000"
-    MinHeight="700"
-    d:DataContext="{x:Static dvm:MainWindowDesignViewModel.Instance}"
-    prism:ViewModelLocator.AutoWireViewModel="True"
-    WindowStartupLocation="CenterScreen"
-    mc:Ignorable="d">
+﻿<Window x:Class="Wu.CommTool.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:core="clr-namespace:Wu.CommTool.Core;assembly=Wu.CommTool.Core"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:dvm="clr-namespace:Wu.CommTool.ViewModels.DesignViewModels"
+        xmlns:ext="clr-namespace:Wu.CommTool.Extensions"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:prism="http://prismlibrary.com/"
+        xmlns:viewmodels="clr-namespace:Wu.CommTool.ViewModels"
+        Width="1250"
+        Height="700"
+        MinWidth="1000"
+        MinHeight="700"
+        d:DataContext="{x:Static dvm:MainWindowDesignViewModel.Instance}"
+        prism:ViewModelLocator.AutoWireViewModel="True"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
     <Window.Resources>
         <!--  最大化时增加边距, 避免由于WindowChrome导致的页面显示不全  -->
         <Style x:Key="MainWindowGrid" TargetType="{x:Type Grid}">
@@ -34,46 +33,40 @@
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
-        <WindowChrome
-            CaptionHeight="3"
-            CornerRadius="0"
-            GlassFrameThickness="1"
-            NonClientFrameEdges="None"
-            ResizeBorderThickness="5"
-            UseAeroCaptionButtons="False" />
+        <WindowChrome CaptionHeight="30"
+                      CornerRadius="0"
+                      GlassFrameThickness="1"
+                      NonClientFrameEdges="None"
+                      ResizeBorderThickness="5"
+                      UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
     <Grid Style="{StaticResource MainWindowGrid}">
-        <md:DialogHost
-            x:Name="DialogHost"
-            DialogTheme="Inherit"
-            Identifier="Root">
+        <md:DialogHost x:Name="DialogHost"
+                       DialogTheme="Inherit"
+                       Identifier="Root">
             <md:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
                 <!--  左侧抽屉  -->
                 <md:DrawerHost.LeftDrawerContent>
                     <DockPanel MinWidth="170">
                         <StackPanel DockPanel.Dock="Top">
-                            <Image
-                                Width="50"
-                                Height="50"
-                                Margin="0,20,0,5"
-                                Source="/Images/Wu.png">
+                            <Image Width="50"
+                                   Height="50"
+                                   Margin="0,20,0,5"
+                                   Source="/Images/Wu.png">
                                 <Image.Clip>
-                                    <EllipseGeometry
-                                        Center="25,25"
-                                        RadiusX="25"
-                                        RadiusY="25" />
+                                    <EllipseGeometry Center="25,25"
+                                                     RadiusX="25"
+                                                     RadiusY="25" />
                                 </Image.Clip>
                             </Image>
-                            <TextBlock
-                                Margin="0,10"
-                                HorizontalAlignment="Center"
-                                Text="Wu" />
+                            <TextBlock Margin="0,10"
+                                       HorizontalAlignment="Center"
+                                       Text="Wu" />
                         </StackPanel>
-                        <ListBox
-                            x:Name="menuBar"
-                            ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
-                            ItemsSource="{Binding MenuBars}">
+                        <ListBox x:Name="menuBar"
+                                 ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
+                                 ItemsSource="{Binding MenuBars}">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="SelectionChanged">
                                     <i:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
@@ -83,10 +76,9 @@
                                 <DataTemplate>
                                     <StackPanel Background="Transparent" Orientation="Horizontal">
                                         <md:PackIcon Margin="20,0" Kind="{Binding Icon}" />
-                                        <TextBlock
-                                            Margin="0,0,20,0"
-                                            VerticalAlignment="Center"
-                                            Text="{Binding Title}" />
+                                        <TextBlock Margin="0,0,20,0"
+                                                   VerticalAlignment="Center"
+                                                   Text="{Binding Title}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
@@ -98,22 +90,19 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <md:Snackbar
-                        x:Name="Snackbar"
-                        Panel.ZIndex="1"
-                        MessageQueue="{md:MessageQueue}" />
-                    <md:ColorZone
-                        x:Name="ColorZone"
-                        Padding="10"
-                        md:ElevationAssist.Elevation="Dp2"
-                        DockPanel.Dock="Top"
-                        Mode="PrimaryMid">
+                    <md:Snackbar x:Name="Snackbar"
+                                 Panel.ZIndex="1"
+                                 MessageQueue="{md:MessageQueue}" />
+                    <md:ColorZone x:Name="ColorZone"
+                                  Padding="10"
+                                  md:ElevationAssist.Elevation="Dp2"
+                                  DockPanel.Dock="Top"
+                                  Mode="PrimaryMid">
                         <Grid>
-                            <TextBlock
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                FontSize="22"
-                                Text="Wu" />
+                            <TextBlock HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontSize="22"
+                                       Text="Wu" />
 
                             <DockPanel LastChildFill="False">
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
@@ -142,42 +131,38 @@
                                         </StackPanel>
                                     </md:PopupBox>-->
 
-                                    <Button
-                                        x:Name="btnMin"
-                                        Content="{md:PackIcon Kind=WindowMinimize,
-                                                              Size=18}"
-                                        Cursor="Hand"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
-                                    <Button
-                                        x:Name="btnMax"
-                                        Content="{md:PackIcon Kind=WindowMaximize,
-                                                              Size=18}"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
-                                    <Button
-                                        x:Name="btnClose"
-                                        Content="{md:PackIcon Kind=WindowClose,
-                                                              Size=18}"
-                                        Cursor="Hand"
-                                        Style="{StaticResource MaterialDesignFlatMidBgButton}" />
+                                    <Button x:Name="btnMin"
+                                            Content="{md:PackIcon Kind=WindowMinimize,
+                                                                  Size=18}"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" />
+                                    <Button x:Name="btnMax"
+                                            Content="{md:PackIcon Kind=WindowMaximize,
+                                                                  Size=18}"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" />
+                                    <Button x:Name="btnClose"
+                                            Content="{md:PackIcon Kind=WindowClose,
+                                                                  Size=18}"
+                                            Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                                            WindowChrome.IsHitTestVisibleInChrome="True" />
                                 </StackPanel>
 
-                                <ToggleButton
-                                    x:Name="MenuToggleButton"
-                                    DockPanel.Dock="Left"
-                                    IsChecked="False"
-                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}" />
+                                <ToggleButton x:Name="MenuToggleButton"
+                                              DockPanel.Dock="Left"
+                                              IsChecked="False"
+                                              Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                              WindowChrome.IsHitTestVisibleInChrome="True" />
                             </DockPanel>
                         </Grid>
                     </md:ColorZone>
                     <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static core:PrismRegionNames.MainViewRegionName}" />
-                    <ScrollViewer
-                        Grid.Row="1"
-                        HorizontalAlignment="Right"
-                        VerticalScrollBarVisibility="Hidden">
-                        <StackPanel
-                            Margin="0,10,10,10"
-                            VerticalAlignment="Top"
-                            hc:Growl.GrowlParent="True" />
+                    <ScrollViewer Grid.Row="1"
+                                  HorizontalAlignment="Right"
+                                  VerticalScrollBarVisibility="Hidden">
+                        <StackPanel Margin="0,10,10,10"
+                                    VerticalAlignment="Top"
+                                    hc:Growl.GrowlParent="True" />
                     </ScrollViewer>
                 </Grid>
             </md:DrawerHost>

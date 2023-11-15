@@ -10,6 +10,30 @@
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>Images\logo.ico</ApplicationIcon>
 	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	  <IsPublishable>True</IsPublishable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	  <IsPublishable>True</IsPublishable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	  <IsPublishable>True</IsPublishable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	  <IsPublishable>True</IsPublishable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net7.0-windows|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	  <IsPublishable>True</IsPublishable>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+	  <DebugType>portable</DebugType>
+	  <IsPublishable>True</IsPublishable>
+	</PropertyGroup>
 	<ItemGroup>
 	  <Compile Remove="publish\**" />
 	  <EmbeddedResource Remove="publish\**" />
@@ -94,4 +118,7 @@
 			<UserProperties />
 		</VisualStudio>
 	</ProjectExtensions>
+	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	  <Exec Command="del $(OutDir)*.pdb /Q" />
+	</Target>
 </Project>
