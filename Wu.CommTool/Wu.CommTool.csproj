@@ -118,7 +118,4 @@
 			<UserProperties />
 		</VisualStudio>
 	</ProjectExtensions>
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="del $(OutDir)*.pdb /Q" />
-	</Target>
 </Project>
