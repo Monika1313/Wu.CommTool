@@ -22,6 +22,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using System.Windows.Interop;
 using System.Windows.Documents;
+using System.Xaml.Permissions;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -30,7 +31,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
     /// </summary>
     public class ModbusRtuModel : BindableBase
     {
-
         public ModbusRtuModel()
         {
             SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);           //串口接收事件
@@ -227,7 +227,14 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             {
                 //查找第一个USB设备
                 var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
-                //有USB设备优先选择USB
+                //上次选中的usb设备
+                var lastUsbDevice = ComPorts.FindFirst(x =>x.Value.ToLower().Contains("usb") && x.Key.Equals(ComConfig.Port.Key) && x.Value.Equals(ComConfig.Port.Value));
+                if (lastUsbDevice.Key != null)
+                {
+                    usbDevice = lastUsbDevice;
+                }
+
+                //有USB设备则选择第一个USB
                 if (usbDevice.Key != null)
                 {
                     //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个

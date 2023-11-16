@@ -6,13 +6,13 @@
 		<UseWPF>true</UseWPF>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
-	  <DebugType>none</DebugType>
+	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-windows|AnyCPU'">
-	  <DebugType>none</DebugType>
+	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net48|AnyCPU'">
-	  <DebugType>none</DebugType>
+	  <DebugType>portable</DebugType>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net6.0-windows|AnyCPU'">
 	  <DebugType>none</DebugType>
