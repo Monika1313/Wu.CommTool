@@ -117,7 +117,19 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <summary>
         /// 字节序
         /// </summary>
-        public ModbusByteOrder ModbusByteOrder { get => _ModbusByteOrder; set => SetProperty(ref _ModbusByteOrder, value); }
+        public ModbusByteOrder ModbusByteOrder
+        {
+            get => _ModbusByteOrder;
+            set
+            {
+                var old = _ModbusByteOrder;
+                SetProperty(ref _ModbusByteOrder, value);
+                if (old != value)
+                {
+                    Value = GetVal(DataBytes, Type, Rate);
+                }
+            }
+        }
         private ModbusByteOrder _ModbusByteOrder;
 
 

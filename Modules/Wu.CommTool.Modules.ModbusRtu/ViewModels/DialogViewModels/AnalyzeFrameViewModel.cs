@@ -10,6 +10,7 @@ using Wu.ViewModels;
 using Wu.Wpf.Common;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using System.Linq;
+using Wu.CommTool.Modules.ModbusRtu.Enums;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 {
@@ -31,6 +32,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
+            ModbusByteOrderChangedCommand = new DelegateCommand<ModbusByteOrder?>(ModbusByteOrderChanged);
         }
 
         /// <summary>
@@ -46,6 +48,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         /// </summary>
         public void OnDialogOpened(IDialogParameters parameters)
         {
+            if (parameters != null && parameters.ContainsKey("ModbusByteOrder"))
+            {
+                ModbusByteOrder = parameters.GetValue<ModbusByteOrder>("ModbusByteOrder");
+            }
             if (parameters != null && parameters.ContainsKey("Value"))
             {
                 ModbusRtuFrame = parameters.GetValue<ModbusRtuFrame>("Value");
@@ -59,14 +65,9 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
                 for (int i = 0; i < ModbusRtuDatas.Count; i++)
                 {
                     ModbusRtuDatas[i].Location = i * 2;         //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+                    ModbusRtuDatas[i].ModbusByteOrder = ModbusByteOrder; //字节序
                     ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(ModbusRtuFrame.RegisterValues, 2 * i);
                     ModbusRtuDatas[i].OriginBytes = ModbusRtuFrame.RegisterValues;        //源字节数组
-                    ModbusRtuDatas[i].ModbusByteOrder = Enums.ModbusByteOrder.DCBA; //字节序
-
-
-
-                    //ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(ModbusRtuFrame.RegisterValues, 2 * i);
-                    //ModbusRtuDatas[i].ModbusByteOrder = Enums.ModbusByteOrder.ABCD; //字节序
                 }
 
             }
@@ -87,6 +88,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         private ModbusRtuFrame _ModbusRtuFrame;
 
         /// <summary>
+        /// 字节序
+        /// </summary>
+        public ModbusByteOrder ModbusByteOrder { get => _ModbusByteOrder; set => SetProperty(ref _ModbusByteOrder, value); }
+        private ModbusByteOrder _ModbusByteOrder = ModbusByteOrder.DCBA;
+
+        /// <summary>
         /// ModbusRtu的寄存器值
         /// </summary>
         public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
@@ -102,6 +109,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         /// 执行命令
         /// </summary>
         public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+        /// <summary>
+        /// 字节序切换
+        /// </summary>
+        public DelegateCommand<ModbusByteOrder?> ModbusByteOrderChangedCommand { get; private set; }
         #endregion
 
 
@@ -180,6 +192,33 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             {
                 UpdateLoading(false);
             }
+        }
+
+
+        /// <summary>
+        /// 字节序切换
+        /// </summary>
+        /// <param name="order"></param>
+        private void ModbusByteOrderChanged(ModbusByteOrder? order)
+        {
+            try
+            {
+                if (order == null)
+                {
+                    return;
+                }
+
+
+                foreach (var item in ModbusRtuDatas)
+                {
+                    item.ModbusByteOrder = ModbusByteOrder;
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+
         }
 
         #endregion

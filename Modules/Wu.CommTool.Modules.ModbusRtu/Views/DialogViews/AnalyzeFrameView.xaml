@@ -52,97 +52,111 @@
                             Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </DockPanel>
 
-                <ContentControl Margin="4"
-                                Padding="0"
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource Effect2Control}"
-                                Visibility="{Binding ModbusRtuDatas.Count, Converter={wu:Zero2Collapsed}}">
-                    <DataGrid Margin="0"
-                              hc:DataGridAttach.ShowRowNumber="True"
-                              AutoGenerateColumns="False"
-                              Background="Transparent"
-                              BorderThickness="0"
-                              CanUserSortColumns="False"
-                              EnableRowVirtualization="True"
-                              ItemsSource="{Binding ModbusRtuDatas}"
-                              RowHeaderWidth="60"
-                              Style="{StaticResource NumDataGrid}">
+                <DockPanel DockPanel.Dock="Right">
+                    <ComboBox Width="200"
+                              hc:TitleElement.Title="字节序"
+                              hc:TitleElement.TitleWidth="50"
+                              DockPanel.Dock="Top"
+                              ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:ModbusByteOrder}}}"
+                              SelectedItem="{Binding ModbusByteOrder}"
+                              Style="{StaticResource FormComboBox}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding ModbusByteOrderChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBox}}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                    <ContentControl Margin="4"
+                                    Padding="0"
+                                    Style="{StaticResource Effect2Control}"
+                                    Visibility="{Binding ModbusRtuDatas.Count, Converter={wu:Zero2Collapsed}}">
+                        <DataGrid Margin="0"
+                                  hc:DataGridAttach.ShowRowNumber="True"
+                                  AutoGenerateColumns="False"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  CanUserSortColumns="False"
+                                  EnableRowVirtualization="True"
+                                  ItemsSource="{Binding ModbusRtuDatas}"
+                                  RowHeaderWidth="60"
+                                  Style="{StaticResource NumDataGrid}">
 
-                        <DataGrid.RowStyle>
-                            <Style TargetType="DataGridRow" />
-                        </DataGrid.RowStyle>
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow" />
+                            </DataGrid.RowStyle>
 
-                        <DataGrid.CellStyle>
-                            <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
-                                <Style.Triggers>
-                                    <Trigger Property="IsKeyboardFocused" Value="False">
-                                        <Setter Property="Background" Value="Transparent" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </DataGrid.CellStyle>
+                            <DataGrid.CellStyle>
+                                <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsKeyboardFocused" Value="False">
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
 
 
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Binding="{Binding DataHex}"
-                                                Foreground="Black"
-                                                Header="16进制"
-                                                IsReadOnly="True" />
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Binding="{Binding DataHex}"
+                                                    Foreground="Black"
+                                                    Header="16进制"
+                                                    IsReadOnly="True" />
 
-                            <DataGridTemplateColumn Header="数据类型">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox MinWidth="135"
-                                                  Margin="0"
-                                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:DataType}}}"
-                                                  SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
-                            <DataGridTemplateColumn Header="值">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <Border MinWidth="60"
-                                                Padding="8,4"
-                                                BorderThickness="1"
-                                                CornerRadius="4">
-                                            <Border.Style>
-                                                <Style TargetType="Border">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
-                                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
-                                                            <Setter Property="Background" Value="{StaticResource Purple_Background}" />
-                                                            <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Border.Style>
-                                            <TextBlock FontSize="13" Text="{Binding Value}">
-                                                <TextBlock.Style>
-                                                    <Style TargetType="TextBlock">
+                                <DataGridTemplateColumn Header="数据类型">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <ComboBox MinWidth="135"
+                                                      Margin="0"
+                                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:DataType}}}"
+                                                      SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="值">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Border MinWidth="60"
+                                                    Padding="8,4"
+                                                    BorderThickness="1"
+                                                    CornerRadius="4">
+                                                <Border.Style>
+                                                    <Style TargetType="Border">
                                                         <Style.Triggers>
                                                             <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
-                                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
                                                             </DataTrigger>
                                                             <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
-                                                                <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
+                                                                <Setter Property="Background" Value="{StaticResource Purple_Background}" />
+                                                                <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
                                                             </DataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
-                                                </TextBlock.Style>
-                                            </TextBlock>
-                                        </Border>
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>
+                                                </Border.Style>
+                                                <TextBlock FontSize="13" Text="{Binding Value}">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="TextBlock">
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                                </DataTrigger>
+                                                                <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                                    <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
 
 
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </ContentControl>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </ContentControl>
+                </DockPanel>
 
                 <ContentControl Margin="4"
                                 DockPanel.Dock="Left"

@@ -22,13 +22,13 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         private readonly IContainerProvider provider;
         private readonly IDialogHostService dialogHost;
 
-        
+
 
         public string DialogHostName { get; set; }
         #endregion
 
         public CustomFrameViewModel() { }
-        public CustomFrameViewModel(IContainerProvider provider, IDialogHostService dialogHost,ModbusRtuModel modbusRtuModel) : base(provider)
+        public CustomFrameViewModel(IContainerProvider provider, IDialogHostService dialogHost, ModbusRtuModel modbusRtuModel) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -120,7 +120,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// <param name="navigationContext"></param>
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            
+
         }
 
         /// <summary>
@@ -128,7 +128,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// </summary>
         public void OnDialogOpened(IDialogParameters parameters)
         {
-            
+
         }
 
 
@@ -230,7 +230,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 }
                 DialogParameters param = new()
                 {
-                    { "Value", data.ModbusRtuFrame }
+                    { "Value", data.ModbusRtuFrame },
+                    { "ModbusByteOrder", ModbusRtuModel.ByteOrder }
                 };
                 var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
             }

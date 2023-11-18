@@ -247,7 +247,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 }
                 DialogParameters param = new()
                 {
-                    { "Value", data.ModbusRtuFrame }
+                    { "Value", data.ModbusRtuFrame },
+                    { "ModbusByteOrder",ModbusRtuModel.ByteOrder }
                 };
                 var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
             }
