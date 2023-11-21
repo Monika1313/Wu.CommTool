@@ -77,6 +77,13 @@ namespace Wu.CommTool.Modules.MqttClient.Models
         private bool _IsOpened = false;
 
         /// <summary>
+        /// 自动重新连接
+        /// </summary>
+        public bool AutoReconnect { get => _AutoReconnect; set => SetProperty(ref _AutoReconnect, value); }
+        private bool _AutoReconnect;
+
+
+        /// <summary>
         /// 接收消息的格式
         /// </summary>
         public MqttPayloadType ReceivePaylodType { get => _ReceivePaylodType; set => SetProperty(ref _ReceivePaylodType, value); }

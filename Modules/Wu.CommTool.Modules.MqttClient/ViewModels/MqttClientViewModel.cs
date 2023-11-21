@@ -41,6 +41,9 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
 
         private string MqttClientConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
         private static string viewName = "MqttClientView";
+
+        CancellationTokenSource connectCts = new();
+        CancellationToken connectCt;
         #endregion
 
         public MqttClientViewModel() { }
@@ -59,6 +62,9 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
             ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
 
             MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
+
+
+            connectCt = connectCts.Token;
 
             //从默认配置文件中读取配置
             try
@@ -450,23 +456,29 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 if (client.IsConnected)
                 {
                     ShowMessage($"断开连接...");
+                    await client.DisconnectAsync();          //断开连接
                 }
                 else
                 {
+                    //connectCts.Cancel();//取消连接
+                    //connectCts = new CancellationTokenSource();
+                    //connectCt = connectCts.Token;
                     ShowMessage($"取消连接...");
                 }
-                await client.DisconnectAsync();          //断开连接
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    MqttClientConfig.IsOpened = false;
-                });
 
+                connectCts.Cancel();//取消连接
+                connectCts = new CancellationTokenSource();
+                connectCt = connectCts.Token;
+
+                MqttClientConfig.IsOpened = false;
             }
             catch (Exception ex)
             {
                 ShowMessage($"断开连接失败 {ex.Message}");
             }
         }
+
+
 
         /// <summary>
         /// 打开Mqtt客户端
@@ -483,23 +495,23 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                     .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
                     .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
                     .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password).Build();         //账号
-
                 client = new MqttFactory().CreateMqttClient();
+                client.ConnectingAsync += Client_ConnectingAsync;
                 client.ConnectedAsync += Client_ConnectedAsync;
                 client.DisconnectedAsync += Client_DisconnectedAsync;
                 client.ApplicationMessageReceivedAsync += Client_ApplicationMessageReceivedAsync;
                 client.InspectPacketAsync += Client_InspectPacketAsync;
-                client.ConnectingAsync += Client_ConnectingAsync;
-
-                ShowMessage("连接中...");
-                MqttClientConfig.IsOpened = true;//连接时需要直接置位, 否则重复连接期间重复点击连接将导致异常
-                await client.ConnectAsync(options);                //启动连接
+                await client.ConnectAsync(options, connectCt);                //启动连接
                 return true;
             }
+            //若是取消操作 则不报警了
+            catch (OperationCanceledException ex)
+            {
+                return false;
+            }
+            //在离线事件中处理 不重复处理
             catch (MqttCommunicationException ex)
             {
-                //在离线事件中处理 不重复处理
-                //ShowErrorMessage($"{ex.Message} {ex.InnerException?.Message}");
                 return false;
             }
             catch (Exception ex)
@@ -511,7 +523,36 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
 
         private Task Client_ConnectingAsync(MqttClientConnectingEventArgs arg)
         {
+            ShowMessage("连接中...");
+            MqttClientConfig.IsOpened = true;//连接时需要直接置位, 否则重复连接期间重复点击连接将导致异常
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// 连接成功
+        /// </summary>
+        /// <param name="arg"></param>
+        /// <returns></returns>
+        private async Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
+        {
+            try
+            {
+                ShowMessage($"连接服务器成功");//连接成功 
+                //没有需要订阅消息  没有订阅或者 订阅的主题为空
+                if (MqttClientConfig.SubscribeTopics.Count.Equals(0))
+                    return;
+
+                //订阅主题
+                foreach (var x in MqttClientConfig.SubscribeTopics)
+                {
+                    await SubscribeTopic(x.Topic);
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage($"订阅失败: {ex.Message}");//连接成功 
+            }
+            return;
         }
 
         private Task Client_InspectPacketAsync(MQTTnet.Diagnostics.InspectMqttPacketEventArgs arg)
@@ -570,57 +611,67 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         /// </summary>
         /// <param name="arg"></param>
         /// <returns></returns>
-        private Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
+        private async Task Client_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
             if (arg == null)
-                return Task.CompletedTask;
+                return;
+
+            MqttClientConfig.IsOpened = false;//修改连接状态
+
             //异常导致的掉线
             if (arg.Exception != null)
             {
-                MqttClientConfig.IsOpened = false;
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                //被取消连接
+                if (arg.Exception is OperationCanceledException)
+                {
+                    ShowMessage("已取消连接...");
+                    //ShowMessage($"{arg.Exception.Message} {arg.Exception.InnerException?.Message}");
+                }
+                else if(arg.Exception is MqttCommunicationException)
                 {
                     ShowErrorMessage($"{arg.Exception.Message} {arg.Exception.InnerException?.Message}");
-                    //ShowErrorMessage("已断开连接");
-                });
+                }
+                else
+                {
+                    MqttClientConfig.IsOpened = false;
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        ShowErrorMessage($"{arg.Exception.Message} {arg.Exception.InnerException?.Message}");
+                        //ShowErrorMessage("已断开连接");
+                    });
+                }
             }
+            //非异常导致离线
+            else
+            {
+                ShowErrorMessage("已断开连接...");
+            }
+
+            //调用UI线程清空订阅列表
             System.Windows.Application.Current.Dispatcher.Invoke(() =>
             {
-                //非主动离线则显示故障消息
-                if (!ManualStopFlag)
-                    ShowErrorMessage("已断开连接");
-                ManualStopFlag = false;                         //复位主动离线标志
-                MqttClientConfig.IsOpened = false;              //修改连接状态
                 //清除订阅成功的主题
                 MqttClientConfig.SubscribeSucceeds.Clear();
             });
-            return Task.CompletedTask;
-        }
 
-        /// <summary>
-        /// 连接成功
-        /// </summary>
-        /// <param name="arg"></param>
-        /// <returns></returns>
-        private async Task Client_ConnectedAsync(MqttClientConnectedEventArgs arg)
-        {
-            try
+            #region 重连
+            //设置了自动重连 且 非主动离线
+            if (MqttClientConfig.AutoReconnect &&!ManualStopFlag && client.IsConnected == false)
             {
-                ShowMessage($"连接服务器成功");//连接成功 
-                //没有需要订阅消息  没有订阅或者 订阅的主题为空
-                if (MqttClientConfig.SubscribeTopics.Count.Equals(0))
-                    return;
-
-                //订阅主题
-                foreach (var x in MqttClientConfig.SubscribeTopics)
+                //等待5秒后再判断是否需要重连
+                ShowMessage("5秒后尝试重新连接...");
+                await Task.Delay(5000);
+                if (!ManualStopFlag && client.IsConnected == false)
                 {
-                    await SubscribeTopic(x.Topic);
+                    //ShowMessage("尝试重新连接...");
+                    await client.ReconnectAsync();
                 }
             }
-            catch (Exception ex)
+            else
             {
-                ShowErrorMessage($"订阅失败: {ex.Message}");//连接成功 
+                ManualStopFlag = false;//主动离线完成,复位手动标志
             }
+            #endregion
             return;
         }
 
