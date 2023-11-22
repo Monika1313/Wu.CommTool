@@ -537,6 +537,7 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
         {
             try
             {
+                MqttClientConfig.IsOpened = true;//更新状态
                 ShowMessage($"连接服务器成功");//连接成功 
                 //没有需要订阅消息  没有订阅或者 订阅的主题为空
                 if (MqttClientConfig.SubscribeTopics.Count.Equals(0))
