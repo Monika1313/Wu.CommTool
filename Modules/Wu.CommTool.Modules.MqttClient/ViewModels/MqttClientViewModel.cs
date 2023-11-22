@@ -44,6 +44,9 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
 
         CancellationTokenSource connectCts = new();
         CancellationToken connectCt;
+
+        CancellationTokenSource reconnectCts = new();
+        CancellationToken reconnectCt;
         #endregion
 
         public MqttClientViewModel() { }
@@ -63,8 +66,6 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
 
             MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
 
-
-            connectCt = connectCts.Token;
 
             //从默认配置文件中读取配置
             try
@@ -460,15 +461,11 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 }
                 else
                 {
-                    //connectCts.Cancel();//取消连接
-                    //connectCts = new CancellationTokenSource();
-                    //connectCt = connectCts.Token;
                     ShowMessage($"取消连接...");
                 }
 
                 connectCts.Cancel();//取消连接
-                connectCts = new CancellationTokenSource();
-                connectCt = connectCts.Token;
+                reconnectCts.Cancel();//取消重连
 
                 MqttClientConfig.IsOpened = false;
             }
@@ -501,6 +498,9 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 client.DisconnectedAsync += Client_DisconnectedAsync;
                 client.ApplicationMessageReceivedAsync += Client_ApplicationMessageReceivedAsync;
                 client.InspectPacketAsync += Client_InspectPacketAsync;
+
+                connectCts = new();
+                connectCt = connectCts.Token;
                 await client.ConnectAsync(options, connectCt);                //启动连接
                 return true;
             }
@@ -663,8 +663,10 @@ namespace Wu.CommTool.Modules.MqttClient.ViewModels
                 await Task.Delay(5000);
                 if (!ManualStopFlag && client.IsConnected == false)
                 {
+                    reconnectCts = new CancellationTokenSource();
+                    reconnectCt = reconnectCts.Token;
                     //ShowMessage("尝试重新连接...");
-                    await client.ReconnectAsync();
+                    await client.ReconnectAsync(reconnectCt);
                 }
             }
             else
