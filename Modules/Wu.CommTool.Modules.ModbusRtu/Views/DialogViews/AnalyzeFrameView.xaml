@@ -59,7 +59,8 @@
                               DockPanel.Dock="Top"
                               ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:ModbusByteOrder}}}"
                               SelectedItem="{Binding ModbusByteOrder}"
-                              Style="{StaticResource FormComboBox}">
+                              Style="{StaticResource FormComboBox}"
+                              Visibility="{Binding ModbusRtuDatas.Count, Converter={wu:Zero2Collapsed}}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding ModbusByteOrderChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ComboBox}}" />
