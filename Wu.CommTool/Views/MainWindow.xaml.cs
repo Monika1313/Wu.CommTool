@@ -40,22 +40,22 @@ namespace Wu.CommTool.Views
                 this.Close();
             };
             //移动
-            ColorZone.MouseMove += (s, e) =>
-            {
-                if (e.LeftButton == MouseButtonState.Pressed)
-                {
-                    this.DragMove();
-                }
-            };
+            //ColorZone.MouseMove += (s, e) =>
+            //{
+            //    if (e.LeftButton == MouseButtonState.Pressed)
+            //    {
+            //        this.DragMove();
+            //    }
+            //};
 
             //双击最大化
-            ColorZone.MouseDoubleClick += async (s, e) =>
-            {
-                if (this.WindowState == WindowState.Maximized)
-                    this.WindowState = WindowState.Normal;
-                else
-                    this.WindowState = WindowState.Maximized;
-            };
+            //ColorZone.MouseDoubleClick += async (s, e) =>
+            //{
+            //    if (this.WindowState == WindowState.Maximized)
+            //        this.WindowState = WindowState.Normal;
+            //    else
+            //        this.WindowState = WindowState.Maximized;
+            //};
 
             menuBar.SelectionChanged += (s, e) =>
             {

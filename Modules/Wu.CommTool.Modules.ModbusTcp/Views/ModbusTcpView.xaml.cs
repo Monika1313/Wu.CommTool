@@ -7,6 +7,7 @@ namespace Wu.CommTool.Modules.ModbusTcp.Views
     /// </summary>
     public partial class ModbusTcpView : UserControl
     {
+        public const string ViewName = nameof(ModbusTcpView);
         public ModbusTcpView()
         {
             InitializeComponent();

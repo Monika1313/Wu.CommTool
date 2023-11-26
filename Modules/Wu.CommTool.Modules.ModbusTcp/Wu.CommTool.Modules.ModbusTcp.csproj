@@ -23,7 +23,7 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="NModbus" Version="3.0.78" />
+		<PackageReference Include="NModbus" Version="3.0.81" />
 		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 	</ItemGroup>
 	<ItemGroup>

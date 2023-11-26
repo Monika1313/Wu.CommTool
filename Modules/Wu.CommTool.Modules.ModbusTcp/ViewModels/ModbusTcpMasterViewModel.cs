@@ -8,15 +8,10 @@ using System;
 using System.Collections.ObjectModel;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
-using System.Net.Sockets;
-using NModbus;
-using System.Net;
-using Wu.CommTool.Shared.Models;
-using Wu.CommTool.Modules.ModbusTcp.Views;
 
 namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
 {
-    public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
+    public class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHostAware
     {
         #region **************************************** 字段 ****************************************
         private readonly IContainerProvider provider;
@@ -24,8 +19,9 @@ namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
         public string DialogHostName { get; set; }
         #endregion
 
-        public ModbusTcpViewModel() { }
-        public ModbusTcpViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        #region **************************************** 构造函数 ****************************************
+        public ModbusTcpMasterViewModel() { }
+        public ModbusTcpMasterViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -35,25 +31,38 @@ namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
             CancelCommand = new DelegateCommand(Cancel);
         }
 
+        /// <summary>
+        /// 导航至该页面触发
+        /// </summary>
+        /// <param name="navigationContext"></param>
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            //Search();
+        }
+
+        /// <summary>
+        /// 打开该弹窗时执行
+        /// </summary>
+        public async void OnDialogOpened(IDialogParameters parameters)
+        {
+            if (parameters != null && parameters.ContainsKey("Value"))
+            {
+                //var oldDto = parameters.GetValue<Dto>("Value");
+                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
+                //if(getResult != null && getResult.Status)
+                //{
+                //    CurrentDto = getResult.Result;
+                //}
+            }
+        }
+        #endregion
+
         #region **************************************** 属性 ****************************************
         /// <summary>
         /// CurrentDto
         /// </summary>
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
-
-        /// <summary>
-        /// 功能菜单
-        /// </summary>
-        public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
-        private ObservableCollection<MenuBar> _MenuBars = new()
-            {
-                new MenuBar() { Icon = "Number1", Title = "主站Master", NameSpace = nameof(ModbusTcpMasterView) },
-                //new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = nameof(ModbusTcpCustomFrameView) },
-                //new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = nameof(SearchDeviceView) },
-                //new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
-                //new MenuBar() { Icon = "Number4", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
-            };
         #endregion
 
 
@@ -79,39 +88,7 @@ namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
             }
         }
 
-        /// <summary>
-        /// 导航至该页面触发
-        /// </summary>
-        /// <param name="navigationContext"></param>
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            //Search();
-        }
 
-        /// <summary>
-        /// 打开ModbusTcp客户端
-        /// </summary>
-        public void OnModbusTcpClient()
-        {
-            TcpClient client = new TcpClient("192.168.1.10", 502);
-            //IModbusMaster master = ModbusIpMaster.CreateIp(client);
-        }
-
-        /// <summary>
-        /// 打开该弹窗时执行
-        /// </summary>
-        public async void OnDialogOpened(IDialogParameters parameters)
-        {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                //var oldDto = parameters.GetValue<Dto>("Value");
-                //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-                //if(getResult != null && getResult.Status)
-                //{
-                //    CurrentDto = getResult.Result;
-                //}
-            }
-        }
 
 
         /// <summary>
