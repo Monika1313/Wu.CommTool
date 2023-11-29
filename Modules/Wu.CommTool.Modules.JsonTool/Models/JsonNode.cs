@@ -57,6 +57,7 @@ namespace Wu.CommTool.Modules.JsonTool.Models
         JsonNode(JToken token, string header, IEnumerable<JsonNode> children)
         {
             Token = token;
+            //var xx = Token.Type;
             Header = header;
             Children = children;
 

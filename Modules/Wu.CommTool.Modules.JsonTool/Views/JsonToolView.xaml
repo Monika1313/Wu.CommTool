@@ -18,6 +18,10 @@
              mc:Ignorable="d">
 
     <UserControl.Resources>
+        <Style x:Key="Jtext" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
         <DataTemplate x:Key="JObjectTemplate">
             <StackPanel Orientation="Vertical">
                 <TextBlock Foreground="#00AA00">{</TextBlock>
@@ -30,46 +34,9 @@
 
         <DataTemplate x:Key="JValueTemplate">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Header}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="Black" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Token.Type}" Value="Object">
-                                    <Setter Property="Foreground" Value="Green" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Token.Type}" Value="Array">
-                                    <Setter Property="Foreground" Value="Blue" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <TextBlock Text=" : " Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}" />
-                <TextBlock Text="{Binding DispValue}" Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
-                                    <Setter Property="Foreground" Value="#a31515" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Token.Value.Type}" Value="Property">
-                                    <Setter Property="Foreground" Value="Green" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Token.Value.Type}" Value="Integer">
-                                    <Setter Property="Foreground" Value="Green" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Token.Value.Type}" Value="Array">
-                                    <Setter Property="Foreground" Value="Blue" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Token.Type}" Value="Object">
-                                    <Setter Property="Foreground" Value="Blue" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <ItemsControl ItemsSource="{Binding Children}" />
+                <TextBlock Foreground="Black"
+                           Style="{StaticResource Jtext}"
+                           Text="{Binding Header}" />
             </StackPanel>
         </DataTemplate>
 
@@ -77,7 +44,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Header}">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style BasedOn="{StaticResource Jtext}" TargetType="TextBlock">
                             <Setter Property="Foreground" Value="Black" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Token.Type}" Value="Object">
@@ -120,25 +87,21 @@
 
         <DataTemplate x:Key="JPropertyTemplate">
             <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Header}">
-                    <TextBlock.Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="Foreground" Value="Black" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding Token.Type}" Value="Object">
-                                    <Setter Property="Foreground" Value="Green" />
-                                </DataTrigger>
-                                <DataTrigger Binding="{Binding Token.Type}" Value="Array">
-                                    <Setter Property="Foreground" Value="Blue" />
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <TextBlock Text=" : " />
+                <TextBlock Margin="0,0,5,0"
+                           Foreground="#a31515"
+                           Style="{StaticResource Jtext}"
+                           Text="&quot;" />
+                <TextBlock Foreground="Black"
+                           Style="{StaticResource Jtext}"
+                           Text="{Binding Header}" />
+                <TextBlock Margin="5,0,0,0"
+                           Foreground="#a31515"
+                           Style="{StaticResource Jtext}"
+                           Text="&quot;" />
+                <TextBlock Style="{StaticResource Jtext}" Text=" : " />
                 <TextBlock Text="{Binding DispValue}" Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}">
                     <TextBlock.Style>
-                        <Style TargetType="TextBlock">
+                        <Style BasedOn="{StaticResource Jtext}" TargetType="TextBlock">
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Token.Value.Type}" Value="String">
                                     <Setter Property="Foreground" Value="#a31515" />
@@ -264,6 +227,7 @@
                                     <ContentControl Content="{Binding}">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource JPropertyTemplate}" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding JNodeType}" Value="{x:Static enums:JNodeType.JObject}">
                                                         <Setter Property="ContentTemplate" Value="{StaticResource JObjectTemplate}" />
@@ -281,6 +245,7 @@
                                             </Style>
                                         </ContentControl.Style>
                                     </ContentControl>
+
                                     <!--<StackPanel Orientation="Horizontal">
                                         <TextBlock Text="{Binding Header}">
                                             <TextBlock.Style>
