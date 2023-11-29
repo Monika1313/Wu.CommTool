@@ -51,6 +51,12 @@ namespace Wu.CommTool.Modules.JsonTool.ViewModels
         /// </summary>
         public ObservableCollection<JsonHeaderLogic> JsonHeaderLogics { get => _JsonHeaderLogics; set => SetProperty(ref _JsonHeaderLogics, value); }
         private ObservableCollection<JsonHeaderLogic> _JsonHeaderLogics = new();
+
+        /// <summary>
+        /// JsonNodes
+        /// </summary>
+        public ObservableCollection<JsonNode> JsonNodes { get => _JsonNodes; set => SetProperty(ref _JsonNodes, value); }
+        private ObservableCollection<JsonNode> _JsonNodes = new();
         #endregion
 
 
@@ -101,6 +107,16 @@ namespace Wu.CommTool.Modules.JsonTool.ViewModels
                 var json = JsonHeaderLogic.FromJToken(jtoken);
                 JsonHeaderLogics.Clear();
                 JsonHeaderLogics.Add(json);
+
+
+                #region New
+                var jtoken2 = JToken.Parse(JsonString);
+                var json2 = JsonNode.FromJToken(jtoken);
+                JsonNodes.Clear();
+                JsonNodes.Add(json2);
+                #endregion
+
+
             }
             catch (Exception ex)
             {
