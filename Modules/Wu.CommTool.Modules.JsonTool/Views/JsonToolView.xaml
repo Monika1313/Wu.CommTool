@@ -20,11 +20,11 @@
     <UserControl.Resources>
         <DataTemplate x:Key="JObjectTemplate">
             <StackPanel Orientation="Vertical">
-                <TextBlock>{</TextBlock>
+                <TextBlock Foreground="#00AA00">{</TextBlock>
                 <Grid Margin="20,0">
                     <ItemsControl ItemsSource="{Binding Children}" />
                 </Grid>
-                <TextBlock>}</TextBlock>
+                <TextBlock Foreground="#00AA00">}</TextBlock>
             </StackPanel>
         </DataTemplate>
 
@@ -135,7 +135,7 @@
                         </Style>
                     </TextBlock.Style>
                 </TextBlock>
-                <TextBlock Text=" : " Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}" />
+                <TextBlock Text=" : " />
                 <TextBlock Text="{Binding DispValue}" Visibility="{Binding InLine, Converter={wucvt:False2Collapsed}}">
                     <TextBlock.Style>
                         <Style TargetType="TextBlock">

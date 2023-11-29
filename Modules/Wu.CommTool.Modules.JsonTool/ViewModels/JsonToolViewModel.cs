@@ -103,15 +103,17 @@ namespace Wu.CommTool.Modules.JsonTool.ViewModels
 
 
                 //json字符串转JToken
-                var jtoken = JToken.Parse(JsonString);
-                var json = JsonHeaderLogic.FromJToken(jtoken);
-                JsonHeaderLogics.Clear();
-                JsonHeaderLogics.Add(json);
+                #region old
+                //var jtoken = JToken.Parse(JsonString);
+                //var json = JsonHeaderLogic.FromJToken(jtoken);
+                //JsonHeaderLogics.Clear();
+                //JsonHeaderLogics.Add(json); 
+                #endregion
 
 
                 #region New
                 var jtoken2 = JToken.Parse(JsonString);
-                var json2 = JsonNode.FromJToken(jtoken);
+                var json2 = JsonNode.FromJToken(jtoken2);
                 JsonNodes.Clear();
                 JsonNodes.Add(json2);
                 #endregion
