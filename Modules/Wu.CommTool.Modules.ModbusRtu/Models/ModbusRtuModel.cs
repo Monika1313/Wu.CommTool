@@ -301,7 +301,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <summary>
         /// 关闭串口
         /// </summary>
-        public void CloseCom()
+        public async void CloseCom()
         {
             try
             {
@@ -317,12 +317,15 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 }
 
                 ComConfig.IsOpened = false;          //标记串口已关闭
-                                                     //SerialPort.DataReceived -= ReceiveMessage;
-                SerialPort.Close();                   //关闭串口 
-                ShowMessage($"关闭串口{SerialPort.PortName}");
-
+                //先清空队列再关闭
                 PublishFrameQueue.Clear();      //清空发送帧队列
                 ReceiveFrameQueue.Clear();      //清空接收帧队列
+                if (ComConfig.IsSending)
+                {
+                    await Task.Delay(100);
+                }
+                ShowMessage($"关闭串口{SerialPort.PortName}");
+                SerialPort.Close();                   //关闭串口 
             }
             catch (Exception ex)
             {
@@ -333,7 +336,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <summary>
         /// 打开串口 若串口未打开则打开串口 若串口已打开则关闭
         /// </summary>
-        private void OperatePort()
+        private async void OperatePort()
         {
             try
             {
@@ -362,9 +365,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 {
                     try
                     {
-                        SerialPort.Close();                   //关闭串口
-                        ComConfig.IsOpened = false;          //标记串口已关闭
-                        ShowMessage($"关闭串口{SerialPort.PortName}");
+                        CloseCom();
                     }
                     catch (Exception ex)
                     {
@@ -538,14 +539,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         {
             try
             {
-                //串口未打开 打开串口
-                //if (ComConfig.IsOpened == false)
-                //{
-                //    ShowErrorMessage("串口未打开");
-                //    ShowMessage("尝试打开串口...");
-                //    OpenCom();
-                //}
-
                 //发送数据不能为空
                 if (message is null || message.Length.Equals(0))
                 {
@@ -576,11 +569,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 {
                     try
                     {
+                        if (!IsPause)
+                            ShowSendMessage(new ModbusRtuFrame(data));
                         SerialPort.Write(data, 0, data.Length);     //发送数据
                         SendBytesCount += data.Length;                    //统计发送数据总数
 
-                        if (!IsPause)
-                            ShowSendMessage(new ModbusRtuFrame(data));
                         return true;
                     }
                     catch (Exception ex)
