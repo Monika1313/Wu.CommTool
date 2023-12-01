@@ -104,7 +104,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// 字节序
         /// </summary>
         public ModbusByteOrder ByteOrder { get => _ByteOrder; set => SetProperty(ref _ByteOrder, value); }
-        private ModbusByteOrder _ByteOrder= ModbusByteOrder.DCBA;
+        private ModbusByteOrder _ByteOrder = ModbusByteOrder.DCBA;
         #endregion
 
         #region ******************************  自定义帧模块 属性  ******************************
@@ -228,7 +228,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //查找第一个USB设备
                 var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
                 //上次选中的usb设备
-                var lastUsbDevice = ComPorts.FindFirst(x =>x.Value.ToLower().Contains("usb") && x.Key.Equals(ComConfig.Port.Key) && x.Value.Equals(ComConfig.Port.Value));
+                var lastUsbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb") && x.Key.Equals(ComConfig.Port.Key) && x.Value.Equals(ComConfig.Port.Value));
                 if (lastUsbDevice.Key != null)
                 {
                     usbDevice = lastUsbDevice;
@@ -459,64 +459,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             catch (System.Exception) { }
         }
 
-
-        //public void ShowReceiveMessage(string message, List<MessageSubContent> messageSubContents)
-        //{
-        //    try
-        //    {
-        //        void action()
-        //        {
-        //            var msg = new MessageData("", DateTime.Now, MessageType.Receive)
-        //            {
-        //                MessageSubContents = new ObservableCollection<MessageSubContent>(messageSubContents)
-        //            };
-
-        //            Messages.Add(msg);
-        //            while (Messages.Count > 500)
-        //            {
-        //                Messages.RemoveAt(0);
-        //            }
-        //        }
-        //        Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
-        //    }
-        //    catch (Exception) { }
-        //}
-
-        //public void ShowSendMessage(string message, List<MessageSubContent> messageSubContents)
-        //{
-        //    try
-        //    {
-        //        void action()
-        //        {
-        //            //var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send);
-        //            //foreach (var item in messageSubContents)
-        //            //{
-        //            //    msg.MessageSubContents.Add(item);
-        //            //}
-
-
-        //            var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send)
-        //            {
-        //                MessageSubContents = new ObservableCollection<MessageSubContent>(messageSubContents)
-        //            };
-
-        //            Messages.Add(msg);
-        //            while (Messages.Count > 260)
-        //            {
-        //                Messages.RemoveAt(0);
-        //            }
-        //        }
-        //        Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
-        //    }
-        //    catch (System.Exception) { }
-        //}
-
         /// <summary>
         /// 界面显示数据
         /// </summary>
         /// <param name="message"></param>
         /// <param name="type"></param>
-        public void ShowMessage(string message, MessageType type = Enums.MessageType.Info)
+        public void ShowMessage(string message, MessageType type = MessageType.Info)
         {
             try
             {
@@ -591,12 +539,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             try
             {
                 //串口未打开 打开串口
-                if (ComConfig.IsOpened == false)
-                {
-                    ShowErrorMessage("串口未打开");
-                    ShowMessage("尝试打开串口...");
-                    OpenCom();
-                }
+                //if (ComConfig.IsOpened == false)
+                //{
+                //    ShowErrorMessage("串口未打开");
+                //    ShowMessage("尝试打开串口...");
+                //    OpenCom();
+                //}
 
                 //发送数据不能为空
                 if (message is null || message.Length.Equals(0))
@@ -958,7 +906,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //Modebus校验
                 case CrcMode.Modbus:
                     var code = Wu.Utils.Crc.Crc16Modbus(msg2);
-                    if (code.Any(x=>x==0))
+                    if (code.Any(x => x == 0))
                     {
                         break;
                     }
@@ -994,10 +942,14 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         WaitPublishFrameEnqueue.WaitOne();
                         continue;//需要再次验证队列是否为空
                     }
-                    ComConfig.IsSending = true;
-                    var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
-                    PublishMessage(frame.Item1);              //请求发送数据帧
-                    await Task.Delay(frame.Item2);            //等待一段时间
+                    //判断串口是否已打开,若已关闭则不执行
+                    if (ComConfig.IsOpened)
+                    {
+                        ComConfig.IsSending = true;
+                        var frame = PublishFrameQueue.Dequeue();  //出队 数据帧
+                        PublishMessage(frame.Item1);              //请求发送数据帧
+                        await Task.Delay(frame.Item2);            //等待一段时间
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -1172,30 +1124,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
 
             try
             {
-                //var msg = SendMessage.Replace("-", string.Empty).GetBytes();
-                //List<byte> crc = new();
-                ////根据选择进行CRC校验
-                //switch (CrcMode)
-                //{
-                //    //无校验
-                //    case CrcMode.None:
-                //        break;
-
-                //    //Modebus校验
-                //    case CrcMode.Modbus:
-                //        var code = Wu.Utils.Crc.Crc16Modbus(msg);
-                //        Array.Reverse(code);
-                //        crc.AddRange(code);
-                //        break;
-                //    default:
-                //        break;
-                //}
-                ////合并数组
-                //List<byte> list = new List<byte>();
-                //list.AddRange(msg);
-                //list.AddRange(crc);
-                //var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
-
                 PublishFrameEnqueue(GetCrcedStrWithSelect(InputMessage));                  //将待发送的消息添加进队列
             }
             catch (Exception ex)
