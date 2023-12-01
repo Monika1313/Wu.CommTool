@@ -10,9 +10,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
     public class ModbusRtuMessageData : MessageData
     {
         #region 构造函数
-        public ModbusRtuMessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info) : base(Content, dateTime, Type, "")
-        {
-        }
 
         /// <summary>
         /// modbusRtu帧
@@ -21,7 +18,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// <param name="dateTime"></param>
         /// <param name="Type"></param>
         /// <param name="frame"></param>
-        public ModbusRtuMessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info, ModbusRtuFrame frame = null) : base(Content, dateTime, Type, "")
+        public ModbusRtuMessageData(string Content, DateTime dateTime, MessageType Type, ModbusRtuFrame frame) : base(Content, dateTime, Type, "")
         {
             ModbusRtuFrame = frame;
         } 

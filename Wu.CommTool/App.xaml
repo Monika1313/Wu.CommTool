@@ -24,6 +24,9 @@
                 <ResourceDictionary Source="ResourceDictonarys\GlobalDictionary.xaml" />
                 <!--  列表样式  -->
                 <ResourceDictionary Source="ResourceDictonarys\ListDictionary.xaml" />
+
+                <!--  ModbusRtu相关的样式资源  -->
+                <ResourceDictionary Source="pack://application:,,,/Wu.CommTool.Modules.ModbusRtu;component/Resources/ModbusRtuResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 

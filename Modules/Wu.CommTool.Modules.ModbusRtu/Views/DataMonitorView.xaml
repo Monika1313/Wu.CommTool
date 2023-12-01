@@ -10,6 +10,7 @@
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:DataMonitorDesignViewModel.Instance}"
              d:DesignHeight="450"
@@ -325,8 +326,30 @@
                                     <VirtualizingStackPanel />
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type models:MessageData}">
+                                    <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock Margin="3"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                            <TextBlock Margin="5,0"
+                                                       VerticalAlignment="Center"
+                                                       Style="{StaticResource MessageTextBlock}"
+                                                       Text="{Binding Type}" />
+                                            <TextBox VerticalAlignment="Center"
+                                                     FontSize="12"
+                                                     FontWeight="Bold"
+                                                     IsReadOnly="True"
+                                                     Style="{StaticResource MessageTextBox}"
+                                                     Text="{Binding Content}"
+                                                     TextWrapping="Wrap" />
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+
+                                <DataTemplate DataType="{x:Type models:ModbusRtuMessageData}">
                                     <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                         <i:Interaction.Triggers>
                                             <i:EventTrigger EventName="MouseLeftButtonUp">
@@ -382,11 +405,10 @@
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
-
                                         </WrapPanel>
                                     </Border>
                                 </DataTemplate>
-                            </ItemsControl.ItemTemplate>
+                            </ItemsControl.Resources>
                         </ItemsControl>
                     </hc:ScrollViewer>
                 </ContentControl>

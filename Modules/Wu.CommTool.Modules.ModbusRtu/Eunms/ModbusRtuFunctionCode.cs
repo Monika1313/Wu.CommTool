@@ -7,7 +7,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Enums
     /// Modbus Rtu 的功能码和错误码
     /// </summary>
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-    public enum ModbusRtuFunctionCode
+    public enum ModbusRtuFunctionCode : byte
     {
         [Description("读线圈")]
         _0x01 = 0x01,//读线圈
