@@ -11,6 +11,7 @@ using Wu.CommTool.Models;
 using Wu.CommTool.Modules.About.Views;
 using Wu.CommTool.Modules.ConvertTools.Views;
 using Wu.CommTool.Modules.ModbusRtu.Views;
+using Wu.CommTool.Modules.ModbusTcp.Views;
 using Wu.CommTool.Modules.MqttClient.Views;
 using Wu.CommTool.Modules.MqttServer.Views;
 using Wu.CommTool.Views;
@@ -113,6 +114,7 @@ namespace Wu.CommTool.ViewModels
             MenuBars =new ObservableCollection<MenuBar>()
             {
                 new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
+                //new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
                 new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
                 new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
                 new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
