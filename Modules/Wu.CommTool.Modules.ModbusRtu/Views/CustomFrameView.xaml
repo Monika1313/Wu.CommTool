@@ -254,12 +254,12 @@
                                 Content="发送" />
 
                     </StackPanel>
-                    <!--<Button
-                        Margin="10,0"
-                        Command="{Binding ExecuteCommand}"
-                        CommandParameter="帧生成器"
-                        Content="帧生成器"
-                        DockPanel.Dock="Right" />-->
+
+                    <Button Margin="10,0"
+                            Command="{Binding ExecuteCommand}"
+                            CommandParameter="帧生成器"
+                            Content="帧生成器"
+                            DockPanel.Dock="Right" />
                 </DockPanel>
 
 

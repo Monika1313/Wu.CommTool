@@ -10,6 +10,7 @@ using Wu.ViewModels;
 using Wu.Wpf.Common;
 using Wu.CommTool.Modules.ModbusRtu.Enums;
 using Wu.CommTool.Modules.ModbusRtu.Models;
+using Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
 {
@@ -31,10 +32,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-            ModbusRtuFunctionCodes = new ObservableCollection<ModbusRtuFunctionCode> 
+            ModbusRtuFrameTypes = new ObservableCollection<ModbusRtuFrameType> 
             {
-                ModbusRtuFunctionCode._0x03,
-                ModbusRtuFunctionCode._0x04, 
+                ModbusRtuFrameType._0x03请求帧,
+                ModbusRtuFrameType._0x04请求帧, 
             };
         }
 
@@ -71,15 +72,20 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
         public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
         private object _CurrentDto = new();
 
+        /// <summary>
+        /// 帧生成
+        /// </summary>
+        public ModbusRtuFrameCreator ModbusRtuFrameCreator { get => _ModbusRtuFrameCreator; set => SetProperty(ref _ModbusRtuFrameCreator, value); }
+        private ModbusRtuFrameCreator _ModbusRtuFrameCreator = new();
 
         /// <summary>
-        /// 可生成的功能码列表
+        /// 可生成的帧列表
         /// </summary>
-        public ObservableCollection<ModbusRtuFunctionCode> ModbusRtuFunctionCodes { get => _ModbusRtuFunctionCodes; set => SetProperty(ref _ModbusRtuFunctionCodes, value); }
-        private ObservableCollection<ModbusRtuFunctionCode> _ModbusRtuFunctionCodes;
+        public ObservableCollection<ModbusRtuFrameType> ModbusRtuFrameTypes { get => _ModbusRtuFrameTypes; set => SetProperty(ref _ModbusRtuFrameTypes, value); }
+        private ObservableCollection<ModbusRtuFrameType> _ModbusRtuFrameTypes;
 
-        public ModbusRtuFunctionCode SelectedCode { get => _SelectedCode; set => SetProperty(ref _SelectedCode, value); }
-        private ModbusRtuFunctionCode _SelectedCode = ModbusRtuFunctionCode._0x03;
+        //public ModbusRtuFunctionCode SelectedCode { get => _SelectedCode; set => SetProperty(ref _SelectedCode, value); }
+        //private ModbusRtuFunctionCode _SelectedCode = ModbusRtuFunctionCode._0x03;
 
         /// <summary>
         /// ModbusRtu帧

@@ -34,20 +34,30 @@
                             Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </DockPanel>
 
+                <ComboBox hc:InfoElement.Necessary="True"
+                          hc:InfoElement.Title="帧类型"
+                          hc:InfoElement.TitleWidth="60"
+                          DockPanel.Dock="Top"
+                          ItemsSource="{Binding ModbusRtuFrameTypes}"
+                          SelectedValue="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          Style="{StaticResource FormComboBox}" />
                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                     <TextBox hc:TitleElement.Title="从站ID"
                              Style="{StaticResource FormTextBox}"
-                             Text="{Binding ModbusRtuFrame.SlaveId}" />
-                    <ComboBox hc:InfoElement.Placeholder="请选择串口..."
-                              hc:InfoElement.Title="功能码"
-                              hc:InfoElement.TitleWidth="45"
-                              DockPanel.Dock="Left"
-                              ItemsSource="{Binding ModbusRtuFunctionCodes}"
-                              SelectedValue="{Binding SelectedCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                              Style="{StaticResource FormComboBox}" />
+                             Text="{Binding ModbusRtuFrameCreator.SlaveId, StringFormat='X2'}" />
+                    <TextBox hc:TitleElement.Title="功能码"
+                             IsReadOnly="True"
+                             Style="{StaticResource FormTextBox}"
+                             Text="{Binding ModbusRtuFrameCreator.Function, StringFormat='X'}" />
+
+                    <TextBox hc:TitleElement.Title="起始地址"
+                             Style="{StaticResource FormTextBox}"
+                             Text="{Binding ModbusRtuFrameCreator.StartAddr, StringFormat='X4'}" />
+                    <TextBox hc:TitleElement.Title="寄存器数量"
+                             Style="{StaticResource FormTextBox}"
+                             Text="{Binding ModbusRtuFrameCreator.RegisterNum, StringFormat='X4'}" />
                 </StackPanel>
 
-                <TextBlock DockPanel.Dock="Top" Text="开发中..." />
                 <ContentControl Margin="4"
                                 DockPanel.Dock="Top"
                                 Style="{StaticResource Effect2Control}" />
