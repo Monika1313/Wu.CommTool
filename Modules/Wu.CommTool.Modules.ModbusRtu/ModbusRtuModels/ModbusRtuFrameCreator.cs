@@ -10,6 +10,7 @@ using System.Text;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.CommTool.Modules.ModbusRtu.Enums;
 using System.Threading.Tasks;
+using Wu.Extensions;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
 {
@@ -21,32 +22,69 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         public ModbusRtuFrameCreator()
         {
             ModbusRtuFrameType = ModbusRtuFrameType._0x03请求帧;
+            SlaveId = 1;
+            Function = 3;
+            StartAddr = 0;
+            RegisterNum = 1;
         }
+
         #region **************************************************  属性  **************************************************
         /// <summary>
         /// 从站ID 1字节
         /// </summary>
-        public byte SlaveId { get => _SlaveId; set => SetProperty(ref _SlaveId, value); }
-        private byte _SlaveId = 1;
+        public byte SlaveId
+        {
+            get => _SlaveId;
+            set
+            {
+                SetProperty(ref _SlaveId, value);
+                SetProperty(ref _SlaveIdHex, value.ToString("X2"),nameof(SlaveIdHex));
+            }
+        }
+        private byte _SlaveId;
 
         /// <summary>
         /// 功能码 1字节
         /// </summary>
-        public ModbusRtuFunctionCode Function { get => _Function; set => SetProperty(ref _Function, value); }
-        private ModbusRtuFunctionCode _Function = ModbusRtuFunctionCode._0x03;
-
+        public byte Function
+        {
+            get => _Function;
+            set
+            {
+                SetProperty(ref _Function, value);
+                SetProperty(ref _FunctionHex, value.ToString("X2"), nameof(FunctionHex));
+            }
+        }
+        private byte _Function;
+        
         /// <summary>
         /// 起始地址/输出地址 2字节
         /// </summary>
-        public short StartAddr { get => _StartAddr; set => SetProperty(ref _StartAddr, value); }
-        private short _StartAddr = 0;
+        public ushort StartAddr
+        {
+            get => _StartAddr;
+            set
+            {
+                SetProperty(ref _StartAddr, value);
+                SetProperty(ref _StartAddrHex, value.ToString("X4"),nameof(StartAddrHex));
+            }
+        }
+        private ushort _StartAddr;
 
         /// <summary>
         /// 寄存器数量/线圈数量(读输出线圈)/输入数量(读离散输入) 2字节 单位word
         /// </summary>
-        public short RegisterNum { get => _RegisterNum; set => SetProperty(ref _RegisterNum, value); }
-        private short _RegisterNum = 1;
+        public ushort RegisterNum
+        {
+            get => _RegisterNum;
+            set
+            {
+                SetProperty(ref _RegisterNum, value);
+                SetProperty(ref _RegisterNumHex, value.ToString("X4"), nameof(RegisterNumHex));
 
+            }
+        }
+        private ushort _RegisterNum;
 
         /// <summary>
         /// 字节数量 1字节
@@ -96,13 +134,62 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         public bool IsCrcPassed => ModbusRtuFrame.IsModbusCrcPassed(Frame);
         #endregion
 
+        #region 16进制值
+        /// <summary>
+        /// 从站地址16进制
+        /// </summary>
+        public string SlaveIdHex
+        {
+            get => _SlaveIdHex;
+            set
+            {
+                SetProperty(ref _SlaveIdHex, value);
+                SetProperty(ref _SlaveId, Convert.ToByte(value!.RemoveSpace(),16),nameof(SlaveId));
+            }
+        }
+        private string _SlaveIdHex;
+
+        /// <summary>
+        /// 功能码16进制
+        /// </summary>
+        public string FunctionHex { get => _FunctionHex; set => SetProperty(ref _FunctionHex, value); }
+        private string _FunctionHex;
+
+        /// <summary>
+        /// 起始地址16进制
+        /// </summary>
+        public string StartAddrHex
+        {
+            get => _StartAddrHex;
+            set
+            {
+                SetProperty(ref _StartAddrHex, value);
+                SetProperty(ref _StartAddr, Convert.ToUInt16(value!.RemoveSpace(), 16), nameof(StartAddr));
+            }
+        }
+        private string _StartAddrHex;
+
+        /// <summary>
+        /// 寄存器数量16进制
+        /// </summary>
+        public string RegisterNumHex
+        {
+            get => _RegisterNumHex;
+            set
+            {
+                SetProperty(ref _RegisterNumHex, value);
+                SetProperty(ref _RegisterNum, Convert.ToUInt16(value!.RemoveSpace(), 16), nameof(RegisterNum));
+            }
+        }
+        private string _RegisterNumHex;
+        #endregion
 
 
         /// <summary>
         /// 获取帧
         /// </summary>
         /// <returns></returns>
-        public byte[] GetFrame()
+        public string GetFrame()
         {
             switch (ModbusRtuFrameType)
             {
@@ -119,6 +206,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
                 case ModbusRtuFrameType._0x82错误帧:
                     break;
                 case ModbusRtuFrameType._0x03请求帧:
+                    return $"{SlaveIdHex} {FunctionHex} {StartAddrHex} {RegisterNumHex} {CrcCode}";
                     break;
                 case ModbusRtuFrameType._0x03响应帧:
                     break;
@@ -161,10 +249,9 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
                 case ModbusRtuFrameType._0x97错误帧:
                     break;
                 default:
-                    break;
+                    return string.Empty;
             }
-            //TODO 
-            return new byte[0];
+            return string.Empty;
         }
     }
 }

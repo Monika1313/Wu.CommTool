@@ -10,9 +10,33 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static ddvm:EditFrameDesignViewModel.Instance}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
+             d:DesignHeight="300"
+             d:DesignWidth="400"
              mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style x:Key="column0"
+               BasedOn="{StaticResource TextBlockBaseStyle}"
+               TargetType="TextBlock">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="Grid.Column" Value="0" />
+        </Style>
+        <Style x:Key="column1"
+               BasedOn="{StaticResource TextBoxBaseStyle}"
+               TargetType="TextBox">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="Grid.Column" Value="1" />
+        </Style>
+        <Style x:Key="column2"
+               BasedOn="{StaticResource TextBoxBaseStyle}"
+               TargetType="TextBox">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="MinWidth" Value="50" />
+            <Setter Property="Grid.Column" Value="2" />
+        </Style>
+    </UserControl.Resources>
     <md:DialogHost Identifier="{x:Static local:EditFrameView.ViewName}">
         <md:DrawerHost>
             <DockPanel>
@@ -41,7 +65,64 @@
                           ItemsSource="{Binding ModbusRtuFrameTypes}"
                           SelectedValue="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                           Style="{StaticResource FormComboBox}" />
-                <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                <Grid HorizontalAlignment="Center" DockPanel.Dock="Top">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <!--  标题  -->
+
+                    <TextBlock Style="{StaticResource column0}" Text="从站ID" />
+                    <TextBlock Grid.Row="1"
+                               Style="{StaticResource column0}"
+                               Text="功能码" />
+                    <TextBlock Grid.Row="2"
+                               Style="{StaticResource column0}"
+                               Text="起始地址" />
+                    <TextBlock Grid.Row="3"
+                               Style="{StaticResource column0}"
+                               Text="寄存器数量" />
+
+                    <TextBox x:Name="textbox"
+                             Grid.Row="0"
+                             Style="{StaticResource column1}"
+                             Text="{Binding ModbusRtuFrameCreator.SlaveId, StringFormat={}{0:00}, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="0"
+                             Style="{StaticResource column2}"
+                             Text="{Binding ModbusRtuFrameCreator.SlaveIdHex, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBox Grid.Row="1"
+                             IsReadOnly="True"
+                             Style="{StaticResource column1}"
+                             Text="{Binding ModbusRtuFrameCreator.Function, StringFormat={}{0:00}}" />
+                    <TextBox Grid.Row="1"
+                             IsReadOnly="True"
+                             Style="{StaticResource column2}"
+                             Text="{Binding ModbusRtuFrameCreator.Function, StringFormat='X2'}" />
+
+                    <TextBox Grid.Row="2"
+                             Style="{StaticResource column1}"
+                             Text="{Binding ModbusRtuFrameCreator.StartAddr, StringFormat={}{0:0000}, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="2"
+                             Style="{StaticResource column2}"
+                             Text="{Binding ModbusRtuFrameCreator.StartAddrHex, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <TextBox Grid.Row="3"
+                             Style="{StaticResource column1}"
+                             Text="{Binding ModbusRtuFrameCreator.RegisterNum, StringFormat={}{0:0000}, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox Grid.Row="3"
+                             Style="{StaticResource column2}"
+                             Text="{Binding ModbusRtuFrameCreator.RegisterNumHex, StringFormat='X4', UpdateSourceTrigger=PropertyChanged}" />
+                </Grid>
+                <!--<StackPanel DockPanel.Dock="Top" Orientation="Vertical">
                     <TextBox hc:TitleElement.Title="从站ID"
                              Style="{StaticResource FormTextBox}"
                              Text="{Binding ModbusRtuFrameCreator.SlaveId, StringFormat='X2'}" />
@@ -56,7 +137,7 @@
                     <TextBox hc:TitleElement.Title="寄存器数量"
                              Style="{StaticResource FormTextBox}"
                              Text="{Binding ModbusRtuFrameCreator.RegisterNum, StringFormat='X4'}" />
-                </StackPanel>
+                </StackPanel>-->
 
                 <ContentControl Margin="4"
                                 DockPanel.Dock="Top"
