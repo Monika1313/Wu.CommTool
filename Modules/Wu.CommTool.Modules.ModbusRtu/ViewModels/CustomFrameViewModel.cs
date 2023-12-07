@@ -254,6 +254,14 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                     //{ "Value", data.ModbusRtuFrame }
                 };
                 var dialogResult = await dialogHost.ShowDialog(nameof(EditFrameView), param, nameof(ModbusRtuView));
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    var x = dialogResult.Parameters.GetValue<string>("Value");
+                    if (!string.IsNullOrWhiteSpace(x))
+                    {
+                        ModbusRtuModel.InputMessage = x;
+                    }
+                }
             }
             catch (Exception ex)
             {

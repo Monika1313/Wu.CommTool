@@ -112,6 +112,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             switch (obj)
             {
                 case "Search": Search(); break;
+                //case "修改生成帧类型": 
+                //    break;
                 case "OpenDialogView": OpenDialogView(); break;
                 default: break;
             }
@@ -129,7 +131,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
                 return;
             //添加返回的参数
             DialogParameters param = new DialogParameters();
-            param.Add("Value", CurrentDto);
+            param.Add("Value", ModbusRtuFrameCreator.FrameStr);
             //关闭窗口,并返回参数
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
         }

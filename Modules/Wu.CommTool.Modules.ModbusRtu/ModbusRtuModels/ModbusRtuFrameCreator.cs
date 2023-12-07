@@ -11,6 +11,7 @@ using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.CommTool.Modules.ModbusRtu.Enums;
 using System.Threading.Tasks;
 using Wu.Extensions;
+using System.Windows.Interop;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
 {
@@ -39,6 +40,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
             {
                 SetProperty(ref _SlaveId, value);
                 SetProperty(ref _SlaveIdHex, value.ToString("X2"),nameof(SlaveIdHex));
+                RaisePropertyChanged(nameof(FrameStr));
             }
         }
         private byte _SlaveId;
@@ -67,6 +69,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
             {
                 SetProperty(ref _StartAddr, value);
                 SetProperty(ref _StartAddrHex, value.ToString("X4"),nameof(StartAddrHex));
+                RaisePropertyChanged(nameof(FrameStr));
             }
         }
         private ushort _StartAddr;
@@ -81,7 +84,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
             {
                 SetProperty(ref _RegisterNum, value);
                 SetProperty(ref _RegisterNumHex, value.ToString("X4"), nameof(RegisterNumHex));
-
+                RaisePropertyChanged(nameof(FrameStr));
             }
         }
         private ushort _RegisterNum;
@@ -101,7 +104,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         /// <summary>
         /// CRC校验码 2字节
         /// </summary>
-        public byte[] CrcCode { get => _CrcCode; set => SetProperty(ref _CrcCode, value); }
+        public byte[] CrcCode
+        {
+            get => _CrcCode;
+            set => SetProperty(ref _CrcCode, value);
+        }
         private byte[] _CrcCode;
 
         /// <summary>
@@ -119,7 +126,83 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         /// <summary>
         /// 帧类型
         /// </summary>
-        public ModbusRtuFrameType ModbusRtuFrameType { get => _ModbusRtuFrameType; set => SetProperty(ref _ModbusRtuFrameType, value); }
+        public ModbusRtuFrameType ModbusRtuFrameType
+        {
+            get => _ModbusRtuFrameType;
+            set
+            {
+                SetProperty(ref _ModbusRtuFrameType, value);
+                switch (_ModbusRtuFrameType)
+                {
+                    
+                    case ModbusRtuFrameType._0x01请求帧:
+                    case ModbusRtuFrameType._0x01响应帧:
+                        SetProperty(ref _Function, (byte)1, nameof(Function));
+                        SetProperty(ref _FunctionHex, _Function.ToString("X2"), nameof(FunctionHex));
+                        break;
+
+                    case ModbusRtuFrameType._0x81错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x02请求帧:
+                        break;
+                    case ModbusRtuFrameType._0x02响应帧:
+                        break;
+                    case ModbusRtuFrameType._0x82错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x03请求帧:
+                    case ModbusRtuFrameType._0x03响应帧:
+                        SetProperty(ref _Function, (byte)3, nameof(Function));
+                        SetProperty(ref _FunctionHex, _Function.ToString("X2"), nameof(FunctionHex));
+                        break;
+
+                    case ModbusRtuFrameType._0x83错误帧:
+                        break;
+
+                    case ModbusRtuFrameType._0x04请求帧:
+                    case ModbusRtuFrameType._0x04响应帧:
+                        SetProperty(ref _Function, (byte)4, nameof(Function));
+                        SetProperty(ref _FunctionHex, _Function.ToString("X2"), nameof(FunctionHex));
+                        break;
+
+                    case ModbusRtuFrameType._0x84错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x05请求帧:
+                        break;
+                    case ModbusRtuFrameType._0x05响应帧:
+                        break;
+                    case ModbusRtuFrameType._0x85错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x06请求帧:
+                        break;
+                    case ModbusRtuFrameType._0x06响应帧:
+                        break;
+                    case ModbusRtuFrameType._0x86错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x0F请求帧:
+                        break;
+                    case ModbusRtuFrameType._0x0F响应帧:
+                        break;
+                    case ModbusRtuFrameType._0x8F错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x10请求帧:
+                        break;
+                    case ModbusRtuFrameType._0x10响应帧:
+                        break;
+                    case ModbusRtuFrameType._0x90错误帧:
+                        break;
+                    case ModbusRtuFrameType._0x17请求帧:
+                        break;
+                    case ModbusRtuFrameType._0x17响应帧:
+                        break;
+                    case ModbusRtuFrameType._0x97错误帧:
+                        break;
+                    default:
+                        break;
+                }
+               
+
+            }
+        }
         private ModbusRtuFrameType _ModbusRtuFrameType;
 
         /// <summary>
@@ -145,6 +228,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
             {
                 SetProperty(ref _SlaveIdHex, value);
                 SetProperty(ref _SlaveId, Convert.ToByte(value!.RemoveSpace(),16),nameof(SlaveId));
+                RaisePropertyChanged(nameof(FrameStr));
             }
         }
         private string _SlaveIdHex;
@@ -165,6 +249,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
             {
                 SetProperty(ref _StartAddrHex, value);
                 SetProperty(ref _StartAddr, Convert.ToUInt16(value!.RemoveSpace(), 16), nameof(StartAddr));
+                RaisePropertyChanged(nameof(FrameStr));
             }
         }
         private string _StartAddrHex;
@@ -179,6 +264,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
             {
                 SetProperty(ref _RegisterNumHex, value);
                 SetProperty(ref _RegisterNum, Convert.ToUInt16(value!.RemoveSpace(), 16), nameof(RegisterNum));
+                RaisePropertyChanged(nameof(FrameStr));
             }
         }
         private string _RegisterNumHex;
@@ -186,10 +272,17 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
 
 
         /// <summary>
+        /// 帧
+        /// </summary>
+        public string FrameStr { get => _FrameStr; }
+        private string _FrameStr => GetFrameStr();
+
+
+        /// <summary>
         /// 获取帧
         /// </summary>
         /// <returns></returns>
-        public string GetFrame()
+        public string GetFrameStr()
         {
             switch (ModbusRtuFrameType)
             {
@@ -205,14 +298,16 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
                     break;
                 case ModbusRtuFrameType._0x82错误帧:
                     break;
+
                 case ModbusRtuFrameType._0x03请求帧:
-                    return $"{SlaveIdHex} {FunctionHex} {StartAddrHex} {RegisterNumHex} {CrcCode}";
-                    break;
+                case ModbusRtuFrameType._0x04请求帧:
+                    var f = $"{SlaveId:X2} {Function:X2} {StartAddr:X4} {RegisterNum:X4} ";
+                    CrcCode = Wu.Utils.Crc.Crc16Modbus(f.GetBytes());
+                    return Wu.CommTool.Modules.ModbusRtu.Utils.ModbusUtils.StrCombineCrcCode(f);
+
                 case ModbusRtuFrameType._0x03响应帧:
                     break;
                 case ModbusRtuFrameType._0x83错误帧:
-                    break;
-                case ModbusRtuFrameType._0x04请求帧:
                     break;
                 case ModbusRtuFrameType._0x04响应帧:
                     break;

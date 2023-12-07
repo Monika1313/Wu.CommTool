@@ -899,7 +899,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 //Modebus校验
                 case CrcMode.Modbus:
                     var code = Wu.Utils.Crc.Crc16Modbus(msg2);
-                    if (code.Any(x => x == 0))
+                    //若已经是校验过的则不校验
+                    if (code.All(x => x == 0))
                     {
                         break;
                     }

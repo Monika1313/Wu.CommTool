@@ -64,7 +64,14 @@
                           DockPanel.Dock="Top"
                           ItemsSource="{Binding ModbusRtuFrameTypes}"
                           SelectedValue="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Style="{StaticResource FormComboBox}" />
+                          Style="{StaticResource FormComboBox}">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <i:InvokeCommandAction Command="{Binding ExecuteCommand}" CommandParameter="修改生成帧类型" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+
                 <Grid HorizontalAlignment="Center" DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="80" />
@@ -141,7 +148,19 @@
 
                 <ContentControl Margin="4"
                                 DockPanel.Dock="Top"
-                                Style="{StaticResource Effect2Control}" />
+                                Style="{StaticResource Effect2Control}">
+                    <TextBox IsReadOnly="True" Text="{Binding ModbusRtuFrameCreator.FrameStr, Mode=OneWay}" />
+                </ContentControl>
+                <StackPanel Margin="10"
+                            HorizontalAlignment="Center"
+                            DockPanel.Dock="Bottom"
+                            Orientation="Horizontal">
+                    <Button Margin="0,0,10,0"
+                            Command="{Binding CancelCommand}"
+                            Content="取消"
+                            Style="{StaticResource MaterialDesignOutlinedButton}" />
+                    <Button Command="{Binding SaveCommand}" Content="确定" />
+                </StackPanel>
             </DockPanel>
         </md:DrawerHost>
     </md:DialogHost>
