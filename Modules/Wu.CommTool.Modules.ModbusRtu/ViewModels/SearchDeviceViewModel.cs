@@ -6,6 +6,7 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Windows;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.CommTool.Modules.ModbusRtu.Views;
 using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
@@ -35,6 +36,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
             ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
             OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
+            CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
 
         }
 
@@ -86,6 +88,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 打开帧解析界面
         /// </summary>
         public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
+
+        /// <summary>
+        /// 复制Modbus帧信息
+        /// </summary>
+        public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
         #endregion
 
 
@@ -212,6 +219,27 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                     { "ModbusByteOrder",ModbusRtuModel.ByteOrder }
                 };
                 var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeFrameView), param, nameof(ModbusRtuView));
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// 复制Modbus数据帧
+        /// </summary>
+        /// <param name="obj"></param>
+        private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+        {
+            try
+            {
+                string xx = string.Empty;
+                foreach (var item in obj.MessageSubContents)
+                {
+                    xx += $"{item.Content} ";
+                }
+                Clipboard.SetDataObject(xx);
             }
             catch (Exception ex)
             {

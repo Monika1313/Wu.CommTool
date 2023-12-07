@@ -701,10 +701,12 @@
                                                 IsReadOnly="True" />
 
                             <DataGridTextColumn Binding="{Binding DataHex}"
+                                                Foreground="Black"
                                                 Header="原始值Hex(高低)"
                                                 IsReadOnly="True" />
 
                             <DataGridTextColumn Binding="{Binding UpdateTime, StringFormat={}{0:HH:mm:ss}}"
+                                                Foreground="Black"
                                                 Header="更新时间"
                                                 IsReadOnly="True" />
 
