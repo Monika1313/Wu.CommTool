@@ -13,7 +13,7 @@
              xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:CustomFrameDesignViewModel.Instance}"
-             d:DesignHeight="450"
+             d:DesignHeight="500"
              d:DesignWidth="800"
              mc:Ignorable="d">
     <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
@@ -235,9 +235,8 @@
             </Grid>
 
             <!--  发送区域  -->
-            <DockPanel Height="130" DockPanel.Dock="Bottom">
+            <DockPanel DockPanel.Dock="Bottom">
                 <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-
                     <StackPanel Cursor=""
                                 DockPanel.Dock="Left"
                                 Orientation="Horizontal">
@@ -248,35 +247,67 @@
                                   ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CrcMode}}}"
                                   SelectedItem="{Binding ModbusRtuModel.CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                   Style="{StaticResource FormComboBox}" />
-                        <Button Margin="10,0"
-                                Command="{Binding ExecuteCommand}"
-                                CommandParameter="SendCustomFrame"
-                                Content="发送" />
-
                     </StackPanel>
 
-                    <Button Margin="10,0"
+                    <!--<Button Margin="10,0"
                             Command="{Binding ExecuteCommand}"
                             CommandParameter="帧生成器"
                             Content="帧生成器"
-                            DockPanel.Dock="Right" />
+                            DockPanel.Dock="Right" />-->
                 </DockPanel>
 
 
-                <ContentControl Margin="4,0"
+                <ContentControl MaxHeight="400"
+                                Margin="4,0"
                                 Padding="0"
                                 Style="{StaticResource Effect2Control}">
-                    <TextBox VerticalContentAlignment="Top"
-                             hc:InfoElement.Placeholder="请输入要发送的内容..."
-                             Style="{StaticResource TextBoxExtend}"
-                             Text="{Binding ModbusRtuModel.InputMessage, UpdateSourceTrigger=PropertyChanged}"
-                             TextWrapping="Wrap">
-                        <TextBox.InputBindings>
-                            <KeyBinding Key="Enter"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="SendCustomFrame" />
-                        </TextBox.InputBindings>
-                    </TextBox>
+                    <hc:ScrollViewer IsInertiaEnabled="True">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.CustomFrames}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DockPanel Margin="4">
+                                        <Button Margin="10,0,0,0"
+                                                Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Content="发送"
+                                                Cursor="Hand"
+                                                DockPanel.Dock="Right" />
+                                        <hc:TextBox VerticalContentAlignment="Top"
+                                                    hc:InfoElement.Placeholder="右键菜单可以生成帧、新增行、删除行"
+                                                    hc:InfoElement.ShowClearButton="True"
+                                                    Style="{StaticResource TextBoxPlusBaseStyle}"
+                                                    Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                    Text="{Binding Frame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                    TextWrapping="Wrap">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Enter"
+                                                            Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}" />
+                                            </TextBox.InputBindings>
+                                            <TextBoxBase.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.CreateFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="帧生成器" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="新增行"
+                                                              Header="新增行" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="删除行" />
+                                                </ContextMenu>
+                                            </TextBoxBase.ContextMenu>
+                                        </hc:TextBox>
+                                    </DockPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
                 </ContentControl>
             </DockPanel>
 

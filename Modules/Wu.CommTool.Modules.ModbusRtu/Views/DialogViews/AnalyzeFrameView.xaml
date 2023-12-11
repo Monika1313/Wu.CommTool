@@ -14,6 +14,9 @@
              d:DesignHeight="450"
              d:DesignWidth="800"
              mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
+    </UserControl.InputBindings>
     <md:DialogHost Identifier="{x:Static local:AnalyzeFrameView.ViewName}">
         <md:DrawerHost>
             <DockPanel>

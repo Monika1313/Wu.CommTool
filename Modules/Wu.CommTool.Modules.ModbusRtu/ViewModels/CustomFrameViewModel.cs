@@ -40,6 +40,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
             OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
 
+            SendCustomFrameCommand = new DelegateCommand<CustomFrame>(SendCustomFrame);
+            CreateFrameCommand = new DelegateCommand<CustomFrame>(CreateFrame);
+            DeleteLineCommand = new DelegateCommand<CustomFrame>(DeleteLine);
+
             //更新串口列表
             ModbusRtuModel.GetComPorts();
         }
@@ -84,6 +88,21 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 打开帧解析界面
         /// </summary>
         public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
+
+        /// <summary>
+        /// 发送自定义帧
+        /// </summary>
+        public DelegateCommand<CustomFrame> SendCustomFrameCommand { get; private set; }
+
+        /// <summary>
+        /// 生成帧命令
+        /// </summary>
+        public DelegateCommand<CustomFrame> CreateFrameCommand { get; private set; }
+
+        /// <summary>
+        /// 删除行命令
+        /// </summary>
+        public DelegateCommand<CustomFrame> DeleteLineCommand { get; private set; }
         #endregion
 
 
@@ -107,8 +126,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 case "CloseCom":
                     ModbusRtuModel.CloseCom();                              //关闭串口
                     break;
+
                 case "帧生成器":
                     OpenEditFrameView();
+                    break;
+                case "新增行":
+                    ModbusRtuModel.CustomFrames.Add(new CustomFrame());
                     break;
                 default: break;
             }
@@ -266,6 +289,59 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             catch (Exception ex)
             {
 
+            }
+        }
+
+        /// <summary>
+        /// 发送自定义帧
+        /// </summary>
+        /// <param name="frame"></param>
+        private void SendCustomFrame(CustomFrame frame)
+        {
+            ModbusRtuModel.SendCustomFrame(frame);
+        }
+
+        /// <summary>
+        /// 生成帧内容
+        /// </summary>
+        /// <param name="frame"></param>
+        private async void CreateFrame(CustomFrame frame)
+        {
+            try
+            {
+                DialogParameters param = new()
+                {
+                    //{ "Value", date }
+                };
+                var dialogResult = await dialogHost.ShowDialog(nameof(EditFrameView), param, nameof(ModbusRtuView));
+                if (dialogResult.Result == ButtonResult.OK)
+                {
+                    var result = dialogResult.Parameters.GetValue<string>("Value");
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        frame.Frame = result;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+
+        /// <summary>
+        /// 删除行
+        /// </summary>
+        /// <param name="frame"></param>
+        private void DeleteLine(CustomFrame frame)
+        {
+            if (ModbusRtuModel.CustomFrames.Count > 1)
+            {
+                ModbusRtuModel.CustomFrames.Remove(frame);
+            }
+            else
+            {
+                ModbusRtuModel.ShowErrorMessage("不能删除最后一行...");
             }
         }
         #endregion

@@ -13,6 +13,9 @@
              d:DesignHeight="300"
              d:DesignWidth="400"
              mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
+    </UserControl.InputBindings>
     <UserControl.Resources>
         <Style x:Key="column0"
                BasedOn="{StaticResource TextBlockBaseStyle}"

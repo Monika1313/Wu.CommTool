@@ -119,6 +119,18 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         /// </summary>
         public CrcMode CrcMode { get => _CrcMode; set => SetProperty(ref _CrcMode, value); }
         private CrcMode _CrcMode = CrcMode.Modbus;
+
+
+        /// <summary>
+        /// 自定义帧的输入框
+        /// </summary>
+        public ObservableCollection<CustomFrame> CustomFrames { get => _CustomFrames; set => SetProperty(ref _CustomFrames, value); }
+        private ObservableCollection<CustomFrame> _CustomFrames =
+        [
+            new ("01 03 0000 0001 "),
+            new ("01 04 0000 0001 "),
+            new (""),
+        ];
         #endregion
 
         #region 搜索设备模块 属性
@@ -1119,6 +1131,38 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             try
             {
                 PublishFrameEnqueue(GetCrcedStrWithSelect(InputMessage));                  //将待发送的消息添加进队列
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// 发送自定义帧
+        /// </summary>
+        public void SendCustomFrame(CustomFrame customFrame)
+        {
+            //若串口未打开则打开串口
+            if (!ComConfig.IsOpened)
+            {
+                ShowMessage("串口未打开, 尝试打开串口...");
+                OpenCom();
+                if (!ComConfig.IsOpened)
+                {
+                    return;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(customFrame.Frame))
+            {
+                ShowErrorMessage("发送消息不能为空...");
+                return;
+            }
+
+            try
+            {
+                PublishFrameEnqueue(GetCrcedStrWithSelect(customFrame.Frame));                  //将待发送的消息添加进队列
             }
             catch (Exception ex)
             {
