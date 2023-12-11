@@ -1397,6 +1397,11 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
         {
             try
             {
+                if (!ComConfig.IsOpened)
+                {
+                    ShowErrorMessage("未打开串口,无法写入...");
+                    return;
+                }
                 //todo 使用正则验证值为数值
                 if (obj.WriteValue == null)
                 {
@@ -1404,14 +1409,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     return;
                 }
 
-                //string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
-                //string fun = "10";                                              //0x10 写入多个寄存器
-                //string startAddr = obj.Addr.ToString("X4");                     //起始地址
-
-                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");     //寄存器数量
-                string quantity = (obj.DataTypeByteLength).ToString("X2");      //字节数量
                 double wValue = double.Parse(obj.WriteValue) / obj.Rate;              //对值的倍率做处理
-                string dataStr = "";
                 string unCrcFrame = "";
                 dynamic data = "";
                 //根据设定的类型转换值
@@ -1453,8 +1451,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 }
                 else
                 {
+                    string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");     //寄存器数量
+                    string quantity = (obj.DataTypeByteLength).ToString("X2");      //字节数量
                     //0x10写入帧
-                    dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
+                    string dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
                     unCrcFrame = $"{DataMonitorConfig.SlaveId:X2} 10 {obj.Addr:X4} {jcqSl} {quantity} {dataStr}";//未校验的数据帧
                 }
 

@@ -25,7 +25,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         #endregion
 
         public DataMonitorViewModel() { }
-        public DataMonitorViewModel(IContainerProvider provider, IDialogHostService dialogHost,ModbusRtuModel modbusRtuModel) : base(provider)
+        public DataMonitorViewModel(IContainerProvider provider, IDialogHostService dialogHost, ModbusRtuModel modbusRtuModel) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
@@ -62,7 +62,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// OpenDrawers
         /// </summary>
         public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
-        private OpenDrawers _OpenDrawers =new();
+        private OpenDrawers _OpenDrawers = new();
         #endregion
 
 
