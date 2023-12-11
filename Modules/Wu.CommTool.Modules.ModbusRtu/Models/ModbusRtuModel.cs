@@ -1403,61 +1403,63 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     ShowErrorMessage("写入值不能为空...");
                     return;
                 }
-                string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
-                string fun = "10";                                                    //0x10 写入多个寄存器
-                string startAddr = obj.Addr.ToString("X4");                     //起始地址
+
+                //string addr = DataMonitorConfig.SlaveId.ToString("X2");         //从站地址
+                //string fun = "10";                                              //0x10 写入多个寄存器
+                //string startAddr = obj.Addr.ToString("X4");                     //起始地址
+
                 string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");     //寄存器数量
                 string quantity = (obj.DataTypeByteLength).ToString("X2");      //字节数量
                 double wValue = double.Parse(obj.WriteValue) / obj.Rate;              //对值的倍率做处理
                 string dataStr = "";
+                string unCrcFrame = "";
                 dynamic data = "";
                 //根据设定的类型转换值
                 switch (obj.Type)
                 {
-                    case Enums.DataType.uShort:
+                    case DataType.uShort:
                         data = (ushort)wValue;
                         break;
-                    case Enums.DataType.Short:
+                    case DataType.Short:
                         data = (short)wValue;
                         break;
-                    case Enums.DataType.uInt:
+                    case DataType.uInt:
                         data = (uint)wValue;
                         break;
-                    case Enums.DataType.Int:
+                    case DataType.Int:
                         data = (int)wValue;
                         break;
-                    case Enums.DataType.uLong:
+                    case DataType.uLong:
                         data = (ulong)wValue;
                         break;
-                    case Enums.DataType.Long:
+                    case DataType.Long:
                         data = (long)wValue;
                         break;
-                    case Enums.DataType.Float:
+                    case DataType.Float:
                         data = (float)wValue;
                         break;
-                    case Enums.DataType.Double:
+                    case DataType.Double:
                         data = (double)wValue;
                         break;
                     default:
                         break;
                 }
 
-                dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
-
-                //string unCrcFrame = addr + fun + startAddr + quantity;       //未校验的数据帧
-                //var crc = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());   //校验码
-                //string frame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr} {crc[1]:X2}{crc[0]:X2}";
-                string unCrcFrame = $"{addr} {fun} {startAddr} {jcqSl} {quantity} {dataStr}";
+                //若是uShort或short则使用0x06功能码(有些设备并不支持0x10功能码) 其他使用0x10功能码
+                if (obj.Type.Equals(DataType.uShort) || obj.Type.Equals(DataType.Short))
+                {
+                    //0x06写入帧
+                    unCrcFrame = $"{DataMonitorConfig.SlaveId:X2} 06 {obj.Addr:X4} {data:X4}";//未校验的数据帧
+                }
+                else
+                {
+                    //0x10写入帧
+                    dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
+                    unCrcFrame = $"{DataMonitorConfig.SlaveId:X2} 10 {obj.Addr:X4} {jcqSl} {quantity} {dataStr}";//未校验的数据帧
+                }
 
                 ShowMessage("数据写入...");
-
-                //请求发送数据帧 由于会失败, 请求多次
                 PublishFrameEnqueue(GetModbusCrcedStr(unCrcFrame), 1000);
-                //PublishFrameEnqueue(GetCrcedStr(unCrcFrame), 1000);
-                //PublishFrameQueue.Enqueue(unCrcFrame);
-                ////PublishFrameQueue.Enqueue(unCrcFrame);
-                ////await Task.Delay(1000);
-                //TaskDelayTime = 100;
             }
             catch (Exception ex)
             {
