@@ -320,7 +320,7 @@
                                 DockPanel.Dock="Top"
                                 Style="{StaticResource Effect2Control}">
                     <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                        <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages}">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages, Mode=OneTime, IsAsync=True}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <VirtualizingStackPanel />

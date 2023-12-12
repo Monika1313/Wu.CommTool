@@ -6,6 +6,8 @@ using Prism.Regions;
 using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using Wu.CommTool.Modules.ModbusRtu.Models;
 using Wu.CommTool.Modules.ModbusRtu.Views;
@@ -29,7 +31,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         {
             this.provider = provider;
             this.dialogHost = dialogHost;
-            this.ModbusRtuModel = modbusRtuModel;
+
 
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
@@ -39,10 +41,21 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
             CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
 
+            this.ModbusRtuModel = modbusRtuModel;
+            //var stopwatch = new Stopwatch();
+            //stopwatch.Start();
+            //stopwatch.Stop();
+            //Debug.WriteLine($"Elapsed Time: {stopwatch.ElapsedMilliseconds} ms");
         }
 
-
-
+        /// <summary>
+        /// 导航至该页面触发
+        /// </summary>
+        /// <param name="navigationContext"></param>
+        public override void OnNavigatedTo(NavigationContext navigationContext)
+        {
+            ModbusRtuModel.RefreshQuickImportList();
+        }
 
 
         #region **************************************** 属性 ****************************************
@@ -134,14 +147,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             ModbusRtuModel.OperateFilter();
         }
 
-        /// <summary>
-        /// 导航至该页面触发
-        /// </summary>
-        /// <param name="navigationContext"></param>
-        public override void OnNavigatedTo(NavigationContext navigationContext)
-        {
-            ModbusRtuModel.RefreshQuickImportList();
-        }
+
 
         /// <summary>
         /// 打开该弹窗时执行

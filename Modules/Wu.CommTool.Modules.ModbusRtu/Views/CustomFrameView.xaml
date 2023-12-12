@@ -316,13 +316,12 @@
                             DockPanel.Dock="Top"
                             Style="{StaticResource Effect2Control}">
                 <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                    <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages}">
+                    <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages, Mode=OneTime, IsAsync=True}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel VirtualizingPanel.CacheLength="2"
                                                         VirtualizingPanel.CacheLengthUnit="Page"
                                                         VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                                                        VirtualizingPanel.ScrollUnit="Item"
                                                         VirtualizingPanel.VirtualizationMode="Recycling" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
@@ -359,7 +358,6 @@
                                     </i:Interaction.Triggers>
                                     <Border.ContextMenu>
                                         <ContextMenu>
-                                            <!--  MenuItem绑定命令  -->
                                             <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                       CommandParameter="{Binding}"
                                                       Header="解析数据帧"
@@ -406,6 +404,20 @@
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
+
+
+                                        <!--<TextBlock>
+                                            <TextBlock.Inlines>
+                                                <ItemsControl ItemsSource="{Binding Runs}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Run Foreground="{Binding ForegroundColor}" Text="{Binding Text}" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </TextBlock.Inlines>
+                                        </TextBlock>-->
+
                                     </WrapPanel>
                                 </Border>
                             </DataTemplate>
