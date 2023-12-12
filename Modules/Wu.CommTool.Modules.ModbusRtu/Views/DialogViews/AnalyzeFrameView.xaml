@@ -53,13 +53,11 @@
                             Content="✕"
                             DockPanel.Dock="Right"
                             Style="{StaticResource MaterialDesignOutlinedButton}" />
-                </DockPanel>
 
-                <DockPanel DockPanel.Dock="Right">
                     <ComboBox Width="200"
                               hc:TitleElement.Title="字节序"
                               hc:TitleElement.TitleWidth="50"
-                              DockPanel.Dock="Top"
+                              DockPanel.Dock="Right"
                               ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:ModbusByteOrder}}}"
                               SelectedItem="{Binding ModbusByteOrder}"
                               Style="{StaticResource FormComboBox}"
@@ -70,6 +68,9 @@
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </ComboBox>
+                </DockPanel>
+
+                <DockPanel DockPanel.Dock="Right">
                     <ContentControl Margin="4"
                                     Padding="0"
                                     Style="{StaticResource Effect2Control}"
@@ -163,6 +164,7 @@
                 </DockPanel>
 
                 <ContentControl Margin="4"
+                                VerticalAlignment="Top"
                                 DockPanel.Dock="Left"
                                 Style="{StaticResource Effect2Control}">
                     <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
@@ -184,7 +186,8 @@
                                             <TextBlock Margin="3"
                                                        VerticalAlignment="Center"
                                                        Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                       Text="{Binding Content}" />
+                                                       Text="{Binding Content}"
+                                                       TextWrapping="Wrap" />
                                         </WrapPanel>
                                     </Border>
                                 </DataTemplate>
