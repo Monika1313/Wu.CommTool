@@ -358,7 +358,6 @@
                                         </i:Interaction.Triggers>
                                         <Border.ContextMenu>
                                             <ContextMenu>
-                                                <!--  MenuItem绑定命令  -->
                                                 <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                           CommandParameter="{Binding}"
                                                           Header="解析数据帧"
@@ -378,13 +377,13 @@
                                                        VerticalAlignment="Center"
                                                        Style="{StaticResource MessageTextBlock}"
                                                        Text="{Binding Type}" />
-                                            <TextBox VerticalAlignment="Center"
+                                            <!--<TextBox VerticalAlignment="Center"
                                                      FontSize="12"
                                                      FontWeight="Bold"
                                                      IsReadOnly="True"
                                                      Style="{StaticResource MessageTextBox}"
                                                      Text="{Binding Content}"
-                                                     TextWrapping="Wrap" />
+                                                     TextWrapping="Wrap" />-->
 
                                             <ItemsControl Background="Transparent"
                                                           ItemsSource="{Binding MessageSubContents}"

@@ -445,13 +445,13 @@
                                                    VerticalAlignment="Center"
                                                    Style="{StaticResource MessageTextBlock}"
                                                    Text="{Binding Type}" />
-                                        <TextBox VerticalAlignment="Center"
+                                        <!--<TextBox VerticalAlignment="Center"
                                                  FontSize="12"
                                                  FontWeight="Bold"
                                                  IsReadOnly="True"
                                                  Style="{StaticResource MessageTextBox}"
                                                  Text="{Binding Content}"
-                                                 TextWrapping="Wrap" />
+                                                 TextWrapping="Wrap" />-->
 
                                         <ItemsControl Background="Transparent"
                                                       ItemsSource="{Binding MessageSubContents}"

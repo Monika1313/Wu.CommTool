@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using System.Windows.Interop;
 using System.Windows.Documents;
 using System.Xaml.Permissions;
+using System.Xml;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models
 {
@@ -1264,7 +1265,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                             if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                                 break;
                             PublishFrameEnqueue(GetModbusCrcedStr(unCrcMsg), ComConfig.SearchInterval);//发送消息入队
-                            await Task.Delay(ComConfig.SearchInterval);           //间隔80ms后再请求下一个
+                            await Task.Delay(ComConfig.SearchInterval);           //间隔数ms后再请求下一个
                         }
                         if (ComConfig.IsOpened == false)
                             break;
@@ -1274,7 +1275,10 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                 }
                 if (ComConfig.IsOpened)
                 {
-                    await Task.Delay(1000);
+                    while (PublishFrameQueue.Count != 0)
+                    {
+                        await Task.Delay(100);
+                    }
                     ShowMessage("搜索完成");
                     CloseCom();
                 }
