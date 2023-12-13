@@ -187,11 +187,29 @@
                                                         <Style.Triggers>
                                                             <MultiDataTrigger>
                                                                 <MultiDataTrigger.Conditions>
-                                                                    <!--  0x05请求帧 输出值  -->
-                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x05请求帧}" />
+                                                                    <!--  0x01请求帧 线圈数量  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x01请求帧}" />
                                                                     <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.RegisterNum}" />
                                                                 </MultiDataTrigger.Conditions>
-                                                                <Setter Property="Text" Value="输出值" />
+                                                                <Setter Property="Text" Value="线圈数量" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x02请求帧 输入数量  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x02请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.RegisterNum}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="输入数量" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x04请求帧 输入寄存器数量  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x04请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.RegisterNum}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="输入寄存器数量" />
                                                             </MultiDataTrigger>
 
                                                             <MultiDataTrigger>
@@ -201,6 +219,33 @@
                                                                     <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.StartAddr}" />
                                                                 </MultiDataTrigger.Conditions>
                                                                 <Setter Property="Text" Value="输出地址" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x05请求帧 输出值  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x05请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.RegisterNum}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="输出值" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x06请求帧  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x06请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.StartAddr}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="寄存器地址" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x06请求帧  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x06请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.RegisterNum}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="寄存器值" />
                                                             </MultiDataTrigger>
                                                         </Style.Triggers>
                                                     </Style>
