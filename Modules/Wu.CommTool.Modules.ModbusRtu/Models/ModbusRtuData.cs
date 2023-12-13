@@ -234,7 +234,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
             {
                 return val;
             }
-            //TODO 字节序处理
+            //字节序处理
             switch (byteOrder)
             {
                 case ModbusByteOrder.ABCD:
