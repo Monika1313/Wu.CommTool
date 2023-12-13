@@ -75,7 +75,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         private ushort _StartAddr;
 
         /// <summary>
-        /// 寄存器数量/线圈数量(读输出线圈)/输入数量(读离散输入) 2字节 单位word
+        /// 0x03寄存器数量/0x01线圈数量(读输出线圈)/0x02输入数量(读离散输入)/0x05的输出值/0x06的寄存器值 2字节 单位word
         /// </summary>
         public ushort RegisterNum
         {
@@ -89,6 +89,18 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         }
         private ushort _RegisterNum;
 
+
+        /// <summary>
+        /// 0x0f的输入数量 0x10的寄存器数量
+        /// </summary>
+        public ushort WriteNum
+        { 
+            get => _WriteNum; 
+            set => SetProperty(ref _WriteNum, value); 
+        }
+        private ushort _WriteNum;
+
+
         /// <summary>
         /// 字节数量 1字节
         /// </summary>
@@ -100,6 +112,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         /// </summary>
         public byte[] RegisterValues { get => _RegisterValues; set => SetProperty(ref _RegisterValues, value); }
         private byte[] _RegisterValues;
+
+
 
         /// <summary>
         /// CRC校验码 2字节
@@ -278,67 +292,67 @@ namespace Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels
         /// <returns></returns>
         public string GetFrameStr()
         {
+            string unCrcFrame = string.Empty;
             switch (ModbusRtuFrameType)
             {
                 case ModbusRtuFrameType._0x01请求帧:
-                    break;
-                case ModbusRtuFrameType._0x01响应帧:
-                    break;
-                case ModbusRtuFrameType._0x81错误帧:
-                    break;
                 case ModbusRtuFrameType._0x02请求帧:
-                    break;
-                case ModbusRtuFrameType._0x02响应帧:
-                    break;
-                case ModbusRtuFrameType._0x82错误帧:
-                    break;
-
                 case ModbusRtuFrameType._0x03请求帧:
                 case ModbusRtuFrameType._0x04请求帧:
-                    var f = $"{SlaveId:X2} {Function:X2} {StartAddr:X4} {RegisterNum:X4} ";
-                    CrcCode = Wu.Utils.Crc.Crc16Modbus(f.GetBytes());
-                    return Wu.CommTool.Modules.ModbusRtu.Utils.ModbusUtils.StrCombineCrcCode(f);
+                case ModbusRtuFrameType._0x05请求帧:
+                case ModbusRtuFrameType._0x06请求帧:
+                    //TODO 0x05请求帧的输出值只能是0xFF00或0x0000
+                    unCrcFrame = $"{SlaveId:X2} {Function:X2} {StartAddr:X4} {RegisterNum:X4} ";
+                    CrcCode = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());
+                    return Wu.CommTool.Modules.ModbusRtu.Utils.ModbusUtils.StrCombineCrcCode(unCrcFrame);
+
+
+                case ModbusRtuFrameType._0x0F请求帧:
+                case ModbusRtuFrameType._0x10请求帧:
+                    //unCrcFrame = $"{SlaveId:X2} {Function:X2} {StartAddr:X4} {RegisterNum:X4} ";
+                    //CrcCode = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());
+                    //return Wu.CommTool.Modules.ModbusRtu.Utils.ModbusUtils.StrCombineCrcCode(unCrcFrame);
+                    break;
+
+
+                case ModbusRtuFrameType._0x81错误帧:
+                case ModbusRtuFrameType._0x82错误帧:
+                case ModbusRtuFrameType._0x83错误帧:
+                case ModbusRtuFrameType._0x84错误帧:
+                case ModbusRtuFrameType._0x85错误帧:
+                case ModbusRtuFrameType._0x86错误帧:
+                case ModbusRtuFrameType._0x8F错误帧:
+                case ModbusRtuFrameType._0x90错误帧:
+                case ModbusRtuFrameType._0x97错误帧:
+                    break;
+
+
+                case ModbusRtuFrameType._0x01响应帧:
+                    break;
+                
+                case ModbusRtuFrameType._0x02响应帧:
+                    break;
 
                 case ModbusRtuFrameType._0x03响应帧:
-                    break;
-                case ModbusRtuFrameType._0x83错误帧:
-                    break;
                 case ModbusRtuFrameType._0x04响应帧:
                     break;
-                case ModbusRtuFrameType._0x84错误帧:
-                    break;
-                case ModbusRtuFrameType._0x05请求帧:
-                    break;
+                
+                
                 case ModbusRtuFrameType._0x05响应帧:
-                    break;
-                case ModbusRtuFrameType._0x85错误帧:
-                    break;
-                case ModbusRtuFrameType._0x06请求帧:
-                    break;
                 case ModbusRtuFrameType._0x06响应帧:
                     break;
-                case ModbusRtuFrameType._0x86错误帧:
-                    break;
-                case ModbusRtuFrameType._0x0F请求帧:
-                    break;
+               
+                
                 case ModbusRtuFrameType._0x0F响应帧:
                     break;
-                case ModbusRtuFrameType._0x8F错误帧:
-                    break;
-                case ModbusRtuFrameType._0x10请求帧:
-                    break;
+                
                 case ModbusRtuFrameType._0x10响应帧:
                     break;
-                case ModbusRtuFrameType._0x90错误帧:
-                    break;
+                
                 case ModbusRtuFrameType._0x17请求帧:
                     break;
                 case ModbusRtuFrameType._0x17响应帧:
                     break;
-                case ModbusRtuFrameType._0x97错误帧:
-                    break;
-                default:
-                    return string.Empty;
             }
             return string.Empty;
         }

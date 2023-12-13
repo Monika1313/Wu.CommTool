@@ -32,11 +32,15 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
             ExecuteCommand = new(Execute);
             SaveCommand = new DelegateCommand(Save);
             CancelCommand = new DelegateCommand(Cancel);
-            ModbusRtuFrameTypes = new ObservableCollection<ModbusRtuFrameType> 
-            {
+            ModbusRtuFrameTypes =
+            [
+                ModbusRtuFrameType._0x01请求帧,
+                ModbusRtuFrameType._0x02请求帧,
                 ModbusRtuFrameType._0x03请求帧,
                 ModbusRtuFrameType._0x04请求帧, 
-            };
+                ModbusRtuFrameType._0x05请求帧, 
+                ModbusRtuFrameType._0x06请求帧, 
+            ];
         }
 
         /// <summary>

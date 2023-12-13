@@ -552,9 +552,9 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                     break;
                 //写单个线圈
                 case ModbusRtuFunctionCode._0x05:
-                    //请求帧和应答帧格式相同 请求帧的输出值只能为0x0000
+                    //请求帧和应答帧格式相同 请求帧的输出值只能为0x0000(false)或0xFF00(true)
                     //请求帧总8字节   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
-                    if (Frame.Length.Equals(8) && Frame[4] == 0 && Frame[5] == 0)
+                    if (Frame.Length.Equals(8) && Frame[4] == 0 && (Frame[5] == 0 || Frame[5] == 0xFF00))
                     {
                         StartAddr = Frame.Skip(2).Take(2).ToArray();
                         RegisterNum = Frame.Skip(4).Take(2).ToArray();

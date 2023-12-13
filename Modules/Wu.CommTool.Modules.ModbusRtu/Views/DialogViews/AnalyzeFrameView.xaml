@@ -180,9 +180,39 @@
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock Width="60"
                                                        Margin="5,0"
+                                                       VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style BasedOn="{StaticResource ModbusRtuMessageTextBlock}" TargetType="TextBlock">
+                                                        <Setter Property="Text" Value="{Binding Type}" />
+                                                        <Style.Triggers>
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x05请求帧 输出值  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x05请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.RegisterNum}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="输出值" />
+                                                            </MultiDataTrigger>
+
+                                                            <MultiDataTrigger>
+                                                                <MultiDataTrigger.Conditions>
+                                                                    <!--  0x05请求帧 输出地址  -->
+                                                                    <Condition Binding="{Binding DataContext.ModbusRtuFrame.Type, RelativeSource={RelativeSource AncestorType=UserControl, Mode=FindAncestor}}" Value="{x:Static enums:ModbusRtuFrameType._0x05请求帧}" />
+                                                                    <Condition Binding="{Binding Type}" Value="{x:Static enums:ModbusRtuMessageType.StartAddr}" />
+                                                                </MultiDataTrigger.Conditions>
+                                                                <Setter Property="Text" Value="输出地址" />
+                                                            </MultiDataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+
+                                            <!--<TextBlock Width="60"
+                                                       Margin="5,0"
                                                        VerticalAlignment="Center"
                                                        Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                       Text="{Binding Type}" />
+                                                       Text="{Binding Type}" />-->
+
                                             <TextBlock Margin="3"
                                                        VerticalAlignment="Center"
                                                        Style="{StaticResource ModbusRtuMessageTextBlock}"

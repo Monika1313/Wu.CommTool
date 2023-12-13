@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:ddvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels"
+             xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views.DialogViews"
@@ -77,7 +78,7 @@
 
                 <Grid HorizontalAlignment="Center" DockPanel.Dock="Top">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="80" />
+                        <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                         <ColumnDefinition Width="auto" />
                     </Grid.ColumnDefinitions>
@@ -88,18 +89,52 @@
                         <RowDefinition Height="auto" />
                     </Grid.RowDefinitions>
 
-                    <!--  标题  -->
-
                     <TextBlock Style="{StaticResource column0}" Text="从站ID" />
                     <TextBlock Grid.Row="1"
                                Style="{StaticResource column0}"
                                Text="功能码" />
-                    <TextBlock Grid.Row="2"
-                               Style="{StaticResource column0}"
-                               Text="起始地址" />
-                    <TextBlock Grid.Row="3"
-                               Style="{StaticResource column0}"
-                               Text="寄存器数量" />
+                    <TextBlock Grid.Row="2">
+                        <TextBlock.Style>
+                            <Style BasedOn="{StaticResource column0}" TargetType="TextBlock">
+                                <Setter Property="Text" Value="起始地址" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x05请求帧}">
+                                        <Setter Property="Text" Value="输出地址" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x06请求帧}">
+                                        <Setter Property="Text" Value="寄存器地址" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBlock Grid.Row="3">
+                        <TextBlock.Style>
+                            <Style BasedOn="{StaticResource column0}" TargetType="TextBlock">
+                                <Setter Property="Text" Value="寄存器数量" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x01请求帧}">
+                                        <Setter Property="Text" Value="线圈数量" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x02请求帧}">
+                                        <Setter Property="Text" Value="输入数量" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x03请求帧}">
+                                        <Setter Property="Text" Value="寄存器数量" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x04请求帧}">
+                                        <Setter Property="Text" Value="输入寄存器数量" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x05请求帧}">
+                                        <Setter Property="Text" Value="输出值" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType}" Value="{x:Static enums:ModbusRtuFrameType._0x06请求帧}">
+                                        <Setter Property="Text" Value="寄存器值" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
 
                     <TextBox x:Name="textbox"
                              Grid.Row="0"
@@ -132,22 +167,6 @@
                              Style="{StaticResource column2}"
                              Text="{Binding ModbusRtuFrameCreator.RegisterNumHex, StringFormat='X4', UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
-                <!--<StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-                    <TextBox hc:TitleElement.Title="从站ID"
-                             Style="{StaticResource FormTextBox}"
-                             Text="{Binding ModbusRtuFrameCreator.SlaveId, StringFormat='X2'}" />
-                    <TextBox hc:TitleElement.Title="功能码"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="{Binding ModbusRtuFrameCreator.Function, StringFormat='X'}" />
-
-                    <TextBox hc:TitleElement.Title="起始地址"
-                             Style="{StaticResource FormTextBox}"
-                             Text="{Binding ModbusRtuFrameCreator.StartAddr, StringFormat='X4'}" />
-                    <TextBox hc:TitleElement.Title="寄存器数量"
-                             Style="{StaticResource FormTextBox}"
-                             Text="{Binding ModbusRtuFrameCreator.RegisterNum, StringFormat='X4'}" />
-                </StackPanel>-->
 
                 <ContentControl Margin="4"
                                 DockPanel.Dock="Top"
