@@ -637,7 +637,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         StartAddr = Frame.Skip(2).Take(2).ToArray();
                         RegisterNum = Frame.Skip(4).Take(2).ToArray();
                         CrcCode = Frame.Skip(6).Take(2).ToArray();
-                        Type = ModbusRtuFrameType._0x10响应帧;
+                        Type = ModbusRtuFrameType._0x0F响应帧;
                     }
                     //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输出数量(2) 字节数(1) 输出值(N*) 校验码(2)
                     else if (Frame.Length >= 10)
@@ -647,7 +647,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models
                         BytesNum = Frame[6];
                         RegisterValues = Frame.Skip(7).Take(Frame.Length - 9).ToArray();
                         CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
-                        Type = ModbusRtuFrameType._0x10请求帧;
+                        Type = ModbusRtuFrameType._0x0F请求帧;
                     }
                     break;
                 case ModbusRtuFunctionCode._0x8F:
