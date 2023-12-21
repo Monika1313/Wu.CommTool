@@ -1,13 +1,4 @@
-﻿using Prism.Ioc;
-using Prism.Modularity;
-using Prism.Regions;
-using Wu.CommTool.Core;
-using Wu.CommTool.Modules.ModbusRtu.Models;
-using Wu.CommTool.Modules.ModbusRtu.ViewModels;
-using Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
-using Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels;
-using Wu.CommTool.Modules.ModbusRtu.Views;
-using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
+﻿using Prism.Modularity;
 
 namespace Wu.CommTool.Modules.ModbusRtu
 {

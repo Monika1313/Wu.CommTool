@@ -1,20 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using Prism.Services.Dialogs;
-using System;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
-using System.Threading.Tasks;
-using System.Windows;
-using Wu.CommTool.Modules.ModbusRtu.Models;
-using Wu.CommTool.Modules.ModbusRtu.Views;
-using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
-using Wu.ViewModels;
-using Wu.Wpf.Common;
-using Wu.Wpf.Models;
+﻿using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {

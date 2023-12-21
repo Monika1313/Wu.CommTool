@@ -1,19 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using Prism.Services.Dialogs;
-using System;
-using System.Collections.ObjectModel;
-using Wu.ViewModels;
-using Wu.Wpf.Common;
-using Wu.CommTool.Core;
-using Wu.CommTool.Modules.ModbusRtu.Views;
-using Wu.CommTool.Shared.Models;
-using Wu.CommTool.Modules.ModbusRtu.Models;
-
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
     public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
     {
@@ -26,7 +11,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         #endregion
 
         public ModbusRtuViewModel() { }
-        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost,IRegionManager regionManager,ModbusRtuModel modbusRtuModel) : base(provider)
+        public ModbusRtuViewModel(IContainerProvider provider, IDialogHostService dialogHost, IRegionManager regionManager, ModbusRtuModel modbusRtuModel) : base(provider)
         {
             this.provider = provider;
             this.dialogHost = dialogHost;

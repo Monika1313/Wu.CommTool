@@ -1,20 +1,4 @@
-﻿using MaterialDesignThemes.Wpf;
-using Newtonsoft.Json;
-using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using Prism.Services.Dialogs;
-using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Windows;
-using Wu.CommTool.Modules.ModbusRtu.Models;
-using Wu.CommTool.Modules.ModbusRtu.Views;
-using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
-using Wu.ViewModels;
-using Wu.Wpf.Common;
-using Wu.Wpf.Models;
+﻿using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -94,7 +78,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
         /// 复制Modbus帧信息
         /// </summary>
         public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
-        
+
         /// <summary>
         /// 打开帧解析界面
         /// </summary>
