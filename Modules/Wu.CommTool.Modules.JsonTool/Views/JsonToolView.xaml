@@ -34,6 +34,7 @@
 
         <DataTemplate x:Key="JValueTemplate">
             <StackPanel Orientation="Horizontal">
+
                 <TextBlock Foreground="Black"
                            Style="{StaticResource Jtext}"
                            Text="{Binding Header}" />
@@ -87,6 +88,15 @@
 
         <DataTemplate x:Key="JPropertyTemplate">
             <StackPanel Orientation="Horizontal">
+                <!--<StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#EEEEEE" />
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>-->
                 <TextBlock Margin="0,0,5,0"
                            Foreground="#a31515"
                            Style="{StaticResource Jtext}"
@@ -143,7 +153,7 @@
                          wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
                          Foreground="#999999"
                          Style="{StaticResource TextBoxExtend}"
-                         Text="{Binding JsonString}"
+                         Text="{Binding JsonString, UpdateSourceTrigger=PropertyChanged}"
                          TextWrapping="Wrap">
                     <TextBox.InputBindings>
                         <KeyBinding Key="Enter"
