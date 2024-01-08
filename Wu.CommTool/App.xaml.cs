@@ -5,20 +5,18 @@ using Prism.Modularity;
 using System;
 using System.IO;
 using System.Windows;
-using Wu.CommTool.Common;
 using Wu.CommTool.Models;
-using Wu.CommTool.ViewModels;
-using Wu.CommTool.Views;
-using Wu.CommTool.Modules.ConvertTools;
 using Wu.CommTool.Modules.About;
-using Wu.CommTool.Modules.ModbusTcp;
+using Wu.CommTool.Modules.ConvertTools;
 using Wu.CommTool.Modules.JsonTool;
 using Wu.CommTool.Modules.Message;
-using Wu.CommTool.Modules.MqttServer;
-using Wu.Wpf.Common;
-using Wu.CommTool.Modules.MqttClient.Views;
-using Wu.CommTool.Modules.MqttClient;
 using Wu.CommTool.Modules.ModbusRtu;
+using Wu.CommTool.Modules.ModbusTcp;
+using Wu.CommTool.Modules.MqttClient;
+using Wu.CommTool.Modules.MqttServer;
+using Wu.CommTool.ViewModels;
+using Wu.CommTool.Views;
+using Wu.Wpf.Common;
 
 namespace Wu.CommTool
 {
@@ -71,15 +69,7 @@ namespace Wu.CommTool
             containerRegistry.Register<IDialogHostService, DialogHostService>();
 
             //注册页面
-            //containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();                                   //ModbusRtu
-            //containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();//ModbusRtu 自动应答编辑界面
             containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
-            //containerRegistry.RegisterForNavigation<JsonToolView, JsonToolViewModel>();                                     //Json工具界面
-            
-
-            //containerRegistry.RegisterForNavigation<JsonDataView, JsonDataViewModel>();                                     //Json数据查看界面
-            //containerRegistry.RegisterForNavigation<MqttServerView, MqttServerViewModel>();                                 //MqttServer
-            //containerRegistry.RegisterForNavigation<MqttClientView, MqttClientViewModel>();                                 //MqttClient
         }
 
         /// <summary>
@@ -90,8 +80,10 @@ namespace Wu.CommTool
             //初始化窗口
             if (Current.MainWindow.DataContext is IConfigureService service)
                 service.Configure();
-            Current.MainWindow.Width = AppConfig!.WinWidth;
-            Current.MainWindow.Height = AppConfig.WinHeight;
+
+            //限制窗口的大小在工作区域范围内,避免软件在不同分辨率的电脑,使用同一个配置文件导致显示异常
+            Current.MainWindow.Width = Math.Min(AppConfig!.WinWidth, SystemParameters.WorkArea.Size.Width);
+            Current.MainWindow.Height = Math.Min(AppConfig.WinHeight, SystemParameters.WorkArea.Size.Height);
             if (AppConfig.IsMaximized)
                 Current.MainWindow.WindowState = WindowState.Maximized;
 
