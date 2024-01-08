@@ -23,6 +23,12 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Remove="Controls\**" />
+	  <EmbeddedResource Remove="Controls\**" />
+	  <None Remove="Controls\**" />
+	  <Page Remove="Controls\**" />
+	</ItemGroup>
+	<ItemGroup>
 	  <None Remove="Images\En.png" />
 	  <None Remove="Images\Kun.png" />
 	  <None Remove="Images\Ww.png" />
@@ -40,8 +46,5 @@
 	  <Resource Include="Images\En.png" />
 	  <Resource Include="Images\Kun.png" />
 	  <Resource Include="Images\Ww.png" />
-	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Controls\" />
 	</ItemGroup>
 </Project>
