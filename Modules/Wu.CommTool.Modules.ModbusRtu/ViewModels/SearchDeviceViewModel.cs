@@ -90,9 +90,6 @@
                 case "SearchDevices": ModbusRtuModel.SearchDevices(); break;
                 case "StopSearchDevices": ModbusRtuModel.StopSearchDevices(); break;
                 case "OpenDialogView": OpenDialogView(); break;
-                case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
-                case "Clear": ModbusRtuModel.MessageClear(); break;         //清空消息
-                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
                 default: break;
             }
         }

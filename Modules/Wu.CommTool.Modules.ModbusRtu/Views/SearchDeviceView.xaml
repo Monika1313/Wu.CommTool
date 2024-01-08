@@ -26,8 +26,7 @@
                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                         Margin="5"
                         HorizontalAlignment="Left"
-                        Command="{Binding ExecuteCommand}"
-                        CommandParameter="Pause"
+                        Command="{Binding ModbusRtuModel.PauseCommand}"
                         Cursor="Hand">
                     <md:PackIcon Width="24" Height="24">
                         <md:PackIcon.Style>
@@ -69,8 +68,7 @@
                         Margin="5"
                         HorizontalAlignment="Left"
                         hc:Poptip.Content="清空消息"
-                        Command="{Binding ExecuteCommand}"
-                        CommandParameter="Clear"
+                        Command="{Binding ModbusRtuModel.MessageClearCommand}"
                         Content="{md:PackIcon Kind=Delete}"
                         Style="{StaticResource Red_CircleButton}" />
             </DockPanel>
@@ -97,11 +95,10 @@
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="5"
                                         HorizontalAlignment="Left"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="GetComPorts"
+                                        Command="{Binding ModbusRtuModel.GetComPortsCommand}"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                                        ToolTip="查找串口设备">
+                                        ToolTip="查找串口设备" Cursor="Hand">
                                     <md:PackIcon Width="24"
                                                  Height="24"
                                                  Kind="Search" />

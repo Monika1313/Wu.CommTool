@@ -106,15 +106,12 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 case "ImportConfig": ModbusRtuModel.ImportConfig(); break;
                 case "RefreshQuickImportList": ModbusRtuModel.RefreshQuickImportList(); break;
 
-                case "Clear": ModbusRtuModel.MessageClear(); break;
                 case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
                 case "OpenRightDrawer": OpenDrawers.RightDrawer = true; break;
                 case "OpenDialogView": OpenDialogView(); break;
-                case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
                 case "OpenAutoRead": ModbusRtuModel.OpenAutoRead(); break;
                 case "CloseAutoRead": ModbusRtuModel.CloseAutoRead(); break;
 
-                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
                 case "OpenCom":                                             //打开串口
                     ModbusRtuModel.OpenCom();
                     break;

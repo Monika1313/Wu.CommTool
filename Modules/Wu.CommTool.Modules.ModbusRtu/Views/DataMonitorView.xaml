@@ -187,8 +187,7 @@
                                         Margin="5"
                                         HorizontalAlignment="Left"
                                         hc:Poptip.Content="查找串口设备"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="GetComPorts"
+                                        Command="{Binding ModbusRtuModel.GetComPortsCommand}"
                                         Content="{md:PackIcon Kind=Search}"
                                         DockPanel.Dock="Left"
                                         Style="{StaticResource Blue_CircleButton}" />
@@ -265,8 +264,7 @@
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Pause"
+                            Command="{Binding ModbusRtuModel.PauseCommand}"
                             Cursor="Hand"
                             DockPanel.Dock="Left">
                         <md:PackIcon Width="24" Height="24">
@@ -307,8 +305,7 @@
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             hc:Poptip.Content="清空消息"
-                            Command="{Binding ExecuteCommand}"
-                            CommandParameter="Clear"
+                            Command="{Binding ModbusRtuModel.MessageClearCommand}"
                             Content="{md:PackIcon Kind=Delete}"
                             DockPanel.Dock="Left"
                             Style="{StaticResource Red_CircleButton}" />
@@ -415,33 +412,10 @@
         </md:DrawerHost.RightDrawerContent>
         <!--  主体内容  -->
         <DockPanel>
-            <!--<DockPanel.Background>
-                                <LinearGradientBrush>
-            -->
-            <!--<GradientStop Offset="0.5" Color="#DDE4FF" />
-                                    <GradientStop Offset="1" Color="#8DA2EE" />-->
-            <!--
-
-                                    <GradientStop Offset="0.5" Color="#FFADF7" />
-                                    <GradientStop Offset="1" Color="#B1FF96" />
-                                </LinearGradientBrush>
-                            </DockPanel.Background>-->
             <!--  头部区域  -->
             <Grid DockPanel.Dock="Top">
                 <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 数据监控" />
                 <DockPanel LastChildFill="False">
-                    <!--  ModbusRtu 功能选择按钮  -->
-                    <!--<Button
-                                            Width="30"
-                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                            Margin="5"
-                                            HorizontalAlignment="Left"
-                                            hc:Poptip.Content="功能选择"
-                                            Command="{Binding ExecuteCommand}"
-                                            CommandParameter="ShowModbusRtuFunSelect"
-                                            Content="{md:PackIcon Kind=Apps}"
-                                            Cursor="Hand"
-                                            Style="{StaticResource Blue_CircleButton}" />-->
 
                     <!--  打开数据监控  -->
                     <Button Width="30"

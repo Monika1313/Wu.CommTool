@@ -9,24 +9,15 @@ global using Prism.Commands;
 global using Prism.Ioc;
 global using Prism.Regions;
 global using Prism.Services.Dialogs;
-global using Prism.Mvvm;
 
 global using MaterialDesignThemes.Wpf;
-global using Newtonsoft.Json;
-
 
 global using Wu.ViewModels;
 global using Wu.Wpf.Models;
 global using Wu.Wpf.Common;
 
 global using Wu.CommTool.Core;
-global using Wu.CommTool.Modules.ModbusRtu.Views;
-global using Wu.CommTool.Modules.ModbusRtu.Models;
-global using Wu.CommTool.Modules.ModbusRtu.ViewModels;
-global using Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
-global using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
-global using Wu.CommTool.Modules.ModbusRtu.Enums;
-
+global using Wu.CommTool.Modules.ConvertTools.Views;
 
 
 

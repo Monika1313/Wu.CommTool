@@ -94,9 +94,6 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                 case "Search": Search(); break;
                 case "OpenDialogView": OpenDialogView(); break;
                 case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
-                case "Clear": ModbusRtuModel.MessageClear(); break;
-                case "Pause": ModbusRtuModel.Pause(); break;                //暂停页面消息更新
-                case "GetComPorts": ModbusRtuModel.GetComPorts(); break;    //查找串口
                 case "AddMosbusRtuAutoResponseData": ModbusRtuModel.AddMosbusRtuAutoResponseData(); break;         //添加新的应答模板
                 case "ExportAutoResponseConfig": ModbusRtuModel.ExportAutoResponseConfig(); break;
                 case "ImportAutoResponseConfig": ModbusRtuModel.ImportAutoResponseConfig(); break;

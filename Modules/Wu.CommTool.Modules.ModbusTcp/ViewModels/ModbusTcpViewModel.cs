@@ -13,6 +13,7 @@ using NModbus;
 using System.Net;
 using Wu.CommTool.Shared.Models;
 using Wu.CommTool.Modules.ModbusTcp.Views;
+using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusTcp.ViewModels
 {
