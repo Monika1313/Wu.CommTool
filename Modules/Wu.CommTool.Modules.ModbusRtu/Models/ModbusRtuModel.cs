@@ -2,14 +2,12 @@
 using Microsoft.Win32;
 
 using System.Collections;
-using System.Collections.Generic;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Windows.Data;
 using Wu.CommTool.Core.Extensions;
-using Wu.Extensions;
 using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;

@@ -4,6 +4,8 @@ global using System.Threading.Tasks;
 global using System.Collections.ObjectModel;
 global using System.IO;
 global using System.Windows;
+global using System.Collections.Generic;
+global using System.ComponentModel;
 
 global using Prism.Commands;
 global using Prism.Ioc;
@@ -18,6 +20,8 @@ global using Newtonsoft.Json;
 global using Wu.ViewModels;
 global using Wu.Wpf.Models;
 global using Wu.Wpf.Common;
+global using Wu.Extensions;
+global using Wu.Wpf.Converters;
 
 global using Wu.CommTool.Core;
 global using Wu.CommTool.Modules.ModbusRtu.Views;
