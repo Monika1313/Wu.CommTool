@@ -28,6 +28,11 @@ using Wu.CommTool.Modules.MqttServer.Model;
 using Wu.CommTool.Shared.Enums.Mqtt;
 using MQTTnet.Internal;
 using Wu.CommTool.Modules.MqttServer.Views;
+using WindowsFirewallHelper;
+using System.Reflection;
+using System.Diagnostics;
+using System.Security.Principal;
+using Wu.Wpf.Extensions;
 
 namespace Wu.CommTool.Modules.MqttServer.ViewModels
 {
@@ -145,6 +150,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                 case "StopMqttServer": StopMqttServer(); break;                            //关闭服务器
                 case "ImportConfig": ImportConfig(); break;
                 case "ExportConfig": ExportConfig(); break;
+                case "AddFwRule": AddFwRule(); break;//添加防火墙规则
                 default: break;
             }
         }
@@ -244,7 +250,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         /// <returns></returns>
         private Task MqttServer_InterceptingPublishAsync(InterceptingPublishEventArgs arg)
         {
-            if (arg == null) 
+            if (arg == null)
                 return Task.CompletedTask;
             try
             {
@@ -710,5 +716,73 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
             }
         }
         #endregion
+
+        async void AddFwRule()
+        {
+            try
+            {
+                // 获取当前运行的可执行文件的完整路径
+                string currentExe = Process.GetCurrentProcess().MainModule.FileName;
+                //判断管理员权限
+                if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
+                {
+                    //提示获取管理员权限
+                    var result = await dialogHost.Question("警告", "该操作需要管理员权限,点击确认以管理员权限重启软件!", "Root");
+                    // 如果不是管理员，则重新启动具有管理员权限的应用程序
+                    var processInfo = new ProcessStartInfo(currentExe)
+                    {
+                        UseShellExecute = true,
+                        Verb = "runas"
+                    };
+
+                    try
+                    {
+                        Process.Start(processInfo);
+                    }
+                    catch (Exception ex)
+                    {
+                        // 用户取消了UAC提示或其他错误处理
+                        ShowErrorMessage(ex.Message);
+                        return;
+                    }
+                    Application.Current.Shutdown();
+                    return;
+                }
+                #region TODO 开放入站规则
+                //用户允许运行
+                //ShowMessage(message: "有权限");
+                //var rule = FirewallManager.Instance.CreateApplicationRule(
+                //    @"11111 Wu.CommTool Rule",
+                //    FirewallAction.Allow,
+                //    currentExe
+                //);
+
+                //var rule2 = FirewallManager.Instance.CreatePortRule(
+                // @"Port 80 - Any Protocol",
+                // FirewallAction.Allow,
+                // 80,
+                // FirewallProtocol.TCP
+                //);
+                //FirewallManager.Instance.Rules.Add(rule);
+
+                //rule.Direction = FirewallDirection.Outbound;
+                //FirewallManager.Instance.Rules.Add(rule);
+                //ShowMessage("添加成功"); 
+                #endregion
+            }
+            catch (Exception ex)
+            {
+                ShowErrorMessage(ex.Message);
+            }
+        }
+
+        void DeleteFwRule()
+        {
+            var myRule = FirewallManager.Instance.Rules.SingleOrDefault(r => r.Name == "My Rule");
+            if (myRule != null)
+            {
+                FirewallManager.Instance.Rules.Remove(myRule);
+            }
+        }
     }
 }

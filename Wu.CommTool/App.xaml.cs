@@ -29,7 +29,8 @@ public partial class App
     {
         //设置该软件的工作目录为当前软件目录
         Directory.SetCurrentDirectory(AppDomain.CurrentDomain.BaseDirectory);
-        var xx = Directory.GetCurrentDirectory();
+
+        //var xx = Directory.GetCurrentDirectory();
         //指定log4net的配置文件
         log4net.Config.XmlConfigurator.Configure(new FileInfo(Directory.GetCurrentDirectory() + "/Configs/Log4netConfig/log4net.config"));
         log.Info("App启动中...");
