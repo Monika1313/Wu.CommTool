@@ -721,13 +721,26 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
         {
             try
             {
+                string ruleName = @"1 Wu.CommTool Rule";
+                //获取防火墙列表，查看是否有该应用的规则
+                var allRules = FirewallManager.Instance.Rules.ToArray();
+                //获取所有与该程序相关的
+                var c = allRules.Where(x => x.FriendlyName.Equals(ruleName));
                 // 获取当前运行的可执行文件的完整路径
                 string currentExe = Process.GetCurrentProcess().MainModule.FileName;
+                //string currentExe = Environment.ProcessPath;
+                //判断当前程序是否已存在该规则,若不存在则创建
+                if (allRules.Any(x => x.FriendlyName.Equals(ruleName) && x.ApplicationName.Equals(currentExe) && x.Action == FirewallAction.Allow))
+                {
+                    ShowMessage("已为该软件添加过规则,，无需再次添加。");
+                    return;
+                }
+
                 //判断管理员权限
                 if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
                 {
                     //提示获取管理员权限
-                    var result = await dialogHost.Question("警告", "该操作需要管理员权限,点击确认以管理员权限重启软件!", "Root");
+                    var result = await dialogHost.Question("警告", "该操作需要管理员权限,点击确认以管理员权限重启该软件，重启后再使用该功能。", "Root");
                     // 如果不是管理员，则重新启动具有管理员权限的应用程序
                     var processInfo = new ProcessStartInfo(currentExe)
                     {
@@ -748,31 +761,25 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                     Application.Current.Shutdown();
                     return;
                 }
-                #region TODO 开放入站规则
-                //用户允许运行
-                //ShowMessage(message: "有权限");
-                //var rule = FirewallManager.Instance.CreateApplicationRule(
-                //    @"11111 Wu.CommTool Rule",
-                //    FirewallAction.Allow,
-                //    currentExe
-                //);
+                #region 开放入站规则
 
-                //var rule2 = FirewallManager.Instance.CreatePortRule(
-                // @"Port 80 - Any Protocol",
-                // FirewallAction.Allow,
-                // 80,
-                // FirewallProtocol.TCP
-                //);
-                //FirewallManager.Instance.Rules.Add(rule);
+                
+                
 
-                //rule.Direction = FirewallDirection.Outbound;
-                //FirewallManager.Instance.Rules.Add(rule);
-                //ShowMessage("添加成功"); 
+                //应用程序规则
+                var rule = FirewallManager.Instance.CreateApplicationRule(
+                    ruleName,
+                    FirewallAction.Allow,//允许
+                    currentExe
+                );
+                rule.Direction = FirewallDirection.Inbound;//入站规则
+                FirewallManager.Instance.Rules.Add(rule);//添加上诉防火墙规则
+                ShowMessage("该应用程序的入站规则添加成功");
                 #endregion
             }
             catch (Exception ex)
             {
-                ShowErrorMessage(ex.Message);
+                ShowErrorMessage($"防火墙规则添加失败:{ex.Message}");
             }
         }
 

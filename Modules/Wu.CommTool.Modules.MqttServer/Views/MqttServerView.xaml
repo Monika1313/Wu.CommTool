@@ -68,9 +68,6 @@
                                      Style="{StaticResource FormTextBox}"
                                      Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <Button Command="{Binding ExecuteCommand}"
-                                    CommandParameter="AddFwRule"
-                                    Content="添加防火墙规则" />
                             <!--  服务器开关  -->
                             <StackPanel HorizontalAlignment="Center"
                                         VerticalAlignment="Top"
@@ -92,6 +89,18 @@
                                         IsEnabled="{Binding MqttServerConfig.IsOpened}"
                                         Style="{StaticResource RedButton}" />
                             </StackPanel>
+
+                            <Button Margin="20,50,20,5"
+                                    Command="{Binding ExecuteCommand}"
+                                    CommandParameter="AddFwRule"
+                                    Content="为该软件开放防火墙"
+                                    Style="{StaticResource RedButton}"
+                                    ToolTip="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。" />
+                            <TextBlock Margin="20,0"
+                                       HorizontalAlignment="Center"
+                                       Foreground="Red"
+                                       Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
+                                       TextWrapping="Wrap" />
                         </StackPanel>
                     </ContentControl>
                 </md:DrawerHost.LeftDrawerContent>
