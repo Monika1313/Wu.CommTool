@@ -742,6 +742,11 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                     //提示获取管理员权限
                     var result = await dialogHost.Question("警告", "该操作需要管理员权限,点击确认以管理员权限重启该软件，重启后再使用该功能。", "Root");
                     // 如果不是管理员，则重新启动具有管理员权限的应用程序
+                    if (result.Result != ButtonResult.OK)
+                    {
+                        return;
+                    }
+
                     var processInfo = new ProcessStartInfo(currentExe)
                     {
                         UseShellExecute = true,
