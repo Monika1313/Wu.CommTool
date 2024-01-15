@@ -151,6 +151,7 @@
                          VerticalContentAlignment="Top"
                          hc:InfoElement.Placeholder="请输入Json字符串..."
                          wuext:TextBoxExtensions.SelectAllWhenGotFocus="True"
+                         AcceptsReturn="True"
                          Foreground="#999999"
                          Style="{StaticResource TextBoxExtend}"
                          Text="{Binding JsonString, UpdateSourceTrigger=PropertyChanged}"
@@ -230,7 +231,7 @@
                     </TreeView>-->
 
 
-                    <ScrollViewer>
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto">
                         <ItemsControl Name="itemsControl" ItemsSource="{Binding JsonNodes}">
                             <ItemsControl.Resources>
                                 <HierarchicalDataTemplate DataType="{x:Type models:JsonNode}" ItemsSource="{Binding Children}">
