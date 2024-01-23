@@ -169,7 +169,7 @@ namespace Wu.CommTool.Modules.MqttServer.ViewModels
                     new MqttServerOptionsBuilder()
                     .WithDefaultEndpoint()
                     .WithDefaultEndpointBoundIPAddress(IPAddress.Parse(MqttServerConfig.ServerIp))//设置MQTT服务器的IP
-                    .WithDefaultEndpointPort(1883)//设置服务器的端口
+                    .WithDefaultEndpointPort(MqttServerConfig.ServerPort)//设置服务器的端口
                     .Build();
                 mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
                 mqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;//客户端连接时验证
