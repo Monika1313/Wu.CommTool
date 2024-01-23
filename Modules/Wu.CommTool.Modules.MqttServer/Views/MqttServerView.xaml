@@ -60,11 +60,13 @@
 
                             <TextBox hc:TitleElement.Title="IP"
                                      hc:TitleElement.TitleWidth="45"
+                                     IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
                                      Style="{StaticResource FormTextBox}"
                                      Text="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <TextBox hc:TitleElement.Title="Port"
                                      hc:TitleElement.TitleWidth="45"
+                                     IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
                                      Style="{StaticResource FormTextBox}"
                                      Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
