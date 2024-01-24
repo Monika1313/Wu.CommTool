@@ -24,6 +24,7 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="HandyControl" Version="3.4.0" />
 		<PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
 		<PackageReference Include="Wu.Wpf" Version="1.0.11" />

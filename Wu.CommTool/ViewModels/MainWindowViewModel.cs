@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.ViewModels;
+﻿using Wu.CommTool.Modules.ModbusTcp.Views;
+
+namespace Wu.CommTool.ViewModels;
 public class MainWindowViewModel : BindableBase, IConfigureService
 {
     /// <summary>
@@ -94,7 +96,10 @@ public class MainWindowViewModel : BindableBase, IConfigureService
         MenuBars = new ObservableCollection<MenuBar>()
         {
             new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
-            //new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
+#if DEBUG
+            new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
+#endif
+
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
             new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
