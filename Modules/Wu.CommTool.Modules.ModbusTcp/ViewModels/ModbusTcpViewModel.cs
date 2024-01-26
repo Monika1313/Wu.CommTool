@@ -1,25 +1,25 @@
-﻿using System.Net.Sockets;
-using Wu.CommTool.Modules.ModbusTcp.Views;
-
-namespace Wu.CommTool.Modules.ModbusTcp.ViewModels;
+﻿namespace Wu.CommTool.Modules.ModbusTcp.ViewModels;
 
 public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
+    private readonly IRegionManager regionManager;
+
     public string DialogHostName { get; set; }
     #endregion
 
     public ModbusTcpViewModel() { }
-    public ModbusTcpViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+    public ModbusTcpViewModel(IContainerProvider provider, IDialogHostService dialogHost, IRegionManager regionManager) : base(provider)
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
+        this.regionManager = regionManager;
         ExecuteCommand = new(Execute);
         SaveCommand = new DelegateCommand(Save);
         CancelCommand = new DelegateCommand(Cancel);
+        SelectedIndexChangedCommand = new DelegateCommand<MenuBar>(SelectedIndexChanged);
     }
 
     #region **************************************** 属性 ****************************************
@@ -41,6 +41,12 @@ public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
             //new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
             //new MenuBar() { Icon = "Number4", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
         };
+
+    /// <summary>
+    /// 初始化完成标志
+    /// </summary>
+    public bool InitFlag { get => _InitFlag; set => SetProperty(ref _InitFlag, value); }
+    private bool _InitFlag;
     #endregion
 
 
@@ -52,6 +58,11 @@ public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
     /// 执行命令
     /// </summary>
     public DelegateCommand<string> ExecuteCommand { get; private set; }
+
+    /// <summary>
+    /// 页面切换
+    /// </summary>
+    public DelegateCommand<MenuBar> SelectedIndexChangedCommand { get; private set; }
     #endregion
 
 
@@ -72,7 +83,18 @@ public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //Search();
+        //首次导航时, 跳转到初始页面
+        if (!InitFlag)
+        {
+            InitFlag = true;
+            this.regionManager.RequestNavigate(PrismRegionNames.ModbusTcpViewRegionName, nameof(ModbusTcpMasterView), back =>
+            {
+                if (back.Error != null)
+                {
+
+                }
+            });
+        }
     }
 
     /// <summary>
@@ -162,6 +184,19 @@ public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
         {
             UpdateLoading(false);
         }
+    }
+
+    /// <summary>
+    /// 页面切换
+    /// </summary>
+    /// <param name="obj"></param>
+    private void SelectedIndexChanged(MenuBar obj)
+    {
+        try
+        {
+            regionManager.RequestNavigate(PrismRegionNames.ModbusTcpViewRegionName, obj.NameSpace);
+        }
+        catch { }
     }
     #endregion
 }

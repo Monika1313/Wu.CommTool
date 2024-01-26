@@ -26,6 +26,12 @@ global using Wu.Wpf.Converters;
 global using CommunityToolkit.Mvvm.ComponentModel;
 global using Wu.CommTool.Modules.ModbusTcp.Models;
 
+global using CommunityToolkit.Mvvm.Input;
+global using NModbus;
+global using System.Net.Sockets;
+
+global using Wu.CommTool.Core;
+global using Wu.CommTool.Modules.ModbusTcp.Views;
 
 
 
