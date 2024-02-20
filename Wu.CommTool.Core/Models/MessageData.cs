@@ -18,13 +18,13 @@ public partial class MessageData : ObservableObject
     /// </summary>
     [ObservableProperty]
     DateTime time;
-    
+
 
     /// <summary>
     /// 消息类型
     /// </summary>
-    public MessageType Type { get => _Type; set => SetProperty(ref _Type, value); }
-    private MessageType _Type;
+    [ObservableProperty]
+    MessageType type;
 
     /// <summary>
     /// 标题
