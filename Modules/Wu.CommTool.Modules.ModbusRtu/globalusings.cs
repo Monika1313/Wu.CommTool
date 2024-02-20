@@ -32,7 +32,7 @@ global using Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
 global using Wu.CommTool.Modules.ModbusRtu.Enums;
 
 global using Wu.CommTool.Core.Models;
-global using Wu.CommTool.Core.Eunms;
+global using Wu.CommTool.Core.Enums;
 
 
 

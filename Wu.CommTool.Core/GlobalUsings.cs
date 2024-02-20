@@ -14,7 +14,7 @@ global using Wu.Wpf.Converters;
 global using System.Globalization;
 global using System.Windows;
 
-global using Wu.CommTool.Core.Eunms;
+global using Wu.CommTool.Core.Enums;
 global using Prism.Regions;
 
 global using Prism.Mvvm;

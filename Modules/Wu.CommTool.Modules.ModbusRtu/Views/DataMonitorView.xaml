@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusRtu.Views.DataMonitorView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="Wu.CommTool.Core"
              xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
@@ -324,7 +325,7 @@
                                 </ItemsPanelTemplate>
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.Resources>
-                                <DataTemplate DataType="{x:Type models:MessageData}">
+                                <DataTemplate DataType="{x:Type core:MessageData}">
                                     <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock Margin="3"

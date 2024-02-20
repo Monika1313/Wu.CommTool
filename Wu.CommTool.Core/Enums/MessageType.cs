@@ -1,4 +1,4 @@
-﻿namespace Wu.CommTool.Core.Eunms;
+﻿namespace Wu.CommTool.Core.Enums;
 
 [TypeConverter(typeof(EnumDescriptionTypeConverter))]
 public enum MessageType : int

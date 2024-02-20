@@ -34,7 +34,6 @@ global using Wu.CommTool.Core;
 global using Wu.CommTool.Modules.ModbusTcp.Views;
 
 global using Wu.CommTool.Core.Models;
-global using Wu.CommTool.Core.Eunms;
-
+global using Wu.CommTool.Core.Enums;
 
 

@@ -6,6 +6,7 @@
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
              xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:core="Wu.CommTool.Core"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -312,7 +313,7 @@
                         </ItemsControl.ItemsPanel>
 
                         <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type models:MessageData}">
+                            <DataTemplate DataType="{x:Type core:MessageData}">
                                 <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                     <WrapPanel Orientation="Horizontal">
                                         <TextBlock Margin="3"
