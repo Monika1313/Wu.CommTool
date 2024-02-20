@@ -15,8 +15,6 @@ using System.Net;
 using System.Text;
 using System.Windows;
 using Wu.CommTool.Core.Extensions;
-using Wu.CommTool.Shared.Eunms;
-using Wu.CommTool.Shared.Models;
 using Wu.Extensions;
 using Wu.ViewModels;
 using Wu.Wpf.Models;

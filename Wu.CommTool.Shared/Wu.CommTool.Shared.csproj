@@ -32,6 +32,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Eunms\Modbus\**" />
+    <EmbeddedResource Remove="Eunms\Modbus\**" />
+    <None Remove="Eunms\Modbus\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Wu" Version="1.0.7" />
   </ItemGroup>
 
@@ -40,9 +46,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Eunms\Modbus\" />
     <Folder Include="Eunms\Mqtt\" />
-    <Folder Include="Models\Mqtt\" />
   </ItemGroup>
 
 </Project>

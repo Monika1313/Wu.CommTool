@@ -7,7 +7,6 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.ObjectModel;
 using Wu.CommTool.Modules.JsonTool.Models;
-using Wu.CommTool.Shared.Models;
 using Wu.ViewModels;
 using Wu.Wpf.Common;
 

@@ -1,18 +1,14 @@
-﻿using Prism.Mvvm;
-using Prism.Navigation;
+﻿namespace Wu.CommTool.Core.Mvvm;
 
-namespace Wu.CommTool.Core.Mvvm
+public abstract class ViewModelBase : BindableBase, IDestructible
 {
-    public abstract class ViewModelBase : BindableBase, IDestructible
+    protected ViewModelBase()
     {
-        protected ViewModelBase()
-        {
 
-        }
+    }
 
-        public virtual void Destroy()
-        {
+    public virtual void Destroy()
+    {
 
-        }
     }
 }
