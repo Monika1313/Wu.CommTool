@@ -35,5 +35,7 @@ global using Wu.CommTool.Modules.ModbusTcp.Views;
 
 global using Wu.CommTool.Core.Models;
 global using Wu.CommTool.Core.Enums;
+global using NModbus.Logging;
+global using NModbus.Message;
 
 

@@ -1,6 +1,5 @@
-﻿using Wu.CommTool.Modules.ModbusTcp.Views;
+﻿namespace Wu.CommTool.ViewModels;
 
-namespace Wu.CommTool.ViewModels;
 public class MainWindowViewModel : BindableBase, IConfigureService
 {
     /// <summary>
@@ -52,7 +51,7 @@ public class MainWindowViewModel : BindableBase, IConfigureService
 
     #region 命令
     /// <summary>
-    /// definity
+    /// 执行命令
     /// </summary>
     public DelegateCommand<string> ExecuteCommand { get; private set; }
 

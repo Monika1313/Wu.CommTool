@@ -1,4 +1,4 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
+﻿namespace Wu.CommTool.Modules.ModbusTcp.Models;
 
 /// <summary>
 /// 用于页面展示的消息数据

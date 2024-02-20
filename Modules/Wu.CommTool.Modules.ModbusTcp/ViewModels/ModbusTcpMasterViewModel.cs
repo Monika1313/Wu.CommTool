@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.ModbusTcp.ViewModels;
 
-public class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHostAware
+public partial class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHostAware
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -56,8 +56,15 @@ public class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// ModbusTcp
     /// </summary>
-    public MtcpMaster Mtcp { get => _Mtcp; set => SetProperty(ref _Mtcp, value); }
-    private MtcpMaster _Mtcp = new();
+    public MtcpMaster MtcpMaster { get => _MtcpMaster; set => SetProperty(ref _MtcpMaster, value); }
+    private MtcpMaster _MtcpMaster = new();
+
+
+    /// <summary>
+    /// 抽屉
+    /// </summary>
+    public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
+    private OpenDrawers _OpenDrawers = new();
     #endregion
 
 
@@ -78,6 +85,7 @@ public class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHostAware
         switch (obj)
         {
             case "Search": Search(); break;
+            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
             case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }

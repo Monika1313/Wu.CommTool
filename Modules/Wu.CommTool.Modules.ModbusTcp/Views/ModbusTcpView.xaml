@@ -10,7 +10,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
-             xmlns:senums="clr-namespace:Wu.CommTool.Shared.Enums;assembly=Wu.CommTool.Shared"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:ModbusTcpDesignViewModel.Instance}"
              d:Height="300"

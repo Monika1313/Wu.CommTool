@@ -11,4 +11,5 @@ global using Wu.CommTool.Modules.ConvertTools.Views;
 global using Wu.CommTool.Modules.ModbusRtu.Views;
 global using Wu.CommTool.Modules.MqttClient.Views;
 global using Wu.CommTool.Modules.MqttServer.Views;
+global using Wu.CommTool.Modules.ModbusTcp.Views;
 global using Wu.Wpf.Common;
