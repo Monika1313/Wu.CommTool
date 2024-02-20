@@ -5,8 +5,6 @@
                     xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
                     xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
                     xmlns:wu="https://github.com/Monika1313/Wu">
-
-
     <DataTemplate x:Key="MessageDataTemplate" DataType="{x:Type core:MessageData}">
         <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
             <WrapPanel Orientation="Horizontal">
