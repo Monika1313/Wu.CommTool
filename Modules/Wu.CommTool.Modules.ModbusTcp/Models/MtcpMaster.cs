@@ -63,12 +63,11 @@ public partial class MtcpMaster : ObservableObject
             var ccc = master.Transport.BuildMessageFrame(request);//生成 读取保持寄存器帧
 
             
-            ShowMessage(BitConverter.ToString(ccc).Replace('-', ' '), MessageType.Send);
+            ShowMessage(ccc.ToHexString(), MessageType.Send);//输入16进制的帧
 
             var aa = await master.ReadHoldingRegistersAsync(slaveId, startAddress, numberOfPoints);
 
             ShowMessage(string.Join(" ", aa), MessageType.Receive);
-            //var xx = master.
             #endregion
         }
         catch (Exception ex)
