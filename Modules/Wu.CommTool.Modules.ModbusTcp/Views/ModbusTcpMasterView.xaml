@@ -18,7 +18,60 @@
     <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
         <!--  左侧抽屉  -->
         <md:DrawerHost.LeftDrawerContent>
-            <DockPanel Width="260" />
+            <DockPanel>
+                <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
+                    <StackPanel Orientation="Vertical">
+                        <TextBlock Margin="5"
+                                   HorizontalAlignment="Center"
+                                   FontSize="24"
+                                   Text="ModbusTcp配置" />
+
+                        <TextBox hc:InfoElement.Necessary="True"
+                                 hc:TitleElement.Title="服务器IP:"
+                                 hc:TitleElement.TitleWidth="100"
+                                 IsEnabled="{Binding MtcpMaster.IsOnline, Converter={wu:ReverseBool}}"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="{Binding MtcpMaster.ServerIp}" />
+
+                        <TextBox hc:InfoElement.Necessary="True"
+                                 hc:TitleElement.Title="服务器 端口:"
+                                 hc:TitleElement.TitleWidth="100"
+                                 IsEnabled="{Binding MtcpMaster.IsOnline, Converter={wu:ReverseBool}}"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="{Binding MtcpMaster.ServerPort}" />
+
+                        <TextBox hc:TitleElement.Title="连接超时(ms):"
+                                 hc:TitleElement.TitleWidth="100"
+                                 IsEnabled="{Binding MtcpMaster.IsOnline, Converter={wu:ReverseBool}}"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="{Binding MtcpMaster.ConnectTimeout}" />
+
+                        <TextBox hc:TitleElement.Title="请求超时(ms):"
+                                 hc:TitleElement.TitleWidth="100"
+                                 IsEnabled="{Binding MtcpMaster.IsOnline, Converter={wu:ReverseBool}}"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="{Binding MtcpMaster.RequestTimeout}" />
+
+                        <StackPanel HorizontalAlignment="Center"
+                                    VerticalAlignment="Top"
+                                    Orientation="Horizontal">
+                            <Button Margin="20"
+                                    Command="{Binding MtcpMaster.ConnectCommand}"
+                                    Content="连接"
+                                    IsEnabled="{Binding MtcpMaster.IsOnline, Converter={wu:ReverseBool}}"
+                                    Style="{StaticResource GreenButton}" />
+
+                            <Button Width="60"
+                                    Margin="20"
+                                    Command="{Binding MtcpMaster.DisConnectCommand}"
+                                    Content="断开"
+                                    DockPanel.Dock="Left"
+                                    IsEnabled="{Binding MtcpMaster.IsOnline}"
+                                    Style="{StaticResource RedButton}" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+            </DockPanel>
         </md:DrawerHost.LeftDrawerContent>
         <!--  主体内容  -->
         <DockPanel>

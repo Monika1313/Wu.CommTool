@@ -16,8 +16,7 @@ public partial class MtcpMaster : ObservableObject
     }
     IModbusMaster master;
 
-    [ObservableProperty]
-    bool isOnline;
+
 
     /// <summary>
     /// 页面消息
@@ -25,6 +24,20 @@ public partial class MtcpMaster : ObservableObject
     [ObservableProperty]
     ObservableCollection<MessageData> messages = [];
 
+
+    #region ModbusTcp服务器参数
+    [ObservableProperty]
+    string serverIp = "127.0.0.1";
+
+    [ObservableProperty]
+    int serverPort = 502;
+
+    [ObservableProperty]
+    int connectTimeout = 3000;
+
+    [ObservableProperty]
+    int requestTimeout = 1000;
+    #endregion
 
     #region 方法
     [RelayCommand]
@@ -45,9 +58,13 @@ public partial class MtcpMaster : ObservableObject
         try
         {
             #region modbus tcp 读取保持寄存器测试
-            using TcpClient client = new TcpClient("127.0.0.1", 502);
+            //验证当前TcpClient是否有效并连接成功;
+            //var client2 = new TcpClient();
+
+            using TcpClient client2 = new TcpClient("127.0.0.1", 502);
+            //client.ConnectAsync(serverIp, serverPort);
             var factory = new ModbusFactory(logger: new DebugModbusLogger());
-            master = factory.CreateMaster(client);
+            master = factory.CreateMaster(client2);
 
             byte slaveId = 1;
             byte startAddress = 0;
@@ -62,7 +79,7 @@ public partial class MtcpMaster : ObservableObject
 
             var ccc = master.Transport.BuildMessageFrame(request);//生成 读取保持寄存器帧
 
-            
+
             ShowMessage(ccc.ToHexString(), MessageType.Send);//输入16进制的帧
 
             var aa = await master.ReadHoldingRegistersAsync(slaveId, startAddress, numberOfPoints);
@@ -76,16 +93,59 @@ public partial class MtcpMaster : ObservableObject
         }
     }
 
+
+
+    TcpClient client = new();
+
+    [ObservableProperty]
+    bool isOnline;
+
+
+    private bool isConnecting = false;
+
     [RelayCommand]
     async Task Connect()
     {
-        ShowMessage("启动按钮按下");
+        try
+        {
+            if (isConnecting)
+            {
+                return;
+            }
+            else
+            {
+                isConnecting = true;
+            }
+            //client = new TcpClient(ServerIp,ServerPort);     //关闭时会是否,需要重新初始化
+            client = new TcpClient();     //关闭时会是否,需要重新初始化
+            await client.ConnectAsync(ServerIp, ServerPort);
+            IsOnline = client.Connected;
+            ShowMessage("建立连接成功...");
+            //var xxx =  client.Connected;
+            //var factory = new ModbusFactory(logger: new DebugModbusLogger());
+            //master = factory.CreateMaster(client);
+
+        }
+        catch (Exception)
+        {
+            IsOnline = client.Connected;
+        }
+        finally { isConnecting = false; }
     }
 
     [RelayCommand]
     async Task DisConnect()
     {
+        try
+        {
+            client.Close();
+            IsOnline = client.Connected;
+            ShowMessage("关闭连接成功...");
+        }
+        catch (Exception)
+        {
 
+        }
     }
 
 
@@ -171,12 +231,12 @@ public partial class MtcpMaster : ObservableObject
     //    catch (System.Exception) { }
     //}
 
-    
+
     /// <summary>
     /// 清空消息
     /// </summary>
     [RelayCommand]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     public void MessageClear()
     {
         Messages.Clear();
