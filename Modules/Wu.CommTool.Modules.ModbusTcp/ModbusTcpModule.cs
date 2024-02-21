@@ -1,7 +1,4 @@
-﻿using Prism.Modularity;
-using Wu.CommTool.Modules.ModbusTcp.ViewModels;
-
-namespace Wu.CommTool.Modules.ModbusTcp;
+﻿namespace Wu.CommTool.Modules.ModbusTcp;
 
 public class ModbusTcpModule : IModule
 {

@@ -39,4 +39,9 @@ global using NModbus.Logging;
 global using NModbus.Message;
 global using Wu.CommTool.Core.Extensions;
 
+global using Prism.Modularity;
+global using Wu.CommTool.Modules.ModbusTcp.ViewModels;
+
+
+
 
