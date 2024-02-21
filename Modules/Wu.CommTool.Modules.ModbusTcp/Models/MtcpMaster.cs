@@ -126,9 +126,10 @@ public partial class MtcpMaster : ObservableObject
             //master = factory.CreateMaster(client);
 
         }
-        catch (Exception)
+        catch (Exception ex)
         {
             IsOnline = client.Connected;
+            ShowErrorMessage($"连接失败...{ex.Message}");
         }
         finally { isConnecting = false; }
     }
