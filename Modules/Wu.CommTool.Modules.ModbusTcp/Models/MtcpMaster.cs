@@ -1,5 +1,4 @@
-﻿using NModbus.Extensions.Enron;
-using System.Collections;
+﻿using System.Net.Sockets;
 
 namespace Wu.CommTool.Modules.ModbusTcp.Models;
 
@@ -45,7 +44,8 @@ public partial class MtcpMaster : ObservableObject
     {
         switch (cmd)
         {
-            case "":
+            case "测试1":
+
                 break;
 
         }
@@ -62,10 +62,12 @@ public partial class MtcpMaster : ObservableObject
             //var client2 = new TcpClient();
 
             using TcpClient client2 = new TcpClient("127.0.0.1", 502);
+            client2.ReceiveTimeout = 1000;
+            client2.SendTimeout = 1000;
             //client.ConnectAsync(serverIp, serverPort);
             var factory = new ModbusFactory(logger: new DebugModbusLogger());
             master = factory.CreateMaster(client2);
-
+            
             byte slaveId = 1;
             byte startAddress = 0;
             byte numberOfPoints = 5;
@@ -101,39 +103,33 @@ public partial class MtcpMaster : ObservableObject
     bool isOnline;
 
 
-    private bool isConnecting = false;
-
+    /// <summary>
+    /// 建立Tcp/Ip连接
+    /// </summary>
+    /// <returns></returns>
     [RelayCommand]
     async Task Connect()
     {
         try
         {
-            if (isConnecting)
-            {
-                return;
-            }
-            else
-            {
-                isConnecting = true;
-            }
-            //client = new TcpClient(ServerIp,ServerPort);     //关闭时会是否,需要重新初始化
-            client = new TcpClient();     //关闭时会是否,需要重新初始化
+            //client = new TcpClient(ServerIp,ServerPort);     //关闭时会释放,需要重新初始化
+            //client = new TcpClient();     //关闭时会释放,需要重新初始化
+            client = InitTcpClient();
             await client.ConnectAsync(ServerIp, ServerPort);
             IsOnline = client.Connected;
             ShowMessage("建立连接成功...");
-            //var xxx =  client.Connected;
-            //var factory = new ModbusFactory(logger: new DebugModbusLogger());
-            //master = factory.CreateMaster(client);
-
         }
         catch (Exception ex)
         {
             IsOnline = client.Connected;
             ShowErrorMessage($"连接失败...{ex.Message}");
         }
-        finally { isConnecting = false; }
     }
 
+    /// <summary>
+    /// 断开Tcp连接
+    /// </summary>
+    /// <returns></returns>
     [RelayCommand]
     async Task DisConnect()
     {
@@ -143,12 +139,37 @@ public partial class MtcpMaster : ObservableObject
             IsOnline = client.Connected;
             ShowMessage("关闭连接成功...");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-
+            ShowErrorMessage(ex.Message);
         }
     }
 
+
+    /// <summary>
+    /// 初始化TcpClient
+    /// </summary>
+    /// <returns></returns>
+    TcpClient InitTcpClient()
+    {
+        var client = new TcpClient();
+        // 获取底层的Socket对象  
+        Socket socket = client.Client;
+
+        //Todo 做一个定时任务, 定时判断连接是否已断开
+        //if (socket.Poll(0, SelectMode.SelectRead))
+        //{
+        //    // 如果返回true，表示套接字处于可读状态，连接仍然有效
+        //}
+        //else
+        //{
+        //    // 如果返回false，表示套接字处于非可读状态，连接可能已断开
+        //}
+
+        return client;
+    }
+
+    
 
     #endregion
 

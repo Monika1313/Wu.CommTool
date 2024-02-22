@@ -103,7 +103,6 @@
                             Foreground="{StaticResource Green_Foreground}"
                             IsEnabled="{Binding MtcpMaster.IsOnline, Converter={wu:ReverseBool}}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
-
                     <!--  关闭  -->
                     <Button Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -172,6 +171,10 @@
                         DockPanel.Dock="Bottom"
                         Orientation="Horizontal">
                 <Button Command="{Binding MtcpMaster.TestMasterCommand}" Content="Test1" />
+                <Button Command="{Binding MtcpMaster.ExecuteCommand}"
+                        CommandParameter="测试1"
+                        Content="测试"
+                        Cursor="Hand" />
             </StackPanel>
             <!--  页面消息  -->
             <ContentControl Margin="4,0"
