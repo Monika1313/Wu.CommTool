@@ -659,7 +659,7 @@
                                     <DataTemplate>
                                         <ComboBox MinWidth="135"
                                                   Margin="0"
-                                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:DataType}}}"
+                                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:DataType}}}"
                                                   SelectedValue="{Binding Type, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

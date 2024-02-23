@@ -1,10 +1,10 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.Enums;
+﻿namespace Wu.CommTool.Core.Enums.Modbus;
 
 /// <summary>
 /// 数据类型
 /// </summary>
 [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-public enum DataType : int
+public enum DataType
 {
     //[Description("8位无符号整型")]
     //Byte,
