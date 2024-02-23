@@ -1,41 +1,34 @@
-﻿using Prism.Commands;
-using Prism.Mvvm;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿namespace Wu.CommTool.Modules.About.ViewModels;
 
-namespace Wu.CommTool.Modules.About.ViewModels
+public class AboutViewModel : BindableBase
 {
-    public class AboutViewModel : BindableBase
+    public AboutViewModel()
     {
-        public AboutViewModel()
-        {
 
-        }
+    }
 
-        /// <summary>
-        /// 打开Github链接 该方法不会被杀毒软件拦截
-        /// </summary>
-        private void ShowGitHub()
+    /// <summary>
+    /// 打开Github链接 该方法不会被杀毒软件拦截
+    /// </summary>
+    private void ShowGitHub()
+    {
+        try
         {
-            try
+            if (@"https://github.com/Monika1313/Wu.CommTool" is string link)
             {
-                if (@"https://github.com/Monika1313/Wu.CommTool" is string link)
+                link = link.Replace("&", "^&");
+                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd", $"/c start {link}")
                 {
-                    link = link.Replace("&", "^&");
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo("cmd", $"/c start {link}")
-                    {
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    });
-                }
-
-                //System.Diagnostics.Process.Start("explorer.exe", @"https://github.com/Monika1313/Wu.CommTool");//使用资源管理器打开会被拦截
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                });
             }
-            catch (Exception)
-            {
 
-            }
+            //System.Diagnostics.Process.Start("explorer.exe", @"https://github.com/Monika1313/Wu.CommTool");//使用资源管理器打开会被拦截
+        }
+        catch (Exception)
+        {
+
         }
     }
 }

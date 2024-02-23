@@ -1,7 +1,7 @@
 ﻿namespace Wu.CommTool.Core.Enums;
 
 [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-public enum MessageType : int
+public enum MessageType
 {
     [Description("消息")]
     Info = 0,

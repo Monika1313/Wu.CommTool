@@ -4,7 +4,7 @@
 /// 数据类型
 /// </summary>
 [TypeConverter(typeof(EnumDescriptionTypeConverter))]
-public enum MqttPayloadType : int
+public enum MqttPayloadType
 {
     [Description("纯文本 UTF-8")]
     Plaintext,
