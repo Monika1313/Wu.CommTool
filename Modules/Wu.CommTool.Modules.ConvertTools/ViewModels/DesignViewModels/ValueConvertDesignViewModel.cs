@@ -1,12 +1,11 @@
-﻿namespace Wu.CommTool.Modules.ConvertTools.ViewModels.DesignViewModels
+﻿namespace Wu.CommTool.Modules.ConvertTools.ViewModels.DesignViewModels;
+
+public class ValueConvertDesignViewModel : ValueConvertViewModel
 {
-    public class ValueConvertDesignViewModel : ValueConvertViewModel
+    private static ValueConvertDesignViewModel _Instance = new();
+    public static ValueConvertDesignViewModel Instance => _Instance ??= new();
+    public ValueConvertDesignViewModel()
     {
-        private static ValueConvertDesignViewModel _Instance = new();
-        public static ValueConvertDesignViewModel Instance => _Instance ??= new();
-        public ValueConvertDesignViewModel()
-        {
-            
-        }
+        
     }
 }

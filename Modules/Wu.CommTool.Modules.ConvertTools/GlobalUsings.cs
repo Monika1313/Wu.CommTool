@@ -23,8 +23,10 @@ global using Prism.Mvvm;
 global using Wu.CommTool.Core.Enums;
 global using Wu.Extensions;
 global using Wu.CommTool.Core.Enums.Modbus;
-
-
-
+global using System.Timers;
+global using Wu.CommTool.Modules.ConvertTools.Enums;
+global using Wu.CommTool.Modules.ConvertTools.Models;
+global using Prism.Modularity;
+global using Wu.CommTool.Modules.ConvertTools.ViewModels;
 
 
