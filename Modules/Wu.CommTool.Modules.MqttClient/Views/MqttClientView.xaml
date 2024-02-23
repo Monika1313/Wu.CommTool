@@ -1,6 +1,7 @@
 ﻿<UserControl x:Class=" Wu.CommTool.Modules.MqttClient.Views.MqttClientView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="Wu.CommTool.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.MqttClient.ViewModels.DesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
@@ -431,7 +432,7 @@
 
                             <ComboBox hc:InfoElement.Title="接收消息格式"
                                       hc:InfoElement.TitleWidth="80"
-                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type shared:MqttPayloadType}}}"
+                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MqttPayloadType}}}"
                                       SelectedItem="{Binding MqttClientConfig.ReceivePaylodType}"
                                       Style="{StaticResource FormComboBox}" />
 
@@ -489,7 +490,7 @@
                             <ComboBox hc:InfoElement.Title="发送消息格式"
                                       hc:InfoElement.TitleWidth="80"
                                       DockPanel.Dock="Right"
-                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type shared:MqttPayloadType}}}"
+                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MqttPayloadType}}}"
                                       SelectedItem="{Binding MqttClientConfig.SendPaylodType}"
                                       Style="{StaticResource FormComboBox}" />
 

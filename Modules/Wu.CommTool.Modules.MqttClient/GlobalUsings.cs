@@ -21,7 +21,6 @@ global using System.Threading.Tasks;
 global using Wu.CommTool.Core.Extensions;
 global using Wu.CommTool.Modules.MqttClient.Models;
 global using Wu.CommTool.Shared.Enums;
-global using Wu.CommTool.Shared.Enums.Mqtt;
 global using Wu.Extensions;
 global using Wu.ViewModels;
 global using Wu.Wpf.Common;
@@ -36,5 +35,7 @@ global using Wu.CommTool.Modules.MqttClient.Views;
 
 global using Prism.Mvvm;
 global using System.IO;
+
+global using Wu.CommTool.Core.Enums.Mqtt;
 
 

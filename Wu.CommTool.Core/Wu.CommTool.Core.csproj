@@ -32,5 +32,8 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Common\" />
+	  <Folder Include="Enums\Modbus\" />
+	  <Folder Include="Models\Modbus\" />
+	  <Folder Include="Models\Mqtt\" />
 	</ItemGroup>
 </Project>
