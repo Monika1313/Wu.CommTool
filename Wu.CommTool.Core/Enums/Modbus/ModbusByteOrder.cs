@@ -1,4 +1,4 @@
-﻿namespace Wu.CommTool.Core.Enums;
+﻿namespace Wu.CommTool.Core.Enums.Modbus;
 
 /// <summary>
 /// ModbusRtu字节序

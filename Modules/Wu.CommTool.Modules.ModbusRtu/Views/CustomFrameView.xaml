@@ -1,12 +1,12 @@
 ﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusRtu.Views.CustomFrameView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="Wu.CommTool.Core"
              xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
              xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
              xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:core="Wu.CommTool.Core"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -89,7 +89,7 @@
                         <ComboBox MinWidth="135"
                                   hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                                   hc:TitleElement.Title="字节序"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:ModbusByteOrder}}}"
+                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
                                   SelectedItem="{Binding ModbusRtuModel.ByteOrder}"
                                   Style="{StaticResource FormComboBox}" />
 

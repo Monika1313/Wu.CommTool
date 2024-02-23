@@ -1,8 +1,4 @@
-﻿using System.IO;
-using System.Text.RegularExpressions;
-using Wu.Extensions;
-
-namespace Wu.CommTool.Core.Common;
+﻿namespace Wu.CommTool.Core.Common;
 
 public static class Utils
 {

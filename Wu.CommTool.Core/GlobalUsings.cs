@@ -20,3 +20,11 @@ global using Prism.Regions;
 global using Prism.Mvvm;
 global using Prism.Navigation;
 
+global using System.IO;
+global using System.Text.RegularExpressions;
+global using Wu.Extensions;
+global using Wu.CommTool.Core.Enums.Modbus;
+global using Wu.CommTool.Core.Enums.Mqtt;
+
+
+

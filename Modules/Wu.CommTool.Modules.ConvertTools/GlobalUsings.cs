@@ -19,5 +19,12 @@ global using Wu.Wpf.Common;
 global using Wu.CommTool.Core;
 global using Wu.CommTool.Modules.ConvertTools.Views;
 
+global using Prism.Mvvm;
+global using Wu.CommTool.Core.Enums;
+global using Wu.Extensions;
+global using Wu.CommTool.Core.Enums.Modbus;
+
+
+
 
 
