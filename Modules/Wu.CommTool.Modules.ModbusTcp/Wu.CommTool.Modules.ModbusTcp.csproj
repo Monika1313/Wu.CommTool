@@ -29,4 +29,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Interfaces\" />
+	</ItemGroup>
 </Project>

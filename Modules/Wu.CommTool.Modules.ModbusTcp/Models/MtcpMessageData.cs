@@ -5,10 +5,12 @@
 /// </summary>
 public partial class MtcpMessageData : MessageData
 {
-    public MtcpMessageData(string Content, DateTime dateTime, MessageType Type = MessageType.Info, string Title = "") : base(Content, dateTime, Type, Title)
+    #region 构造函数
+    public MtcpMessageData(string Content, DateTime dateTime, MessageType Type, MtcpFrame frame) : base(Content, dateTime, Type, "")
     {
-        //mtcpFrame =
+        mtcpFrame = frame;
     }
+    #endregion
 
     [ObservableProperty]
     MtcpFrame mtcpFrame;

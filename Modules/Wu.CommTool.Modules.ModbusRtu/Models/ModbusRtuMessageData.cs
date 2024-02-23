@@ -17,6 +17,7 @@ public class ModbusRtuMessageData : MessageData
     public ModbusRtuMessageData(string Content, DateTime dateTime, MessageType Type, ModbusRtuFrame frame) : base(Content, dateTime, Type, "")
     {
         ModbusRtuFrame = frame;
+        MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg());
     }
     #endregion
 

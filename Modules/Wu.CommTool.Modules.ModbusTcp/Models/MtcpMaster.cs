@@ -1,6 +1,4 @@
-﻿using System.Net.Sockets;
-
-namespace Wu.CommTool.Modules.ModbusTcp.Models;
+﻿namespace Wu.CommTool.Modules.ModbusTcp.Models;
 
 /// <summary>
 /// Modbus Tcp 从站=Master
@@ -67,7 +65,7 @@ public partial class MtcpMaster : ObservableObject
             //client.ConnectAsync(serverIp, serverPort);
             var factory = new ModbusFactory(logger: new DebugModbusLogger());
             master = factory.CreateMaster(client2);
-            
+
             byte slaveId = 1;
             byte startAddress = 0;
             byte numberOfPoints = 5;
@@ -169,7 +167,7 @@ public partial class MtcpMaster : ObservableObject
         return client;
     }
 
-    
+
 
     #endregion
 
@@ -212,7 +210,7 @@ public partial class MtcpMaster : ObservableObject
     //    {
     //        void action()
     //        {
-    //            var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame)
+    //            var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame)
     //            {
     //                MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
     //            };
@@ -227,31 +225,27 @@ public partial class MtcpMaster : ObservableObject
     //    catch (Exception) { }
     //}
 
-    ///// <summary>
-    ///// 页面展示发送数据消息
-    ///// </summary>
-    ///// <param name="frame"></param>
-    //public void ShowSendMessage(ModbusRtuFrame frame)
-    //{
-    //    try
-    //    {
-    //        void action()
-    //        {
-    //            var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame)
-    //            {
-    //                MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
-    //            };
-
-    //            Messages.Add(msg);
-    //            while (Messages.Count > 200)
-    //            {
-    //                Messages.RemoveAt(0);
-    //            }
-    //        }
-    //        Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
-    //    }
-    //    catch (System.Exception) { }
-    //}
+    /// <summary>
+    /// 页面展示发送数据消息
+    /// </summary>
+    /// <param name="frame"></param>
+    public void ShowSendMessage(MtcpFrame frame)
+    {
+        try
+        {
+            void action()
+            {
+                var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
+                Messages.Add(msg);
+                while (Messages.Count > 200)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (System.Exception) { }
+    }
 
 
     /// <summary>

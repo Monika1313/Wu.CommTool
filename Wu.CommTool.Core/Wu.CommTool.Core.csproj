@@ -32,6 +32,7 @@
 		<PackageReference Include="Wu.Wpf.ControlLibrary" Version="1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="Interfaces\" />
 	  <Folder Include="Models\Modbus\" />
 	  <Folder Include="Models\Mqtt\" />
 	</ItemGroup>

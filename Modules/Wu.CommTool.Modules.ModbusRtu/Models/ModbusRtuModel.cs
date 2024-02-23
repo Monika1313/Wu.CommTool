@@ -443,10 +443,7 @@ public class ModbusRtuModel : BindableBase
         {
             void action()
             {
-                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame)
-                {
-                    MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
-                };
+                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
                 Messages.Add(msg);
                 while (Messages.Count > 200)
                 {
@@ -468,10 +465,7 @@ public class ModbusRtuModel : BindableBase
         {
             void action()
             {
-                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame)
-                {
-                    MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
-                };
+                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame);
 
                 Messages.Add(msg);
                 while (Messages.Count > 200)
