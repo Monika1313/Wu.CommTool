@@ -111,7 +111,6 @@
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
-	  <ProjectReference Include="..\Wu.CommTool.Shared\Wu.CommTool.Shared.csproj" />
 	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio>

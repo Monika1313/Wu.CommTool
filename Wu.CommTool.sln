@@ -16,8 +16,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Core", "Wu.Comm
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F3EDE274-21EF-4108-B0F8-ACCAF64D4B2B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Shared", "Wu.CommTool.Shared\Wu.CommTool.Shared.csproj", "{B3F61F10-070F-415A-BBBD-8F3B0B38D384}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusTcp", "Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj", "{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.About", "Modules\Wu.CommTool.Modules.About\Wu.CommTool.Modules.About.csproj", "{43ED2DE9-95B7-4F52-BDEE-E1A72F5D611E}"
@@ -30,9 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.JsonToo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.MqttServer", "Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj", "{8F0A328B-2FA3-47C1-AA4F-16B70C403FED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.MqttClient", "Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj", "{37A93862-E7A0-4D7B-AF79-E66D3BAF7F98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.MqttClient", "Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj", "{37A93862-E7A0-4D7B-AF79-E66D3BAF7F98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.ModbusRtu", "Modules\Wu.CommTool.Modules.ModbusRtu\Wu.CommTool.Modules.ModbusRtu.csproj", "{9B266E31-CFAA-48FE-81ED-CD2F85778E32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusRtu", "Modules\Wu.CommTool.Modules.ModbusRtu\Wu.CommTool.Modules.ModbusRtu.csproj", "{9B266E31-CFAA-48FE-81ED-CD2F85778E32}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,10 +46,6 @@ Global
 		{148FD692-6990-46A1-9659-D48BAC6DC1FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{148FD692-6990-46A1-9659-D48BAC6DC1FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{148FD692-6990-46A1-9659-D48BAC6DC1FA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B3F61F10-070F-415A-BBBD-8F3B0B38D384}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B3F61F10-070F-415A-BBBD-8F3B0B38D384}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B3F61F10-070F-415A-BBBD-8F3B0B38D384}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B3F61F10-070F-415A-BBBD-8F3B0B38D384}.Release|Any CPU.Build.0 = Release|Any CPU
 		{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
