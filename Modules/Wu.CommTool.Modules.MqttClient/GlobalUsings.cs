@@ -20,7 +20,6 @@ global using System.Threading;
 global using System.Threading.Tasks;
 global using Wu.CommTool.Core.Extensions;
 global using Wu.CommTool.Modules.MqttClient.Models;
-global using Wu.CommTool.Shared.Enums;
 global using Wu.Extensions;
 global using Wu.ViewModels;
 global using Wu.Wpf.Common;

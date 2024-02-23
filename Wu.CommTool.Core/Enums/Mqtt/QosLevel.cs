@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using Wu.Wpf.Converters;
-
-namespace Wu.CommTool.Shared.Enums;
+﻿namespace Wu.CommTool.Core.Enums;
 
 /// <summary>
 /// Mqtt Qos消息质量等级

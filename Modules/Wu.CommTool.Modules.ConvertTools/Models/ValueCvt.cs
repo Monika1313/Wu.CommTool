@@ -1,9 +1,6 @@
 ﻿using Prism.Mvvm;
-using System;
-using Wu.CommTool.Shared.Enums;
+using Wu.CommTool.Core.Enums;
 using Wu.Extensions;
-using Wu.CommTool.Shared.Common;
-using System.Windows.Media;
 
 namespace Wu.CommTool.Modules.ConvertTools.Models
 {
@@ -58,20 +55,20 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                     SetProperty(ref _ABCD_16wHex, val.InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
                 case ModbusByteOrder.BADC:
-                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
                 case ModbusByteOrder.CDAB:
-                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
                 case ModbusByteOrder.DCBA:
-                    SetProperty(ref _ABCD_16wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_16wHex));
+                    SetProperty(ref _ABCD_16wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_16wHex));
                     break;
             }
             //先赋值各参数的16进制符号
             //SetProperty(ref _ABCD_16wHex, val, nameof(ABCD_16wHex));
-            SetProperty(ref _DCBA_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_16wHex));
-            SetProperty(ref _BADC_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_16wHex));
-            SetProperty(ref _CDAB_16wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_16wHex));
+            SetProperty(ref _DCBA_16wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_16wHex));
+            SetProperty(ref _BADC_16wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_16wHex));
+            SetProperty(ref _CDAB_16wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_16wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_16wHex));
 
             //在根据16进制值转换
             SetProperty(ref _ABCD_16Int, Convert.ToInt16(_ABCD_16wHex!.RemoveSpace(), 16), nameof(ABCD_16Int));
@@ -103,7 +100,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 return Tuple.Create(val!, true);
             }
             //含非合法16进制字符
-            else if (!Shared.Common.Utils.IsHexString(val))
+            else if (!Core.Common.Utils.IsHexString(val))
             {
                 return Tuple.Create(val!, false);//该值是错误的值
             }
@@ -183,19 +180,19 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                     SetProperty(ref _ABCD_32wHex, val.InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
                 case ModbusByteOrder.BADC:
-                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
                 case ModbusByteOrder.CDAB:
-                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
                 case ModbusByteOrder.DCBA:
-                    SetProperty(ref _ABCD_32wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_32wHex));
+                    SetProperty(ref _ABCD_32wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_32wHex));
                     break;
             }
             //先赋值各参数的16进制符号
-            SetProperty(ref _DCBA_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_32wHex));
-            SetProperty(ref _BADC_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_32wHex));
-            SetProperty(ref _CDAB_32wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_32wHex));
+            SetProperty(ref _DCBA_32wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_32wHex));
+            SetProperty(ref _BADC_32wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_32wHex));
+            SetProperty(ref _CDAB_32wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_32wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_32wHex));
 
             //再根据16进制值转换
             SetProperty(ref _ABCD_32Int, Convert.ToInt32(_ABCD_32wHex!.RemoveSpace(), 16), nameof(ABCD_32Int));
@@ -230,7 +227,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 return Tuple.Create(val!, true);
             }
             //含非合法16进制字符
-            else if (!Shared.Common.Utils.IsHexString(val))
+            else if (!Core.Common.Utils.IsHexString(val))
             {
                 return Tuple.Create(val!, false);//该值是错误的值
             }
@@ -326,7 +323,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                 return Tuple.Create(val!, true);
             }
             //含非合法16进制字符
-            else if (!Shared.Common.Utils.IsHexString(val))
+            else if (!Core.Common.Utils.IsHexString(val))
             {
                 return Tuple.Create(val!, false);//该值是错误的值
             }
@@ -355,19 +352,19 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
                     SetProperty(ref _ABCD_64wHex, val.InsertFormat(2, " "), nameof(ABCD_64wHex));
                     break;
                 case ModbusByteOrder.BADC:
-                    SetProperty(ref _ABCD_64wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    SetProperty(ref _ABCD_64wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(ABCD_64wHex));
                     break;
                 case ModbusByteOrder.CDAB:
-                    SetProperty(ref _ABCD_64wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    SetProperty(ref _ABCD_64wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(ABCD_64wHex));
                     break;
                 case ModbusByteOrder.DCBA:
-                    SetProperty(ref _ABCD_64wHex, Shared.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_64wHex));
+                    SetProperty(ref _ABCD_64wHex, Core.Common.Utils.ConvertByteOrder(val, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(ABCD_64wHex));
                     break;
             }
             //先赋值各参数的16进制符号
-            SetProperty(ref _DCBA_64wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_64wHex));
-            SetProperty(ref _BADC_64wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_64wHex));
-            SetProperty(ref _CDAB_64wHex, Shared.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_64wHex));
+            SetProperty(ref _DCBA_64wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.DCBA).InsertFormat(2, " "), nameof(DCBA_64wHex));
+            SetProperty(ref _BADC_64wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.BADC).InsertFormat(2, " "), nameof(BADC_64wHex));
+            SetProperty(ref _CDAB_64wHex, Core.Common.Utils.ConvertByteOrder(_ABCD_64wHex!, ModbusByteOrder.CDAB).InsertFormat(2, " "), nameof(CDAB_64wHex));
 
             //再根据16进制值转换
             SetProperty(ref _ABCD_64Int, Convert.ToInt64(_ABCD_64wHex!.RemoveSpace(), 16), nameof(ABCD_64Int));
@@ -764,8 +761,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// DCBA 64位浮点型
         /// </summary>
-        public double? DCBA_Double 
-        { 
+        public double? DCBA_Double
+        {
             get => _DCBA_Double;
             set
             {
@@ -852,7 +849,7 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// </summary>
         public uint? BADC_32Uint
         {
-            get => _BADC_32Uint; 
+            get => _BADC_32Uint;
             set
             {
                 SetProperty(ref _BADC_32Uint, value);
@@ -927,8 +924,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// BADC 64进制有符号整型
         /// </summary>
-        public long? BADC_64Int 
-        { 
+        public long? BADC_64Int
+        {
             get => _BADC_64Int;
             set
             {
@@ -941,8 +938,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// BADC 64位浮点型
         /// </summary>
-        public double? BADC_Double 
-        { 
+        public double? BADC_Double
+        {
             get => _BADC_Double;
             set
             {
@@ -1089,8 +1086,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// CDAB 64进制无符号整型
         /// </summary>
-        public ulong? CDAB_64Uint 
-        { 
+        public ulong? CDAB_64Uint
+        {
             get => _CDAB_64Uint;
             set
             {
@@ -1103,8 +1100,8 @@ namespace Wu.CommTool.Modules.ConvertTools.Models
         /// <summary>
         /// CDAB 64进制有符号整型
         /// </summary>
-        public long? CDAB_64Int 
-        { 
+        public long? CDAB_64Int
+        {
             get => _CDAB_64Int;
             set
             {

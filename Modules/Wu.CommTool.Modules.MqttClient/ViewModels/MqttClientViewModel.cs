@@ -42,7 +42,7 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig\Default.jsonMCC");
-            var xx = Shared.Common.Utils.ReadJsonFile(p);
+            var xx = Core.Common.Utils.ReadJsonFile(p);
             var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx);
             if (x == null)
                 return;
@@ -196,7 +196,7 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             //将当前的配置序列化为json字符串
             var content = JsonConvert.SerializeObject(MqttClientConfig);
             //保存文件
-            Shared.Common.Utils.WriteJsonFile(sfd.FileName, content);
+            Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
             HcGrowlExtensions.Success("配置导出完成", viewName);
             RefreshQuickImportList();
         }
@@ -229,7 +229,7 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 
             if (dlg.ShowDialog() != true)
                 return;
-            var xx = Shared.Common.Utils.ReadJsonFile(dlg.FileName);
+            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx);
             MqttClientConfig = x;
             HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入成功", viewName);
@@ -248,7 +248,7 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            var xx = Shared.Common.Utils.ReadJsonFile(obj.FullName);//读取文件
+            var xx = Core.Common.Utils.ReadJsonFile(obj.FullName);//读取文件
             var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx)!;//反序列化
             if (x == null)
             {

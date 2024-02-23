@@ -28,7 +28,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
             //导入默认自动应答配置
             try
             {
-                var xx = Shared.Common.Utils.ReadJsonFile(Path.Combine(ModbusRtuModel.ModbusRtuAutoResponseConfigDict, "Default.jsonARC"));
+                var xx = Core.Common.Utils.ReadJsonFile(Path.Combine(ModbusRtuModel.ModbusRtuAutoResponseConfigDict, "Default.jsonARC"));
                 ModbusRtuModel.MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
                 ModbusRtuModel.RefreshModbusRtuDataDataView();//更新数据视图
             }

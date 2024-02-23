@@ -1,12 +1,8 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Text.RegularExpressions;
-using Wu.CommTool.Shared.Enums;
 using Wu.Extensions;
 
-namespace Wu.CommTool.Shared.Common;
+namespace Wu.CommTool.Core.Common;
 
 public static class Utils
 {
@@ -72,7 +68,7 @@ public static class Utils
     {
         var aa = str.GetBytes();
         var xx = ConvertByteOrder(str.GetBytes(), byteOrder);
-        return BitConverter.ToString(ConvertByteOrder(str.GetBytes(), byteOrder)).Replace("-",string.Empty);
+        return BitConverter.ToString(ConvertByteOrder(str.GetBytes(), byteOrder)).Replace("-", string.Empty);
     }
 
     /// <summary>

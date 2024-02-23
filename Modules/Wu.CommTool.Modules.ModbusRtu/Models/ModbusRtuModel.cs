@@ -1579,7 +1579,7 @@ public class ModbusRtuModel : BindableBase
             //将当前的配置序列化为json字符串
             var content = JsonConvert.SerializeObject(DataMonitorConfig);
             //保存文件
-            Wu.CommTool.Shared.Common.Utils.WriteJsonFile(sfd.FileName, content);
+            Wu.CommTool.Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
             HcGrowlExtensions.Success("导出数据监控配置完成", nameof(ModbusRtuView));
             RefreshQuickImportList();//更新列表
         }
@@ -1611,7 +1611,7 @@ public class ModbusRtuModel : BindableBase
 
             if (dlg.ShowDialog() != true)
                 return;
-            var xx = Shared.Common.Utils.ReadJsonFile(dlg.FileName);
+            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
             RefreshModbusRtuDataDataView();//更新数据视图
             //ShowMessage("导入配置完成");
@@ -1632,7 +1632,7 @@ public class ModbusRtuModel : BindableBase
     {
         try
         {
-            var xx = Shared.Common.Utils.ReadJsonFile(obj.FullName);
+            var xx = Core.Common.Utils.ReadJsonFile(obj.FullName);
             DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
             if (DataMonitorConfig == null)
             {
@@ -1802,7 +1802,7 @@ public class ModbusRtuModel : BindableBase
             //将当前的配置序列化为json字符串
             var content = JsonConvert.SerializeObject(MosbusRtuAutoResponseDatas);
             //保存文件
-            Shared.Common.Utils.WriteJsonFile(sfd.FileName, content);
+            Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
             HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(sfd.FileName)}\"导出成功", ModbusRtuView.ViewName);
             RefreshQuickImportList();//更新列表
         }
@@ -1834,7 +1834,7 @@ public class ModbusRtuModel : BindableBase
 
             if (dlg.ShowDialog() != true)
                 return;
-            var xx = Shared.Common.Utils.ReadJsonFile(dlg.FileName);
+            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
             RefreshModbusRtuDataDataView();//更新数据视图
             HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", ModbusRtuView.ViewName);

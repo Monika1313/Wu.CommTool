@@ -27,12 +27,11 @@
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="HandyControl" Version="3.4.0" />
 		<PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
+		<PackageReference Include="Wu" Version="1.0.7" />
 		<PackageReference Include="Wu.Wpf" Version="1.0.11" />
 		<PackageReference Include="Wu.Wpf.ControlLibrary" Version="1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Common\" />
-	  <Folder Include="Enums\Modbus\" />
 	  <Folder Include="Models\Modbus\" />
 	  <Folder Include="Models\Mqtt\" />
 	</ItemGroup>
