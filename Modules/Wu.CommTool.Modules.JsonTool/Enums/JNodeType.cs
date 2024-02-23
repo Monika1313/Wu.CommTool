@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace Wu.CommTool.Modules.JsonTool.Enums;
 
-namespace Wu.CommTool.Modules.JsonTool.Enums
+public enum JNodeType
 {
-    public enum JNodeType
-    {
-        JValue,
-        JArray, 
-        JObject, 
-        JProperty
-    }
+    JValue,
+    JArray,
+    JObject,
+    JProperty
 }
