@@ -49,6 +49,10 @@ public partial class MtcpMaster : ObservableObject
         }
     }
 
+
+
+
+
     [RelayCommand]
     [property: JsonIgnore]
     async Task TestMaster()
@@ -95,7 +99,7 @@ public partial class MtcpMaster : ObservableObject
 
 
 
-    TcpClient client = new();
+    WuTcpClient wuTcpClient = new();
 
     [ObservableProperty]
     bool isOnline;
@@ -110,16 +114,27 @@ public partial class MtcpMaster : ObservableObject
     {
         try
         {
-            //client = new TcpClient(ServerIp,ServerPort);     //关闭时会释放,需要重新初始化
-            //client = new TcpClient();     //关闭时会释放,需要重新初始化
-            client = InitTcpClient();
-            await client.ConnectAsync(ServerIp, ServerPort);
-            IsOnline = client.Connected;
-            ShowMessage("建立连接成功...");
+            #region old
+            ////client = new TcpClient(ServerIp,ServerPort);     //关闭时会释放,需要重新初始化
+            ////client = new TcpClient();     //关闭时会释放,需要重新初始化
+            //client = InitTcpClient();
+            //await client.ConnectAsync(ServerIp, ServerPort);
+            //IsOnline = client.Connected;
+            //ShowMessage("建立连接成功..."); 
+            #endregion
+
+            //建立TcpIp连接
+            wuTcpClient?.Dispose();
+            wuTcpClient = new WuTcpClient();
+            wuTcpClient.ClientConnected += (e) => ShowMessage($"连接服务器成功... {ServerIp}:{ServerPort}");
+            wuTcpClient.Connect(ServerIp, ServerPort);
+            //await wuTcpClient.ConnectAsync(ServerIp, ServerPort);
+            //IsOnline = wuTcpClient.Connected;
+            //ShowMessage("建立连接成功...");
         }
         catch (Exception ex)
         {
-            IsOnline = client.Connected;
+            IsOnline = wuTcpClient.Connected;
             ShowErrorMessage($"连接失败...{ex.Message}");
         }
     }
@@ -133,8 +148,8 @@ public partial class MtcpMaster : ObservableObject
     {
         try
         {
-            client.Close();
-            IsOnline = client.Connected;
+            wuTcpClient.Close();
+            IsOnline = wuTcpClient.Connected;
             ShowMessage("关闭连接成功...");
         }
         catch (Exception ex)
@@ -153,6 +168,7 @@ public partial class MtcpMaster : ObservableObject
         var client = new TcpClient();
         // 获取底层的Socket对象  
         Socket socket = client.Client;
+
 
         //Todo 做一个定时任务, 定时判断连接是否已断开
         //if (socket.Poll(0, SelectMode.SelectRead))

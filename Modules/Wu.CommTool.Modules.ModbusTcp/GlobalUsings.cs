@@ -43,6 +43,7 @@ global using Prism.Modularity;
 global using Wu.CommTool.Modules.ModbusTcp.ViewModels;
 global using Wu.CommTool.Core.Enums.Modbus;
 global using Wu.CommTool.Modules.ModbusTcp.Enums;
-
+global using System.Runtime.CompilerServices;
+global using Wu.CommTool.Modules.ModbusTcp.Events;
 
 
