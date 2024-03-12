@@ -99,7 +99,7 @@ public partial class MtcpMaster : ObservableObject
 
 
 
-    WuTcpClient wuTcpClient = new();
+    WuTcpClient wuTcpClient;
 
     [ObservableProperty]
     bool isOnline;
@@ -126,7 +126,21 @@ public partial class MtcpMaster : ObservableObject
             //建立TcpIp连接
             wuTcpClient?.Dispose();
             wuTcpClient = new WuTcpClient();
-            wuTcpClient.ClientConnected += (e) => ShowMessage($"连接服务器成功... {ServerIp}:{ServerPort}");
+            wuTcpClient.ClientConnected += (e) => 
+                {
+                    IsOnline = true;
+                    ShowMessage($"连接服务器成功... {ServerIp}:{ServerPort}");
+                };
+            wuTcpClient.ClientDisconnected += (e) =>
+                {
+                    IsOnline = false;
+                    ShowMessage("断开连接...");
+                };
+
+            wuTcpClient.MessageReceived += (s) =>
+            {
+                ShowMessage(s);
+            };
             wuTcpClient.Connect(ServerIp, ServerPort);
             //await wuTcpClient.ConnectAsync(ServerIp, ServerPort);
             //IsOnline = wuTcpClient.Connected;
@@ -149,8 +163,8 @@ public partial class MtcpMaster : ObservableObject
         try
         {
             wuTcpClient.Close();
-            IsOnline = wuTcpClient.Connected;
-            ShowMessage("关闭连接成功...");
+            //IsOnline = wuTcpClient.Connected;
+            //ShowMessage("关闭连接成功...");
         }
         catch (Exception ex)
         {

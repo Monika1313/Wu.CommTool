@@ -167,7 +167,7 @@
                 </DockPanel>
             </Grid>
 
-            <StackPanel Margin="8"
+            <!--<StackPanel Margin="8"
                         DockPanel.Dock="Bottom"
                         Orientation="Horizontal">
                 <Button Command="{Binding MtcpMaster.TestMasterCommand}" Content="Test1" />
@@ -175,7 +175,7 @@
                         CommandParameter="测试1"
                         Content="测试"
                         Cursor="Hand" />
-            </StackPanel>
+            </StackPanel>-->
             <!--  页面消息  -->
             <ContentControl Margin="4,0"
                             DockPanel.Dock="Top"
