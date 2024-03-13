@@ -99,7 +99,7 @@ public partial class MtcpMaster : ObservableObject
 
 
 
-    WuTcpClient wuTcpClient;
+    MbusTcpClient mbusTcpClient;
 
     [ObservableProperty]
     bool isOnline;
@@ -124,31 +124,32 @@ public partial class MtcpMaster : ObservableObject
             #endregion
 
             //建立TcpIp连接
-            wuTcpClient?.Dispose();
-            wuTcpClient = new WuTcpClient();
-            wuTcpClient.ClientConnected += (e) => 
+            mbusTcpClient?.Dispose();
+            mbusTcpClient = new MbusTcpClient();
+            mbusTcpClient.ClientConnecting += () =>
+            {
+                ShowMessage($"连接中...");
+            };
+            mbusTcpClient.ClientConnected += (e) =>
                 {
                     IsOnline = true;
                     ShowMessage($"连接服务器成功... {ServerIp}:{ServerPort}");
                 };
-            wuTcpClient.ClientDisconnected += (e) =>
+            mbusTcpClient.ClientDisconnected += (e) =>
                 {
                     IsOnline = false;
                     ShowMessage("断开连接...");
                 };
 
-            wuTcpClient.MessageReceived += (s) =>
+            mbusTcpClient.MessageReceived += (s) =>
             {
                 ShowMessage(s);
             };
-            wuTcpClient.Connect(ServerIp, ServerPort);
-            //await wuTcpClient.ConnectAsync(ServerIp, ServerPort);
-            //IsOnline = wuTcpClient.Connected;
-            //ShowMessage("建立连接成功...");
+            await mbusTcpClient.ConnectAsync(ServerIp, ServerPort);
         }
         catch (Exception ex)
         {
-            IsOnline = wuTcpClient.Connected;
+            IsOnline = mbusTcpClient.Connected;
             ShowErrorMessage($"连接失败...{ex.Message}");
         }
     }
@@ -162,42 +163,13 @@ public partial class MtcpMaster : ObservableObject
     {
         try
         {
-            wuTcpClient.Close();
-            //IsOnline = wuTcpClient.Connected;
-            //ShowMessage("关闭连接成功...");
+            mbusTcpClient.Close();
         }
         catch (Exception ex)
         {
             ShowErrorMessage(ex.Message);
         }
     }
-
-
-    /// <summary>
-    /// 初始化TcpClient
-    /// </summary>
-    /// <returns></returns>
-    TcpClient InitTcpClient()
-    {
-        var client = new TcpClient();
-        // 获取底层的Socket对象  
-        Socket socket = client.Client;
-
-
-        //Todo 做一个定时任务, 定时判断连接是否已断开
-        //if (socket.Poll(0, SelectMode.SelectRead))
-        //{
-        //    // 如果返回true，表示套接字处于可读状态，连接仍然有效
-        //}
-        //else
-        //{
-        //    // 如果返回false，表示套接字处于非可读状态，连接可能已断开
-        //}
-
-        return client;
-    }
-
-
 
     #endregion
 
