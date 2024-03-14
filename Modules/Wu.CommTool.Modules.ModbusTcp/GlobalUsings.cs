@@ -46,4 +46,5 @@ global using Wu.CommTool.Modules.ModbusTcp.Enums;
 global using System.Runtime.CompilerServices;
 global using Wu.CommTool.Modules.ModbusTcp.Events;
 
+global using Wu.CommTool.Core.Common;
 

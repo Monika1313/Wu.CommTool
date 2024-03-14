@@ -167,15 +167,74 @@
                 </DockPanel>
             </Grid>
 
-            <!--<StackPanel Margin="8"
+            <StackPanel Margin="8"
+                        Cursor=""
                         DockPanel.Dock="Bottom"
                         Orientation="Horizontal">
-                <Button Command="{Binding MtcpMaster.TestMasterCommand}" Content="Test1" />
-                <Button Command="{Binding MtcpMaster.ExecuteCommand}"
+                <!--<Button Command="{Binding MtcpMaster.SendMessageCommand}"
+                        CommandParameter="123456"
+                        Content="Test1"
+                        Cursor="Hand" />-->
+                <!--<Button Command="{Binding MtcpMaster.ExecuteCommand}"
                         CommandParameter="测试1"
                         Content="测试"
-                        Cursor="Hand" />
-            </StackPanel>-->
+                        Cursor="Hand" />-->
+            </StackPanel>
+
+            <ContentControl MaxHeight="400"
+                            Margin="4,4,4,0"
+                            Padding="0"
+                            DockPanel.Dock="Bottom"
+                            Style="{StaticResource Effect2Control}">
+                <hc:ScrollViewer IsInertiaEnabled="True">
+                    <ItemsControl Background="Transparent" ItemsSource="{Binding MtcpMaster.MtcpCustomFrames}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel Margin="4">
+                                    <Button Margin="10,0,0,0"
+                                            Command="{Binding DataContext.MtcpMaster.SendMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                            CommandParameter="{Binding}"
+                                            Content="发送"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right" />
+                                    <hc:TextBox VerticalContentAlignment="Top"
+                                                hc:InfoElement.Placeholder="右键菜单可以生成帧、新增行、删除行"
+                                                hc:InfoElement.ShowClearButton="True"
+                                                Style="{StaticResource TextBoxPlusBaseStyle}"
+                                                Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                Text="{Binding Frame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                TextWrapping="Wrap">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Key="Enter"
+                                                        Command="{Binding DataContext.MtcpMaster.SendMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}" />
+                                        </TextBox.InputBindings>
+                                        <TextBoxBase.ContextMenu>
+                                            <ContextMenu>
+                                                <!--<MenuItem Command="{Binding Path=PlacementTarget.Tag.CreateFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          CommandParameter="{Binding}"
+                                                          Header="帧生成器" />-->
+                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.MtcpMaster.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          CommandParameter="新增行"
+                                                          Header="新增行" />
+                                                <!--<MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                          CommandParameter="{Binding}"
+                                                          Header="删除行" />-->
+                                            </ContextMenu>
+                                        </TextBoxBase.ContextMenu>
+                                    </hc:TextBox>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </hc:ScrollViewer>
+            </ContentControl>
+
             <!--  页面消息  -->
             <ContentControl Margin="4,0"
                             DockPanel.Dock="Top"

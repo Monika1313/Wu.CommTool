@@ -6,6 +6,6 @@ public class ModbusTcpMasterDesignViewModel : ModbusTcpMasterViewModel
     public static ModbusTcpMasterDesignViewModel Instance => _Instance ??= new();
     public ModbusTcpMasterDesignViewModel()
     {
-        OpenDrawers.LeftDrawer = true;
+        OpenDrawers.LeftDrawer = false;
     }
 }

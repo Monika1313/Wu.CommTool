@@ -35,7 +35,12 @@ public partial class MbusTcpClient : TcpClient
     /// <summary>
     /// 消息发送事件
     /// </summary>
-    public event Action<EventArgs> MessageSending;
+    public event Action<string> MessageSending;
+
+    /// <summary>
+    /// 发生错误事件
+    /// </summary>
+    public event Action<string> ErrorOccurred;
     #endregion
 
 
@@ -104,10 +109,31 @@ public partial class MbusTcpClient : TcpClient
         }
     }
 
-
-    public void SendMessage()
+    /// <summary>
+    /// 发送消息
+    /// </summary>
+    /// <param name="message"></param>
+    public void SendMessage(string message)
     {
-
+        try
+        {
+            if (Connected)
+            {
+                //byte[] data = Encoding.ASCII.GetBytes(message);
+                byte[] data = ModbusUtils.FromHex(message);
+                this.GetStream().Write(data, 0, data.Length);
+                MessageSending?.Invoke(message);
+            }
+            else
+            {
+                ErrorOccurred("未连接...");
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorOccurred(ex.Message);
+            this.Close();
+        }
     }
 
 

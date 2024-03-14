@@ -36,14 +36,25 @@ public partial class MtcpMaster : ObservableObject
     int requestTimeout = 1000;
     #endregion
 
+    #region 属性
+    [ObservableProperty]
+    ObservableCollection<MtcpCustomFrame> mtcpCustomFrames = [
+        new ("01 03 0000 0001 "),
+        new ("01 04 0000 0001 "),
+        new (""),
+    ];
+    #endregion
+
+
+
     #region 方法
     [RelayCommand]
     async Task Execute(string cmd)
     {
         switch (cmd)
         {
-            case "测试1":
-
+            case "新增行":
+                MtcpCustomFrames.Add(new MtcpCustomFrame());
                 break;
 
         }
@@ -114,15 +125,6 @@ public partial class MtcpMaster : ObservableObject
     {
         try
         {
-            #region old
-            ////client = new TcpClient(ServerIp,ServerPort);     //关闭时会释放,需要重新初始化
-            ////client = new TcpClient();     //关闭时会释放,需要重新初始化
-            //client = InitTcpClient();
-            //await client.ConnectAsync(ServerIp, ServerPort);
-            //IsOnline = client.Connected;
-            //ShowMessage("建立连接成功..."); 
-            #endregion
-
             //建立TcpIp连接
             mbusTcpClient?.Dispose();
             mbusTcpClient = new MbusTcpClient();
@@ -140,10 +142,18 @@ public partial class MtcpMaster : ObservableObject
                     IsOnline = false;
                     ShowMessage("断开连接...");
                 };
-
+            mbusTcpClient.MessageSending += (s) =>
+            {
+                //ShowSendMessage(new MtcpFrame(s));
+                ShowMessage(s);
+            };
             mbusTcpClient.MessageReceived += (s) =>
             {
                 ShowMessage(s);
+            };
+            mbusTcpClient.ErrorOccurred += (s) =>
+            {
+                ShowErrorMessage(s);
             };
             await mbusTcpClient.ConnectAsync(ServerIp, ServerPort);
         }
@@ -152,6 +162,23 @@ public partial class MtcpMaster : ObservableObject
             IsOnline = mbusTcpClient.Connected;
             ShowErrorMessage($"连接失败...{ex.Message}");
         }
+    }
+
+    [RelayCommand]
+    public async Task SendMessage(MtcpCustomFrame mtcpCustomFrame)
+    {
+        //若未初始化客户端或未连接,则先连接
+        if (mbusTcpClient == null || !mbusTcpClient.Connected)
+        {
+            await Connect();
+        }
+        string message = mtcpCustomFrame.Frame.Replace(" ", "");
+        if (message.Length %2 == 1)
+        {
+            ShowErrorMessage("消息少个字符");
+            return;
+        }
+        mbusTcpClient.SendMessage(mtcpCustomFrame.Frame);
     }
 
     /// <summary>
