@@ -9,7 +9,7 @@ public enum StopBits
     [Description("1")]
     One = 1,
     [Description("2")]
-    Two,
+    Two = 2,
     [Description("1.5")]
-    OnePointFive
+    OnePointFive = 3
 }
