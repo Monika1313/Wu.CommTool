@@ -13,4 +13,16 @@ public static class ModbusUtils
         }
         return data;
     }
+
+
+    /// <summary>
+    /// 数据格式化 每间隔几个字符插入1个空格
+    /// </summary>
+    /// <param name="input"></param>
+    /// <param name="interval"></param>
+    /// <returns></returns>
+    public static string DataFormat(this byte[] input, int interval = 4)
+    {
+        return BitConverter.ToString(input).Replace("-", "").InsertFormat(interval, " ");
+    }
 }

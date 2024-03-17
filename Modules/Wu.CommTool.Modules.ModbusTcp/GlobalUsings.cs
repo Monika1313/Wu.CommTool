@@ -27,7 +27,6 @@ global using CommunityToolkit.Mvvm.ComponentModel;
 global using Wu.CommTool.Modules.ModbusTcp.Models;
 
 global using CommunityToolkit.Mvvm.Input;
-global using NModbus;
 global using System.Net.Sockets;
 
 global using Wu.CommTool.Core;
@@ -35,8 +34,6 @@ global using Wu.CommTool.Modules.ModbusTcp.Views;
 
 global using Wu.CommTool.Core.Models;
 global using Wu.CommTool.Core.Enums;
-global using NModbus.Logging;
-global using NModbus.Message;
 global using Wu.CommTool.Core.Extensions;
 
 global using Prism.Modularity;
@@ -46,5 +43,7 @@ global using Wu.CommTool.Modules.ModbusTcp.Enums;
 global using System.Runtime.CompilerServices;
 global using Wu.CommTool.Modules.ModbusTcp.Events;
 
+
 global using Wu.CommTool.Core.Common;
+global using Wu.Utils;
 

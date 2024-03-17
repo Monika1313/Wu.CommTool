@@ -23,13 +23,14 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="NModbus" Version="3.0.81" />
 		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+		<ProjectReference Include="..\Wu.CommTool.Modules.ModbusRtu\Wu.CommTool.Modules.ModbusRtu.csproj" />
 	</ItemGroup>
 	<ItemGroup>
+	  <Folder Include="Extensions\" />
 	  <Folder Include="Interfaces\" />
 	</ItemGroup>
 </Project>

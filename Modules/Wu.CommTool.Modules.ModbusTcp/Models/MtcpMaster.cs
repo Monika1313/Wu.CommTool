@@ -8,10 +8,7 @@ public partial class MtcpMaster : ObservableObject
     public MtcpMaster()
     {
         ShowMessage("开发中...");
-        ShowMessage("开发中...");
-        ShowMessage("开发中...");
     }
-    IModbusMaster master;
 
 
 
@@ -39,13 +36,11 @@ public partial class MtcpMaster : ObservableObject
     #region 属性
     [ObservableProperty]
     ObservableCollection<MtcpCustomFrame> mtcpCustomFrames = [
-        new ("01 03 0000 0001 "),
-        new ("01 04 0000 0001 "),
+        new ("00 0A 00 00 00 06 01 03 00 00 00 01 "),
+        new ("00 0B 00 00 00 06 01 03 00 00 00 04 "),
         new (""),
     ];
     #endregion
-
-
 
     #region 方法
     [RelayCommand]
@@ -60,10 +55,6 @@ public partial class MtcpMaster : ObservableObject
         }
     }
 
-
-
-
-
     [RelayCommand]
     [property: JsonIgnore]
     async Task TestMaster()
@@ -74,32 +65,32 @@ public partial class MtcpMaster : ObservableObject
             //验证当前TcpClient是否有效并连接成功;
             //var client2 = new TcpClient();
 
-            using TcpClient client2 = new TcpClient("127.0.0.1", 502);
-            client2.ReceiveTimeout = 1000;
-            client2.SendTimeout = 1000;
-            //client.ConnectAsync(serverIp, serverPort);
-            var factory = new ModbusFactory(logger: new DebugModbusLogger());
-            master = factory.CreateMaster(client2);
+            //using TcpClient client2 = new TcpClient("127.0.0.1", 502);
+            //client2.ReceiveTimeout = 1000;
+            //client2.SendTimeout = 1000;
+            ////client.ConnectAsync(serverIp, serverPort);
+            //var factory = new ModbusFactory(logger: new DebugModbusLogger());
+            //master = factory.CreateMaster(client2);
 
-            byte slaveId = 1;
-            byte startAddress = 0;
-            byte numberOfPoints = 5;
+            //byte slaveId = 1;
+            //byte startAddress = 0;
+            //byte numberOfPoints = 5;
 
-            //请求
-            var request = new ReadHoldingInputRegistersRequest(
-                    ModbusFunctionCodes.ReadHoldingRegisters,
-                    slaveId,
-                    startAddress,
-                    numberOfPoints);
+            ////请求
+            //var request = new ReadHoldingInputRegistersRequest(
+            //        ModbusFunctionCodes.ReadHoldingRegisters,
+            //        slaveId,
+            //        startAddress,
+            //        numberOfPoints);
 
-            var ccc = master.Transport.BuildMessageFrame(request);//生成 读取保持寄存器帧
+            //var ccc = master.Transport.BuildMessageFrame(request);//生成 读取保持寄存器帧
 
 
-            ShowMessage(ccc.ToHexString(), MessageType.Send);//输入16进制的帧
+            //ShowMessage(ccc.ToHexString(), MessageType.Send);//输入16进制的帧
 
-            var aa = await master.ReadHoldingRegistersAsync(slaveId, startAddress, numberOfPoints);
+            //var aa = await master.ReadHoldingRegistersAsync(slaveId, startAddress, numberOfPoints);
 
-            ShowMessage(string.Join(" ", aa), MessageType.Receive);
+            //ShowMessage(string.Join(" ", aa), MessageType.Receive);
             #endregion
         }
         catch (Exception ex)
@@ -121,6 +112,7 @@ public partial class MtcpMaster : ObservableObject
     /// </summary>
     /// <returns></returns>
     [RelayCommand]
+    [property: JsonIgnore]
     async Task Connect()
     {
         try
@@ -144,12 +136,11 @@ public partial class MtcpMaster : ObservableObject
                 };
             mbusTcpClient.MessageSending += (s) =>
             {
-                //ShowSendMessage(new MtcpFrame(s));
-                ShowMessage(s);
+                ShowSendMessage(new MtcpFrame(s));
             };
             mbusTcpClient.MessageReceived += (s) =>
             {
-                ShowMessage(s);
+                ShowReceiveMessage(new MtcpFrame(s));
             };
             mbusTcpClient.ErrorOccurred += (s) =>
             {
@@ -164,8 +155,14 @@ public partial class MtcpMaster : ObservableObject
         }
     }
 
+    /// <summary>
+    /// 发送自定义帧
+    /// </summary>
+    /// <param name="mtcpCustomFrame"></param>
+    /// <returns></returns>
     [RelayCommand]
-    public async Task SendMessage(MtcpCustomFrame mtcpCustomFrame)
+    [property:JsonIgnore]
+    public async Task SendCustomnMessage(MtcpCustomFrame mtcpCustomFrame)
     {
         //若未初始化客户端或未连接,则先连接
         if (mbusTcpClient == null || !mbusTcpClient.Connected)
@@ -173,12 +170,36 @@ public partial class MtcpMaster : ObservableObject
             await Connect();
         }
         string message = mtcpCustomFrame.Frame.Replace(" ", "");
-        if (message.Length %2 == 1)
+        if (message.Length % 2 == 1)
         {
             ShowErrorMessage("消息少个字符");
             return;
         }
         mbusTcpClient.SendMessage(mtcpCustomFrame.Frame);
+    }
+
+
+    /// <summary>
+    /// 发送消息帧
+    /// </summary>
+    /// <param name="mtcpFrame"></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task SendMessage(MtcpFrame mtcpFrame)
+    {
+        ////若未初始化客户端或未连接,则先连接
+        //if (mbusTcpClient == null || !mbusTcpClient.Connected)
+        //{
+        //    await Connect();
+        //}
+
+        //string message = mtcpFrame.Replace(" ", "");
+        //if (message.Length % 2 == 1)
+        //{
+        //    ShowErrorMessage("消息少个字符");
+        //    return;
+        //}
+        //mbusTcpClient.SendMessage(mtcpFrame.Frame);
     }
 
     /// <summary>
@@ -229,30 +250,27 @@ public partial class MtcpMaster : ObservableObject
     /// <param name="message"></param>
     public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
-    ///// <summary>
-    ///// 页面展示接收数据消息
-    ///// </summary>
-    ///// <param name="frame"></param>
-    //public void ShowReceiveMessage(MtcpFrame frame)
-    //{
-    //    try
-    //    {
-    //        void action()
-    //        {
-    //            var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame)
-    //            {
-    //                MessageSubContents = new ObservableCollection<MessageSubContent>(frame.GetmessageWithErrMsg())
-    //            };
-    //            Messages.Add(msg);
-    //            while (Messages.Count > 200)
-    //            {
-    //                Messages.RemoveAt(0);
-    //            }
-    //        }
-    //        Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
-    //    }
-    //    catch (Exception) { }
-    //}
+    /// <summary>
+    /// 页面展示接收数据消息
+    /// </summary>
+    /// <param name="frame"></param>
+    public void ShowReceiveMessage(MtcpFrame frame)
+    {
+        try
+        {
+            void action()
+            {
+                var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame);
+                Messages.Add(msg);
+                while (Messages.Count > 200)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (Exception) { }
+    }
 
     /// <summary>
     /// 页面展示发送数据消息

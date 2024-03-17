@@ -8,10 +8,18 @@ public partial class MtcpMessageData : MessageData
     #region 构造函数
     public MtcpMessageData(string Content, DateTime dateTime, MessageType Type, MtcpFrame frame) : base(Content, dateTime, Type, "")
     {
-        mtcpFrame = frame;
+        MtcpFrame = frame;
+        MtcpSubMessageData = new ObservableCollection<MtcpSubMessageData>(frame.GetMessageWithErrMsg());
     }
     #endregion
 
     [ObservableProperty]
     MtcpFrame mtcpFrame;
+
+    /// <summary>
+    /// 子消息
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<MtcpSubMessageData> mtcpSubMessageData = [];
+    
 }

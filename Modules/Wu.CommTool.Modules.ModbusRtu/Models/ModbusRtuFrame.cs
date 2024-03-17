@@ -142,16 +142,6 @@ public class ModbusRtuFrame : BindableBase
             return true;
     }
 
-    //private Brush SlaveIdBrush = Brushes.RoyalBlue;
-    //private static Brush FunctionBrush = Brushes.OrangeRed;
-    //private static Brush StartAddrBrush = Brushes.Purple;
-    //private static Brush BytesNumBursh = Brushes.DeepPink;
-    //private static Brush RegisterNumBursh = Brushes.Chocolate;
-    //private static Brush RegisterValuesBursh = Brushes.LimeGreen;
-    //private static Brush ErrCodeBursh = Brushes.Red;
-    //private static Brush CrcCodeBrush = Brushes.BlueViolet;
-
-
     public List<MessageSubContent> GetMessage()
     {
         List<MessageSubContent> messages = new List<MessageSubContent>();

@@ -197,7 +197,7 @@
                             <DataTemplate>
                                 <DockPanel Margin="4">
                                     <Button Margin="10,0,0,0"
-                                            Command="{Binding DataContext.MtcpMaster.SendMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                            Command="{Binding DataContext.MtcpMaster.SendCustomnMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
                                             Content="发送"
                                             Cursor="Hand"
@@ -275,11 +275,11 @@
 
                             <DataTemplate DataType="{x:Type models:MtcpMessageData}">
                                 <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                    <i:Interaction.Triggers>
+                                    <!--<i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonUp">
                                             <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
                                         </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                                    </i:Interaction.Triggers>-->
                                     <!--<Border.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
@@ -311,8 +311,8 @@
                                                  TextWrapping="Wrap" />
 
                                         <ItemsControl Background="Transparent"
-                                                      ItemsSource="{Binding MessageSubContents}"
-                                                      Visibility="{Binding MessageSubContents.Count, Converter={wu:Zero2Collapsed}}">
+                                                      ItemsSource="{Binding MtcpSubMessageData}"
+                                                      Visibility="{Binding MtcpSubMessageData.Count, Converter={wu:Zero2Collapsed}}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
