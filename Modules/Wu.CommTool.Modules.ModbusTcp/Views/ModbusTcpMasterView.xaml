@@ -323,24 +323,12 @@
                                                     <TextBlock Margin="3,0,3,0"
                                                                VerticalAlignment="Center"
                                                                FontWeight="Bold"
-                                                               Style="{StaticResource ModbusRtuMessageTextBlock}"
+                                                               Style="{StaticResource MtcpMessageTextBlock}"
                                                                Text="{Binding Content}"
                                                                TextWrapping="Wrap" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
-
-                                        <TextBlock>
-                                            <TextBlock.Inlines>
-                                                <ItemsControl ItemsSource="{Binding Runs}">
-                                                    <ItemsControl.ItemTemplate>
-                                                        <DataTemplate>
-                                                            <Run Foreground="{Binding ForegroundColor}" Text="{Binding Text}" />
-                                                        </DataTemplate>
-                                                    </ItemsControl.ItemTemplate>
-                                                </ItemsControl>
-                                            </TextBlock.Inlines>
-                                        </TextBlock>
                                     </WrapPanel>
                                 </Border>
                             </DataTemplate>

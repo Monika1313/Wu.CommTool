@@ -86,6 +86,7 @@ public partial class MtcpFrame : ObservableObject
                 }
                 break;
             case MtcpFunctionCode._0x83:
+
                 break;
             case MtcpFunctionCode._0x04:
                 if (ByteFrame.Length.Equals(7 + 5))
@@ -96,6 +97,26 @@ public partial class MtcpFrame : ObservableObject
                 }
                 break;
             case MtcpFunctionCode._0x84:
+                if (PDU.Length.Equals(2))
+                {
+                    MtcpFrameType = MtcpFrameType._0x84错误帧;
+                    ErrorCode = PDU[1];
+                    switch (ErrorCode)
+                    {
+                        case 1:
+                            ErrMessage = $"该设备不支持{(FunctionCode - 0x80).ToString().TrimStart('_')}功能码";
+                            break;
+                        case 2:
+                            ErrMessage = "起始地址或起始地址+寄存器数量不符合。寄存器数量范围应∈[0x0001,0x007D]";
+                            break;
+                        case 3:
+                            ErrMessage = "寄存器数量范围应∈[0x0001,0x007D]";
+                            break;
+                        case 4:
+                            ErrMessage = "读输入寄存器失败";
+                            break;
+                    }
+                }
                 break;
             case MtcpFunctionCode._0x05:
                 break;
@@ -161,6 +182,7 @@ public partial class MtcpFrame : ObservableObject
         messages.Add(new MtcpSubMessageData($"{ProtocolId:X4}", MtcpMessageType.ProtocolId));
         messages.Add(new MtcpSubMessageData($"{PduLength:X4}", MtcpMessageType.PduLength));
         messages.Add(new MtcpSubMessageData($"{UnitId:X2}", MtcpMessageType.UnitId));
+        messages.Add(new MtcpSubMessageData($"{(byte)FunctionCode:X2}", MtcpMessageType.FunctionCode));
 
         switch (MtcpFrameType)
         {
@@ -178,12 +200,10 @@ public partial class MtcpFrame : ObservableObject
                 break;
 
             case MtcpFrameType._0x03请求帧:
-                messages.Add(new MtcpSubMessageData($"{(byte)FunctionCode:X2}", MtcpMessageType.FunctionCode));
                 messages.Add(new MtcpSubMessageData($"{StartAddr:X4}", MtcpMessageType.StartAddr));
                 messages.Add(new MtcpSubMessageData($"{RegisterNum:X4}", MtcpMessageType.RegisterNum));
                 break;
             case MtcpFrameType._0x03响应帧:
-                messages.Add(new MtcpSubMessageData($"{(byte)FunctionCode:X2}", MtcpMessageType.FunctionCode));
                 messages.Add(new MtcpSubMessageData($"{BytesNum:X2}", MtcpMessageType.BytesNum));
                 messages.Add(new MtcpSubMessageData($"{RegisterValues.DataFormat(2)}", MtcpMessageType.RegisterValues));
 
@@ -191,13 +211,14 @@ public partial class MtcpFrame : ObservableObject
             case MtcpFrameType._0x83错误帧:
                 break;
             case MtcpFrameType._0x04请求帧:
-                messages.Add(new MtcpSubMessageData($"{(byte)FunctionCode:X2}", MtcpMessageType.FunctionCode));
                 messages.Add(new MtcpSubMessageData($"{StartAddr:X4}", MtcpMessageType.StartAddr));
                 messages.Add(new MtcpSubMessageData($"{RegisterNum:X4}", MtcpMessageType.RegisterNum));
                 break;
+
             case MtcpFrameType._0x04响应帧:
                 break;
             case MtcpFrameType._0x84错误帧:
+                messages.Add(new MtcpSubMessageData($"{ErrorCode:X2}", MtcpMessageType.ErrorCode));
                 break;
             case MtcpFrameType._0x05请求帧:
                 break;
@@ -331,6 +352,9 @@ public partial class MtcpFrame : ObservableObject
     byte bytesNum;
 
     byte[] RegisterValues;
+
+    [ObservableProperty]
+    byte errorCode;
     #endregion
 
 

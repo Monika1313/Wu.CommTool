@@ -3,6 +3,7 @@
                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                         xmlns:local="clr-namespace:Wu.CommTool"
                         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                        xmlns:mtcp="Wu.CommTool.Modules.ModbusTcp"
                         xmlns:prism="http://prismlibrary.com/">
     <Application.Resources>
         <ResourceDictionary>
@@ -137,7 +138,7 @@
             </Style>
 
             <Style x:Key="ModbusRtuMessageTextBlock" TargetType="TextBlock">
-                <Setter Property="Background" Value="#00FFFFFF" />
+                <Setter Property="Background" Value="Transparent" />
                 <Setter Property="FontWeight" Value="Bold" />
                 <Style.Triggers>
                     <DataTrigger Binding="{Binding Type}" Value="0">
@@ -169,6 +170,47 @@
                     </DataTrigger>
                 </Style.Triggers>
             </Style>
+
+            <Style x:Key="MtcpMessageTextBlock" TargetType="TextBlock">
+                <Setter Property="Background" Value="Transparent" />
+                <Setter Property="FontWeight" Value="Bold" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.TransactionId}">
+                        <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ProtocolId}">
+                        <Setter Property="Foreground" Value="{StaticResource Pink_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.PduLength}">
+                        <Setter Property="Foreground" Value="{StaticResource Cyan_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.UnitId}">
+                        <Setter Property="Foreground" Value="{StaticResource GeekBlue_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.FunctionCode}">
+                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.StartAddr}">
+                        <Setter Property="Foreground" Value="{StaticResource Orange_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.RegisterNum}">
+                        <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.BytesNum}">
+                        <Setter Property="Foreground" Value="{StaticResource Pink_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.RegisterValues}">
+                        <Setter Property="Foreground" Value="{StaticResource Gold_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ErrorCode}">
+                        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+                    </DataTrigger>
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ErrMsg}">
+                        <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+
 
             <Style x:Key="ModbusRtuMessageBorder" TargetType="Border">
                 <Setter Property="CornerRadius" Value="4" />

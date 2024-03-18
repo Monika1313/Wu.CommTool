@@ -35,7 +35,7 @@ public enum MtcpMessageType
 
     #region 其他
     [Description("错误码")]
-    ErrCode,
+    ErrorCode,
     [Description("错误消息")]
     ErrMsg 
     #endregion
