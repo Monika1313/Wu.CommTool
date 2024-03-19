@@ -1031,7 +1031,6 @@ public class ModbusRtuModel : BindableBase
                 //校验成功
                 else
                 {
-                    //ShowReceiveMessage(mFrame.ToString(), mFrame.GetmessageWithErrMsg());
                     ShowReceiveMessage(mFrame);
                 }
                 #endregion
@@ -1492,12 +1491,15 @@ public class ModbusRtuModel : BindableBase
                 case DataType.Double:
                     data = (double)wValue;
                     break;
+                case DataType.Hex:
+                    data = $"{obj.WriteValue:X4}";
+                    break;
                 default:
                     break;
             }
 
             //若是uShort或short则使用0x06功能码(有些设备并不支持0x10功能码) 其他使用0x10功能码
-            if (obj.Type.Equals(DataType.uShort) || obj.Type.Equals(DataType.Short))
+            if (obj.Type.Equals(DataType.uShort) || obj.Type.Equals(DataType.Short) || obj.Type.Equals(DataType.Hex))
             {
                 //0x06写入帧
                 unCrcFrame = $"{DataMonitorConfig.SlaveId:X2} 06 {obj.Addr:X4} {data:X4}";//未校验的数据帧

@@ -12,24 +12,30 @@ public enum DataType
     //Sint,
 
     [Description("uShort 16位无符号整型")]
-    uShort,
+    uShort = 0,
     [Description("Short 16位有符号整型")]
-    Short,
+    Short = 1,
 
     [Description("uInt 32无符号位整型")]
-    uInt,
+    uInt = 2,
     [Description("Int 32有符号位整型")]
-    Int,
+    Int = 3,
 
     [Description("uLong 64位无符号整型")]
-    uLong,
+    uLong = 4,
     [Description("Long 64位有符号整型")]
-    Long,
+    Long = 5,
 
     [Description("Float 32位浮点型")]
-    Float,
+    Float = 6,
+
     [Description("Double 64位浮点型")]
-    Double,
+    Double = 7,
+
+    [Description("Hex 16位16进制字符")]
+    Hex = 8,
+
+
 
     //[Description("布尔")]
     //Bool,

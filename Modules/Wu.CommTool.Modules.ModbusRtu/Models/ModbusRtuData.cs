@@ -172,6 +172,7 @@ public class ModbusRtuData : BindableBase
             DataType.Long => Math.Round(BitConverter.ToInt64(databytes, 0) * rate, 3),
             DataType.Float => Math.Round((BitConverter.ToSingle(databytes, 0) * rate), 2),
             DataType.Double => Math.Round(BitConverter.ToDouble(databytes, 0) * rate, 2),
+            DataType.Hex => $"0x{BitConverter.ToString(databytes.Reverse().ToArray()).Replace("-", "")}",
             _ => (dynamic)0,
         };
     }
@@ -197,6 +198,7 @@ public class ModbusRtuData : BindableBase
             DataType.Long => 8,
             DataType.Float => 4,
             DataType.Double => 8,
+            DataType.Hex =>2,
             //case DataType.Bool:
             //    return 1;
             _ => 1,
