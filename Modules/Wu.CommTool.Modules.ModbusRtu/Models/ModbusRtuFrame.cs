@@ -17,10 +17,8 @@ public class ModbusRtuFrame : BindableBase
         AnalyseFrame();
     }
 
-    public ModbusRtuFrame(string frame)
+    public ModbusRtuFrame(string frame) : this(frame.GetBytes())
     {
-        Frame = frame.GetBytes();
-        AnalyseFrame();
     }
     #endregion
 
@@ -142,6 +140,7 @@ public class ModbusRtuFrame : BindableBase
             return true;
     }
 
+    #region 解析帧内容用于UI显示
     public List<MessageSubContent> GetMessage()
     {
         List<MessageSubContent> messages = new List<MessageSubContent>();
@@ -251,9 +250,11 @@ public class ModbusRtuFrame : BindableBase
             messages.Add(new MessageSubContent($"错误: {ErrMessage}", ModbusRtuMessageType.ErrMsg));
         }
         return messages;
-    }
+    } 
+    #endregion
 
 
+    #region 旧的方法 弃用
     /// <summary>
     /// 获取格式化的帧字符串
     /// </summary>
@@ -319,7 +320,7 @@ public class ModbusRtuFrame : BindableBase
         {
             return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
         }
-    }
+    } 
 
     /// <summary>
     /// 格式化字符串
@@ -333,6 +334,8 @@ public class ModbusRtuFrame : BindableBase
         }
         return GetFormatFrame();
     }
+    #endregion
+
 
     /// <summary>
     /// 解析数据帧

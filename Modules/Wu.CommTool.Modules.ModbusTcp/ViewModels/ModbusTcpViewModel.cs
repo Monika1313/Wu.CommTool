@@ -35,8 +35,8 @@ public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
     public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
     private ObservableCollection<MenuBar> _MenuBars = new()
         {
-            new MenuBar() { Icon = "Number1", Title = "主站Master", NameSpace = nameof(ModbusTcpMasterView) },
-            //new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = nameof(ModbusTcpCustomFrameView) },
+            new MenuBar() { Icon = "Number1", Title = "自定义帧", NameSpace = nameof(ModbusTcpCustomFrameView) },
+            //new MenuBar() { Icon = "Number1", Title = "主站Master", NameSpace = nameof(ModbusTcpMasterView) },
             //new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = nameof(SearchDeviceView) },
             //new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
             //new MenuBar() { Icon = "Number4", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
@@ -87,7 +87,7 @@ public class ModbusTcpViewModel : NavigationViewModel, IDialogHostAware
         if (!InitFlag)
         {
             InitFlag = true;
-            this.regionManager.RequestNavigate(PrismRegionNames.ModbusTcpViewRegionName, nameof(ModbusTcpMasterView), back =>
+            this.regionManager.RequestNavigate(PrismRegionNames.ModbusTcpViewRegionName, nameof(ModbusTcpCustomFrameView), back =>
             {
                 if (back.Error != null)
                 {

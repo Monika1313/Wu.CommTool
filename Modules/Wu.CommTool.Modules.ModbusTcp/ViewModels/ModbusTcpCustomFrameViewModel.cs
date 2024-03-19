@@ -52,6 +52,18 @@ public class ModbusTcpCustomFrameViewModel : NavigationViewModel, IDialogHostAwa
     /// </summary>
     public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
     private object _CurrentDto = new();
+
+    /// <summary>
+    /// ModbusTcp
+    /// </summary>
+    public MtcpMaster MtcpMaster { get => _MtcpMaster; set => SetProperty(ref _MtcpMaster, value); }
+    private MtcpMaster _MtcpMaster = new();
+
+    /// <summary>
+    /// 抽屉
+    /// </summary>
+    public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
+    private OpenDrawers _OpenDrawers = new();
     #endregion
 
 
@@ -72,6 +84,7 @@ public class ModbusTcpCustomFrameViewModel : NavigationViewModel, IDialogHostAwa
         switch (obj)
         {
             case "Search": Search(); break;
+            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
             case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }

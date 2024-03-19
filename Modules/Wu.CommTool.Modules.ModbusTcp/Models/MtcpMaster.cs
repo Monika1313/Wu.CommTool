@@ -161,9 +161,14 @@ public partial class MtcpMaster : ObservableObject
     /// <param name="mtcpCustomFrame"></param>
     /// <returns></returns>
     [RelayCommand]
-    [property:JsonIgnore]
-    public async Task SendCustomnMessage(MtcpCustomFrame mtcpCustomFrame)
+    [property: JsonIgnore]
+    public async Task SendCustomMessage(MtcpCustomFrame mtcpCustomFrame)
     {
+        if (mtcpCustomFrame.Frame.Length.Equals(0))
+        {
+            ShowErrorMessage("发送消息不能为空...");
+            return;
+        }
         //若未初始化客户端或未连接,则先连接
         if (mbusTcpClient == null || !mbusTcpClient.Connected)
         {

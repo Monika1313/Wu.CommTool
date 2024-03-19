@@ -205,7 +205,7 @@
                     <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ErrorCode}">
                         <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
                     </DataTrigger>
-                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ErrMsg}">
+                    <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ErrorMessage}">
                         <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
                     </DataTrigger>
                 </Style.Triggers>

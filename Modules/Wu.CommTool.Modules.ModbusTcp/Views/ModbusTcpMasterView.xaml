@@ -197,7 +197,7 @@
                             <DataTemplate>
                                 <DockPanel Margin="4">
                                     <Button Margin="10,0,0,0"
-                                            Command="{Binding DataContext.MtcpMaster.SendCustomnMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                            Command="{Binding DataContext.MtcpMaster.SendCustomMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                             CommandParameter="{Binding}"
                                             Content="发送"
                                             Cursor="Hand"
@@ -210,8 +210,8 @@
                                                 Text="{Binding Frame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                 TextWrapping="Wrap">
                                         <TextBox.InputBindings>
-                                            <KeyBinding Key="Enter"
-                                                        Command="{Binding DataContext.MtcpMaster.SendMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                            <KeyBinding Key="Return"
+                                                        Command="{Binding DataContext.MtcpMaster.SendCustomMessageCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                                         CommandParameter="{Binding}" />
                                         </TextBox.InputBindings>
                                         <TextBoxBase.ContextMenu>
