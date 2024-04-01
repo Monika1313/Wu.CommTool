@@ -6,7 +6,7 @@
 - 🍭ModbusRtu自动解析数据帧
 - 🔖智能防粘包，速度快也能解析（有无法校验的帧会出错）
 
-## 功能介绍
+## 🌈功能介绍
 1. Modbus Rtu 
 - 自动格式化解析和验证数据帧
 - 自定义帧  支持自动校验
@@ -22,7 +22,7 @@
 - 右键消息可对Json格式的数据进行格式化查看
 4. Json格式化查看
 
-## Modbus Rtu
+## 🌊Modbus Rtu
 ### Modbus Rtu 自定义帧
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu自定义帧.png)
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/ModbusRtu解析数据帧.png)
@@ -53,9 +53,10 @@
 ## Mqtt Client
 ![image](https://github.com/Monika1313/Wu.CommTool/blob/master/Wu.CommTool/Images/About/Mqtt客户端.png)
 
-## 如何下载
+## 📦如何下载
+- 仅支持windows系统, 需安装.NET 6
 - 进入 [Release](https://github.com/Monika1313/Wu.CommTool/releases) 页面下载，下载WuCommTool.zip
 
-## 联系作者
+## ☀️联系作者
 - QQ：961501261
 - QQ群: 746533921
