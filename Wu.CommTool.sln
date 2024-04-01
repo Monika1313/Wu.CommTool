@@ -32,6 +32,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.MqttCli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusRtu", "Modules\Wu.CommTool.Modules.ModbusRtu\Wu.CommTool.Modules.ModbusRtu.csproj", "{9B266E31-CFAA-48FE-81ED-CD2F85778E32}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "参考资料", "参考资料", "{BC08EA19-6543-4CFE-A1A0-DE80BFFAADF1}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\..\..\Desktop\ModbusRtu PDU.xlsx = ..\..\..\..\Desktop\ModbusRtu PDU.xlsx
+		..\..\..\..\OneDrive\说明书\1 国标\GBT Modbus协议.pdf = ..\..\..\..\OneDrive\说明书\1 国标\GBT Modbus协议.pdf
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
