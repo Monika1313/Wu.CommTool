@@ -5,7 +5,7 @@
 		<LangVersion>latestMajor</LangVersion>
 		<!--<Prefer32Bit Condition="'$(TargetFramework)' == 'net48'">true</Prefer32Bit>-->
 		<UseWPF>true</UseWPF>
-		<AssemblyName>Wu通讯调试工具</AssemblyName>
+		<AssemblyName>Wu.CommTool</AssemblyName>
 		<UseWindowsForms>True</UseWindowsForms>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>Images\logo.ico</ApplicationIcon>
