@@ -1,28 +1,32 @@
-﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:core="Wu.CommTool.Core"
-                    xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
-                    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-                    xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
-                    xmlns:wu="https://github.com/Monika1313/Wu">
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="Wu.CommTool.Core"
+    xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
+    xmlns:wu="https://github.com/Monika1313/Wu">
     <DataTemplate x:Key="MessageDataTemplate" DataType="{x:Type core:MessageData}">
         <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
             <WrapPanel Orientation="Horizontal">
-                <TextBlock Margin="3"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource MessageTextBlock}"
-                           Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                <TextBlock Margin="5,0"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource MessageTextBlock}"
-                           Text="{Binding Type}" />
-                <TextBox VerticalAlignment="Center"
-                         FontSize="12"
-                         FontWeight="Bold"
-                         IsReadOnly="True"
-                         Style="{StaticResource MessageTextBox}"
-                         Text="{Binding Content}"
-                         TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="3"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MessageTextBlock}"
+                    Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                <TextBlock
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MessageTextBlock}"
+                    Text="{Binding Type}" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    IsReadOnly="True"
+                    Style="{StaticResource MessageTextBox}"
+                    Text="{Binding Content}"
+                    TextWrapping="Wrap" />
             </WrapPanel>
         </Border>
     </DataTemplate>
@@ -37,36 +41,42 @@
             <Border.ContextMenu>
                 <ContextMenu>
                     <!--  MenuItem绑定命令  -->
-                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                              CommandParameter="{Binding}"
-                              Header="解析数据帧"
-                              Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
-                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                              CommandParameter="{Binding}"
-                              Header="复制Modbus数据帧"
-                              Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
+                    <MenuItem
+                        Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                        CommandParameter="{Binding}"
+                        Header="解析数据帧"
+                        Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
+                    <MenuItem
+                        Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                        CommandParameter="{Binding}"
+                        Header="复制Modbus数据帧"
+                        Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
                 </ContextMenu>
             </Border.ContextMenu>
             <WrapPanel Orientation="Horizontal">
-                <TextBlock Margin="3"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource MessageTextBlock}"
-                           Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                <TextBlock Margin="5,0"
-                           VerticalAlignment="Center"
-                           Style="{StaticResource MessageTextBlock}"
-                           Text="{Binding Type}" />
-                <TextBox VerticalAlignment="Center"
-                         FontSize="12"
-                         FontWeight="Bold"
-                         IsReadOnly="True"
-                         Style="{StaticResource MessageTextBox}"
-                         Text="{Binding Content}"
-                         TextWrapping="Wrap" />
+                <TextBlock
+                    Margin="3"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MessageTextBlock}"
+                    Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                <TextBlock
+                    Margin="5,0"
+                    VerticalAlignment="Center"
+                    Style="{StaticResource MessageTextBlock}"
+                    Text="{Binding Type}" />
+                <TextBox
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    FontWeight="Bold"
+                    IsReadOnly="True"
+                    Style="{StaticResource MessageTextBox}"
+                    Text="{Binding Content}"
+                    TextWrapping="Wrap" />
 
-                <ItemsControl Background="Transparent"
-                              ItemsSource="{Binding MessageSubContents}"
-                              Visibility="{Binding MessageSubContents.Count, Converter={wu:Zero2Collapsed}}">
+                <ItemsControl
+                    Background="Transparent"
+                    ItemsSource="{Binding MessageSubContents}"
+                    Visibility="{Binding MessageSubContents.Count, Converter={wu:Zero2Collapsed}}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -74,12 +84,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Margin="3,0,3,0"
-                                       VerticalAlignment="Center"
-                                       FontWeight="Bold"
-                                       Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                       Text="{Binding Content}"
-                                       TextWrapping="Wrap" />
+                            <TextBlock
+                                Margin="3,0,3,0"
+                                VerticalAlignment="Center"
+                                FontWeight="Bold"
+                                Style="{StaticResource ModbusRtuMessageTextBlock}"
+                                Text="{Binding Content}"
+                                TextWrapping="Wrap" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

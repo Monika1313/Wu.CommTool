@@ -14,13 +14,11 @@ namespace Wu.CommTool.Modules.ModbusRtu
             containerRegistry.RegisterSingleton<ModbusRtuModel>();
 
             containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();
-            //containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>("ModbusRtuViewNew");
             containerRegistry.RegisterForNavigation<CustomFrameView, CustomFrameViewModel>();
             containerRegistry.RegisterForNavigation<SearchDeviceView, SearchDeviceViewModel>();
             containerRegistry.RegisterForNavigation<DataMonitorView, DataMonitorViewModel>();
             containerRegistry.RegisterForNavigation<AutoResponseView, AutoResponseViewModel>();
             containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();
-
             containerRegistry.RegisterForNavigation<AnalyzeFrameView, AnalyzeFrameViewModel>();
             containerRegistry.RegisterForNavigation<EditFrameView, EditFrameViewModel>();
         }

@@ -33,7 +33,5 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Interfaces\" />
-	  <Folder Include="Models\Modbus\" />
-	  <Folder Include="Models\Mqtt\" />
 	</ItemGroup>
 </Project>
