@@ -36,7 +36,6 @@
 	<ItemGroup>
 		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
-		<PackageReference Include="System.Management" Version="7.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />

@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows;
 using Wu.CommTool.Modules.About;
 using Wu.CommTool.Modules.ConvertTools;
+using Wu.CommTool.Modules.NetworkTool;
 using Wu.CommTool.Modules.JsonTool;
 using Wu.CommTool.Modules.Message;
 using Wu.CommTool.Modules.ModbusRtu;
@@ -16,9 +17,6 @@ using Wu.CommTool.Views;
 
 namespace Wu.CommTool;
 
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
 public partial class App
 {
     public static AppConfig AppConfig { get; set; } = new();
@@ -100,7 +98,7 @@ public partial class App
         moduleCatalog.AddModule<MessageModule>();       //弹窗消息模块
         moduleCatalog.AddModule<MqttServerModule>();    //Mqtt服务器模块
         moduleCatalog.AddModule<MqttClientModule>();    //Mqtt客户端模块
-        moduleCatalog.AddModule<ModbusRtuModule>();    //ModbusRtu模块
+        moduleCatalog.AddModule<ModbusRtuModule>();     //ModbusRtu模块
+        moduleCatalog.AddModule<NetworkToolModule>();   //网络工具模块
     }
-
 }

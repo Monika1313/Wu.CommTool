@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.ViewModels;
+﻿using Wu.CommTool.Modules.NetworkTool.Views;
+
+namespace Wu.CommTool.ViewModels;
 
 public class MainWindowViewModel : BindableBase, IConfigureService
 {
@@ -101,6 +103,7 @@ public class MainWindowViewModel : BindableBase, IConfigureService
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
             new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
             new() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
+            new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
             new() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
             //new MenuBar() { Icon = "Clyde", Title = "ModbusRtu", NameSpace = "ModbusRtuViewNew" }
             //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }

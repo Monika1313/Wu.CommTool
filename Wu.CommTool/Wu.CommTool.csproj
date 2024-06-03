@@ -91,7 +91,6 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Prism.DryIoc" Version="8.1.97" />
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
-		<PackageReference Include="System.Management" Version="7.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Update="Configs\Log4netConfig\log4net.config">
@@ -110,6 +109,7 @@
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.NetworkTool\Wu.CommTool.Modules.NetworkTool.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
 	</ItemGroup>
 	<ProjectExtensions>
