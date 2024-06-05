@@ -170,6 +170,25 @@ public class ModbusRtuModel : BindableBase
     ///// </summary>
     public IList<Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
     private IList<Parity> _SelectedParitys = new List<Parity>();
+
+
+    /// <summary>
+    /// 搜索使用的功能码
+    /// </summary>
+    public byte SearchFunctionCode { get => _SearchFunctionCode; set => SetProperty(ref _SearchFunctionCode, value); }
+    private byte _SearchFunctionCode = 3;
+
+    /// <summary>
+    /// 搜索时读取数据的起始地址
+    /// </summary>
+    public int SearchStartAddr { get => _SearchStartAddr; set => SetProperty(ref _SearchStartAddr, value); }
+    private int _SearchStartAddr = 0000;
+
+    /// <summary>
+    /// 搜索时读取的数量
+    /// </summary>
+    public int SearchReadNum { get => _SearchReadNum; set => SetProperty(ref _SearchReadNum, value); }
+    private int _SearchReadNum = 1;
     #endregion
 
 
@@ -1264,7 +1283,8 @@ public class ModbusRtuModel : BindableBase
                         //修改设置
                         SerialPort.BaudRate = (int)baud;
                         SerialPort.Parity = (System.IO.Ports.Parity)parity;
-                        string unCrcMsg = $"{i:X2}0300000001";//读取第一个字
+                        //string unCrcMsg = $"{i:X2}0300000001";//读取第一个字           
+                        string unCrcMsg = $"{i:X2}{SearchFunctionCode:X2}{SearchStartAddr:X4}{SearchReadNum:X4}";//根据设置读取数据
                         //串口关闭时或不处于搜索状态
                         if (ComConfig.IsOpened == false || SearchDeviceState != 1)
                             break;

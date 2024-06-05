@@ -15,8 +15,8 @@
     xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
     xmlns:wu="https://github.com/Monika1313/Wu"
     d:DataContext="{x:Static dvm:SearchDeviceDesignViewModel.Instance}"
-    d:DesignHeight="450"
-    d:DesignWidth="800"
+    d:DesignHeight="700"
+    d:DesignWidth="900"
     mc:Ignorable="d">
     <DockPanel>
         <!--  头部区域  -->
@@ -231,6 +231,26 @@
                                     </Button.Style>
                                 </Button>
                             </StackPanel>
+                            <ContentControl IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}" Style="{StaticResource Effect2Control}">
+                                <StackPanel Orientation="Vertical">
+                                    <TextBlock
+                                        HorizontalAlignment="Center"
+                                        FontSize="16"
+                                        Text="可选设置项" />
+                                    <TextBox
+                                        hc:TitleElement.Title="功能码"
+                                        Style="{StaticResource FormTextBox}"
+                                        Text="{Binding ModbusRtuModel.SearchFunctionCode}" />
+                                    <TextBox
+                                        hc:TitleElement.Title="起始地址"
+                                        Style="{StaticResource FormTextBox}"
+                                        Text="{Binding ModbusRtuModel.SearchStartAddr}" />
+                                    <TextBox
+                                        hc:TitleElement.Title="读取数量"
+                                        Style="{StaticResource FormTextBox}"
+                                        Text="{Binding ModbusRtuModel.SearchReadNum}" />
+                                </StackPanel>
+                            </ContentControl>
                         </StackPanel>
                     </ScrollViewer>
                 </DockPanel>
