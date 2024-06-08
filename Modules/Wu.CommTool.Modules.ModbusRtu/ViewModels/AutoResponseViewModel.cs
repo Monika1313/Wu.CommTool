@@ -1,4 +1,4 @@
-﻿using Wu.Wpf.Models;
+﻿    using Wu.Wpf.Models;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
 {
@@ -240,8 +240,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.ViewModels
                     return;
                 //添加参数
                 DialogParameters param = new();
-                if (obj != null)
-                    param.Add("Value", obj);
+                param.Add("Value", obj);
+
                 var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, ModbusRtuView.ViewName);
 
                 if (dialogResult.Result == ButtonResult.OK)

@@ -99,7 +99,7 @@ namespace Wu.CommTool.Views
                     //获取最大化或最小化前的窗口大小
                     Rect rb = this.RestoreBounds;
                     App.AppConfig.WinWidth = rb.Width;
-                    App.AppConfig.WinHeight = rb.Width;
+                    App.AppConfig.WinHeight = rb.Height;
                 }
                 else
                 {

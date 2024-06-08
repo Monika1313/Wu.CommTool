@@ -123,7 +123,6 @@ public class ModbusRtuFrame : BindableBase
         return BitConverter.ToString(input).Replace("-", "").InsertFormat(interval, " ");
     }
 
-
     /// <summary>
     /// 判断ModbusCrc校验是否通过
     /// </summary>
@@ -194,7 +193,6 @@ public class ModbusRtuFrame : BindableBase
                     messages.Add(new MessageSubContent($"{DatasFormat(RegisterValues)}", ModbusRtuMessageType.RegisterValues));
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
-
 
                 case ModbusRtuFrameType._0x0F响应帧:
                 case ModbusRtuFrameType._0x10响应帧:
@@ -294,7 +292,6 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x10响应帧:
                     return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
 
-
                 case ModbusRtuFrameType._0x81错误帧:
                 case ModbusRtuFrameType._0x82错误帧:
                 case ModbusRtuFrameType._0x83错误帧:
@@ -309,7 +306,6 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x06请求帧:
                 case ModbusRtuFrameType._0x06响应帧:
                     return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
-
 
                 default:
                     return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");

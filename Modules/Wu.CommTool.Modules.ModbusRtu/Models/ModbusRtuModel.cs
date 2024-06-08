@@ -644,7 +644,7 @@ public class ModbusRtuModel : BindableBase
             //若串口未开启则返回
             if (!SerialPort.IsOpen)
             {
-                SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
+                SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
 
@@ -754,7 +754,7 @@ public class ModbusRtuModel : BindableBase
             //若串口未开启则返回
             if (!SerialPort.IsOpen)
             {
-                SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
+                SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
 
