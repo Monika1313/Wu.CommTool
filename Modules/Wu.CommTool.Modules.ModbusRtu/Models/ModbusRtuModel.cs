@@ -642,9 +642,9 @@ public class ModbusRtuModel : BindableBase
         try
         {
             //若串口未开启则返回
-            if (!SerialPort.IsOpen)
+            if (SerialPort != null && !SerialPort.IsOpen)
             {
-                SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
+                SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
 
@@ -724,8 +724,6 @@ public class ModbusRtuModel : BindableBase
         }
     }
 
-
-
     public bool IsModbusCrcOk(List<byte> frame)
     {
         return IsModbusCrcOk(frame.ToArray());
@@ -752,9 +750,9 @@ public class ModbusRtuModel : BindableBase
         try
         {
             //若串口未开启则返回
-            if (!SerialPort.IsOpen)
+            if (SerialPort != null && !SerialPort.IsOpen)
             {
-                SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
+                SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
 
