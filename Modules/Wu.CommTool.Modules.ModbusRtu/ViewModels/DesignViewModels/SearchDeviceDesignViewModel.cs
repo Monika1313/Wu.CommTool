@@ -1,12 +1,11 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels;
+
+public class SearchDeviceDesignViewModel : SearchDeviceViewModel
 {
-    public class SearchDeviceDesignViewModel : SearchDeviceViewModel
+    private static SearchDeviceDesignViewModel _Instance = new();
+    public static SearchDeviceDesignViewModel Instance => _Instance ??= new();
+    public SearchDeviceDesignViewModel()
     {
-        private static SearchDeviceDesignViewModel _Instance = new();
-        public static SearchDeviceDesignViewModel Instance => _Instance ??= new();
-        public SearchDeviceDesignViewModel()
-        {
-            ModbusRtuModel = new();
-        }
+        ModbusRtuModel = new();
     }
 }

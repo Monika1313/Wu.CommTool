@@ -6,8 +6,6 @@ public class CustomFrameViewModel : NavigationViewModel, IDialogHostAware
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
 
-
-
     public string DialogHostName { get; set; }
     #endregion
 
@@ -142,8 +140,10 @@ public class CustomFrameViewModel : NavigationViewModel, IDialogHostAware
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
         //添加返回的参数
-        DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        DialogParameters param = new()
+        {
+            { "Value", CurrentDto }
+        };
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -214,7 +214,7 @@ public class CustomFrameViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning($"{ex.Message}");
         }
     }
 
@@ -267,7 +267,7 @@ public class CustomFrameViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning($"{ex.Message}");
         }
     }
 
@@ -288,10 +288,7 @@ public class CustomFrameViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            DialogParameters param = new()
-            {
-                //{ "Value", date }
-            };
+            DialogParameters param = [];
             var dialogResult = await dialogHost.ShowDialog(nameof(EditFrameView), param, nameof(ModbusRtuView));
             if (dialogResult.Result == ButtonResult.OK)
             {
@@ -304,7 +301,7 @@ public class CustomFrameViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning($"{ex.Message}");
         }
     }
 

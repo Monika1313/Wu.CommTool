@@ -1,26 +1,25 @@
 ﻿using Prism.Modularity;
 
-namespace Wu.CommTool.Modules.ModbusRtu
+namespace Wu.CommTool.Modules.ModbusRtu;
+
+public class ModbusRtuModule : IModule
 {
-    public class ModbusRtuModule : IModule
+    public void OnInitialized(IContainerProvider containerProvider)
     {
-        public void OnInitialized(IContainerProvider containerProvider)
-        {
 
-        }
+    }
 
-        public void RegisterTypes(IContainerRegistry containerRegistry)
-        {
-            containerRegistry.RegisterSingleton<ModbusRtuModel>();
+    public void RegisterTypes(IContainerRegistry containerRegistry)
+    {
+        containerRegistry.RegisterSingleton<ModbusRtuModel>();
 
-            containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();
-            containerRegistry.RegisterForNavigation<CustomFrameView, CustomFrameViewModel>();
-            containerRegistry.RegisterForNavigation<SearchDeviceView, SearchDeviceViewModel>();
-            containerRegistry.RegisterForNavigation<DataMonitorView, DataMonitorViewModel>();
-            containerRegistry.RegisterForNavigation<AutoResponseView, AutoResponseViewModel>();
-            containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();
-            containerRegistry.RegisterForNavigation<AnalyzeFrameView, AnalyzeFrameViewModel>();
-            containerRegistry.RegisterForNavigation<EditFrameView, EditFrameViewModel>();
-        }
+        containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();
+        containerRegistry.RegisterForNavigation<CustomFrameView, CustomFrameViewModel>();
+        containerRegistry.RegisterForNavigation<SearchDeviceView, SearchDeviceViewModel>();
+        containerRegistry.RegisterForNavigation<DataMonitorView, DataMonitorViewModel>();
+        containerRegistry.RegisterForNavigation<AutoResponseView, AutoResponseViewModel>();
+        containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();
+        containerRegistry.RegisterForNavigation<AnalyzeFrameView, AnalyzeFrameViewModel>();
+        containerRegistry.RegisterForNavigation<EditFrameView, EditFrameViewModel>();
     }
 }

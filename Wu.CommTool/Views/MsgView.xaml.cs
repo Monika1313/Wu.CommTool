@@ -1,16 +1,12 @@
 ﻿using System.Windows.Controls;
 
-namespace Wu.CommTool.Views
+namespace Wu.CommTool.Views;
+
+public partial class MsgView : UserControl
 {
-    /// <summary>
-    /// MsgView.xaml 的交互逻辑
-    /// </summary>
-    public partial class MsgView : UserControl
+    public const string ViewName = nameof(MsgView);
+    public MsgView()
     {
-        public const string ViewName = nameof(MsgView);
-        public MsgView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

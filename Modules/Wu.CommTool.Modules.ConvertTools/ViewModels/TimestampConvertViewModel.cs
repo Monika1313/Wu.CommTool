@@ -41,9 +41,8 @@ public class TimestampConvertViewModel : NavigationViewModel, IRegionMemberLifet
         }
         catch (Exception ex)
         {
-
+            
         }
-
     }
 
 

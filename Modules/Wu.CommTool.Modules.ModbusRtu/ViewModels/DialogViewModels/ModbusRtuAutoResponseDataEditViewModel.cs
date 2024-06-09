@@ -1,153 +1,142 @@
-﻿using MaterialDesignThemes.Wpf;
-using Prism.Commands;
-using Prism.Ioc;
-using Prism.Regions;
-using Prism.Services.Dialogs;
-using System;
-using Wu.CommTool.Modules.ModbusRtu.Models;
-using Wu.ViewModels;
-using Wu.Wpf.Common;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
 
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels
+public class ModbusRtuAutoResponseDataEditViewModel : NavigationViewModel, IDialogHostAware
 {
-    public class ModbusRtuAutoResponseDataEditViewModel : NavigationViewModel, IDialogHostAware
+    #region **************************************** 字段 ****************************************
+    private readonly IContainerProvider provider;
+    private readonly IDialogHostService dialogHost;
+    public string DialogHostName { get; set; }
+    #endregion
+
+    public ModbusRtuAutoResponseDataEditViewModel() { }
+    public ModbusRtuAutoResponseDataEditViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
     {
-        #region **************************************** 字段 ****************************************
-        private readonly IContainerProvider provider;
-        private readonly IDialogHostService dialogHost;
-        public string DialogHostName { get; set; }
-        #endregion
+        this.provider = provider;
+        this.dialogHost = dialogHost;
 
-        public ModbusRtuAutoResponseDataEditViewModel() { }
-        public ModbusRtuAutoResponseDataEditViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+        ExecuteCommand = new(Execute);
+        SaveCommand = new DelegateCommand(Save);
+        CancelCommand = new DelegateCommand(Cancel);
+    }
+
+    #region **************************************** 属性 ****************************************
+    /// <summary>
+    /// CurrentDto
+    /// </summary>
+    public ModbusRtuAutoResponseData CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
+    private ModbusRtuAutoResponseData _CurrentDto = new();
+    #endregion
+
+
+    #region **************************************** 命令 ****************************************
+    public DelegateCommand SaveCommand { get; set; }
+    public DelegateCommand CancelCommand { get; set; }
+
+    /// <summary>
+    /// 执行命令
+    /// </summary>
+    public DelegateCommand<string> ExecuteCommand { get; private set; }
+    #endregion
+
+
+    #region **************************************** 方法 ****************************************
+    public void Execute(string obj)
+    {
+        switch (obj)
         {
-            this.provider = provider;
-            this.dialogHost = dialogHost;
-
-            ExecuteCommand = new(Execute);
-            SaveCommand = new DelegateCommand(Save);
-            CancelCommand = new DelegateCommand(Cancel);
+            case "Search": Search(); break;
+            case "OpenDialogView": OpenDialogView(); break;
+            default: break;
         }
+    }
 
-        #region **************************************** 属性 ****************************************
-        /// <summary>
-        /// CurrentDto
-        /// </summary>
-        public ModbusRtuAutoResponseData CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-        private ModbusRtuAutoResponseData _CurrentDto = new();
-        #endregion
+    /// <summary>
+    /// 导航至该页面触发
+    /// </summary>
+    /// <param name="navigationContext"></param>
+    public override void OnNavigatedTo(NavigationContext navigationContext)
+    {
+        //Search();
+    }
 
-
-        #region **************************************** 命令 ****************************************
-        public DelegateCommand SaveCommand { get; set; }
-        public DelegateCommand CancelCommand { get; set; }
-
-        /// <summary>
-        /// 执行命令
-        /// </summary>
-        public DelegateCommand<string> ExecuteCommand { get; private set; }
-        #endregion
-
-
-        #region **************************************** 方法 ****************************************
-        public void Execute(string obj)
+    /// <summary>
+    /// 打开该弹窗时执行
+    /// </summary>
+    public async void OnDialogOpened(IDialogParameters parameters)
+    {
+        if (parameters != null && parameters.ContainsKey("Value"))
         {
-            switch (obj)
-            {
-                case "Search": Search(); break;
-                case "OpenDialogView": OpenDialogView(); break;
-                default: break;
-            }
+            var obj = parameters.GetValue<ModbusRtuAutoResponseData>("Value");
+            CurrentDto.Name = obj.Name;
+            CurrentDto.ResponseTemplate = obj.ResponseTemplate;
+            CurrentDto.MateTemplate = obj.MateTemplate;
         }
+    }
 
-        /// <summary>
-        /// 导航至该页面触发
-        /// </summary>
-        /// <param name="navigationContext"></param>
-        public override void OnNavigatedTo(NavigationContext navigationContext)
+
+    /// <summary>
+    /// 保存
+    /// </summary>
+    private void Save()
+    {
+        if (!DialogHost.IsDialogOpen(DialogHostName))
+            return;
+        //添加返回的参数
+        DialogParameters param = new()
         {
-            //Search();
-        }
+            { "Value", CurrentDto }
+        };
+        //关闭窗口,并返回参数
+        DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
+    }
 
-        /// <summary>
-        /// 打开该弹窗时执行
-        /// </summary>
-        public async void OnDialogOpened(IDialogParameters parameters)
+    /// <summary>
+    /// 取消
+    /// </summary>
+    private void Cancel()
+    {
+        //若窗口处于打开状态则关闭
+        if (DialogHost.IsDialogOpen(DialogHostName))
+            DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+    }
+
+    /// <summary>
+    /// 弹窗
+    /// </summary>
+    private async void OpenDialogView()
+    {
+        try
         {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                var obj = parameters.GetValue<ModbusRtuAutoResponseData>("Value");
-                CurrentDto.Name = obj.Name;
-                CurrentDto.ResponseTemplate = obj.ResponseTemplate;
-                CurrentDto.MateTemplate = obj.MateTemplate;
-            }
-        }
-
-
-        /// <summary>
-        /// 保存
-        /// </summary>
-        private void Save()
-        {
-            if (!DialogHost.IsDialogOpen(DialogHostName))
-                return;
-            //添加返回的参数
             DialogParameters param = new()
             {
                 { "Value", CurrentDto }
             };
-            //关闭窗口,并返回参数
-            DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
+            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
         }
-
-        /// <summary>
-        /// 取消
-        /// </summary>
-        private void Cancel()
+        catch (Exception ex)
         {
-            //若窗口处于打开状态则关闭
-            if (DialogHost.IsDialogOpen(DialogHostName))
-                DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+
         }
-
-        /// <summary>
-        /// 弹窗
-        /// </summary>
-        private async void OpenDialogView()
-        {
-            try
-            {
-                DialogParameters param = new()
-                {
-                    { "Value", CurrentDto }
-                };
-                //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        /// <summary>
-        /// 查询数据
-        /// </summary>
-        private async void Search()
-        {
-            try
-            {
-                UpdateLoading(true);
-
-            }
-            catch (Exception ex)
-            {
-                //aggregator.SendMessage($"{ex.Message}", "Main");
-            }
-            finally
-            {
-                UpdateLoading(false);
-            }
-        }
-        #endregion
     }
+
+    /// <summary>
+    /// 查询数据
+    /// </summary>
+    private async void Search()
+    {
+        try
+        {
+            UpdateLoading(true);
+
+        }
+        catch (Exception ex)
+        {
+            //aggregator.SendMessage($"{ex.Message}", "Main");
+        }
+        finally
+        {
+            UpdateLoading(false);
+        }
+    }
+    #endregion
 }

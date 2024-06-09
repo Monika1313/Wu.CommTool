@@ -11,7 +11,7 @@ public class MainWindowViewModel : BindableBase, IConfigureService
     private string _Title = "Wu";
     private readonly IRegionManager regionManager;
     private IRegionNavigationJournal journal;
-    public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
 
     public MainWindowViewModel()
     {
