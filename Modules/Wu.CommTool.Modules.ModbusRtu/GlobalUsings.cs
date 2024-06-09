@@ -16,7 +16,6 @@ global using Prism.Mvvm;
 global using MaterialDesignThemes.Wpf;
 global using Newtonsoft.Json;
 
-
 global using Wu.ViewModels;
 global using Wu.Wpf.Models;
 global using Wu.Wpf.Common;

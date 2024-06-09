@@ -26,6 +26,7 @@ public class MenuBar : BindableBase
     }
 
     private string? nameSpace;
+
     /// <summary>
     /// 菜单命名空间
     /// </summary>
@@ -34,5 +35,4 @@ public class MenuBar : BindableBase
         get { return nameSpace; }
         set { nameSpace = value; }
     }
-
 }

@@ -1,6 +1,4 @@
-﻿using Wu.CommTool.Modules.NetworkTool.Views;
-
-namespace Wu.CommTool.ViewModels;
+﻿namespace Wu.CommTool.ViewModels;
 
 public class MainWindowViewModel : BindableBase, IConfigureService
 {
@@ -107,9 +105,6 @@ public class MainWindowViewModel : BindableBase, IConfigureService
             new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
 #endif
             new() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
-            //new MenuBar() { Icon = "Clyde", Title = "ModbusRtu", NameSpace = "ModbusRtuViewNew" }
-            //new MenuBar() { Icon = "Clyde", Title = "测试", NameSpace = "TEST" }
-
         };
     }
 
@@ -123,7 +118,7 @@ public class MainWindowViewModel : BindableBase, IConfigureService
             return;
         try
         {
-            App.AppConfig.DefaultView = obj.NameSpace;
+            App.AppConfig.DefaultView = obj.NameSpace ?? string.Empty;
             log.Info($"切换界面{obj.NameSpace}");
             regionManager.Regions[PrismRegionNames.MainViewRegionName].RequestNavigate(obj.NameSpace, back =>
             {
@@ -136,7 +131,7 @@ public class MainWindowViewModel : BindableBase, IConfigureService
         }
         catch (Exception ex)
         {
-            log.Info(ex.Message);
+            log.Info($"窗口导航时出错惹:{ex.Message}");
         }
     }
 }

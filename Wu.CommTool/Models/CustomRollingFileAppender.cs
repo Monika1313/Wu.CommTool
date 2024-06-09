@@ -43,7 +43,9 @@ public class CustomRollingFileAppender : RollingFileAppender
     {
         try
         {
-            string strBasepath = Path.GetDirectoryName(File);
+            var strBasepath = Path.GetDirectoryName(File);
+            if (strBasepath == null)
+                return;
             foreach (string file in Directory.GetFiles(strBasepath))
             {
                 DeleteLogFiles(file, DeleteStyle);
@@ -59,7 +61,9 @@ public class CustomRollingFileAppender : RollingFileAppender
     {
         try
         {
-            string strBasepath = Path.GetDirectoryName(File);
+            var strBasepath = Path.GetDirectoryName(File);
+            if (strBasepath == null)
+                return;
             int a = MaxSizeRollBackups;
             int b = MaximumFileCount;
             int n = a > b ? a : b;
@@ -113,6 +117,7 @@ public class CustomRollingFileAppender : RollingFileAppender
         }
         catch { }
     }
+
     /// <summary>
     /// 根据时间条件删除文件
     /// </summary>
@@ -126,7 +131,7 @@ public class CustomRollingFileAppender : RollingFileAppender
             if (string.IsNullOrWhiteSpace(file)) return;
             if (System.IO.File.Exists(file) == false) return;
 
-            FileInfo fi = new FileInfo(file);
+            FileInfo fi = new(file);
             if (mode == DeleteMode.CreationTime && fi.CreationTime < DateTime.Now.AddDays(-odd))
             {
                 System.IO.File.Delete(file);

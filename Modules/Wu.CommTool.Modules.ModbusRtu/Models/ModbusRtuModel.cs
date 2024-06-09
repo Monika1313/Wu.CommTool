@@ -1,13 +1,11 @@
 ﻿using ImTools;
 using Microsoft.Win32;
-
 using System.Collections;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Windows.Data;
-using Wu.CommTool.Core.Extensions;
 using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
@@ -631,98 +629,100 @@ public class ModbusRtuModel : BindableBase
         }
     }
 
-    /// <summary>
-    /// 接收消息
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    private void 旧的ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
-    {
-        try
-        {
-            //若串口未开启则返回
-            if (SerialPort != null && !SerialPort.IsOpen)
-            {
-                SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
-                return;
-            }
+    #region 旧的数据接收方法 弃用了
+    ///// <summary>
+    ///// 接收消息
+    ///// </summary>
+    ///// <param name="sender"></param>
+    ///// <param name="e"></param>
+    ///// <exception cref="NotImplementedException"></exception>
+    //private void 旧的ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
+    //{
+    //    try
+    //    {
+    //        //若串口未开启则返回
+    //        if (SerialPort != null && !SerialPort.IsOpen)
+    //        {
+    //            SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
+    //            return;
+    //        }
 
-            ComConfig.IsReceiving = true;
+    //        ComConfig.IsReceiving = true;
 
-            //System.Diagnostics.Stopwatch oTime = new();   //定义一个计时对象  
-            //oTime.Start();                         //开始计时 
+    //        //System.Diagnostics.Stopwatch oTime = new();   //定义一个计时对象  
+    //        //oTime.Start();                         //开始计时 
 
-            #region 接收数据
+    //        #region 接收数据
 
-            //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
-            //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
-            //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
-
-
-
-            //接收的数据缓存
-            List<byte> list = new();
-            if (ComConfig.IsOpened == false)
-                return;
-            string msg = string.Empty;//
-            //string tempMsg = string.Empty;//接收数据二次缓冲 串口接收数据先缓存至此
-            int times = 0;//计算次数 连续数ms无数据判断为一帧结束
-            do
-            {
-                if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
-                {
-                    times = 0;
-                    int dataCount = SerialPort.BytesToRead;          //获取数据量
-                    byte[] tempBuffer = new byte[dataCount];         //声明数组
-                    SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
-                    list.AddRange(tempBuffer);                       //添加进接收的数据列表
-                    msg += BitConverter.ToString(tempBuffer);
-                    //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
-                    if (list.Count > ComConfig.MaxLength)
-                        break;
-                }
-                else
-                {
-                    times++;
-                    Thread.Sleep(1);
-                }
-            } while (times < ComConfig.TimeOut);
-            #endregion
+    //        //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
+    //        //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
+    //        //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
 
-            msg = msg.Replace('-', ' ');
-            ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
 
-            //搜索时将验证通过的添加至搜索到的设备列表
-            if (SearchDeviceState == 1)
-            {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-                {
-                    CurrentDevice.ReceiveMessage = msg;
-                    CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
-                    ModbusRtuDevices.Add(CurrentDevice);
-                }));
-                HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
-            }
+    //        //接收的数据缓存
+    //        List<byte> list = new();
+    //        if (ComConfig.IsOpened == false)
+    //            return;
+    //        string msg = string.Empty;//
+    //        //string tempMsg = string.Empty;//接收数据二次缓冲 串口接收数据先缓存至此
+    //        int times = 0;//计算次数 连续数ms无数据判断为一帧结束
+    //        do
+    //        {
+    //            if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
+    //            {
+    //                times = 0;
+    //                int dataCount = SerialPort.BytesToRead;          //获取数据量
+    //                byte[] tempBuffer = new byte[dataCount];         //声明数组
+    //                SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
+    //                list.AddRange(tempBuffer);                       //添加进接收的数据列表
+    //                msg += BitConverter.ToString(tempBuffer);
+    //                //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
+    //                if (list.Count > ComConfig.MaxLength)
+    //                    break;
+    //            }
+    //            else
+    //            {
+    //                times++;
+    //                Thread.Sleep(1);
+    //            }
+    //        } while (times < ComConfig.TimeOut);
+    //        #endregion
 
-            ReceiveBytesCount += list.Count;         //计算总接收数据量
-            //若暂停更新接收数据 则不显示
-            if (IsPause)
-                return;
-            WaitUartReceived.Set();//置位数据接收完成标志
-            //oTime.Stop();
-            //ShowMessage($"接收数据用时{oTime.Elapsed.TotalMilliseconds} ms");
-        }
-        catch (Exception ex)
-        {
-            ShowMessage(ex.Message, MessageType.Receive);
-        }
-        finally
-        {
-            ComConfig.IsReceiving = false;
-        }
-    }
+
+    //        msg = msg.Replace('-', ' ');
+    //        ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
+
+    //        //搜索时将验证通过的添加至搜索到的设备列表
+    //        if (SearchDeviceState == 1)
+    //        {
+    //            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+    //            {
+    //                CurrentDevice.ReceiveMessage = msg;
+    //                CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
+    //                ModbusRtuDevices.Add(CurrentDevice);
+    //            }));
+    //            HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
+    //        }
+
+    //        ReceiveBytesCount += list.Count;         //计算总接收数据量
+    //        //若暂停更新接收数据 则不显示
+    //        if (IsPause)
+    //            return;
+    //        WaitUartReceived.Set();//置位数据接收完成标志
+    //        //oTime.Stop();
+    //        //ShowMessage($"接收数据用时{oTime.Elapsed.TotalMilliseconds} ms");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        ShowMessage(ex.Message, MessageType.Receive);
+    //    }
+    //    finally
+    //    {
+    //        ComConfig.IsReceiving = false;
+    //    }
+    //} 
+    #endregion
 
     public bool IsModbusCrcOk(List<byte> frame)
     {
@@ -755,18 +755,23 @@ public class ModbusRtuModel : BindableBase
                 SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
-
+            //接收中状态
             ComConfig.IsReceiving = true;
 
             #region 接收数据
 
-            //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
+            //由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则先解析
             //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
             //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
 
-            List<byte> frameCache = new List<byte>();//接收数据二次缓冲 串口接收数据先缓存至此
-            List<byte> frame = new();//接收的数据帧
+
+            //TODO 若监控通讯网络时,不在帧起点则会导致数据帧一直解析错误,需要新的方法抓取功能码判断帧的起始位置。
+
+
+            
+            List<byte> frameCache = [];//接收数据二次缓冲 串口接收数据先缓存至此
+            List<byte> frame = [];//接收的数据帧
             bool isNot = false;//前8字节不是一帧标志 不做标记将导致对响应帧多次重复校验
 
             if (ComConfig.IsOpened == false)
@@ -1691,7 +1696,7 @@ public class ModbusRtuModel : BindableBase
     /// 打开自动响应编辑界面
     /// </summary>
     /// <param name="obj"></param>
-    public async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
+    public void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
     {
         //try
         //{
