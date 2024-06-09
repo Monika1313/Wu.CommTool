@@ -819,11 +819,18 @@ public class ModbusRtuModel : BindableBase
                                 continue;
                             }
 
-                            //TODO 0x03和0x10粘包问题已处理 其他功能码的未做
+                            //0x04响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
+                            if (frame[1] == 0x04 && frameCache.Count >= (frame[2] + 5))
+                            {
+                                frame = frameCache.Take(frame[2] + 5).ToList();
+                            }
+                            else if (frame[1] == 0x04 && frameCache.Count < (frame[2] + 5))
+                            {
+                                continue;
+                            }
 
+                            //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
                         }
-
-
 
 
                         //若前面8字节验证失败, 则根据功能码截取不同帧长度后 再次验证
