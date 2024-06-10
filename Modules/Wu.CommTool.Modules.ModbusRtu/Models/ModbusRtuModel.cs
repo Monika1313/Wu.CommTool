@@ -594,7 +594,7 @@ public class ModbusRtuModel : BindableBase
             {
                 data = message.Replace("-", string.Empty).GetBytes();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ShowErrorMessage($"数据转换16进制失败，发送数据位数量必须为偶数(16进制一个字节2位数)。");
                 return false;
@@ -750,43 +750,46 @@ public class ModbusRtuModel : BindableBase
         try
         {
             //若串口未开启则返回
-            if (SerialPort != null && !SerialPort.IsOpen)
+            if (SerialPort == null || !SerialPort.IsOpen)
             {
-                SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
+                SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
-            //接收中状态
+            //标记接收中状态
             ComConfig.IsReceiving = true;
 
             #region 接收数据
-
             //由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则先解析
             //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
             //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
-
-
-            //TODO 若监控通讯网络时,不在帧起点则会导致数据帧一直解析错误,需要新的方法抓取功能码判断帧的起始位置。
-
-
-            
-            List<byte> frameCache = [];//接收数据二次缓冲 串口接收数据先缓存至此
-            List<byte> frame = [];//接收的数据帧
-            bool isNot = false;//前8字节不是一帧标志 不做标记将导致对响应帧多次重复校验
-
-            if (ComConfig.IsOpened == false)
-                return;
-            string msg = string.Empty;
-            int times = 0;//计算次数 连续数ms无数据判断为一帧结束
+            List<byte> frameCache = []; //接收数据二次缓冲 串口接收数据先缓存至此
+            List<byte> frame = [];      //接收的数据帧
+            bool isNot = false;         //前8字节不是一帧标志 不做标记将导致对响应帧多次重复校验
+            string msg = string.Empty;  //
+            int times = 0;              //计算次数 连续数ms无数据判断为一帧结束
             do
             {
-                if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
+                //若串口已被关闭则退出
+                if (ComConfig.IsOpened == false)
+                    return;
+
+                //TODO 若监控通讯网络时,不在帧起点则会导致数据帧一直解析错误,需要新的方法抓取功能码判断帧的起始位置。
+
+                if (SerialPort.BytesToRead > 0)
                 {
                     times = 0;
                     int dataCount = SerialPort.BytesToRead;          //获取数据量
                     byte[] tempBuffer = new byte[dataCount];         //声明数组
                     SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
                     frameCache.AddRange(tempBuffer);                       //添加进接收的数据列表
+
+
+                    //TODO 根据功能码调整帧至正确的起始位置
+                    //获取缓存中所有的功能码位置
+                    //第一字节可能是地址误判为功能码  若出现连续的两个功能码,则第一个功能码应评定为地址
+                    //若功能码不在第二字节,则将第一个功能码-1位置前的字节全部输出
+
 
                     //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
                     if (!isNot && frameCache.Count >= 8)
@@ -1429,7 +1432,7 @@ public class ModbusRtuModel : BindableBase
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    private void TimerElapsed(object? sender, ElapsedEventArgs e)
+    private void TimerElapsed(object sender, ElapsedEventArgs e)
     {
         try
         {
