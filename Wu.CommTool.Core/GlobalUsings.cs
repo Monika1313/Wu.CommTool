@@ -11,8 +11,10 @@ global using System.Text;
 global using System.Text.RegularExpressions;
 global using System.Windows;
 global using System.Windows.Markup;
+global using System.Collections.Generic;
 global using Wu.CommTool.Core.Enums;
 global using Wu.CommTool.Core.Enums.Modbus;
 global using Wu.Extensions;
 global using Wu.Wpf.Converters;
+
 

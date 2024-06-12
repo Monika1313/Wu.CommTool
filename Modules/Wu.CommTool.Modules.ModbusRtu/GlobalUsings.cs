@@ -34,5 +34,6 @@ global using Wu.CommTool.Modules.ModbusRtu.ModbusRtuModels;
 global using Wu.CommTool.Core.Models;
 global using Wu.CommTool.Core.Enums;
 global using Wu.CommTool.Core.Enums.Modbus;
-
 global using Wu.CommTool.Core.Extensions;
+global using Wu.CommTool.Core.Common;
+

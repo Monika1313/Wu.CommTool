@@ -745,6 +745,11 @@ public class ModbusRtuModel : BindableBase
             return false;
     }
 
+    /// <summary>
+    /// 接收串口消息
+    /// </summary>
+    /// <param name="sender"></param>
+    /// <param name="e"></param>
     private void ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
     {
         try
@@ -784,11 +789,15 @@ public class ModbusRtuModel : BindableBase
                     SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
                     frameCache.AddRange(tempBuffer);                       //添加进接收的数据列表
 
-
+                    #region 根据功能码调整帧至正确的起始位置
                     //TODO 根据功能码调整帧至正确的起始位置
                     //获取缓存中所有的功能码位置
-                    //第一字节可能是地址误判为功能码  若出现连续的两个功能码,则第一个功能码应评定为地址
+                    //var funcs = ModbusUtils.GetIndicesOfFunctions(frameCache);
+                    //第一字节可能是地址误判为功能码 若出现连续的两个功能码, 则第一个功能码应评定为地址
+
                     //若功能码不在第二字节,则将第一个功能码-1位置前的字节全部输出
+
+                    #endregion
 
 
                     //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
