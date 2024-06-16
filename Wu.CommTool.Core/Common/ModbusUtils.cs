@@ -35,7 +35,8 @@ public static class ModbusUtils
     public static List<int> GetIndicesOfFunctions(List<byte> bytes)
     {
         List<int> indices = [];
-        byte[] valuesToFind = [0x01,0x02,0x03,0x04,0x0F,0x10];//仅处理常用的功能码
+        //byte[] valuesToFind = [0x03,0x04];//先判断03 04功能码
+        byte[] valuesToFind = [0x01, 0x02, 0x03, 0x04, 0x0F, 0x10];//仅处理常用的功能码
         for (int i = 0; i < bytes.Count; i++)
         {
             if (valuesToFind.Contains(bytes[i]))

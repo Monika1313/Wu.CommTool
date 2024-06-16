@@ -73,7 +73,7 @@ public class ModbusRtuModel : BindableBase
     /// 页面消息
     /// </summary>
     public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
-    private ObservableCollection<MessageData> _Messages = new();
+    private ObservableCollection<MessageData> _Messages = [];
 
     /// <summary>
     /// 暂停
@@ -85,7 +85,7 @@ public class ModbusRtuModel : BindableBase
     /// 串口列表
     /// </summary>
     public ObservableCollection<KeyValuePair<string, string>> ComPorts { get => _ComPorts; set => SetProperty(ref _ComPorts, value); }
-    private ObservableCollection<KeyValuePair<string, string>> _ComPorts = new();
+    private ObservableCollection<KeyValuePair<string, string>> _ComPorts = [];
 
     /// <summary>
     /// Com口配置
@@ -124,7 +124,6 @@ public class ModbusRtuModel : BindableBase
     /// </summary>
     public CrcMode CrcMode { get => _CrcMode; set => SetProperty(ref _CrcMode, value); }
     private CrcMode _CrcMode = CrcMode.Modbus;
-
 
     /// <summary>
     /// 自定义帧的输入框
@@ -225,8 +224,6 @@ public class ModbusRtuModel : BindableBase
     private ObservableCollection<ModbusRtuAutoResponseData> _MosbusRtuAutoResponseDatas = new();
 
     #endregion
-
-
 
 
     #region 串口操作方法
@@ -377,7 +374,7 @@ public class ModbusRtuModel : BindableBase
     /// <summary>
     /// 打开串口 若串口未打开则打开串口 若串口已打开则关闭
     /// </summary>
-    private async void OperatePort()
+    private void OperatePort()
     {
         try
         {
@@ -432,13 +429,13 @@ public class ModbusRtuModel : BindableBase
     public string GetModbusCrcedStr(string msg)
     {
         var msg2 = msg.Replace("-", string.Empty).GetBytes();
-        List<byte> crc = new();
+        List<byte> crc = [];
         //根据选择ModbusCRC校验
         var code = Wu.Utils.Crc.Crc16Modbus(msg2);
         Array.Reverse(code);
         crc.AddRange(code);
         //合并数组
-        List<byte> list = new List<byte>();
+        List<byte> list = new();
         list.AddRange(msg2);
         list.AddRange(crc);
         var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
@@ -764,51 +761,83 @@ public class ModbusRtuModel : BindableBase
             ComConfig.IsReceiving = true;
 
             #region 接收数据
-            //由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则先解析
-            //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
-            //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
-
-            List<byte> frameCache = []; //接收数据二次缓冲 串口接收数据先缓存至此
+            List<byte> frameCache = []; //接收数据二次缓存 串口接收数据先缓存至此
             List<byte> frame = [];      //接收的数据帧
             bool isNot = false;         //前8字节不是一帧标志 不做标记将导致对响应帧多次重复校验
             string msg = string.Empty;  //
             int times = 0;              //计算次数 连续数ms无数据判断为一帧结束
+            //bool isDone = false;        //frameCache处理完成
             do
             {
                 //若串口已被关闭则退出
                 if (ComConfig.IsOpened == false)
                     return;
 
-                //TODO 若监控通讯网络时,不在帧起点则会导致数据帧一直解析错误,需要新的方法抓取功能码判断帧的起始位置。
-
+                //串口接收到新的数据时执行
                 if (SerialPort.BytesToRead > 0)
                 {
-                    times = 0;
-                    int dataCount = SerialPort.BytesToRead;          //获取数据量
+                    times = 0;                                       //重置等待时间
+                    int dataCount = SerialPort.BytesToRead;          //获取串口缓存中的数据量
                     byte[] tempBuffer = new byte[dataCount];         //声明数组
                     SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
-                    frameCache.AddRange(tempBuffer);                       //添加进接收的数据列表
+                    frameCache.AddRange(tempBuffer);                 //添加进接收的数据缓存列表
+                    //isDone = false;                                  //标记frameCache未处理完成
+                }
 
-                    #region 根据功能码调整帧至正确的起始位置
-                    //TODO 根据功能码调整帧至正确的起始位置
-                    //获取缓存中所有的功能码位置
-                    //var funcs = ModbusUtils.GetIndicesOfFunctions(frameCache);
-                    //第一字节可能是地址误判为功能码 若出现连续的两个功能码, 则第一个功能码应评定为地址
+                //二级缓存frameCache中还有未处理完的数据
+                if (frameCache.Count > 0)
+                {
+                    #region 根据功能码调整帧至正确的起始位置(由于数据中可能存在类似功能码的数据, 可能会有错误)
+                    if (frameCache.Count >= 8)
+                    {
+                        //TODO 根据接收数据中功能码位置调整帧至正确的起始位置
+                        //获取缓存中所有的功能码位置
+                        var funcs = ModbusUtils.GetIndicesOfFunctions(frameCache);
+                        //接收缓存至少2字节,且功能码至少1个
 
-                    //若功能码不在第二字节,则将第一个功能码-1位置前的字节全部输出
-
+                        //将功能码调整至第二字节的位置
+                        if (frameCache.Count >= 1 && funcs.Count > 0)
+                        {
+                            //若前2个功能码是连续的, 则第一个功能码应判定为地址
+                            if (funcs.Count >= 2                         //有多个功能码
+                                && (funcs[1] - funcs[0] == 1) //前两个功能码是连续的
+                                && funcs[0] != 0)                   //第一字节不是地址
+                            {
+                                frame = frameCache.Take(funcs[0]).ToList();//将这一帧前面的输出
+                                //输出接收到的数据
+                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                                ReceiveBytesCount += frame.Count;              //计算总接收数据量
+                                isNot = false;
+                                continue;
+                            }
+                            //前2字节都没有功能码,则将功能码调整至第二字节
+                            else if (funcs[0] > 2)
+                            {
+                                frame = frameCache.Take(funcs[0] - 1).ToList();//功能码前一个字节为地址要保留,所以要-1
+                                //输出接收到的数据
+                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                                ReceiveBytesCount += frame.Count;              //计算总接收数据量
+                                isNot = false;
+                                continue;
+                            }
+                        }
+                    }
                     #endregion
 
-
+                    #region 防粘包处理 前8字节为请求帧的处理
+                    //由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则先解析
+                    //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
+                    //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
                     //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
                     if (!isNot && frameCache.Count >= 8)
                     {
-                        //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
-                        frame = frameCache.Take(8).ToList();
+                        frame = frameCache.Take(8).ToList();   //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
+                        var crcOk = IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
 
-                        var crcOk = IsModbusCrcOk(frame);//先验证前8字节是否能校验成功
-
-                        //若8字节校验未通过, 则根据功能码再次解析
+                        #region TODO 这部分未完成
+                        //若8字节校验未通过,则可能不是上述描述的请求帧,应根据对应帧的具体内容具体解析
                         if (!crcOk)
                         {
                             //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
@@ -840,31 +869,24 @@ public class ModbusRtuModel : BindableBase
                             {
                                 continue;
                             }
-
                             //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
                         }
 
+                        ////若前面8字节验证失败, 则根据功能码截取不同帧长度后 再次验证
+                        //if (!crcOk)
+                        //{
+                        //    crcOk = IsModbusCrcOk(frame);
+                        //}
+                        #endregion
 
-                        //若前面8字节验证失败, 则根据功能码截取不同帧长度后 再次验证
-                        if (!crcOk)
-                        {
-                            crcOk = IsModbusCrcOk(frame);
-                        }
-
-                        //校验通过
+                        //CRC校验通过
                         if (crcOk)
                         {
+                            //输出接收到的数据
                             ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                            frameCache.RemoveRange(0, frame.Count);  //从缓存中移除已处理的8字节
-                            ReceiveBytesCount += frame.Count;         //计算总接收数据量
-                        }
-                        else if (!crcOk && frame[1] == 0x03)
-                        {
-                            isNot = true;
-                        }
-                        else if (!crcOk && frame[1] == 0x10)
-                        {
-                            isNot = true;
+                            frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                            ReceiveBytesCount += frame.Count;              //计算总接收数据量
+                            times = 0;                                     //重置计时器
                         }
                         //验证失败,标记并不再重复校验
                         else
@@ -872,16 +894,16 @@ public class ModbusRtuModel : BindableBase
                             isNot = true;
                         }
                     }
+                    #endregion
+                }
 
-                    //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
-                    if (frameCache.Count > ComConfig.MaxLength)
-                        break;
-                }
-                else
-                {
-                    times++;
-                    Thread.Sleep(1);
-                }
+                //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
+                if (frameCache.Count > ComConfig.MaxLength)
+                    break;
+                //计时
+                times++;
+                Thread.Sleep(1);
+                //mosbusRtu标准协议 一帧最大长度是256字节
             } while (times < ComConfig.TimeOut);
             #endregion
 
@@ -1154,8 +1176,6 @@ public class ModbusRtuModel : BindableBase
         }
     }
     #endregion
-
-
 
     #region ******************************  自定义帧模块 方法  ******************************
     /// <summary>
