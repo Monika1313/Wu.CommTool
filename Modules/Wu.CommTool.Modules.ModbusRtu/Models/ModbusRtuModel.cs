@@ -772,6 +772,7 @@ public class ModbusRtuModel : BindableBase
                 //若串口已被关闭则退出
                 if (ComConfig.IsOpened == false)
                     return;
+                times++;//计时
 
                 //串口接收到新的数据时执行
                 if (SerialPort.BytesToRead > 0)
@@ -788,7 +789,7 @@ public class ModbusRtuModel : BindableBase
                 if (frameCache.Count > 0)
                 {
                     #region 根据功能码调整帧至正确的起始位置(由于数据中可能存在类似功能码的数据, 可能会有错误)
-                    if (frameCache.Count >= 8)
+                    if (frameCache.Count >= 8 && (times > 1))
                     {
                         //TODO 根据接收数据中功能码位置调整帧至正确的起始位置
                         //获取缓存中所有的功能码位置
@@ -837,6 +838,7 @@ public class ModbusRtuModel : BindableBase
                         var crcOk = IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
 
                         #region TODO 这部分未完成
+                        //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
                         //若8字节校验未通过,则可能不是上述描述的请求帧,应根据对应帧的具体内容具体解析
                         if (!crcOk)
                         {
@@ -845,38 +847,40 @@ public class ModbusRtuModel : BindableBase
                             {
                                 frame = frameCache.Take(frame[6] + 9).ToList();
                             }
-                            else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
+                            else if(frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
                             {
-                                continue;
+                                continue;//数据量不够则继续接收
                             }
-
                             //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
-                            if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
+                            else if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
                             {
                                 frame = frameCache.Take(frame[2] + 5).ToList();
                             }
                             else if (frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
                             {
-                                continue;
+                                continue;//数据量不够则继续接收
                             }
-
                             //0x04响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
-                            if (frame[1] == 0x04 && frameCache.Count >= (frame[2] + 5))
+                            else if (frame[1] == 0x04 && frameCache.Count >= (frame[2] + 5))
                             {
                                 frame = frameCache.Take(frame[2] + 5).ToList();
                             }
                             else if (frame[1] == 0x04 && frameCache.Count < (frame[2] + 5))
                             {
+                                continue;//数据量不够则继续接收
+                            }
+
+                            //解析出可能的帧并校验成功
+                            if (frame.Count > 0 && IsModbusCrcOk(frame))
+                            {
+                                //输出接收到的数据
+                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                                ReceiveBytesCount += frame.Count;              //计算总接收数据量
+                                times = 0;                                     //重置计时器
                                 continue;
                             }
-                            //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
                         }
-
-                        ////若前面8字节验证失败, 则根据功能码截取不同帧长度后 再次验证
-                        //if (!crcOk)
-                        //{
-                        //    crcOk = IsModbusCrcOk(frame);
-                        //}
                         #endregion
 
                         //CRC校验通过
@@ -897,13 +901,11 @@ public class ModbusRtuModel : BindableBase
                     #endregion
                 }
 
+                //ModbusRtu标准协议 一帧最大长度是256字节
                 //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
                 if (frameCache.Count > ComConfig.MaxLength)
                     break;
-                //计时
-                times++;
                 Thread.Sleep(1);
-                //mosbusRtu标准协议 一帧最大长度是256字节
             } while (times < ComConfig.TimeOut);
             #endregion
 
