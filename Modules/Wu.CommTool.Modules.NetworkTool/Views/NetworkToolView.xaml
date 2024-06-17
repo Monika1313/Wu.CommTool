@@ -58,7 +58,8 @@
                                     <Button
                                         Margin="4"
                                         HorizontalAlignment="Left"
-                                        Command="{Binding 启用DHCPCommand}"
+                                        Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        CommandParameter="{Binding .}"
                                         Content="启用DHCP" />
                                 </StackPanel>
                             </DockPanel>

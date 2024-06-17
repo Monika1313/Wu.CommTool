@@ -1,5 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using MaterialDesignThemes.Wpf;
+using Prism.Services.Dialogs;
 using System.Diagnostics;
+using System.Security.Principal;
 using Wu.CommTool.Core.Extensions;
 
 namespace Wu.CommTool.Modules.NetworkTool.Models;
@@ -58,10 +61,22 @@ public partial class NetworkCard : ObservableObject
     string manufacturer;
 
     [RelayCommand]
-    public void 启用DHCP()
+    public async void 启用DHCP()
     {
         try
         {
+            
+
+
+
+
+
+
+
+
+
+
+
             ////如果没有启用IP设置的网络设备则跳过
             ////重置DNS为空
             //mo.InvokeMethod("SetDNSServerSearchOrder", null);
