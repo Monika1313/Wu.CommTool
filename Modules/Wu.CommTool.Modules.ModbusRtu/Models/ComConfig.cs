@@ -73,4 +73,10 @@ public partial class ComConfig : ObservableObject
     /// </summary>
     [ObservableProperty]
     int searchInterval = 50;
+
+    /// <summary>
+    /// 自动分帧 对于连续时间间隔较短的帧,可自动识别正确的帧起止位置
+    /// </summary>
+    [ObservableProperty]
+    Enable autoFrame = Enable.禁用;
 }

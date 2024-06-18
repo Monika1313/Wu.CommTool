@@ -789,7 +789,7 @@ public class ModbusRtuModel : BindableBase
                 if (frameCache.Count > 0)
                 {
                     #region 根据功能码调整帧至正确的起始位置(由于数据中可能存在类似功能码的数据, 可能会有错误)
-                    if (frameCache.Count >= 8 && (times > 1))
+                    if (ComConfig.AutoFrame == Enable.启用 && frameCache.Count >= 8 && (times > 1))
                     {
                         //TODO 根据接收数据中功能码位置调整帧至正确的起始位置
                         //获取缓存中所有的功能码位置

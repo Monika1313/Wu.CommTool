@@ -21,8 +21,8 @@
     <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
         <!--  左侧抽屉  -->
         <md:DrawerHost.LeftDrawerContent>
-            <DockPanel>
-                <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
+            <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
+                <ScrollViewer>
                     <StackPanel Orientation="Vertical">
                         <TextBlock
                             Margin="5"
@@ -128,9 +128,34 @@
                                 IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
                                 Style="{StaticResource RedButton}" />
                         </StackPanel>
+
+                        <ContentControl Style="{StaticResource Effect2Control}">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource TextBlockTitle}" Text="开发中的功能" />
+                                <TextBlock
+                                    HorizontalAlignment="Center"
+                                    Foreground="{StaticResource Red_Foreground}"
+                                    Text="若无法正常使用请禁用功能" />
+                                <DockPanel>
+                                    <TextBlock
+                                        Margin="10"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        Text="自动分帧" />
+
+                                    <ComboBox
+                                        Margin="10"
+                                        VerticalAlignment="Center"
+                                        DockPanel.Dock="Left"
+                                        ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:Enable}}}"
+                                        SelectedItem="{Binding ModbusRtuModel.ComConfig.AutoFrame}"
+                                        Style="{StaticResource ComboBoxCapsule}" />
+                                </DockPanel>
+                            </StackPanel>
+                        </ContentControl>
                     </StackPanel>
-                </Border>
-            </DockPanel>
+                </ScrollViewer>
+            </Border>
         </md:DrawerHost.LeftDrawerContent>
         <!--  主体内容  -->
         <DockPanel>
