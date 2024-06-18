@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /Wu.CommTool/Properties/Settings.Designer.cs
+/Json查看.json

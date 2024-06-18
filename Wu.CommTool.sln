@@ -15,6 +15,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Core", "Wu.CommTool.Core\Wu.CommTool.Core.csproj", "{148FD692-6990-46A1-9659-D48BAC6DC1FA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F3EDE274-21EF-4108-B0F8-ACCAF64D4B2B}"
+	ProjectSection(SolutionItems) = preProject
+		Json查看.json = Json查看.json
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusTcp", "Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj", "{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0}"
 EndProject
