@@ -1,25 +1,15 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using MaterialDesignThemes.Wpf;
-using Prism.Services.Dialogs;
-using System.Diagnostics;
-using System.Security.Principal;
-using Wu.CommTool.Core.Extensions;
-
-namespace Wu.CommTool.Modules.NetworkTool.Models;
+﻿namespace Wu.CommTool.Modules.NetworkTool.Models;
 
 /// <summary>
 /// 网卡
 /// </summary>
 public partial class NetworkCard : ObservableObject
 {
-
     public NetworkCard(ManagementObject mo)
     {
         this.mo = mo;
         UpdateInfo();
     }
-
-    
 
     public void UpdateInfo()
     {
@@ -65,7 +55,7 @@ public partial class NetworkCard : ObservableObject
     {
         try
         {
-            
+
 
 
 
@@ -109,6 +99,7 @@ public partial class NetworkCard : ObservableObject
         }
         catch (Exception ex)
         {
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 }

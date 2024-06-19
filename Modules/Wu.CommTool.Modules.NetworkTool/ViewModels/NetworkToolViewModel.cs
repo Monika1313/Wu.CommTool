@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
+﻿namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
 
 public partial class NetworkToolViewModel : NavigationViewModel
 {
@@ -10,17 +8,6 @@ public partial class NetworkToolViewModel : NavigationViewModel
     {
         获取物理网卡信息();
         this.dialogHost = dialogHost;
-    }
-
-    [RelayCommand]
-    void Execute(string obj)
-    {
-        switch (obj)
-        {
-            case "获取物理网卡信息": 获取物理网卡信息(); break;
-            case "获取所有网卡信息": 获取所有网卡信息(); break;
-            case "打开网络连接": 打开网络连接(); break;
-        }
     }
 
     #region 字段
@@ -35,6 +22,18 @@ public partial class NetworkToolViewModel : NavigationViewModel
     [ObservableProperty]
     ObservableCollection<NetworkCard> networkCards = [];
     #endregion
+
+
+    [RelayCommand]
+    void Execute(string obj)
+    {
+        switch (obj)
+        {
+            case "获取物理网卡信息": 获取物理网卡信息(); break;
+            case "获取所有网卡信息": 获取所有网卡信息(); break;
+            case "打开网络连接": 打开网络连接(); break;
+        }
+    }
 
     /// <summary>
     /// 获取所有网卡信息
