@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using System.ComponentModel;
-using System.Windows;
-
-namespace Wu.CommTool.Views;
+﻿namespace Wu.CommTool.Views;
 
 public partial class MainWindow : Window
 {

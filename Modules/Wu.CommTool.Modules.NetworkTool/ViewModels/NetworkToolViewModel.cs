@@ -1,21 +1,19 @@
-﻿namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
+﻿using System.Threading.Tasks;
+
+namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
 
 public partial class NetworkToolViewModel : NavigationViewModel
 {
-    public NetworkToolViewModel()
-    {
+    public NetworkToolViewModel() { }
 
-    }
     public NetworkToolViewModel(IDialogHostService dialogHost)
     {
-        ExecuteCommand = new DelegateCommand<string>(Execute);
-        EnableDhcpCommand = new DelegateCommand<NetworkCard>(EnableDhcp);
-
         获取物理网卡信息();
         this.dialogHost = dialogHost;
     }
 
-    private void Execute(string obj)
+    [RelayCommand]
+    void Execute(string obj)
     {
         switch (obj)
         {
@@ -25,10 +23,17 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
     }
 
-    #region 属性
-    public ObservableCollection<NetworkCard> NetworkCards { get => _NetworkCards; set => SetProperty(ref _NetworkCards, value); }
-    private ObservableCollection<NetworkCard> _NetworkCards = [];
+    #region 字段
     private readonly IDialogHostService dialogHost;
+    #endregion
+
+
+    #region 属性
+    /// <summary>
+    /// 网卡列表
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<NetworkCard> networkCards = [];
     #endregion
 
     /// <summary>
@@ -45,7 +50,8 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// 指定网卡启用DHCP
     /// </summary>
     /// <param name="nwc"></param>
-    public async void EnableDhcp(NetworkCard nwc)
+    [RelayCommand]
+    public async Task EnableDhcp(NetworkCard nwc)
     {
         try
         {
@@ -110,15 +116,10 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
         catch (Exception ex)
         {
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 
-
-    #region 命令
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    public DelegateCommand<NetworkCard> EnableDhcpCommand { get; private set; }
-    #endregion
 
 
     void 获取物理网卡信息()

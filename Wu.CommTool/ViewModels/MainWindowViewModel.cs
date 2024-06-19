@@ -1,78 +1,49 @@
 ﻿namespace Wu.CommTool.ViewModels;
 
-public class MainWindowViewModel : BindableBase, IConfigureService
+public partial class MainWindowViewModel : ObservableObject, IConfigureService
 {
-    /// <summary>
-    /// 标题
-    /// </summary>
-    public string Title { get => _Title; set => SetProperty(ref _Title, value); }
-    private string _Title = "Wu";
+    #region    *****************************************  字段  *****************************************
     private readonly IRegionManager regionManager;
     private IRegionNavigationJournal journal;
     public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
+    #endregion *****************************************  字段  *****************************************
 
-    public MainWindowViewModel()
-    {
 
-    }
+    #region    *****************************************  构造函数  *****************************************
+    public MainWindowViewModel() { }
     public MainWindowViewModel(IRegionManager regionManager)
     {
         this.regionManager = regionManager;
 
         CreateMenuBar();
-        ExecuteCommand = new DelegateCommand<string>(Execute);
-        NavigateCommand = new DelegateCommand<MenuBar>(Navigate);
 
-        GoBackCommand = new DelegateCommand(() =>
-        {
-            if (journal != null && journal.CanGoBack)
-                journal.GoBack();
-        });
-        GoForwarCommand = new DelegateCommand(() =>
-        {
-            if (journal != null && journal.CanGoForward)
-                journal.GoForward();
-        });
+        
     }
+    #endregion *****************************************  构造函数  *****************************************
+
 
     #region *****************************************  属性  *****************************************
     /// <summary>
+    /// 标题
+    /// </summary>
+    [ObservableProperty]
+    string title = "Wu.CommTool";
+
+    /// <summary>
     /// 主菜单
     /// </summary>
-    public ObservableCollection<MenuBar> MenuBars { get => _MenuBars; set => SetProperty(ref _MenuBars, value); }
-    private ObservableCollection<MenuBar> _MenuBars;
+    [ObservableProperty]
+    ObservableCollection<MenuBar> menuBars;
 
     /// <summary>
     /// 是否最大化
     /// </summary>
-    public bool IsMaximized { get => _IsMaximized; set => SetProperty(ref _IsMaximized, value); }
-    private bool _IsMaximized = false;
-    #endregion
+    [ObservableProperty]
+    bool isMaximized = false;
+    #endregion *****************************************  属性  *****************************************
 
-    #region 命令
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 导航命令
-    /// </summary>
-    public DelegateCommand<MenuBar> NavigateCommand { get; private set; }
-
-    /// <summary>
-    /// 导航返回
-    /// </summary>
-    public DelegateCommand GoBackCommand { get; private set; }
-
-    /// <summary>
-    /// 导航前进
-    /// </summary>
-    public DelegateCommand GoForwarCommand { get; private set; }
-
-    #endregion
-
-    private void Execute(string obj)
+    [RelayCommand]
+    void Execute(string obj)
     {
         switch (obj)
         {
@@ -80,7 +51,6 @@ public class MainWindowViewModel : BindableBase, IConfigureService
                 break;
         }
     }
-
 
     /// <summary>
     /// 初始化配置
@@ -92,8 +62,8 @@ public class MainWindowViewModel : BindableBase, IConfigureService
     /// </summary>
     void CreateMenuBar()
     {
-        MenuBars = new ObservableCollection<MenuBar>()
-        {
+        MenuBars =
+        [
             new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
 
@@ -105,14 +75,15 @@ public class MainWindowViewModel : BindableBase, IConfigureService
             new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
 #endif
             new() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
-        };
+        ];
     }
 
     /// <summary>
     /// 窗口导航
     /// </summary>
     /// <param name="obj"></param>
-    private void Navigate(MenuBar obj)
+    [RelayCommand]
+    void Navigate(MenuBar obj)
     {
         if (obj == null || string.IsNullOrWhiteSpace(obj.NameSpace))
             return;
@@ -133,5 +104,25 @@ public class MainWindowViewModel : BindableBase, IConfigureService
         {
             log.Info($"窗口导航时出错惹:{ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// 导航后退
+    /// </summary>
+    [RelayCommand]
+    void GoBack()
+    {
+        if (journal != null && journal.CanGoBack)
+            journal.GoBack();
+    }
+
+    /// <summary>
+    /// 导航前进
+    /// </summary>
+    [RelayCommand]
+    void GoForwar()
+    {
+        if (journal != null && journal.CanGoForward)
+            journal.GoForward();
     }
 }

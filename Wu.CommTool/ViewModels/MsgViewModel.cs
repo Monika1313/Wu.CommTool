@@ -2,7 +2,7 @@
 using Prism.Services.Dialogs;
 
 namespace Wu.CommTool.ViewModels;
-public class MsgViewModel : BindableBase, IDialogHostAware
+public partial class MsgViewModel : ObservableObject, IDialogHostAware
 {
     public MsgViewModel()
     {
@@ -13,14 +13,14 @@ public class MsgViewModel : BindableBase, IDialogHostAware
     /// <summary>
     /// 标题
     /// </summary>
-    public string Title { get => _Title; set => SetProperty(ref _Title, value); }
-    private string _Title;
+    [ObservableProperty]
+    string title;
 
     /// <summary>
     /// 内容
     /// </summary>
-    public string Content { get => _Content; set => SetProperty(ref _Content, value); }
-    private string _Content;
+    [ObservableProperty]
+    string content;
 
 
     public string DialogHostName { get; set; } = "Root";
@@ -39,7 +39,7 @@ public class MsgViewModel : BindableBase, IDialogHostAware
     /// <summary>
     /// 取消
     /// </summary>
-    private void Cancel()
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (!DialogHost.IsDialogOpen(DialogHostName))
@@ -50,7 +50,7 @@ public class MsgViewModel : BindableBase, IDialogHostAware
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;

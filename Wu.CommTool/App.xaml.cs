@@ -1,20 +1,4 @@
-﻿using Newtonsoft.Json;
-using Prism.Ioc;
-using Prism.Modularity;
-using System.Windows;
-using Wu.CommTool.Modules.About;
-using Wu.CommTool.Modules.ConvertTools;
-using Wu.CommTool.Modules.JsonTool;
-using Wu.CommTool.Modules.Message;
-using Wu.CommTool.Modules.ModbusRtu;
-using Wu.CommTool.Modules.ModbusTcp;
-using Wu.CommTool.Modules.MqttClient;
-using Wu.CommTool.Modules.MqttServer;
-using Wu.CommTool.Modules.NetworkTool;
-using Wu.CommTool.ViewModels;
-using Wu.CommTool.Views;
-
-namespace Wu.CommTool;
+﻿namespace Wu.CommTool;
 
 public partial class App
 {

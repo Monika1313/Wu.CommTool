@@ -20,3 +20,6 @@ global using Prism.Services.Dialogs;
 global using System.Security.Principal;
 global using System.Windows;
 global using Wu.Wpf.Extensions;
+global using CommunityToolkit.Mvvm.Input;
+
+

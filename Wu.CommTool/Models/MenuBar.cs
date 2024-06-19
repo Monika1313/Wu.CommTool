@@ -3,36 +3,23 @@
 /// <summary>
 /// 系统导航菜单
 /// </summary>
-public class MenuBar : BindableBase
+public partial class MenuBar : ObservableObject
 {
-    private string? icon;
     /// <summary>
     /// 菜单图标
     /// </summary>
-    public string? Icon
-    {
-        get { return icon; }
-        set { icon = value; }
-    }
+    [ObservableProperty]
+    string? icon;
 
-    private string? title;
     /// <summary>
     /// 菜单名称
     /// </summary>
-    public string? Title
-    {
-        get { return title; }
-        set { title = value; }
-    }
+    [ObservableProperty]
+    private string? title;
 
-    private string? nameSpace;
-
+    [ObservableProperty]
     /// <summary>
     /// 菜单命名空间
     /// </summary>
-    public string? NameSpace
-    {
-        get { return nameSpace; }
-        set { nameSpace = value; }
-    }
+    private string? nameSpace;
 }
