@@ -5,6 +5,8 @@
 /// </summary>
 public partial class NetworkCard : ObservableObject
 {
+    readonly ManagementObject mo;
+
     public NetworkCard(ManagementObject mo)
     {
         this.mo = mo;
@@ -15,17 +17,30 @@ public partial class NetworkCard : ObservableObject
     {
         try
         {
-            //DhcpEnable = Convert.ToBoolean(mo["DHCPEnabled"] ?? false);//DHCP状态
-            Enable = Convert.ToBoolean(mo["NetEnabled"] ?? false);//启用状态
+
+            // 获取适配器的描述
+            string description = mo["Description"]?.ToString();
+            string x1 = mo["PhysicalAdapter"]?.ToString();//是否为物理网卡
+            Enable = Convert.ToBoolean(mo["NetEnabled"] ?? false);//网卡启用禁用状态
             ConnectionId = mo["NetConnectionID"]?.ToString();//连接名称
             Name = mo["Name"]?.ToString();                   //驱动程序
             Manufacturer = mo["Manufacturer"]?.ToString();   //制造商
 
-
-            var xx = (System.Array)(mo.Properties["IPAddress"].Value);
-            //Console.WriteLine("IP(" + st + ")|" + "MAC(" + WmiObj["MACAddress"] + ")" + "\n");
-            //netmac = WmiObj["MACAddress"];
-            //netmac = netmac.ToString().Replace(":", "");
+            #region 遍历mo每个属性
+            List<string> strings = new List<string>();
+            foreach (PropertyData property in mo.Properties)
+            {
+                strings.Add(property.Name);
+                var name = property.Name;
+                // 检查属性值是否为空
+                var value = property.Value ?? "null";
+                // 如果属性是一个数组，将其转换为字符串
+                if (value is Array)
+                {
+                    value = string.Join(", ", (Array)value);
+                }
+            }
+            #endregion
         }
         catch (Exception ex)
         {
@@ -33,11 +48,14 @@ public partial class NetworkCard : ObservableObject
         }
     }
 
-    readonly ManagementObject mo;
+
 
     [ObservableProperty]
     string name;
-
+    
+    /// <summary>
+    /// 网卡启用禁用状态
+    /// </summary>
     [ObservableProperty]
     bool enable;
 
@@ -49,57 +67,4 @@ public partial class NetworkCard : ObservableObject
 
     [ObservableProperty]
     string manufacturer;
-
-    [RelayCommand]
-    public async void 启用DHCP()
-    {
-        try
-        {
-
-
-
-
-
-
-
-
-
-
-
-
-            ////如果没有启用IP设置的网络设备则跳过
-            ////重置DNS为空
-            //mo.InvokeMethod("SetDNSServerSearchOrder", null);
-            ////开启DHCP
-            //mo.InvokeMethod("EnableDHCP", null);
-
-
-
-            //需要管理员权限
-            // 设置网卡为DHCP
-            ProcessStartInfo psi = new()
-            {
-                FileName = "netsh",
-                Arguments = $"interface ip set address \"{ConnectionId}\" source=dhcp",
-                CreateNoWindow = true,
-                UseShellExecute = false,
-                RedirectStandardOutput = true
-            };
-
-            using Process process = new();
-            process.StartInfo = psi;
-            process.Start();
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            if (process.ExitCode != 0)
-            {
-                HcGrowlExtensions.Warning("设置失败,需要管理员权限...");
-            }
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning(ex.Message);
-        }
-    }
 }

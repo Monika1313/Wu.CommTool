@@ -26,6 +26,12 @@
                 CommandParameter="打开网络连接"
                 Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
 
+            <Button
+                Margin="4"
+                Command="{Binding ExecuteCommand}"
+                CommandParameter="测试"
+                Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
+
         </StackPanel>
         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="False" IsInertiaEnabled="True">
             <ItemsControl
@@ -60,7 +66,8 @@
                                         HorizontalAlignment="Left"
                                         Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                         CommandParameter="{Binding .}"
-                                        Content="启用DHCP" />
+                                        Content="启用DHCP"
+                                        IsEnabled="{Binding DhcpEnable, Converter={wu:ReverseBool}}" />
                                 </StackPanel>
                             </DockPanel>
                         </ContentControl>
