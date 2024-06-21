@@ -5,8 +5,3 @@ global using System;
 global using Wu.CommTool.Modules.About.ViewModels;
 global using Wu.CommTool.Modules.About.Views;
 
-
-
-
-
-

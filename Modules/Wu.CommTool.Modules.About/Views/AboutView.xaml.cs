@@ -1,15 +1,11 @@
 ﻿using System.Windows.Controls;
 
-namespace Wu.CommTool.Modules.About.Views
+namespace Wu.CommTool.Modules.About.Views;
+
+public partial class AboutView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for AboutView
-    /// </summary>
-    public partial class AboutView : UserControl
+    public AboutView()
     {
-        public AboutView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

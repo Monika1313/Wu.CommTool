@@ -31,7 +31,19 @@ public partial class NetworkToolViewModel : NavigationViewModel
         {
             case "获取物理网卡信息": 获取物理网卡信息(); break;
             case "获取所有网卡信息": 获取所有网卡信息(); break;
-            case "打开网络连接": 打开网络连接(); break;
+            case "打开网络连接": NetworkToolViewModel.打开网络连接(); break;
+            case "测试": 测试(); break;
+        }
+    }
+
+    private void 测试()
+    {
+        // 获取所有网络适配器
+        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+        foreach (NetworkInterface adapter in adapters)
+        {
+            var name = adapter.Name;
+            var x1 = adapter.GetIPProperties().GetIPv4Properties().IsDhcpEnabled;//获取DHCP状态
         }
     }
 
@@ -137,7 +149,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
     }
 
-    void 打开网络连接()
+    private static void 打开网络连接()
     {
         ProcessStartInfo startInfo = new("NCPA.cpl")
         {
