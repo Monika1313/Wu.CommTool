@@ -5,7 +5,7 @@
 /// </summary>
 public partial class NetworkCard : ObservableObject
 {
-    readonly ManagementObject mo;
+    public readonly ManagementObject mo;
 
     public NetworkCard(ManagementObject mo)
     {
@@ -28,7 +28,7 @@ public partial class NetworkCard : ObservableObject
             // 检查是否包含DHCPEnabled属性并获取其值
             if (config.Properties["DHCPEnabled"] != null)
             {
-                DhcpEnable = (bool)config["DHCPEnabled"];
+                DhcpEnabled = (bool)config["DHCPEnabled"];
 
                 // 获取适配器的描述
                 string description = (string)config["Description"];
@@ -62,16 +62,32 @@ public partial class NetworkCard : ObservableObject
             // 获取适配器的描述
             string description = mo["Description"]?.ToString();
             //string x1 = mo["PhysicalAdapter"]?.ToString();//是否为物理网卡
-            Enable = Convert.ToBoolean(mo["NetEnabled"] ?? false);//网卡启用禁用状态
+            NetEnabled = Convert.ToBoolean(mo["NetEnabled"] ?? false);//网卡启用禁用状态
             NetConnectionId = mo["NetConnectionID"]?.ToString();//连接名称
             Name = mo["Name"]?.ToString();                   //驱动程序
             Manufacturer = mo["Manufacturer"]?.ToString();   //制造商
 
             //查询该网卡的Win32_NetworkAdapterConfiguration信息,以获取DHCP状态等
             ManagementObjectSearcher searcherConfig = new("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE Index = " + mo["Index"]);
-            foreach (ManagementObject queryObjConfig in searcherConfig.Get())
+            foreach (ManagementObject configObj in searcherConfig.Get())
             {
-                DhcpEnable = Convert.ToBoolean(queryObjConfig["DHCPEnabled"]);//网卡DHCP状态
+                DhcpEnabled = Convert.ToBoolean(configObj["DHCPEnabled"]);//网卡DHCP状态
+
+                string[] ipAddresses = (string[])configObj["IPAddress"];
+                string[] subnets = (string[])configObj["IPSubnet"];
+                if (ipAddresses != null && subnets != null)
+                {
+                    for (int i = 0; i < ipAddresses.Length; i++)
+                    {
+                        // 仅IPv4地址及其子网掩码
+                        if (ipAddresses[i].Contains("."))
+                        {
+                            //Todo添加至列表
+                        }
+                    }
+                }
+
+
             }
         }
         catch (Exception)
@@ -89,13 +105,13 @@ public partial class NetworkCard : ObservableObject
     /// 网卡启用禁用状态
     /// </summary>
     [ObservableProperty]
-    bool enable;
+    bool netEnabled;
 
     /// <summary>
     /// DHCP状态
     /// </summary>
     [ObservableProperty]
-    bool dhcpEnable;
+    bool dhcpEnabled;
 
     /// <summary>
     /// 名称

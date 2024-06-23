@@ -13,6 +13,9 @@
              d:DesignWidth="800"
              mc:Ignorable="d">
     <DockPanel>
+        <TextBlock DockPanel.Dock="Top"
+                   Style="{StaticResource TitleTextBlock}"
+                   Text="开发中的功能..." />
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
             <Button Margin="4"
                     Command="{Binding ExecuteCommand}"
@@ -52,14 +55,19 @@
                                                Foreground="{StaticResource Blue_Foreground}"
                                                Text="{Binding NetConnectionId}" />
                                     <TextBlock Text="{Binding Name}" />
-                                    <TextBlock Text="{Binding Enable}" />
+                                    <TextBlock Text="{Binding NetEnabled}" />
                                     <TextBlock Text="{Binding Manufacturer}" />
                                     <Button Margin="4"
                                             HorizontalAlignment="Left"
                                             Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                             CommandParameter="{Binding .}"
                                             Content="启用DHCP"
-                                            IsEnabled="{Binding DhcpEnable, Converter={wu:ReverseBool}}" />
+                                            IsEnabled="{Binding DhcpEnabled, Converter={wu:ReverseBool}}" />
+                                    <Button Margin="4"
+                                            HorizontalAlignment="Left"
+                                            Command="{Binding DataContext.NetEnableCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                            CommandParameter="{Binding .}"
+                                            Content="启用禁用网卡" />
                                 </StackPanel>
                             </DockPanel>
                         </ContentControl>

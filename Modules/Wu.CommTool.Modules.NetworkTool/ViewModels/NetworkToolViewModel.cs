@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
+﻿using System.Security.Policy;
+
+namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
 
 public partial class NetworkToolViewModel : NavigationViewModel
 {
@@ -36,15 +38,66 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
     }
 
+    /// <summary>
+    /// 执行Netsh命令
+    /// </summary>
+    /// <param name="arguments"></param>
+    public static async void ExecuteNetshCommand(string arguments)
+    {
+        ProcessStartInfo psi = new ProcessStartInfo("netsh", arguments)
+        {
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+            CreateNoWindow = true
+        };
+
+        using (Process process = Process.Start(psi))
+        {
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            Console.WriteLine(output);
+        }
+    }
+
+
+    /// <summary>
+    /// 修改网卡启用禁用状态
+    /// </summary>
+    /// <param name="nwc"></param>
+    /// <returns></returns>
+    [RelayCommand]
+    public async Task NetEnable(NetworkCard nwc)
+    {
+        try
+        {
+            if (await 是否有管理员权限())
+            {
+                return;
+            }
+
+            if (nwc.NetEnabled)
+            {
+                //nwc.mo.InvokeMethod("Disable", null);
+                // 禁用网卡
+                ExecuteNetshCommand($"interface set interface \"{nwc.NetConnectionId}\" admin=disable");
+                await Task.Delay(1000);
+            }
+            else
+            {
+                // 禁用网卡
+                ExecuteNetshCommand($"interface set interface \"{nwc.NetConnectionId}\" admin=enable");
+                await Task.Delay(1000);
+            }
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
+
     private void 测试()
     {
-        // 获取所有网络适配器
-        NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-        foreach (NetworkInterface adapter in adapters)
-        {
-            var name = adapter.Name;
-            var x1 = adapter.GetIPProperties().GetIPv4Properties().IsDhcpEnabled;//获取DHCP状态
-        }
+       
     }
 
     /// <summary>
@@ -55,6 +108,44 @@ public partial class NetworkToolViewModel : NavigationViewModel
     {
         List<NetworkInterface> result = [.. NetworkInterface.GetAllNetworkInterfaces()];
         return result;
+    }
+
+
+    public async Task<bool> 是否有管理员权限()
+    {
+        //判断管理员权限 非管理员权限请求提权
+        if (!new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator))
+        {
+            //提示获取管理员权限
+            var result = await dialogHost.Question("警告", "该操作需要管理员权限,点击确认以管理员权限重启该软件，重启后再使用该功能。", "Root");
+            // 如果不是管理员，则重新启动具有管理员权限的应用程序
+            if (result.Result != ButtonResult.OK)
+            {
+                return false;
+            }
+
+            // 获取当前运行的可执行文件的完整路径
+            string currentExe = Process.GetCurrentProcess().MainModule.FileName;
+            var processInfo = new ProcessStartInfo(currentExe)
+            {
+                UseShellExecute = true,
+                Verb = "runas"
+            };
+
+            try
+            {
+                Process.Start(processInfo);
+            }
+            catch (Exception ex)
+            {
+                // 用户取消了UAC提示或其他错误处理
+                HcGrowlExtensions.Warning(ex.Message);
+                return false;
+            }
+            Application.Current.Shutdown();
+            return false;
+        }
+        return false;
     }
 
     /// <summary>
