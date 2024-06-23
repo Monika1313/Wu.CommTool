@@ -104,7 +104,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
             ProcessStartInfo psi = new()
             {
                 FileName = "netsh",
-                Arguments = $"interface ip set address \"{nwc.ConnectionId}\" source=dhcp",
+                Arguments = $"interface ip set address \"{nwc.NetConnectionId}\" source=dhcp",
                 CreateNoWindow = true,
                 UseShellExecute = false,
                 RedirectStandardOutput = true
@@ -137,9 +137,18 @@ public partial class NetworkToolViewModel : NavigationViewModel
     {
         try
         {
+
+            #region 查询Win32_NetworkAdapter
             string query = @"SELECT * FROM Win32_NetworkAdapter WHERE Manufacturer!='Microsoft' AND NOT PNPDeviceID LIKE 'ROOT\\%'";
             ManagementObjectSearcher mos = new(query);
             ManagementObjectCollection moc = mos.Get();
+            #endregion
+
+            #region 这个查询方法也能用
+            //ManagementObjectSearcher mos = new("SELECT * FROM Win32_NetworkAdapter WHERE PhysicalAdapter = True AND NOT PNPDeviceID LIKE 'ROOT%'");
+            //ManagementObjectCollection moc = mos.Get();  
+            #endregion
+
             NetworkCards = [];
             NetworkCards.AddRange(moc.OfType<ManagementObject>().Select(mo => new NetworkCard(mo)));
         }
