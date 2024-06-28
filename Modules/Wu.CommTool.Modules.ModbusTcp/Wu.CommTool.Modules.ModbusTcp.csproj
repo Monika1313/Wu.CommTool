@@ -31,6 +31,5 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Extensions\" />
-	  <Folder Include="Interfaces\" />
 	</ItemGroup>
 </Project>
