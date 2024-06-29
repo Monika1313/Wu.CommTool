@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Wu.CommTool.Modules.NetworkTool.Views;
+﻿namespace Wu.CommTool.Modules.NetworkTool.Views;
 
 public partial class NetworkToolView : UserControl
 {

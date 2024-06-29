@@ -1,6 +1,4 @@
-﻿using System.Security.Policy;
-
-namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
+﻿namespace Wu.CommTool.Modules.NetworkTool.ViewModels;
 
 public partial class NetworkToolViewModel : NavigationViewModel
 {
@@ -97,7 +95,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
 
     private void 测试()
     {
-       
+
     }
 
     /// <summary>

@@ -5,7 +5,7 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    public string DialogHostName { get; set; }
+    
     #endregion
 
     #region **************************************** 构造函数 ****************************************
@@ -56,6 +56,8 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     #endregion
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; }
+
     [ObservableProperty]
     object currentDto = new();
 

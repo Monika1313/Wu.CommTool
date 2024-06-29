@@ -6,7 +6,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
     //public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-    public string DialogHostName { get; set; } = MqttServerView.ViewName;
     private MQTTnet.Server.MqttServer mqttServer;                                 //Mqtt服务器
     #endregion
 
@@ -15,10 +14,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
-        ExecuteCommand = new(Execute);
-        OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
-        //UnsubscribeTopicCommand = new DelegateCommand<MqttSubedTopic>(UnsubscribeTopic);
 
         //从默认配置文件中读取配置
         try
@@ -33,70 +28,55 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-            ShowErrorMessage("配置文件读取失败");
+            ShowErrorMessage($"配置文件读取失败:{ex.Message}");
         }
     }
 
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; } = MqttServerView.ViewName;
+
     /// <summary>
     /// CurrentDto
     /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
     /// <summary>
     /// 页面消息
     /// </summary>
-    public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
-    private ObservableCollection<MessageData> _Messages = new();
+    [ObservableProperty] 
+    ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 打开抽屉
     /// </summary>
-    public OpenDrawers IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
-    private OpenDrawers _IsDrawersOpen = new();
+    [ObservableProperty]
+    OpenDrawers isDrawersOpen = new();
 
     /// <summary>
     /// IsPause
     /// </summary>
-    public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
-    private bool _IsPause;
+    [ObservableProperty]
+    bool isPause;
 
     /// <summary>
     /// Mqtt服务器配置
     /// </summary>
-    public MqttServerConfig MqttServerConfig { get => _MqttServerConfig; set => SetProperty(ref _MqttServerConfig, value); }
-    private MqttServerConfig _MqttServerConfig = new();
+    [ObservableProperty]
+    MqttServerConfig mqttServerConfig = new();
 
     /// <summary>
     /// MqttUsers
     /// </summary>
-    public ObservableCollection<MqttUser> MqttUsers { get => _MqttUsers; set => SetProperty(ref _MqttUsers, value); }
-    private ObservableCollection<MqttUser> _MqttUsers = new();
-    #endregion
-
-
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    ///// <summary>
-    ///// 取消订阅主题
-    ///// </summary>
-    public DelegateCommand<MqttSubedTopic> UnsubscribeTopicCommand { get; private set; }
-
-    /// <summary>
-    /// 打开json格式化界面
-    /// </summary>
-    public DelegateCommand<MessageData> OpenJsonDataViewCommand { get; private set; }
+    [ObservableProperty] 
+    ObservableCollection<MqttUser> mqttUsers = [];
     #endregion
 
 
     #region **************************************** 方法 ****************************************
-    public void Execute(string obj)
+    [RelayCommand]
+    private void Execute(string obj)
     {
         switch (obj)
         {
@@ -420,10 +400,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     #endregion
 
 
-
-
-
-
     #region 配置文件
     /// <summary>
     /// 导出配置文件
@@ -643,7 +619,8 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// 打开json格式化界面
     /// </summary>
     /// <param name="obj"></param>
-    private async void OpenJsonDataView(MessageData obj)
+    [RelayCommand]
+    private async Task OpenJsonDataView(MessageData obj)
     {
         try
         {
@@ -658,7 +635,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             }
             catch (Exception ex)
             {
-                HcGrowlExtensions.Warning("无法进行Json格式化...", MqttServerView.ViewName);
+                HcGrowlExtensions.Warning($"无法进行Json格式化...{ex.Message}", MqttServerView.ViewName);
                 return;
             }
 
@@ -673,7 +650,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
     #endregion
@@ -729,8 +706,8 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             }
             #region 开放入站规则
 
-            
-            
+
+
 
             //应用程序规则
             var rule = FirewallManager.Instance.CreateApplicationRule(

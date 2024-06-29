@@ -1,15 +1,9 @@
-﻿using System.Windows.Controls;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.Views.DialogViews;
 
-namespace Wu.CommTool.Modules.ModbusRtu.Views.DialogViews
+public partial class ModbusRtuAutoResponseDataEditView : UserControl
 {
-    /// <summary>
-    /// ModbusRtuAutoResponseDataEditView.xaml 的交互逻辑
-    /// </summary>
-    public partial class ModbusRtuAutoResponseDataEditView : UserControl
+    public ModbusRtuAutoResponseDataEditView()
     {
-        public ModbusRtuAutoResponseDataEditView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

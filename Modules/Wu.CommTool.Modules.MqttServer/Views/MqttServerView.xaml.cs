@@ -1,16 +1,10 @@
-﻿using System.Windows.Controls;
+﻿namespace Wu.CommTool.Modules.MqttServer.Views;
 
-namespace Wu.CommTool.Modules.MqttServer.Views
+public partial class MqttServerView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for MqttServerView
-    /// </summary>
-    public partial class MqttServerView : UserControl
+    public const string ViewName = nameof(MqttServerView);
+    public MqttServerView()
     {
-        public const string ViewName = nameof(MqttServerView);
-        public MqttServerView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

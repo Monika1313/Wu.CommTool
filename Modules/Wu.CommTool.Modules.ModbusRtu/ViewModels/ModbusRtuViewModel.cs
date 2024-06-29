@@ -6,8 +6,6 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
     private readonly IRegionManager regionManager;
-
-    public string DialogHostName { get; set; }
     #endregion
 
     public ModbusRtuViewModel() { }
@@ -17,12 +15,11 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
         this.regionManager = regionManager;
         ModbusRtuModel = modbusRtuModel;
-
-        ExecuteCommand = new(Execute);
-        SelectedIndexChangedCommand = new DelegateCommand<MenuBar>(SelectedIndexChanged);
     }
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; }
+
     /// <summary>
     /// ModbusRtuModel
     /// </summary>
@@ -55,25 +52,12 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
     #endregion
 
 
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 页面切换
-    /// </summary>
-    public DelegateCommand<MenuBar> SelectedIndexChangedCommand { get; private set; }
-    #endregion
-
-
     #region **************************************** 方法 ****************************************
-    public void Execute(string obj)
+    [RelayCommand]
+    private void Execute(string obj)
     {
         switch (obj)
         {
-            case "Search": Search(); break;
             case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
@@ -107,10 +91,6 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
        
     }
 
-
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {
@@ -123,9 +103,6 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -149,14 +126,6 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
         }
         catch { }
     }
-
-    /// <summary>
-    /// 查询数据
-    /// </summary>
-    private void Search()
-    {
-       
-    }
     #endregion
 
 
@@ -165,6 +134,7 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
     /// 页面切换
     /// </summary>
     /// <param name="obj"></param>
+    [RelayCommand]
     private void SelectedIndexChanged(MenuBar obj)
     {
         try

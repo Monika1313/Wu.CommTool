@@ -5,7 +5,6 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    public string DialogHostName { get; set; }
     #endregion
 
     public DataMonitorViewModel() { }
@@ -13,12 +12,6 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
-        ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
-        QuickImportConfigCommand = new DelegateCommand<ConfigFile>(QuickImportConfig);
-        OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
-        CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
-
         ModbusRtuModel = modbusRtuModel;
     }
 
@@ -33,6 +26,8 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
 
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; }
+
     [ObservableProperty]
     object currentDto = new();
 
@@ -50,38 +45,12 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
     #endregion
 
 
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// ModburRtu数据写入
-    /// </summary>
-    public DelegateCommand<ModbusRtuData> ModburRtuDataWriteCommand { get; private set; }
-
-    /// <summary>
-    /// 快速导入数据监控配置
-    /// </summary>
-    public DelegateCommand<ConfigFile> QuickImportConfigCommand { get; private set; }
-
-    /// <summary>
-    /// 打开帧解析界面
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
-
-    /// <summary>
-    /// 复制Modbus帧信息
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
-
-    #endregion
-
-
     #region **************************************** 方法 ****************************************
     [RelayCommand]
     void Execute(string obj)
     {
         switch (obj)
         {
-            case "Search": Search(); break;
-
             case "ExportConfig": ModbusRtuModel.ExportConfig(); break;
             case "ImportConfig": ModbusRtuModel.ImportConfig(); break;
             case "RefreshQuickImportList": ModbusRtuModel.RefreshQuickImportList(); break;
@@ -116,9 +85,6 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
         
     }
 
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {
@@ -133,9 +99,6 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -149,45 +112,22 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
     /// </summary>
     private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning($"{ex.Message}");
-        }
+       
     }
 
     /// <summary>
-    /// 查询数据
+    /// ModburRtu数据写入
     /// </summary>
-    private void Search()
-    {
-        try
-        {
-            UpdateLoading(true);
-
-        }
-        catch (Exception ex)
-        {
-            //aggregator.SendMessage($"{ex.Message}", "Main");
-        }
-        finally
-        {
-            UpdateLoading(false);
-        }
-    }
-
+    [RelayCommand]
     private void ModburRtuDataWrite(ModbusRtuData data)
     {
         ModbusRtuModel.ModburRtuDataWrite(data);
     }
 
+    /// <summary>
+    /// 快速导入数据监控配置
+    /// </summary>
+    [RelayCommand]
     private void QuickImportConfig(ConfigFile file)
     {
         ModbusRtuModel.QuickImportConfig(file);
@@ -197,7 +137,8 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
     /// 打开解析帧页面
     /// </summary>
     /// <param name="data"></param>
-    private async void OpenAnalyzeFrameView(ModbusRtuMessageData data)
+    [RelayCommand]
+    private async Task OpenAnalyzeFrameView(ModbusRtuMessageData data)
     {
         try
         {
@@ -222,6 +163,7 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
     /// 复制Modbus数据帧
     /// </summary>
     /// <param name="obj"></param>
+    [RelayCommand]
     private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
     {
         try

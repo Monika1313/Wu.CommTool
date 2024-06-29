@@ -5,7 +5,6 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    public string DialogHostName { get; set; }
     #endregion
 
     #region **************************************** 构造函数 ****************************************
@@ -40,11 +39,13 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     /// </summary>
     public void OnDialogOpened(IDialogParameters parameters)
     {
-       
+
     }
     #endregion
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; }
+
     [ObservableProperty]
     object currentDto = new();
 
@@ -57,13 +58,13 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 可生成的帧列表
     /// </summary>
-    [ObservableProperty] 
+    [ObservableProperty]
     ObservableCollection<ModbusRtuFrameType> modbusRtuFrameTypes;
 
     /// <summary>
     /// ModbusRtu帧
     /// </summary>
-    [ObservableProperty] 
+    [ObservableProperty]
     ModbusRtuFrame modbusRtuFrame = new();
     #endregion
 
@@ -79,9 +80,6 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {
@@ -94,9 +92,6 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -110,7 +105,7 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     /// </summary>
     private void OpenDialogView()
     {
-       
+
     }
     #endregion
 }

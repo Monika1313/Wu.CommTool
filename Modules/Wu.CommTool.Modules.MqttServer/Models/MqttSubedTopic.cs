@@ -3,17 +3,17 @@
 /// <summary>
 /// 订阅的主题
 /// </summary>
-public class MqttSubedTopic : BindableBase
+public partial class MqttSubedTopic : ObservableObject
 {
     /// <summary>
     /// 主题
     /// </summary>
-    public string Topic { get => _Topic; set => SetProperty(ref _Topic, value); }
-    private string _Topic = string.Empty;
+    [ObservableProperty]
+    string topic = string.Empty;
 
     /// <summary>
     /// Parent
     /// </summary>
-    public MqttUser Parent { get => _Parent; set => SetProperty(ref _Parent, value); }
-    private MqttUser _Parent;
+    [ObservableProperty]
+    MqttUser parent;
 }

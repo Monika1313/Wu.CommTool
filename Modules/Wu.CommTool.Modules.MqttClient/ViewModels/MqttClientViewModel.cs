@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.MqttClient.ViewModels;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Wu.CommTool.Modules.MqttClient.ViewModels;
 
 public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -27,14 +29,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         this.provider = provider;
         this.dialogHost = dialogHost;
 
-        ExecuteCommand = new(Execute);
-        SubTopicCommand = new DelegateCommand<MqttTopic>(SubTopic);
-        UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
-        OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
-        ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
-
         MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
-
 
         //从默认配置文件中读取配置
         try
@@ -57,55 +52,51 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     }
 
 
-
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
     /// <summary>
     /// 页面消息
     /// </summary>
-    public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
-    private ObservableCollection<MessageData> _Messages = new();
+    [ObservableProperty]
+    ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 暂停更新接收的数据
     /// </summary>
-    public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
-    private bool _IsPause = false;
+    [ObservableProperty]
+    bool isPause = false;
 
     /// <summary>
     /// OpenDrawers
     /// </summary>
-    public OpenDrawers IsDrawersOpen { get => _IsDrawersOpen; set => SetProperty(ref _IsDrawersOpen, value); }
-    private OpenDrawers _IsDrawersOpen = new();
+    [ObservableProperty]
+    OpenDrawers isDrawersOpen = new();
 
     /// <summary>
     /// MqttClientConfig
     /// </summary>
-    public MqttClientConfig MqttClientConfig { get => _MqttClientConfig; set => SetProperty(ref _MqttClientConfig, value); }
-    private MqttClientConfig _MqttClientConfig = new();
+    [ObservableProperty]
+    MqttClientConfig mqttClientConfig = new();
 
     /// <summary>
     /// 发送的消息
     /// </summary>
-    public string SendMessage { get => _SendMessage; set => SetProperty(ref _SendMessage, value); }
-    private string _SendMessage = string.Empty;
+    [ObservableProperty]
+    string sendMessage = string.Empty;
 
     /// <summary>
     /// 新的订阅主题
     /// </summary>
-    public MqttTopic NewSubTopic { get => _NewSubTopic; set => SetProperty(ref _NewSubTopic, value); }
-    private MqttTopic _NewSubTopic = new(string.Empty);
+    [ObservableProperty]
+    MqttTopic newSubTopic = new(string.Empty);
 
     /// <summary>
     /// 主动关闭客户端标志
     /// </summary>
-    public bool ManualStopFlag { get => _ManualStopFlag; set => SetProperty(ref _ManualStopFlag, value); }
-    private bool _ManualStopFlag;
+    [ObservableProperty]
+    bool manualStopFlag;
 
     /// <summary>
     /// 配置文件列表
@@ -115,36 +106,9 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     #endregion
 
 
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 取消订阅主题
-    /// </summary>
-    public DelegateCommand<MqttTopic> SubTopicCommand { get; private set; }
-
-    /// <summary>
-    /// 取消订阅主题
-    /// </summary>
-    public DelegateCommand<string> UnsubscribeTopicCommand { get; private set; }
-
-    /// <summary>
-    /// 打开json格式化界面
-    /// </summary>
-    public DelegateCommand<MessageData> OpenJsonDataViewCommand { get; private set; }
-
-    /// <summary>
-    /// 快速导入配置
-    /// </summary>
-    public DelegateCommand<ConfigFile> ImportConfigCommand { get; private set; }
-    #endregion
-
-
     #region **************************************** 方法 ****************************************
-    public async void Execute(string obj)
+    [RelayCommand]
+    private async Task Execute(string obj)
     {
         switch (obj)
         {
@@ -201,8 +165,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-
-
     /// <summary>
     /// 导入配置文件
     /// </summary>
@@ -239,6 +201,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// 导入配置文件
     /// </summary>
     /// <param name="obj"></param>
+    [RelayCommand]
     private void ImportConfig(ConfigFile obj)
     {
         try
@@ -281,7 +244,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             ShowErrorMessage("读取配置文件夹异常: " + ex.Message);
         }
     }
-
 
     /// <summary>
     /// 暂停更新接收的数据
@@ -360,7 +322,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     break;
             }
 
-
             switch (MqttClientConfig.SendPaylodType)
             {
                 case MqttPayloadType.Json:
@@ -408,7 +369,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// </summary>
     private void Clear()
     {
-        Messages = new();
+        Messages = [];
     }
 
     /// <summary>
@@ -684,7 +645,8 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// 取消订阅订阅主题
     /// </summary>
     /// <returns></returns>
-    private async void UnsubscribeTopic(string topic)
+    [RelayCommand]
+    private async Task UnsubscribeTopic(string topic)
     {
         try
         {
@@ -703,10 +665,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             ShowErrorMessage(ex.Message);
         }
     }
-
-
-
-
 
     protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
     protected void ShowReceiveMessage(string message, string title = "") => ShowMessage(message, MessageType.Receive, title);
@@ -792,7 +750,8 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// 打开json格式化界面
     /// </summary>
     /// <param name="obj"></param>
-    private async void OpenJsonDataView(MessageData obj)
+    [RelayCommand]
+    private async Task OpenJsonDataView(MessageData obj)
     {
         try
         {
@@ -828,10 +787,11 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 
 
     /// <summary>
-    /// 退订主题
+    /// 移除待订阅的主题
     /// </summary>
     /// <param name="obj"></param>
-    private void SubTopic(MqttTopic obj)
+    [RelayCommand]
+    private void RemoveSubTopic(MqttTopic obj)
     {
         try
         {

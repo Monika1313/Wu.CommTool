@@ -1,10 +1,10 @@
-﻿global using MaterialDesignThemes.Wpf;
+﻿global using CommunityToolkit.Mvvm.Input;
+global using MaterialDesignThemes.Wpf;
 global using Microsoft.Win32;
 global using MQTTnet;
 global using MQTTnet.Client;
 global using MQTTnet.Exceptions;
 global using Newtonsoft.Json;
-global using Prism.Commands;
 global using Prism.Ioc;
 global using Prism.Modularity;
 global using Prism.Mvvm;
@@ -17,6 +17,7 @@ global using System.Linq;
 global using System.Text;
 global using System.Threading;
 global using System.Threading.Tasks;
+global using System.Windows.Controls;
 global using Wu.CommTool.Core.Enums;
 global using Wu.CommTool.Core.Enums.Mqtt;
 global using Wu.CommTool.Core.Extensions;
@@ -28,8 +29,3 @@ global using Wu.Extensions;
 global using Wu.ViewModels;
 global using Wu.Wpf.Common;
 global using Wu.Wpf.Models;
-global using CommunityToolkit.Mvvm.Input;
-
-
-
-

@@ -5,7 +5,6 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    public string DialogHostName { get; set; }
     #endregion
 
     public ModbusRtuAutoResponseDataEditViewModel() { }
@@ -16,6 +15,8 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
     }
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; }
+
     [ObservableProperty]
     ModbusRtuAutoResponseData currentDto = new();
     #endregion
@@ -55,10 +56,6 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
         }
     }
 
-
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {
@@ -73,9 +70,6 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -89,18 +83,18 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
     /// </summary>
     private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning(ex.Message);
-        }
+        //try
+        //{
+        //    DialogParameters param = new()
+        //    {
+        //        { "Value", CurrentDto }
+        //    };
+        //    //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
+        //}
+        //catch (Exception ex)
+        //{
+        //    HcGrowlExtensions.Warning(ex.Message);
+        //}
     }
     #endregion
 }

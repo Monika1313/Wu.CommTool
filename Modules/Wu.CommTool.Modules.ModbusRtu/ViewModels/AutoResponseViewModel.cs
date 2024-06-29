@@ -5,7 +5,6 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    public string DialogHostName { get; set; }
     #endregion
 
     public AutoResponseViewModel() { }
@@ -30,6 +29,8 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
 
 
     #region **************************************** 属性 ****************************************
+    public string DialogHostName { get; set; }
+
     [ObservableProperty]
     object currentDto = new();
 
@@ -99,12 +100,8 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
     {
     }
 
-
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
-    void Save()
+    private void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -117,11 +114,8 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
-    void Cancel()
+    private void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

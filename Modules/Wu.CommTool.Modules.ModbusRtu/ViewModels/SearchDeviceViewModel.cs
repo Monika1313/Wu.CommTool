@@ -5,7 +5,6 @@ public partial class SearchDeviceViewModel : NavigationViewModel, IDialogHostAwa
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    public string DialogHostName { get; set; }
     #endregion
 
     public SearchDeviceViewModel() { }
@@ -14,70 +13,40 @@ public partial class SearchDeviceViewModel : NavigationViewModel, IDialogHostAwa
         this.provider = provider;
         this.dialogHost = dialogHost;
         ModbusRtuModel = modbusRtuModel;
-
-        ExecuteCommand = new(Execute);
-        BaudRateSelectionChangedCommand = new DelegateCommand<object>(BaudRateSelectionChanged);
-        ParitySelectionChangedCommand = new DelegateCommand<object>(ParitySelectionChanged);
-        OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
-        CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
-
     }
 
+    /// <summary>
+    /// 校验位选框选项修改
+    /// </summary>
+    [RelayCommand]
     private void ParitySelectionChanged(object obj)
     {
         ModbusRtuModel.ParitySelectionChanged(obj);
     }
 
+    /// <summary>
+    /// 波特率选框选项改变
+    /// </summary>
+    [RelayCommand]
     private void BaudRateSelectionChanged(object obj)
     {
         ModbusRtuModel.BaudRateSelectionChanged(obj);
     }
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    public string DialogHostName { get; set; }
 
-    /// <summary>
-    /// ModbusRtuModel
-    /// </summary>
-    public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
-    private ModbusRtuModel _ModbusRtuModel;
-    #endregion
+    [ObservableProperty]
+    object currentDto = new();
 
-
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 波特率选框选项改变
-    /// </summary>
-    public DelegateCommand<object> BaudRateSelectionChangedCommand { get; private set; }
-
-    /// <summary>
-    /// 校验位选框选项修改
-    /// </summary>
-    public DelegateCommand<object> ParitySelectionChangedCommand { get; private set; }
-
-    /// <summary>
-    /// 打开帧解析界面
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
-
-    /// <summary>
-    /// 复制Modbus帧信息
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
+    [ObservableProperty]
+    ModbusRtuModel modbusRtuModel;
     #endregion
 
 
     #region **************************************** 方法 ****************************************
-    public void Execute(string obj)
+    [RelayCommand]
+    private void Execute(string obj)
     {
         switch (obj)
         {
@@ -95,7 +64,7 @@ public partial class SearchDeviceViewModel : NavigationViewModel, IDialogHostAwa
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //Search();
+
     }
 
     /// <summary>
@@ -155,7 +124,8 @@ public partial class SearchDeviceViewModel : NavigationViewModel, IDialogHostAwa
     /// 打开解析帧页面
     /// </summary>
     /// <param name="data"></param>
-    private async void OpenAnalyzeFrameView(ModbusRtuMessageData data)
+    [RelayCommand]
+    private async Task OpenAnalyzeFrameView(ModbusRtuMessageData data)
     {
         try
         {
@@ -180,6 +150,7 @@ public partial class SearchDeviceViewModel : NavigationViewModel, IDialogHostAwa
     /// 复制Modbus数据帧
     /// </summary>
     /// <param name="obj"></param>
+    [RelayCommand]
     private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
     {
         try

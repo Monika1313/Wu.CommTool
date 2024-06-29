@@ -13,6 +13,7 @@ global using System.Net.NetworkInformation;
 global using System.Security.Principal;
 global using System.Threading.Tasks;
 global using System.Windows;
+global using System.Windows.Controls;
 global using Wu.CommTool.Core.Extensions;
 global using Wu.CommTool.Modules.NetworkTool.Models;
 global using Wu.CommTool.Modules.NetworkTool.ViewModels;
@@ -20,5 +21,3 @@ global using Wu.CommTool.Modules.NetworkTool.Views;
 global using Wu.ViewModels;
 global using Wu.Wpf.Common;
 global using Wu.Wpf.Extensions;
-
-

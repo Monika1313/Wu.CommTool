@@ -20,7 +20,6 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
     [ObservableProperty]
     string content;
 
-
     public string DialogHostName { get; set; } = "Root";
 
     public void OnDialogOpened(IDialogParameters parameters)
@@ -32,9 +31,6 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
             Content = parameters.GetValue<string>(nameof(Content));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -44,9 +40,6 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
     }
 
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {

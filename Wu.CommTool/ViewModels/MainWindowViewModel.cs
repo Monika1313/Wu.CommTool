@@ -14,10 +14,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     public MainWindowViewModel(IRegionManager regionManager)
     {
         this.regionManager = regionManager;
-
         CreateMenuBar();
-
-        
     }
     #endregion *****************************************  构造函数  *****************************************
 
@@ -43,7 +40,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     #endregion *****************************************  属性  *****************************************
 
     [RelayCommand]
-    void Execute(string obj)
+    private void Execute(string obj)
     {
         switch (obj)
         {
