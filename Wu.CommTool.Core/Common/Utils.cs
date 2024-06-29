@@ -10,9 +10,9 @@ public static class Utils
     /// <returns></returns>
     public static bool IsHexString(string? str)
     {
-        if (string.IsNullOrEmpty(str))
+        if (string.IsNullOrWhiteSpace(str))
             return false;
-        string val = str.Replace(" ", "");
+        string val = str!.Replace(" ", "");
         return Regex.IsMatch(val, "^[0-9A-Fa-f]+$");//验证字符串仅包含16进制字符 至少一个字符
     }
 

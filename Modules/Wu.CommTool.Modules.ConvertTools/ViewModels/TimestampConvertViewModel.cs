@@ -178,7 +178,7 @@ public class TimestampConvertViewModel : NavigationViewModel, IRegionMemberLifet
     }
 
 
-    public async void Execute(string obj)
+    public void Execute(string obj)
     {
         switch (obj)
         {

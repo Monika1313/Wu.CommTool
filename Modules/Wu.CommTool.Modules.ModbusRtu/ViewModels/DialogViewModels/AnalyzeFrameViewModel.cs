@@ -103,14 +103,10 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     {
         switch (obj)
         {
-            case "Search": Search(); break;
             case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
-
-
-
 
     /// <summary>
     /// 保存
@@ -141,42 +137,10 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     /// <summary>
     /// 弹窗
     /// </summary>
-    private async void OpenDialogView()
+    private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-
-        }
+        
     }
-
-    /// <summary>
-    /// 查询数据
-    /// </summary>
-    private async void Search()
-    {
-        try
-        {
-            UpdateLoading(true);
-
-        }
-        catch (Exception ex)
-        {
-            //aggregator.SendMessage($"{ex.Message}", "Main");
-        }
-        finally
-        {
-            UpdateLoading(false);
-        }
-    }
-
 
     /// <summary>
     /// 字节序切换
@@ -199,10 +163,8 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
-
     }
-
     #endregion
 }

@@ -22,15 +22,6 @@ public class ModbusRtuFrame : BindableBase
     }
     #endregion
 
-
-
-
-
-    #region **************************************************  字段  **************************************************
-
-    #endregion
-
-
     #region **************************************************  属性  **************************************************
     /// <summary>
     /// 从站ID 1字节
@@ -108,7 +99,6 @@ public class ModbusRtuFrame : BindableBase
     /// </summary>
     public ObservableCollection<MessageSubContent> MessageSubContents => new ObservableCollection<MessageSubContent>(GetMessage());
     #endregion
-
 
 
     #region **************************************************  方法  **************************************************

@@ -113,17 +113,9 @@ public partial class JsonToolViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 打开该弹窗时执行
     /// </summary>
-    public async void OnDialogOpened(IDialogParameters parameters)
+    public void OnDialogOpened(IDialogParameters parameters)
     {
-        if (parameters != null && parameters.ContainsKey("Value"))
-        {
-            //var oldDto = parameters.GetValue<EmployeeDto>("Value");
-            //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-            //if(getResult != null && getResult.Status)
-            //{
-            //    CurrentDto = getResult.Result;
-            //}
-        }
+        
     }
 
     /// <summary>
@@ -152,20 +144,9 @@ public partial class JsonToolViewModel : NavigationViewModel, IDialogHostAware
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    private async void OpenDialogView()
+    private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-
-        }
+        
     }
     #endregion
 }

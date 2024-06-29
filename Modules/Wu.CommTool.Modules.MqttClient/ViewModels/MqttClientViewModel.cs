@@ -148,7 +148,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     {
         switch (obj)
         {
-            case "Open": OpenMqttClient(); break;  //开启客户端
+            case "Open": await OpenMqttClient(); break;  //开启客户端
             case "Close": CloseMqttClient(); break;//关闭客户端
             case "Clear": Clear(); break;
             case "Pause": Pause(); break;

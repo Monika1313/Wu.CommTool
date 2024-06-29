@@ -3,7 +3,7 @@
 /// <summary>
 /// ModbusRtu界面消息展示
 /// </summary>
-public class ModbusRtuMessageData : MessageData
+public partial class ModbusRtuMessageData : MessageData
 {
     #region 构造函数
 
@@ -24,13 +24,12 @@ public class ModbusRtuMessageData : MessageData
     /// <summary>
     /// Modbus帧
     /// </summary>
-    public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
-    private ModbusRtuFrame _ModbusRtuFrame;
+    [ObservableProperty]
+    ModbusRtuFrame _ModbusRtuFrame;
 
     /// <summary>
     /// 子消息
     /// </summary>
-    public ObservableCollection<MessageSubContent> MessageSubContents { get => _MessageSubContents; set => SetProperty(ref _MessageSubContents, value); }
-    private ObservableCollection<MessageSubContent> _MessageSubContents = new();
-
+    [ObservableProperty]
+    ObservableCollection<MessageSubContent> messageSubContents = [];
 }
