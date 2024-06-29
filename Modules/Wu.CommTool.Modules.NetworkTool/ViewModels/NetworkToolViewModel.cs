@@ -40,7 +40,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// 执行Netsh命令
     /// </summary>
     /// <param name="arguments"></param>
-    public static async void ExecuteNetshCommand(string arguments)
+    public static void ExecuteNetshCommand(string arguments)
     {
         ProcessStartInfo psi = new ProcessStartInfo("netsh", arguments)
         {

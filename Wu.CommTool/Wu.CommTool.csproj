@@ -9,6 +9,7 @@
 		<UseWindowsForms>True</UseWindowsForms>
 		<Nullable>enable</Nullable>
 		<ApplicationIcon>Images\logo.ico</ApplicationIcon>
+		<NoWarn>1685</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
 	  <DebugType>portable</DebugType>
@@ -88,7 +89,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="log4net" Version="2.0.15" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 		<PackageReference Include="Prism.DryIoc" Version="8.1.97" />
 		<PackageReference Include="System.IO.Ports" Version="7.0.0" />
 	</ItemGroup>

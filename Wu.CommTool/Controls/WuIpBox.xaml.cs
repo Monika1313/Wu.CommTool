@@ -34,9 +34,12 @@ namespace Wu.CommTool.Controls
         private void OnPaste(object sender, DataObjectPastingEventArgs e)
         {
             var isText = e.SourceDataObject.GetDataPresent(DataFormats.UnicodeText, true);
-            if (!isText) return;
+            if (!isText) 
+                return;
             var text = e.SourceDataObject.GetData(DataFormats.UnicodeText) as string;
-            string strResult = text.Replace("\n", "").Replace("\t", "").Replace("\r", "").Trim();
+            if(string.IsNullOrWhiteSpace(text)) 
+                return;
+            string strResult = text!.Replace("\n", "").Replace("\t", "").Replace("\r", "").Trim();
             bool isIp = Regex.IsMatch(strResult, @"^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$");
             if (isIp)
             {
@@ -206,7 +209,8 @@ namespace Wu.CommTool.Controls
             Key key = e.Key;
             //Keys/* key = e.keycode*/
             //System.Windows.Forms.Keys x = e.keycode
-            TextBox tbx = sender as TextBox;
+            if (sender is not TextBox tbx)
+                return;
             if ((key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9))
             {
                 //表示输入IP，暂不做处理
@@ -254,7 +258,8 @@ namespace Wu.CommTool.Controls
         private void TextBox_PreviewKeyUp(object sender, KeyEventArgs e)
         {
             Key key = e.Key;
-            TextBox tbx = sender as TextBox;
+            if (sender is not TextBox tbx) 
+                return;
             if ((key >= Key.D0 && key <= Key.D9) || (key >= Key.NumPad0 && key <= Key.NumPad9))
             {
                 // 当前输入框满三个数字后
@@ -285,7 +290,7 @@ namespace Wu.CommTool.Controls
         /// <param name="isSelectAll">是否全选</param>
         private void SetTbxFocus(TextBox curretTbx, bool isBack, bool isSelectAll)
         {
-            List<TextBox> TbxIPList = new();
+            List<TextBox> TbxIPList = [];
             foreach (UIElement item in gridIPAddress.Children)
             {
                 if (item.GetType() == typeof(TextBox))
@@ -293,7 +298,7 @@ namespace Wu.CommTool.Controls
                     TbxIPList.Add((TextBox)item);
                 }
             }
-            TextBox nextTbx = null;
+            TextBox? nextTbx = null;
             // 往后
             if (isBack)
             {

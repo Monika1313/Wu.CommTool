@@ -1,4 +1,5 @@
-﻿namespace Wu.CommTool.Modules.ConvertTools.ViewModels;
+﻿
+namespace Wu.CommTool.Modules.ConvertTools.ViewModels;
 
 public class TimestampConvertViewModel : NavigationViewModel, IRegionMemberLifetime
 {
@@ -30,7 +31,7 @@ public class TimestampConvertViewModel : NavigationViewModel, IRegionMemberLifet
         ConvertTimestampS = ConvertTimestampMs / 1000;
     }
 
-    private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+    private void Timer_Elapsed(object? sender, ElapsedEventArgs e)
     {
         try
         {
@@ -41,7 +42,7 @@ public class TimestampConvertViewModel : NavigationViewModel, IRegionMemberLifet
         }
         catch (Exception ex)
         {
-            
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 

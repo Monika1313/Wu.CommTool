@@ -21,15 +21,15 @@ public class ModbusRtuData : BindableBase
     /// 源数据Hex
     /// </summary>
     [JsonIgnore]
-    public dynamic? OriginValue { get => _OriginValue; set => SetProperty(ref _OriginValue, value); }
-    private dynamic? _OriginValue;
+    public dynamic OriginValue { get => _OriginValue; set => SetProperty(ref _OriginValue, value); }
+    private dynamic _OriginValue;
 
     /// <summary>
     /// 值
     /// </summary>
     [JsonIgnore]
-    public dynamic? Value { get => _Value; set => SetProperty(ref _Value, value); }
-    private dynamic? _Value;
+    public dynamic Value { get => _Value; set => SetProperty(ref _Value, value); }
+    private dynamic _Value;
 
     /// <summary>
     /// 数据类型
@@ -75,13 +75,11 @@ public class ModbusRtuData : BindableBase
     /// </summary>
     public int DataTypeByteLength => GetDataTypeLength(Type);
 
-
-
     /// <summary>
     /// 源字节数组
     /// </summary>
     [JsonIgnore]
-    public byte[]? OriginBytes
+    public byte[] OriginBytes
     {
         get => _OriginBytes;
         set
@@ -90,7 +88,7 @@ public class ModbusRtuData : BindableBase
             Value = GetVal(DataBytes, Type, Rate);
         }
     }
-    private byte[]? _OriginBytes;
+    private byte[] _OriginBytes;
 
     /// <summary>
     /// 在源字节数组中的位置
@@ -100,7 +98,7 @@ public class ModbusRtuData : BindableBase
 
     //当前值的原始字节数组(已转换字节序)
     [JsonIgnore]
-    public byte[]? DataBytes => GetDataBytes(OriginBytes, Location, ModbusByteOrder, Type);
+    public byte[] DataBytes => GetDataBytes(OriginBytes, Location, ModbusByteOrder, Type);
 
     //高位在前 低位在后
     [JsonIgnore]
@@ -135,7 +133,7 @@ public class ModbusRtuData : BindableBase
     /// <param name="byteOrder">字节序</param>
     /// <param name="dataType">数据类型</param>
     /// <returns></returns>
-    public static dynamic? GetDataBytes(byte[]? origin, int skip, ModbusByteOrder byteOrder, DataType dataType)
+    public static dynamic GetDataBytes(byte[] origin, int skip, ModbusByteOrder byteOrder, DataType dataType)
     {
         if (origin == null)
         {
@@ -155,7 +153,7 @@ public class ModbusRtuData : BindableBase
     /// <param name="dataType"></param>
     /// <param name="rate"></param>
     /// <returns></returns>
-    public static dynamic? GetVal(byte[]? databytes, DataType dataType, double rate)
+    public static dynamic GetVal(byte[] databytes, DataType dataType, double rate)
     {
         if (databytes == null)
         {

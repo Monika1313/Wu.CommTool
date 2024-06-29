@@ -1357,7 +1357,7 @@ public class ModbusRtuModel : BindableBase
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
         finally
         {

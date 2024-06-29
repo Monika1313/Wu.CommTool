@@ -6,6 +6,7 @@
 	 <LangVersion>latestMajor</LangVersion>
      <UseWPF>true</UseWPF>
      <Nullable>enable</Nullable>
+	 <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
     <DebugType>portable</DebugType>

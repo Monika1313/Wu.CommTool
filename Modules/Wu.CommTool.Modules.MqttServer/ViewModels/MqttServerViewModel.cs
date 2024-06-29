@@ -521,10 +521,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 
     }
 
-
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {
@@ -539,9 +535,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -565,7 +558,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 

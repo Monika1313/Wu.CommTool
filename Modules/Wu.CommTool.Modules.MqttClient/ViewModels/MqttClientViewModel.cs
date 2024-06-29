@@ -44,7 +44,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-            ShowErrorMessage("配置文件读取失败");
+            ShowErrorMessage($"配置文件读取失败{ex.Message}");
         }
 
         //读取配置文件夹
@@ -432,12 +432,12 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             return true;
         }
         //若是取消操作 则不报警了
-        catch (OperationCanceledException ex)
+        catch (OperationCanceledException)
         {
             return false;
         }
         //在离线事件中处理 不重复处理
-        catch (MqttCommunicationException ex)
+        catch (MqttCommunicationException)
         {
             return false;
         }
@@ -766,7 +766,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             }
             catch (Exception ex)
             {
-                HcGrowlExtensions.Warning("无法进行Json格式化...", viewName);
+                HcGrowlExtensions.Warning($"无法进行Json格式化...{ex.Message}", viewName);
                 return;
             }
 
@@ -781,7 +781,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 

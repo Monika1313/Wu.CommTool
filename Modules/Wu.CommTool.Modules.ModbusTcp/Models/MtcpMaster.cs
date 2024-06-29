@@ -44,7 +44,7 @@ public partial class MtcpMaster : ObservableObject
 
     #region 方法
     [RelayCommand]
-    async Task Execute(string cmd)
+    private void Execute(string cmd)
     {
         switch (cmd)
         {
@@ -57,7 +57,7 @@ public partial class MtcpMaster : ObservableObject
 
     [RelayCommand]
     [property: JsonIgnore]
-    async Task TestMaster()
+    private void TestMaster()
     {
         try
         {
@@ -95,7 +95,7 @@ public partial class MtcpMaster : ObservableObject
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 
@@ -190,7 +190,7 @@ public partial class MtcpMaster : ObservableObject
     /// <param name="mtcpFrame"></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task SendMessage(MtcpFrame mtcpFrame)
+    public void SendMessage(MtcpFrame mtcpFrame)
     {
         ////若未初始化客户端或未连接,则先连接
         //if (mbusTcpClient == null || !mbusTcpClient.Connected)
@@ -212,7 +212,7 @@ public partial class MtcpMaster : ObservableObject
     /// </summary>
     /// <returns></returns>
     [RelayCommand]
-    async Task DisConnect()
+    private void DisConnect()
     {
         try
         {

@@ -1,4 +1,6 @@
-﻿global using MaterialDesignThemes.Wpf;
+﻿global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using MaterialDesignThemes.Wpf;
 global using Prism.Commands;
 global using Prism.Ioc;
 global using Prism.Modularity;
@@ -12,6 +14,7 @@ global using System.Windows;
 global using System.Windows.Controls;
 global using Wu.CommTool.Core;
 global using Wu.CommTool.Core.Enums.Modbus;
+global using Wu.CommTool.Core.Extensions;
 global using Wu.CommTool.Modules.ConvertTools.Enums;
 global using Wu.CommTool.Modules.ConvertTools.Models;
 global using Wu.CommTool.Modules.ConvertTools.ViewModels;

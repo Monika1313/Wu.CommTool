@@ -22,7 +22,7 @@ public partial class MainWindow : Window
                 this.WindowState = WindowState.Maximized;
         };
         //关闭
-        btnClose.Click += async (s, e) =>
+        btnClose.Click += (s, e) =>
         {
             this.Close();
         };

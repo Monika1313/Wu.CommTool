@@ -3,6 +3,7 @@
 		<TargetFrameworks>net6.0-windows;net7.0-windows;net48</TargetFrameworks>
 		<LangVersion>latestMajor</LangVersion>
 		<UseWPF>true</UseWPF>
+		<NoWarn>1685</NoWarn>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net6.0-windows|AnyCPU'">
 	  <DebugType>portable</DebugType>

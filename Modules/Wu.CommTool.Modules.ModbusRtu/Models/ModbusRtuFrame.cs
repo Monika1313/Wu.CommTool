@@ -300,7 +300,7 @@ public class ModbusRtuFrame : BindableBase
                 default:
                     return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
             }
-            return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
+            //return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
         }
         catch
         {
