@@ -236,6 +236,29 @@ public partial class MtcpMaster : ObservableObject
             ShowErrorMessage("不能删除最后一行...");
         }
     }
+
+    /// <summary>
+    /// 复制帧内容
+    /// </summary>
+    /// <param name="obj"></param>
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void CopyFrame(MtcpMessageData obj)
+    {
+        try
+        {
+            string re = string.Empty;
+            foreach (var item in obj.MtcpSubMessageData)
+            {
+                re += $"{item.Content} ";
+            }
+            Clipboard.SetDataObject(re);
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"{ex.Message}");
+        }
+    }
     #endregion
 
     #region******************************  页面消息  ******************************

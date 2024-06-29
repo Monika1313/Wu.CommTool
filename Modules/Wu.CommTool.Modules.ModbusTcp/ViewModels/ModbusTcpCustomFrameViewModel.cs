@@ -51,28 +51,35 @@ public partial class ModbusTcpCustomFrameViewModel : NavigationViewModel
         switch (obj)
         {
             case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
-            case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
 
     /// <summary>
-    /// 弹窗
+    /// 打开解析页面
     /// </summary>
-    private void OpenDialogView()
+    [RelayCommand]
+    [property: JsonIgnore]
+    private async Task OpenAnalyzeMtcpFrameView(MtcpMessageData data)
     {
-        //try
-        //{
-        //    DialogParameters param = new()
-        //    {
-        //        { "Value", CurrentDto }
-        //    };
-        //    var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        //}
-        //catch (Exception ex)
-        //{
-        //    HcGrowlExtensions.Warning(ex.Message);
-        //}
+        try
+        {
+            if (data == null || data.MtcpFrame == null)
+            {
+                return;
+            }
+            DialogParameters param = new()
+            {
+                { "Value", data.MtcpFrame },
+                //TODO 字节序传参
+                //{ "ModbusByteOrder", ModbusRtuModel.ByteOrder }
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeMtcpFrameView), param, nameof(ModbusTcpView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
     #endregion
 }

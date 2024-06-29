@@ -289,23 +289,25 @@
 
                             <DataTemplate DataType="{x:Type models:MtcpMessageData}">
                                 <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                    <!--<i:Interaction.Triggers>
-                                     <i:EventTrigger EventName="MouseLeftButtonUp">
-                                         <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
-                                     </i:EventTrigger>
-                                 </i:Interaction.Triggers>-->
-                                    <!--<Border.ContextMenu>
-                                     <ContextMenu>
-                                         <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                   CommandParameter="{Binding}"
-                                                   Header="解析数据帧"
-                                                   Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
-                                         <MenuItem Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                   CommandParameter="{Binding}"
-                                                   Header="复制Modbus数据帧"
-                                                   Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
-                                     </ContextMenu>
-                                 </Border.ContextMenu>-->
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseLeftButtonUp">
+                                            <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <Border.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem
+                                                Command="{Binding Path=PlacementTarget.Tag.MtcpMaster.CopyFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                CommandParameter="{Binding}"
+                                                Header="复制Modbus数据帧"
+                                                Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
+                                            <MenuItem
+                                                Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                CommandParameter="{Binding}"
+                                                Header="解析数据帧"
+                                                Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
+                                        </ContextMenu>
+                                    </Border.ContextMenu>
                                     <WrapPanel Orientation="Horizontal">
                                         <TextBlock
                                             Margin="3"
