@@ -14,6 +14,7 @@ public partial class MtcpFrame : ObservableObject
 
     public MtcpFrame(string frame) : this(frame.GetBytes())
     {
+
     }
     #endregion
 
@@ -167,9 +168,7 @@ public partial class MtcpFrame : ObservableObject
                 break;
         }
 
-
-
-
+        MtcpSubMessageDatas = new ObservableCollection<MtcpSubMessageData>(GetMessageWithErrMsg());
     }
 
     /// <summary>
@@ -307,6 +306,12 @@ public partial class MtcpFrame : ObservableObject
     /// </summary>
     [ObservableProperty]
     string errMessage;
+
+    /// <summary>
+    /// 子消息
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<MtcpSubMessageData> mtcpSubMessageDatas = [];
     #endregion
 
     #region MBAP（报文头）：MBAP的长度为7个字节
@@ -362,13 +367,5 @@ public partial class MtcpFrame : ObservableObject
     [ObservableProperty]
     byte errorCode;
     #endregion
-
-
-
-
-    #region 方法
-
-    #endregion
-
 
 }

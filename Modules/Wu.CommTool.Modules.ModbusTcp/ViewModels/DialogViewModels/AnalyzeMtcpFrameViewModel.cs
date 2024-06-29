@@ -14,16 +14,6 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
-        //IRelayCommand
-        //SearchCommand
-        //CurrentDto
-    }
-
-    [RelayCommand]
-    public void Test()
-    {
-
     }
 
     /// <summary>
@@ -40,15 +30,27 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
     /// </summary>
     public void OnDialogOpened(IDialogParameters parameters)
     {
-        //if (parameters != null && parameters.ContainsKey("Value"))
+        //if (parameters != null && parameters.ContainsKey("ModbusByteOrder"))
         //{
-        //    var oldDto = parameters.GetValue<Dto>("Value");
-        //    var getResult = await service.GetDataAsync(oldDto);
-        //    if (getResult != null && getResult.Status)
-        //    {
-        //        CurrentDto = getResult.Result;
-        //    }
+        //    ModbusByteOrder = parameters.GetValue<ModbusByteOrder>("ModbusByteOrder");
         //}
+        if (parameters != null && parameters.ContainsKey("Value"))
+        {
+            MtcpFrame = parameters.GetValue<MtcpFrame>("Value");
+            //if (ModbusRtuFrame.RegisterValues?.Length > 0)
+            //{
+            //    ModbusRtuDatas.AddRange(Enumerable.Range(0, ModbusRtuFrame.RegisterValues.Length / 2).Select(x => new ModbusRtuData()));
+            //}
+
+            //将读取的数据写入
+            //for (int i = 0; i < ModbusRtuDatas.Count; i++)
+            //{
+            //    ModbusRtuDatas[i].Location = i * 2;         //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
+            //    ModbusRtuDatas[i].ModbusByteOrder = ModbusByteOrder; //字节序
+            //    ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(ModbusRtuFrame.RegisterValues, 2 * i);
+            //    ModbusRtuDatas[i].OriginBytes = ModbusRtuFrame.RegisterValues;        //源字节数组
+            //}
+        }
     }
     #endregion
 
@@ -57,7 +59,13 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
     public string DialogHostName { get; set; }
 
     [ObservableProperty]
-    object currentDto = new();
+    MtcpFrame mtcpFrame;
+
+    /// <summary>
+    /// 用于响应字节序修改后的显示
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<MtcpSubMessageData> mtcpSubMessageDatas = [];
     #endregion **************************************** 属性 ****************************************
 
 
@@ -67,7 +75,6 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
     {
         switch (obj)
         {
-            case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
@@ -78,8 +85,8 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
         //添加返回的参数
-        DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        DialogParameters param = [];
+        //param.Add("Value", CurrentDto);
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -90,25 +97,6 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
-    }
-
-    /// <summary>
-    /// 弹窗
-    /// </summary>
-    private void OpenDialogView()
-    {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning(ex.Message);
-        }
     }
     #endregion
 }

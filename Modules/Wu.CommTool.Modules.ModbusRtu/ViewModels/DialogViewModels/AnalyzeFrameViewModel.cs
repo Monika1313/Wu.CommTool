@@ -83,16 +83,12 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     {
         switch (obj)
         {
-            case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
 
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
-    void Save()
+    private void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -105,23 +101,12 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
-    void Cancel()
+    private void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
-    }
-
-    /// <summary>
-    /// 弹窗
-    /// </summary>
-    private void OpenDialogView()
-    {
-        
     }
 
     /// <summary>
