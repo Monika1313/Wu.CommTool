@@ -42,15 +42,11 @@ global using Wu.CommTool.Core.Enums.Modbus;
 global using Wu.CommTool.Modules.ModbusTcp.Enums;
 global using System.Runtime.CompilerServices;
 global using Wu.CommTool.Modules.ModbusTcp.Events;
-
-
 global using Wu.CommTool.Core.Common;
 global using Wu.Utils;
-
 
 global using Wu.CommTool.Modules.ModbusTcp.ViewModels.DialogViewModels;
 global using Wu.CommTool.Modules.ModbusTcp.Views.DialogViews;
 global using Wu.CommTool.Modules.ModbusTcp.Interfaces;
-
-
+global using System.Windows.Controls;
 

@@ -10,8 +10,6 @@ public partial class MtcpMaster : ObservableObject
         ShowMessage("开发中...");
     }
 
-
-
     /// <summary>
     /// 页面消息
     /// </summary>
@@ -44,6 +42,7 @@ public partial class MtcpMaster : ObservableObject
 
     #region 方法
     [RelayCommand]
+    [property:JsonIgnore]
     private void Execute(string cmd)
     {
         switch (cmd)
@@ -51,7 +50,6 @@ public partial class MtcpMaster : ObservableObject
             case "新增行":
                 MtcpCustomFrames.Add(new MtcpCustomFrame());
                 break;
-
         }
     }
 
@@ -224,6 +222,20 @@ public partial class MtcpMaster : ObservableObject
         }
     }
 
+    //删除行
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void DeleteLine(MtcpCustomFrame obj)
+    {
+        if (MtcpCustomFrames.Count > 1)
+        {
+            MtcpCustomFrames.Remove(obj);
+        }
+        else
+        {
+            ShowErrorMessage("不能删除最后一行...");
+        }
+    }
     #endregion
 
     #region******************************  页面消息  ******************************

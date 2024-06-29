@@ -13,7 +13,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models;
 /// <summary>
 /// ModbusRtu共享实例
 /// </summary>
-public class ModbusRtuModel : BindableBase
+public class ModbusRtuModel : ObservableObject
 {
     public ModbusRtuModel()
     {

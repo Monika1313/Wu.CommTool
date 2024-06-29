@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Wu.CommTool.Modules.ModbusTcp.Views.DialogViews;
+﻿namespace Wu.CommTool.Modules.ModbusTcp.Views.DialogViews;
 
 public partial class AnalyzeMtcpFrameView : UserControl
 {

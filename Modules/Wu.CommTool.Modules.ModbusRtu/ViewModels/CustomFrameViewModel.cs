@@ -31,9 +31,6 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
     [ObservableProperty]
     object currentDto = new();
 
-    /// <summary>
-    /// ModbusRtuModel
-    /// </summary>
     [ObservableProperty]
     ModbusRtuModel modbusRtuModel;
 
@@ -74,7 +71,6 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
     {
         switch (obj)
         {
-            case "Search": Search(); break;
             case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;//打开左侧抽屉
             case "OpenDialogView": OpenDialogView(); break;             //打开弹窗
             case "SendCustomFrame": ModbusRtuModel.SendCustomFrame(); break;  //发送自定义帧
@@ -112,10 +108,6 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
 
     }
 
-
-    /// <summary>
-    /// 保存
-    /// </summary>
     [RelayCommand]
     void Save()
     {
@@ -130,9 +122,6 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
 
-    /// <summary>
-    /// 取消
-    /// </summary>
     [RelayCommand]
     void Cancel()
     {
@@ -150,19 +139,11 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
     }
 
     /// <summary>
-    /// 查询数据
-    /// </summary>
-    private void Search()
-    {
-       
-    }
-
-    /// <summary>
     /// 复制Modbus数据帧
     /// </summary>
     /// <param name="obj"></param>
     [RelayCommand]
-    void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+    private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
     {
         try
         {
