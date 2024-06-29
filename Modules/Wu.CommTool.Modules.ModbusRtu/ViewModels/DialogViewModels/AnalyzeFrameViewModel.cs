@@ -14,9 +14,6 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
-        ExecuteCommand = new(Execute);
-        ModbusByteOrderChangedCommand = new DelegateCommand<ModbusByteOrder?>(ModbusByteOrderChanged);
     }
 
     /// <summary>
@@ -25,6 +22,7 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
+
     }
 
     /// <summary>
@@ -53,52 +51,32 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
                 ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(ModbusRtuFrame.RegisterValues, 2 * i);
                 ModbusRtuDatas[i].OriginBytes = ModbusRtuFrame.RegisterValues;        //源字节数组
             }
-
         }
     }
     #endregion
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
-    /// <summary>
-    /// ModbusRtuFrame
-    /// </summary>
-    public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
-    private ModbusRtuFrame _ModbusRtuFrame;
+    [ObservableProperty]
+    ModbusRtuFrame modbusRtuFrame;
 
     /// <summary>
     /// 字节序
     /// </summary>
-    public ModbusByteOrder ModbusByteOrder { get => _ModbusByteOrder; set => SetProperty(ref _ModbusByteOrder, value); }
-    private ModbusByteOrder _ModbusByteOrder = ModbusByteOrder.DCBA;
+    [ObservableProperty]
+    ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA;
 
     /// <summary>
     /// ModbusRtu的寄存器值
     /// </summary>
-    public ObservableCollection<ModbusRtuData> ModbusRtuDatas { get => _ModbusRtuDatas; set => SetProperty(ref _ModbusRtuDatas, value); }
-    private ObservableCollection<ModbusRtuData> _ModbusRtuDatas = new();
+    [ObservableProperty]
+    ObservableCollection<ModbusRtuData> modbusRtuDatas = [];
     #endregion
-
-
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 字节序切换
-    /// </summary>
-    public DelegateCommand<ModbusByteOrder?> ModbusByteOrderChangedCommand { get; private set; }
-    #endregion
-
 
     #region **************************************** 方法 ****************************************
+    [RelayCommand]
     public void Execute(string obj)
     {
         switch (obj)
@@ -117,8 +95,10 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
         //添加返回的参数
-        DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        DialogParameters param = new()
+        {
+            { "Value", CurrentDto }
+        };
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -146,6 +126,7 @@ public partial class AnalyzeFrameViewModel : NavigationViewModel, IDialogHostAwa
     /// 字节序切换
     /// </summary>
     /// <param name="order"></param>
+    [RelayCommand]
     private void ModbusByteOrderChanged(ModbusByteOrder? order)
     {
         try

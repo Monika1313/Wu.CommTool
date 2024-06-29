@@ -16,8 +16,6 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         this.dialogHost = dialogHost;
         ModbusRtuModel = modbusRtuModel;
 
-        ExecuteCommand = new(Execute);
-        CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
         OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
 
         SendCustomFrameCommand = new DelegateCommand<CustomFrame>(SendCustomFrame);
@@ -30,37 +28,24 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
 
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
     /// <summary>
     /// ModbusRtuModel
     /// </summary>
-    public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
-    private ModbusRtuModel _ModbusRtuModel;
+    [ObservableProperty]
+    ModbusRtuModel modbusRtuModel;
 
     /// <summary>
     /// 抽屉
     /// </summary>
-    public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
-    private OpenDrawers _OpenDrawers = new();
+    [ObservableProperty]
+    OpenDrawers _OpenDrawers = new();
     #endregion
 
 
     #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 复制Modbus帧信息
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
-
     /// <summary>
     /// 打开帧解析界面
     /// </summary>
@@ -84,7 +69,8 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
 
 
     #region **************************************** 方法 ****************************************
-    public void Execute(string obj)
+    [RelayCommand]
+    void Execute(string obj)
     {
         switch (obj)
         {
@@ -160,18 +146,7 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
     /// </summary>
     private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-
-        }
+        
     }
 
     /// <summary>
@@ -179,26 +154,15 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
     /// </summary>
     private void Search()
     {
-        try
-        {
-            UpdateLoading(true);
-
-        }
-        catch (Exception ex)
-        {
-            //aggregator.SendMessage($"{ex.Message}", "Main");
-        }
-        finally
-        {
-            UpdateLoading(false);
-        }
+       
     }
 
     /// <summary>
     /// 复制Modbus数据帧
     /// </summary>
     /// <param name="obj"></param>
-    private void CopyModbusRtuFrame(ModbusRtuMessageData obj)
+    [RelayCommand]
+    void CopyModbusRtuFrame(ModbusRtuMessageData obj)
     {
         try
         {
@@ -236,7 +200,7 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         }
         catch (Exception ex)
         {
-
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 

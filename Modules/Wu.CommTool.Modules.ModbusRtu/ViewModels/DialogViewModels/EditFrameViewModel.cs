@@ -15,7 +15,6 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
         this.provider = provider;
         this.dialogHost = dialogHost;
 
-        ExecuteCommand = new(Execute);
         ModbusRtuFrameTypes =
         [
             ModbusRtuFrameType._0x01请求帧,
@@ -33,7 +32,7 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //Search();
+
     }
 
     /// <summary>
@@ -46,44 +45,31 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     #endregion
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
     /// <summary>
     /// 帧生成
     /// </summary>
-    public ModbusRtuFrameCreator ModbusRtuFrameCreator { get => _ModbusRtuFrameCreator; set => SetProperty(ref _ModbusRtuFrameCreator, value); }
-    private ModbusRtuFrameCreator _ModbusRtuFrameCreator = new();
+    [ObservableProperty]
+    ModbusRtuFrameCreator modbusRtuFrameCreator = new();
 
     /// <summary>
     /// 可生成的帧列表
     /// </summary>
-    public ObservableCollection<ModbusRtuFrameType> ModbusRtuFrameTypes { get => _ModbusRtuFrameTypes; set => SetProperty(ref _ModbusRtuFrameTypes, value); }
-    private ObservableCollection<ModbusRtuFrameType> _ModbusRtuFrameTypes;
-
-    //public ModbusRtuFunctionCode SelectedCode { get => _SelectedCode; set => SetProperty(ref _SelectedCode, value); }
-    //private ModbusRtuFunctionCode _SelectedCode = ModbusRtuFunctionCode._0x03;
+    [ObservableProperty] 
+    ObservableCollection<ModbusRtuFrameType> modbusRtuFrameTypes;
 
     /// <summary>
     /// ModbusRtu帧
     /// </summary>
-    public ModbusRtuFrame ModbusRtuFrame { get => _ModbusRtuFrame; set => SetProperty(ref _ModbusRtuFrame, value); }
-    private ModbusRtuFrame _ModbusRtuFrame = new();
-    #endregion
-
-
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
+    [ObservableProperty] 
+    ModbusRtuFrame modbusRtuFrame = new();
     #endregion
 
 
     #region **************************************** 方法 ****************************************
+    [RelayCommand]
     public void Execute(string obj)
     {
         switch (obj)
@@ -92,9 +78,6 @@ public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
             default: break;
         }
     }
-
-
-
 
     /// <summary>
     /// 保存

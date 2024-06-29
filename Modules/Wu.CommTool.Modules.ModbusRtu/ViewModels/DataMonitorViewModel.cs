@@ -14,17 +14,12 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
         this.provider = provider;
         this.dialogHost = dialogHost;
 
-        ExecuteCommand = new(Execute);
         ModburRtuDataWriteCommand = new DelegateCommand<ModbusRtuData>(ModburRtuDataWrite);
         QuickImportConfigCommand = new DelegateCommand<ConfigFile>(QuickImportConfig);
         OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
         CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
 
-        this.ModbusRtuModel = modbusRtuModel;
-        //var stopwatch = new Stopwatch();
-        //stopwatch.Start();
-        //stopwatch.Stop();
-        //Debug.WriteLine($"Elapsed Time: {stopwatch.ElapsedMilliseconds} ms");
+        ModbusRtuModel = modbusRtuModel;
     }
 
     /// <summary>
@@ -38,32 +33,24 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
 
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
     /// <summary>
     /// ModbusRtuModel
     /// </summary>
-    public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
-    private ModbusRtuModel _ModbusRtuModel;
+    [ObservableProperty]
+    ModbusRtuModel modbusRtuModel;
 
     /// <summary>
-    /// OpenDrawers
+    /// 抽屉
     /// </summary>
-    public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
-    private OpenDrawers _OpenDrawers = new();
+    [ObservableProperty]
+    OpenDrawers openDrawers = new();
     #endregion
 
 
     #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
     /// <summary>
     /// ModburRtu数据写入
     /// </summary>
@@ -88,7 +75,8 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
 
 
     #region **************************************** 方法 ****************************************
-    public void Execute(string obj)
+    [RelayCommand]
+    void Execute(string obj)
     {
         switch (obj)
         {

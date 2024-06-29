@@ -13,33 +13,20 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
-        ExecuteCommand = new(Execute);
     }
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public ModbusRtuAutoResponseData CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private ModbusRtuAutoResponseData _CurrentDto = new();
-    #endregion
-
-
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
+    [ObservableProperty]
+    ModbusRtuAutoResponseData currentDto = new();
     #endregion
 
 
     #region **************************************** 方法 ****************************************
+    [RelayCommand]
     public void Execute(string obj)
     {
         switch (obj)
         {
-            case "Search": Search(); break;
             case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
@@ -51,13 +38,13 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //Search();
+
     }
 
     /// <summary>
     /// 打开该弹窗时执行
     /// </summary>
-    public async void OnDialogOpened(IDialogParameters parameters)
+    public void OnDialogOpened(IDialogParameters parameters)
     {
         if (parameters != null && parameters.ContainsKey("Value"))
         {
@@ -100,7 +87,7 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
     /// <summary>
     /// 弹窗
     /// </summary>
-    private async void OpenDialogView()
+    private void OpenDialogView()
     {
         try
         {
@@ -112,27 +99,7 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
         }
         catch (Exception ex)
         {
-
-        }
-    }
-
-    /// <summary>
-    /// 查询数据
-    /// </summary>
-    private async void Search()
-    {
-        try
-        {
-            UpdateLoading(true);
-
-        }
-        catch (Exception ex)
-        {
-            //aggregator.SendMessage($"{ex.Message}", "Main");
-        }
-        finally
-        {
-            UpdateLoading(false);
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
     #endregion

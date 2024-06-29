@@ -15,11 +15,6 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
         this.dialogHost = dialogHost;
         ModbusRtuModel = modbusRtuModel;
 
-        ExecuteCommand = new(Execute);
-        OpenMosbusRtuAutoResponseDataEditViewCommand = new DelegateCommand<ModbusRtuAutoResponseData>(OpenMosbusRtuAutoResponseDataEditView);
-        CopyModbusRtuFrameCommand = new DelegateCommand<ModbusRtuMessageData>(CopyModbusRtuFrame);
-        OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
-
         //导入默认自动应答配置
         try
         {
@@ -35,50 +30,25 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
 
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// CurrentDto
-    /// </summary>
-    public object CurrentDto { get => _CurrentDto; set => SetProperty(ref _CurrentDto, value); }
-    private object _CurrentDto = new();
+    [ObservableProperty]
+    object currentDto = new();
 
     /// <summary>
     /// ModbusRtuModel
     /// </summary>
-    public ModbusRtuModel ModbusRtuModel { get => _ModbusRtuModel; set => SetProperty(ref _ModbusRtuModel, value); }
-    private ModbusRtuModel _ModbusRtuModel;
+    [ObservableProperty]
+    ModbusRtuModel modbusRtuModel;
 
     /// <summary>
     /// OpenDrawers
     /// </summary>
-    public OpenDrawers OpenDrawers { get => _OpenDrawers; set => SetProperty(ref _OpenDrawers, value); }
-    private OpenDrawers _OpenDrawers = new();
-    #endregion
-
-
-    #region **************************************** 命令 ****************************************
-    /// <summary>
-    /// 执行命令
-    /// </summary>
-    public DelegateCommand<string> ExecuteCommand { get; private set; }
-
-    /// <summary>
-    /// 打开自动应答编辑界面
-    /// </summary>
-    public DelegateCommand<ModbusRtuAutoResponseData> OpenMosbusRtuAutoResponseDataEditViewCommand { get; private set; }
-
-    /// <summary>
-    /// 复制Modbus帧信息
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> CopyModbusRtuFrameCommand { get; private set; }
-
-    /// <summary>
-    /// 打开帧解析界面
-    /// </summary>
-    public DelegateCommand<ModbusRtuMessageData> OpenAnalyzeFrameViewCommand { get; private set; }
+    [ObservableProperty]
+    OpenDrawers openDrawers = new();
     #endregion
 
 
     #region **************************************** 方法 ****************************************
+    [RelayCommand]
     public void Execute(string obj)
     {
         switch (obj)
@@ -119,7 +89,7 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //Search();
+
     }
 
     /// <summary>
@@ -195,13 +165,16 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
         }
     }
 
-
-    private async void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
+    /// <summary>
+    /// 打开自动应答编辑界面
+    /// </summary>
+    [RelayCommand]
+    private async Task OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
     {
         try
         {
             if (obj == null)
-                return;
+                return ;
             //添加参数
             DialogParameters param = new()
             {
@@ -235,7 +208,8 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
     /// 打开解析帧页面
     /// </summary>
     /// <param name="data"></param>
-    private async void OpenAnalyzeFrameView(ModbusRtuMessageData data)
+    [RelayCommand]
+    private async Task OpenAnalyzeFrameView(ModbusRtuMessageData data)
     {
         try
         {
