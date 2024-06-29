@@ -168,7 +168,7 @@
                                     <Border Style="{StaticResource MtcpMessageBorder}">
                                         <WrapPanel Orientation="Horizontal">
                                             <TextBlock
-                                                Width="60"
+                                                Width="75"
                                                 Margin="5,0"
                                                 VerticalAlignment="Center">
                                                 <TextBlock.Style>
