@@ -1,13 +1,7 @@
 ﻿namespace Wu.CommTool.Modules.Message.ViewModels;
 
-public class MsgViewModel : BindableBase, IDialogHostAware
+public partial class MsgViewModel : ObservableObject, IDialogHostAware
 {
-    public MsgViewModel()
-    {
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
-    }
-
     /// <summary>
     /// 标题
     /// </summary>
@@ -22,8 +16,6 @@ public class MsgViewModel : BindableBase, IDialogHostAware
 
 
     public string DialogHostName { get; set; } = "Root";
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
 
     public void OnDialogOpened(IDialogParameters parameters)
     {
@@ -37,7 +29,8 @@ public class MsgViewModel : BindableBase, IDialogHostAware
     /// <summary>
     /// 取消
     /// </summary>
-    private void Cancel()
+    [RelayCommand]
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (!DialogHost.IsDialogOpen(DialogHostName))
@@ -48,7 +41,8 @@ public class MsgViewModel : BindableBase, IDialogHostAware
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    [RelayCommand]
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;

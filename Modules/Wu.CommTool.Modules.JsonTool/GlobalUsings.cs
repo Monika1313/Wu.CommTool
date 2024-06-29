@@ -16,3 +16,4 @@ global using Wu.ViewModels;
 global using Wu.Wpf.Common;
 global using Wu.Wpf.Extensions;
 global using Wu.CommTool.Modules.JsonTool.Enums;
+global using CommunityToolkit.Mvvm.Input;

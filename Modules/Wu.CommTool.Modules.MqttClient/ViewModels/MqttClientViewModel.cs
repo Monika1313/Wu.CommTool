@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.MqttClient.ViewModels;
 
-public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
+public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -30,8 +30,6 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         ExecuteCommand = new(Execute);
         SubTopicCommand = new DelegateCommand<MqttTopic>(SubTopic);
         UnsubscribeTopicCommand = new DelegateCommand<string>(UnsubscribeTopic);
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
         OpenJsonDataViewCommand = new DelegateCommand<MessageData>(OpenJsonDataView);
         ImportConfigCommand = new DelegateCommand<ConfigFile>(ImportConfig);
 
@@ -118,9 +116,6 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 命令 ****************************************
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
-
     /// <summary>
     /// 执行命令
     /// </summary>
@@ -762,7 +757,8 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    [RelayCommand]
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -776,7 +772,8 @@ public class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 取消
     /// </summary>
-    private void Cancel()
+    [RelayCommand]
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.ModbusTcp.ViewModels.DialogViewModels;
 
-public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHostAware, ITest
+public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHostAware
 {
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -16,8 +16,6 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
         this.provider = provider;
         this.dialogHost = dialogHost;
 
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
         //IRelayCommand
         //SearchCommand
         //CurrentDto
@@ -66,8 +64,7 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
 
 
     #region **************************************** 命令 ****************************************
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
+
     #endregion
 
 
@@ -86,7 +83,8 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    [RelayCommand]
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -101,7 +99,8 @@ public partial class AnalyzeMtcpFrameViewModel : NavigationViewModel, IDialogHos
     /// 取消
     /// </summary>
     //[RelayCommand]
-    private void Cancel()
+    [RelayCommand]
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
 
-public class EditFrameViewModel : NavigationViewModel, IDialogHostAware
+public partial class EditFrameViewModel : NavigationViewModel, IDialogHostAware
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -16,8 +16,6 @@ public class EditFrameViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
 
         ExecuteCommand = new(Execute);
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
         ModbusRtuFrameTypes =
         [
             ModbusRtuFrameType._0x01请求帧,
@@ -86,9 +84,6 @@ public class EditFrameViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 命令 ****************************************
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
-
     /// <summary>
     /// 执行命令
     /// </summary>
@@ -115,7 +110,8 @@ public class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    [RelayCommand]
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -129,7 +125,8 @@ public class EditFrameViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 取消
     /// </summary>
-    private void Cancel()
+    [RelayCommand]
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

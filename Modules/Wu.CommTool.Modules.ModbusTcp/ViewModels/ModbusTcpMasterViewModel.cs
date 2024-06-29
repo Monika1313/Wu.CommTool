@@ -16,8 +16,6 @@ public partial class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHost
         this.dialogHost = dialogHost;
 
         ExecuteCommand = new(Execute);
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
     }
 
     /// <summary>
@@ -69,9 +67,6 @@ public partial class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHost
 
 
     #region **************************************** 命令 ****************************************
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
-
     /// <summary>
     /// 执行命令
     /// </summary>
@@ -97,7 +92,8 @@ public partial class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHost
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    [RelayCommand]
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -111,7 +107,8 @@ public partial class ModbusTcpMasterViewModel : NavigationViewModel, IDialogHost
     /// <summary>
     /// 取消
     /// </summary>
-    private void Cancel()
+    [RelayCommand]
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

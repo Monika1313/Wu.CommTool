@@ -6,8 +6,6 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
 {
     public MsgViewModel()
     {
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
     }
 
     /// <summary>
@@ -24,8 +22,6 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
 
 
     public string DialogHostName { get; set; } = "Root";
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
 
     public void OnDialogOpened(IDialogParameters parameters)
     {
@@ -39,6 +35,7 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
     /// <summary>
     /// 取消
     /// </summary>
+    [RelayCommand]
     void Cancel()
     {
         //若窗口处于打开状态则关闭
@@ -50,6 +47,7 @@ public partial class MsgViewModel : ObservableObject, IDialogHostAware
     /// <summary>
     /// 保存
     /// </summary>
+    [RelayCommand]
     void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))

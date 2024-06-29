@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
-public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
+public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -19,8 +19,6 @@ public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
         ModbusRtuModel = modbusRtuModel;
 
         ExecuteCommand = new(Execute);
-        SaveCommand = new DelegateCommand(Save);
-        CancelCommand = new DelegateCommand(Cancel);
         SelectedIndexChangedCommand = new DelegateCommand<MenuBar>(SelectedIndexChanged);
     }
 
@@ -58,9 +56,6 @@ public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 命令 ****************************************
-    public DelegateCommand SaveCommand { get; set; }
-    public DelegateCommand CancelCommand { get; set; }
-
     /// <summary>
     /// 执行命令
     /// </summary>
@@ -116,7 +111,8 @@ public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 保存
     /// </summary>
-    private void Save()
+    [RelayCommand]
+    void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -130,7 +126,8 @@ public class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 取消
     /// </summary>
-    private void Cancel()
+    [RelayCommand]
+    void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

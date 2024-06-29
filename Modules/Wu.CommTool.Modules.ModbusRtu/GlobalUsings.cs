@@ -37,6 +37,6 @@ global using Wu.CommTool.Core.Enums.Modbus;
 global using Wu.CommTool.Core.Extensions;
 global using Wu.CommTool.Core.Common;
 global using CommunityToolkit.Mvvm.ComponentModel;
-
+global using CommunityToolkit.Mvvm.Input;
 
 

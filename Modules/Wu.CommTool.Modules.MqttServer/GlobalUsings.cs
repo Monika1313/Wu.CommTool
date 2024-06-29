@@ -35,5 +35,4 @@ global using Wu.ViewModels;
 global using Wu.Wpf.Common;
 global using Wu.Wpf.Extensions;
 global using Wu.Wpf.Models;
-
-
+global using CommunityToolkit.Mvvm.Input;

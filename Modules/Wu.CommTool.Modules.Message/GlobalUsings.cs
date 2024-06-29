@@ -6,3 +6,6 @@ global using Prism.Mvvm;
 global using Prism.Services.Dialogs;
 global using Wu.Wpf.Common;
 
+global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+

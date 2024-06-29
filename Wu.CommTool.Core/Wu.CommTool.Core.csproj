@@ -29,7 +29,7 @@
 		<PackageReference Include="System.Management" Version="8.0.0" />
 		<PackageReference Include="WindowsFirewallHelper" Version="2.2.0.86" />
 		<PackageReference Include="Wu" Version="1.0.7" />
-		<PackageReference Include="Wu.Wpf" Version="1.1.1" />
+		<PackageReference Include="Wu.Wpf" Version="1.2.0" />
 		<PackageReference Include="Wu.Wpf.ControlLibrary" Version="1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
