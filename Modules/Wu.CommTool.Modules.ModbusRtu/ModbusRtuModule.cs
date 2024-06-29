@@ -1,6 +1,4 @@
-﻿using Prism.Modularity;
-
-namespace Wu.CommTool.Modules.ModbusRtu;
+﻿namespace Wu.CommTool.Modules.ModbusRtu;
 
 public class ModbusRtuModule : IModule
 {

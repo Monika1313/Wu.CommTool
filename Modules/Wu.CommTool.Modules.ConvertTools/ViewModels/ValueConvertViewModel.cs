@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.ConvertTools.ViewModels;
+﻿using Wu.CommTool.Core.Extensions;
+
+namespace Wu.CommTool.Modules.ConvertTools.ViewModels;
 
 public class ValueConvertViewModel : NavigationViewModel
 {
@@ -12,7 +14,6 @@ public class ValueConvertViewModel : NavigationViewModel
     public ValueConvertViewModel(IContainerProvider provider) : base(provider)
     {
         this.provider = provider;
-        //this.dialogHost = dialogHost;
 
         ExecuteCommand = new(Execute);
         SaveCommand = new DelegateCommand(Save);
@@ -62,23 +63,15 @@ public class ValueConvertViewModel : NavigationViewModel
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //Search();
+
     }
 
     /// <summary>
     /// 打开该弹窗时执行
     /// </summary>
-    public async void OnDialogOpened(IDialogParameters parameters)
+    public void OnDialogOpened(IDialogParameters parameters)
     {
-        if (parameters != null && parameters.ContainsKey("Value"))
-        {
-            //var oldDto = parameters.GetValue<Dto>("Value");
-            //var getResult = await employeeService.GetSinglePersonalStorageAsync(oldDto);
-            //if(getResult != null && getResult.Status)
-            //{
-            //    CurrentDto = getResult.Result;
-            //}
-        }
+
     }
 
 
@@ -109,40 +102,17 @@ public class ValueConvertViewModel : NavigationViewModel
     /// <summary>
     /// 弹窗
     /// </summary>
-    private async void OpenDialogView()
+    private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
 
-        }
     }
 
     /// <summary>
     /// 查询数据
     /// </summary>
-    private async void Search()
+    private void Search()
     {
-        try
-        {
-            UpdateLoading(true);
 
-        }
-        catch (Exception ex)
-        {
-            //aggregator.SendMessage($"{ex.Message}", "Main");
-        }
-        finally
-        {
-            UpdateLoading(false);
-        }
     }
     #endregion
 }

@@ -1,16 +1,10 @@
-﻿using System.Windows.Controls;
+﻿namespace Wu.CommTool.Modules.JsonTool.Views;
 
-namespace Wu.CommTool.Modules.JsonTool.Views
+public partial class JsonToolView : UserControl
 {
-    /// <summary>
-    /// JsonView.xaml 的交互逻辑
-    /// </summary>
-    public partial class JsonToolView : UserControl
+    public const string ViewName = nameof(JsonToolView);
+    public JsonToolView()
     {
-        public const string ViewName = nameof(JsonToolView);
-        public JsonToolView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

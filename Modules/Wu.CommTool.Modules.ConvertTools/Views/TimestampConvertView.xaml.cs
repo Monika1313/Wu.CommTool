@@ -1,15 +1,9 @@
-﻿using System.Windows.Controls;
+﻿namespace Wu.CommTool.Modules.ConvertTools.Views;
 
-namespace Wu.CommTool.Modules.ConvertTools.Views
+public partial class TimestampConvertView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for TimestampConvertView
-    /// </summary>
-    public partial class TimestampConvertView : UserControl
+    public TimestampConvertView()
     {
-        public TimestampConvertView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }

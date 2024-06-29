@@ -2,17 +2,14 @@
 
 public partial class MsgViewModel : ObservableObject, IDialogHostAware
 {
-    /// <summary>
-    /// 标题
-    /// </summary>
-    public string Title { get => _Title; set => SetProperty(ref _Title, value); }
-    private string _Title;
+    [ObservableProperty]
+    string title;
 
     /// <summary>
     /// 内容
     /// </summary>
-    public string Content { get => _Content; set => SetProperty(ref _Content, value); }
-    private string _Content;
+    [ObservableProperty]
+    string content;
 
 
     public string DialogHostName { get; set; } = "Root";

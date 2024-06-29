@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Wu.CommTool.Modules.About.Views;
+﻿namespace Wu.CommTool.Modules.About.Views;
 
 public partial class AboutView : UserControl
 {

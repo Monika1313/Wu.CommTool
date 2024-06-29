@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.About.ViewModels;
 
-public class AboutViewModel : BindableBase
+public partial class AboutViewModel : ObservableObject
 {
     public AboutViewModel()
     {

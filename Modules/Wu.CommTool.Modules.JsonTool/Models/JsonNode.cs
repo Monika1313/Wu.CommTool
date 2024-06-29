@@ -3,46 +3,43 @@
 /// <summary>
 /// Json格式化
 /// </summary>
-public class JsonNode : BindableBase
+public partial class JsonNode : ObservableObject
 {
     /// <summary>
     /// Header
     /// </summary>
-    public string Header { get => _Header; set => SetProperty(ref _Header, value); }
-    private string _Header;
+    [ObservableProperty]
+    string header;
 
     /// <summary>
     /// 显示值
     /// </summary>
-    public string DispValue { get => _DispValue; set => SetProperty(ref _DispValue, value); }
-    private string _DispValue;
+    [ObservableProperty]
+    string dispValue;
 
     /// <summary>
     /// Name和Value显示在同一行
     /// </summary>
-    public bool InLine { get => _InLine; set => SetProperty(ref _InLine, value); }
-    private bool _InLine;
+    [ObservableProperty]
+    bool inLine;
 
     /// <summary>
     /// 是否展开子项 默认展开
     /// </summary>
-    public bool IsExpand { get => _IsExpand; set => SetProperty(ref _IsExpand, value); }
-    private bool _IsExpand = true;
+    [ObservableProperty]
+    private bool isExpand = true;
 
 
     /// <summary>
     /// 类型
     /// </summary>
-    public JNodeType JNodeType { get => _JNodeType; set => SetProperty(ref _JNodeType, value); }
-    private JNodeType _JNodeType = JNodeType.JProperty;
+    [ObservableProperty]
+    JNodeType jNodeType = JNodeType.JProperty;
 
 
     public IEnumerable<JsonNode> Children { get; private set; }
 
     public JToken Token { get; private set; }
-
-
-
 
 
     #region 构造函数
@@ -97,10 +94,6 @@ public class JsonNode : BindableBase
         }
     }
     #endregion
-
-
-
-
 
 
 

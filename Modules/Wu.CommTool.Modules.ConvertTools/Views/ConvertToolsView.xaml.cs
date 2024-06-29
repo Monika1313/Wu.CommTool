@@ -1,15 +1,9 @@
-﻿using System.Windows.Controls;
+﻿namespace Wu.CommTool.Modules.ConvertTools.Views;
 
-namespace Wu.CommTool.Modules.ConvertTools.Views
+public partial class ConvertToolsView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for ConvertToolsView
-    /// </summary>
-    public partial class ConvertToolsView : UserControl
+    public ConvertToolsView()
     {
-        public ConvertToolsView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
     }
 }
