@@ -20,18 +20,15 @@ public partial class NetworkCard : ObservableObject
         string deviceId = mo["DeviceID"].ToString();
 
         // 查询对应的网络适配器配置
-        ManagementObjectSearcher configSearcher = new ManagementObjectSearcher(
+        ManagementObjectSearcher configSearcher = new(
             $"SELECT * FROM Win32_NetworkAdapterConfiguration WHERE SettingID = '{deviceId}'");
-        var x = configSearcher.Get().Count;
-        foreach (ManagementObject config in configSearcher.Get())
+        //var x = configSearcher.Get().Count;
+        foreach (ManagementObject config in configSearcher.Get().Cast<ManagementObject>())
         {
             // 检查是否包含DHCPEnabled属性并获取其值
             if (config.Properties["DHCPEnabled"] != null)
             {
                 DhcpEnabled = (bool)config["DHCPEnabled"];
-
-                // 获取适配器的描述
-                string description = (string)config["Description"];
             }
         }
     }
@@ -69,7 +66,7 @@ public partial class NetworkCard : ObservableObject
 
             //查询该网卡的Win32_NetworkAdapterConfiguration信息,以获取DHCP状态等
             ManagementObjectSearcher searcherConfig = new("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE Index = " + mo["Index"]);
-            foreach (ManagementObject configObj in searcherConfig.Get())
+            foreach (ManagementObject configObj in searcherConfig.Get().Cast<ManagementObject>())
             {
                 DhcpEnabled = Convert.ToBoolean(configObj["DHCPEnabled"]);//网卡DHCP状态
 
@@ -80,7 +77,7 @@ public partial class NetworkCard : ObservableObject
                     for (int i = 0; i < ipAddresses.Length; i++)
                     {
                         // 仅IPv4地址及其子网掩码
-                        if (ipAddresses[i].Contains("."))
+                        if (ipAddresses[i].Contains('.'))
                         {
                             Ipv4List.Add(new Ipv4(ipAddresses[i], subnets[i]));
                         }

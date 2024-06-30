@@ -37,17 +37,75 @@
                 CommandParameter="打开网络连接"
                 Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
 
-            <Button
+            <!--<Button
                 Margin="4"
                 Command="{Binding ExecuteCommand}"
                 CommandParameter="测试"
-                Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
-
+                Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />-->
         </StackPanel>
+
+        <ContentControl
+            Margin="4"
+            Padding="0"
+            DockPanel.Dock="Right"
+            Style="{StaticResource Effect2Control}">
+            <hc:ScrollViewer IsInertiaEnabled="True">
+                <StackPanel>
+                    <TextBlock
+                        Margin="30,5"
+                        Style="{StaticResource TitleTextBlock}"
+                        Text="Ipv4设置" />
+                    <ItemsControl Background="Transparent" ItemsSource="{Binding NetworkCardConfig.Ipv4s}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Vertical" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="models:Ipv4">
+                                <DockPanel Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                    <DockPanel.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem
+                                                Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                CommandParameter="{Binding}"
+                                                Header="删除" />
+                                        </ContextMenu>
+                                    </DockPanel.ContextMenu>
+
+                                    <ContentControl Style="{StaticResource Effect2Control}">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="4,0,4,0"
+                                                VerticalAlignment="Center"
+                                                Text="IP地址" />
+                                            <TextBox
+                                                Width="110"
+                                                VerticalContentAlignment="Center"
+                                                Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBlock
+                                                Margin="10,0,4,0"
+                                                VerticalAlignment="Center"
+                                                Text="子网掩码" />
+                                            <TextBox
+                                                Width="110"
+                                                VerticalContentAlignment="Center"
+                                                Text="{Binding SubnetMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        </StackPanel>
+                                    </ContentControl>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </hc:ScrollViewer>
+        </ContentControl>
+
         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="False" IsInertiaEnabled="True">
             <ItemsControl
                 Margin="0"
                 Background="Transparent"
+                IsTabStop="False"
                 ItemsSource="{Binding NetworkCards, IsAsync=True}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -77,33 +135,50 @@
                                         Text="{Binding Name}" />
                                 </StackPanel>
 
+
                                 <StackPanel
-                                    Margin="10"
+                                    Margin="4"
                                     DockPanel.Dock="Top"
                                     Orientation="Horizontal">
-                                    <!--<TextBlock Text="{Binding NetEnabled}" />-->
-                                    <!--<TextBlock Text="{Binding Manufacturer}" />-->
+                                    <TextBlock Text="Dhcp状态: " />
+
+                                    <TextBlock VerticalAlignment="Center">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding DhcpEnabled}" Value="false">
+                                                        <Setter Property="Text" Value="禁用" />
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding DhcpEnabled}" Value="true">
+                                                        <Setter Property="Text" Value="启用" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+
+
                                     <Button
                                         Margin="4"
                                         HorizontalAlignment="Left"
                                         Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                         CommandParameter="{Binding .}"
                                         Content="启用DHCP"
-                                        IsEnabled="{Binding DhcpEnabled, Converter={wu:ReverseBool}}" />
+                                        Visibility="{Binding DhcpEnabled, Converter={wu:True2Collapsed}}" />
                                     <!--<Button
                                         Margin="4"
                                         HorizontalAlignment="Left"
                                         Command="{Binding DataContext.NetEnableCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                         CommandParameter="{Binding .}"
                                         Content="启用禁用网卡" />-->
-                                    <Button
+                                    <!--<Button
                                         Margin="4"
                                         HorizontalAlignment="Left"
                                         Command="{Binding DataContext.ImportIpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                         CommandParameter="{Binding .}"
-                                        Content="设置固定IP" />
+                                        Content="设置固定IP" />-->
                                 </StackPanel>
-                                <ItemsControl Margin="10" ItemsSource="{Binding Ipv4List}">
+                                <ItemsControl Margin="6" ItemsSource="{Binding Ipv4List}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Vertical" />

@@ -1,10 +1,10 @@
 ﻿namespace Wu.CommTool.Modules.NetworkTool.Models;
 
-public partial class Ipv4 :ObservableObject
+public partial class Ipv4 : ObservableObject
 {
-    public Ipv4()
+    public Ipv4() : this(string.Empty, string.Empty)
     {
-            
+
     }
 
     public Ipv4(string address, string subnetMask)

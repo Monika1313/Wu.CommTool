@@ -97,10 +97,6 @@
                         <RowDefinition Height="auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-                    <md:Snackbar
-                        x:Name="Snackbar"
-                        Panel.ZIndex="1"
-                        MessageQueue="{md:MessageQueue}" />
                     <md:ColorZone
                         x:Name="ColorZone"
                         Padding="10"
@@ -113,8 +109,13 @@
                                 VerticalAlignment="Center"
                                 FontSize="22"
                                 Text="Wu" />
-
                             <DockPanel LastChildFill="False">
+                                <ToggleButton
+                                    x:Name="MenuToggleButton"
+                                    DockPanel.Dock="Left"
+                                    IsChecked="False"
+                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}"
+                                    WindowChrome.IsHitTestVisibleInChrome="True" />
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
 
                                     <!--<md:PopupBox StaysOpen="True">
@@ -160,13 +161,6 @@
                                         Style="{StaticResource MaterialDesignFlatMidBgButton}"
                                         WindowChrome.IsHitTestVisibleInChrome="True" />
                                 </StackPanel>
-
-                                <ToggleButton
-                                    x:Name="MenuToggleButton"
-                                    DockPanel.Dock="Left"
-                                    IsChecked="False"
-                                    Style="{StaticResource MaterialDesignHamburgerToggleButton}"
-                                    WindowChrome.IsHitTestVisibleInChrome="True" />
                             </DockPanel>
                         </Grid>
                     </md:ColorZone>

@@ -8,6 +8,9 @@ public partial class NetworkToolViewModel : NavigationViewModel
     {
         获取物理网卡信息();
         this.dialogHost = dialogHost;
+
+        NetworkCardConfig.Ipv4s.Add(new Ipv4());
+        NetworkCardConfig.Ipv4s.Add(new Ipv4());
     }
 
     #region 字段
@@ -21,18 +24,23 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// </summary>
     [ObservableProperty]
     ObservableCollection<NetworkCard> networkCards = [];
+
+    /// <summary>
+    ///  网卡配置
+    /// </summary>
+    [ObservableProperty]
+    NetworkCardConfig networkCardConfig = new();
     #endregion
 
 
     [RelayCommand]
-    void Execute(string obj)
+    private void Execute(string obj)
     {
         switch (obj)
         {
             case "获取物理网卡信息": 获取物理网卡信息(); break;
             case "获取所有网卡信息": 获取所有网卡信息(); break;
-            case "打开网络连接": NetworkToolViewModel.打开网络连接(); break;
-            case "测试": 测试(); break;
+            case "打开网络连接": 打开网络连接(); break;
         }
     }
 
@@ -42,19 +50,16 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// <param name="arguments"></param>
     public static void ExecuteNetshCommand(string arguments)
     {
-        ProcessStartInfo psi = new ProcessStartInfo("netsh", arguments)
+        ProcessStartInfo psi = new("netsh", arguments)
         {
             RedirectStandardOutput = true,
             UseShellExecute = false,
             CreateNoWindow = true
         };
 
-        using (Process process = Process.Start(psi))
-        {
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            Console.WriteLine(output);
-        }
+        using Process process = Process.Start(psi);
+        string output = process.StandardOutput.ReadToEnd();
+        process.WaitForExit();
     }
 
 
@@ -64,7 +69,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// <param name="nwc"></param>
     /// <returns></returns>
     [RelayCommand]
-    public async Task NetEnable(NetworkCard nwc)
+    internal async Task NetEnable(NetworkCard nwc)
     {
         try
         {
@@ -91,11 +96,6 @@ public partial class NetworkToolViewModel : NavigationViewModel
         {
             HcGrowlExtensions.Warning(ex.Message);
         }
-    }
-
-    private void 测试()
-    {
-
     }
 
     /// <summary>
@@ -151,7 +151,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// </summary>
     /// <param name="nwc"></param>
     [RelayCommand]
-    public async Task EnableDhcp(NetworkCard nwc)
+    internal async Task EnableDhcp(NetworkCard nwc)
     {
         try
         {
@@ -177,6 +177,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
                 try
                 {
                     Process.Start(processInfo);
+                    nwc.DhcpEnabled = true;//执行成功修改状态
                 }
                 catch (Exception ex)
                 {

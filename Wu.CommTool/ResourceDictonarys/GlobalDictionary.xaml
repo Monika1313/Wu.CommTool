@@ -221,7 +221,9 @@
 
 
     <!--  md:DialogHost 默认使用MaterialDesignEmbeddedDialogHost 弹窗大小将限制在小于主窗口  -->
-    <Style BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}" TargetType="md:DialogHost" />
+    <Style BasedOn="{StaticResource MaterialDesignEmbeddedDialogHost}" TargetType="md:DialogHost">
+        <Setter Property="IsTabStop" Value="False" />
+    </Style>
 
     <!--  Border  -->
     <!--<Style TargetType="Border">
@@ -283,6 +285,7 @@
     <Style x:Key="Effect2Control" TargetType="ContentControl">
         <Setter Property="Margin" Value="4" />
         <Setter Property="Padding" Value="4" />
+        <Setter Property="IsTabStop" Value="False" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="Template">
             <Setter.Value>
@@ -297,5 +300,9 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style TargetType="ItemsControl">
+        <Setter Property="IsTabStop" Value="False" />
     </Style>
 </ResourceDictionary>
