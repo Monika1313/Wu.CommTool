@@ -1,41 +1,54 @@
-﻿<UserControl x:Class="Wu.CommTool.Modules.NetworkTool.Views.NetworkToolView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:local="clr-namespace:Wu.CommTool.Modules.NetworkTool.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:models="clr-namespace:Wu.CommTool.Modules.NetworkTool.Models"
-             xmlns:viewmodels="clr-namespace:Wu.CommTool.Modules.NetworkTool.ViewModels"
-             xmlns:wu="https://github.com/Monika1313/Wu"
-             d:DataContext="{d:DesignInstance Type=viewmodels:NetworkToolViewModel}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="Wu.CommTool.Modules.NetworkTool.Views.NetworkToolView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dvm="clr-namespace:Wu.CommTool.Modules.NetworkTool.ViewModels.DesignViewModels"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Wu.CommTool.Modules.NetworkTool.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Wu.CommTool.Modules.NetworkTool.Models"
+    xmlns:viewmodels="clr-namespace:Wu.CommTool.Modules.NetworkTool.ViewModels"
+    xmlns:wu="https://github.com/Monika1313/Wu"
+    d:DataContext="{x:Static dvm:NetworkToolDesignViewModel.Instance}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+    </UserControl.Resources>
     <DockPanel>
-        <TextBlock DockPanel.Dock="Top"
-                   Style="{StaticResource TitleTextBlock}"
-                   Text="开发中的功能..." />
+        <TextBlock
+            DockPanel.Dock="Top"
+            Style="{StaticResource TitleTextBlock}"
+            Text="开发中的功能..." />
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button Margin="4"
-                    Command="{Binding ExecuteCommand}"
-                    CommandParameter="获取物理网卡信息"
-                    Content="获取物理网卡信息" />
-            <Button Margin="4"
-                    Command="{Binding ExecuteCommand}"
-                    CommandParameter="打开网络连接"
-                    Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
+            <Button
+                Margin="4"
+                Command="{Binding ExecuteCommand}"
+                CommandParameter="获取物理网卡信息"
+                Content="获取物理网卡信息" />
+            <Button
+                Margin="4"
+                Command="{Binding ExecuteCommand}"
+                CommandParameter="打开网络连接"
+                Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
 
-            <Button Margin="4"
-                    Command="{Binding ExecuteCommand}"
-                    CommandParameter="测试"
-                    Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
+            <Button
+                Margin="4"
+                Command="{Binding ExecuteCommand}"
+                CommandParameter="测试"
+                Content="{Binding RelativeSource={RelativeSource Mode=Self}, Path=CommandParameter}" />
 
         </StackPanel>
         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="False" IsInertiaEnabled="True">
-            <ItemsControl Margin="0"
-                          Background="Transparent"
-                          ItemsSource="{Binding NetworkCards, IsAsync=True}">
+            <ItemsControl
+                Margin="0"
+                Background="Transparent"
+                ItemsSource="{Binding NetworkCards, IsAsync=True}">
                 <ItemsControl.ItemsPanel>
                     <ItemsPanelTemplate>
                         <StackPanel Orientation="Vertical" />
@@ -44,31 +57,71 @@
 
                 <ItemsControl.ItemTemplate>
                     <DataTemplate DataType="models:NetworkCard">
-                        <ContentControl Width="AUTO"
-                                        MinHeight="100"
-                                        Margin="4"
-                                        Style="{DynamicResource Effect2Control}">
+                        <ContentControl
+                            Width="AUTO"
+                            MinHeight="100"
+                            Margin="4"
+                            Style="{DynamicResource Effect2Control}">
                             <DockPanel>
-                                <StackPanel Margin="10" DockPanel.Dock="Left">
-                                    <TextBlock FontSize="18"
-                                               FontWeight="Bold"
-                                               Foreground="{StaticResource Blue_Foreground}"
-                                               Text="{Binding NetConnectionId}" />
-                                    <TextBlock Text="{Binding Name}" />
-                                    <TextBlock Text="{Binding NetEnabled}" />
-                                    <TextBlock Text="{Binding Manufacturer}" />
-                                    <Button Margin="4"
-                                            HorizontalAlignment="Left"
-                                            Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                                            CommandParameter="{Binding .}"
-                                            Content="启用DHCP"
-                                            IsEnabled="{Binding DhcpEnabled, Converter={wu:ReverseBool}}" />
-                                    <Button Margin="4"
-                                            HorizontalAlignment="Left"
-                                            Command="{Binding DataContext.NetEnableCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                                            CommandParameter="{Binding .}"
-                                            Content="启用禁用网卡" />
+                                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                                    <TextBlock
+                                        Margin="5"
+                                        VerticalAlignment="Center"
+                                        FontSize="18"
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource Blue_Foreground}"
+                                        Text="{Binding NetConnectionId}" />
+                                    <TextBlock
+                                        Margin="5"
+                                        VerticalAlignment="Center"
+                                        Text="{Binding Name}" />
                                 </StackPanel>
+
+                                <StackPanel
+                                    Margin="10"
+                                    DockPanel.Dock="Top"
+                                    Orientation="Horizontal">
+                                    <!--<TextBlock Text="{Binding NetEnabled}" />-->
+                                    <!--<TextBlock Text="{Binding Manufacturer}" />-->
+                                    <Button
+                                        Margin="4"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        CommandParameter="{Binding .}"
+                                        Content="启用DHCP"
+                                        IsEnabled="{Binding DhcpEnabled, Converter={wu:ReverseBool}}" />
+                                    <!--<Button
+                                        Margin="4"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding DataContext.NetEnableCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        CommandParameter="{Binding .}"
+                                        Content="启用禁用网卡" />-->
+                                    <Button
+                                        Margin="4"
+                                        HorizontalAlignment="Left"
+                                        Command="{Binding DataContext.ImportIpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                        CommandParameter="{Binding .}"
+                                        Content="设置固定IP" />
+                                </StackPanel>
+                                <ItemsControl Margin="10" ItemsSource="{Binding Ipv4List}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Vertical" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="models:Ipv4">
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="IPv4地址:" />
+                                                    <TextBlock Text="{Binding Address}" />
+                                                    <TextBlock Margin="10,0,0,0" Text="IPv4子网掩码:" />
+                                                    <TextBlock Text="{Binding SubnetMask}" />
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
                             </DockPanel>
                         </ContentControl>
                     </DataTemplate>

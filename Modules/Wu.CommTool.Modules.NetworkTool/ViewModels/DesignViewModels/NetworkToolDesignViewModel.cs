@@ -6,6 +6,6 @@ public class NetworkToolDesignViewModel : NetworkToolViewModel
     public static NetworkToolDesignViewModel Instance => _Instance ??= new();
     public NetworkToolDesignViewModel()
     {
-
+        获取物理网卡信息();
     }
 }

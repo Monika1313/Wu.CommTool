@@ -82,17 +82,15 @@ public partial class NetworkCard : ObservableObject
                         // 仅IPv4地址及其子网掩码
                         if (ipAddresses[i].Contains("."))
                         {
-                            //Todo添加至列表
+                            Ipv4List.Add(new Ipv4(ipAddresses[i], subnets[i]));
                         }
                     }
                 }
-
-
             }
         }
         catch (Exception)
         {
-            
+
         }
     }
 
@@ -100,7 +98,7 @@ public partial class NetworkCard : ObservableObject
 
     [ObservableProperty]
     string name;
-    
+
     /// <summary>
     /// 网卡启用禁用状态
     /// </summary>
@@ -124,4 +122,7 @@ public partial class NetworkCard : ObservableObject
     /// </summary>
     [ObservableProperty]
     string manufacturer;
+
+    [ObservableProperty]
+    ObservableCollection<Ipv4> ipv4List = [];
 }

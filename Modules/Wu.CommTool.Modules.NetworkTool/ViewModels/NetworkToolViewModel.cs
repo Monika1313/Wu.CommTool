@@ -222,11 +222,10 @@ public partial class NetworkToolViewModel : NavigationViewModel
 
 
 
-    void 获取物理网卡信息()
+    protected void 获取物理网卡信息()
     {
         try
         {
-
             #region 查询Win32_NetworkAdapter
             string query = @"SELECT * FROM Win32_NetworkAdapter WHERE Manufacturer!='Microsoft' AND NOT PNPDeviceID LIKE 'ROOT\\%'";
             ManagementObjectSearcher mos = new(query);
