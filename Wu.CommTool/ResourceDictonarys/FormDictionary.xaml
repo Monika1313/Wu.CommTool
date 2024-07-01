@@ -1,13 +1,11 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:hc="https://handyorg.github.io/handycontrol">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:hc="https://handyorg.github.io/handycontrol">
 
     <!--  表单文本框  -->
-    <Style
-        x:Key="FormTextBox"
-        BasedOn="{StaticResource TextBoxExtend}"
-        TargetType="TextBox">
+    <Style x:Key="FormTextBox"
+           BasedOn="{StaticResource TextBoxExtend}"
+           TargetType="TextBox">
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
@@ -16,10 +14,9 @@
 
 
     <!--  表单日期选择器  -->
-    <Style
-        x:Key="FormDatePicker"
-        BasedOn="{StaticResource DatePickerExtend}"
-        TargetType="DatePicker">
+    <Style x:Key="FormDatePicker"
+           BasedOn="{StaticResource DatePickerExtend}"
+           TargetType="DatePicker">
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
@@ -27,10 +24,9 @@
     </Style>
 
     <!--  表单ComboBox  -->
-    <Style
-        x:Key="FormComboBox"
-        BasedOn="{StaticResource ComboBoxExtend}"
-        TargetType="ComboBox">
+    <Style x:Key="FormComboBox"
+           BasedOn="{StaticResource ComboBoxExtend}"
+           TargetType="ComboBox">
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
@@ -38,28 +34,25 @@
     </Style>
 
     <!--  hc:CheckComboBox  -->
-    <Style
-        x:Key="FormCheckComboBox"
-        BasedOn="{StaticResource CheckComboBoxExtend}"
-        TargetType="hc:CheckComboBox">
+    <Style x:Key="FormCheckComboBox"
+           BasedOn="{StaticResource CheckComboBoxExtend}"
+           TargetType="hc:CheckComboBox">
         <Setter Property="Background" Value="Transparent" />
     </Style>
 
     <!--  表单密码框  -->
-    <Style
-        x:Key="FormPasswordBox"
-        BasedOn="{StaticResource PasswordBoxExtend}"
-        TargetType="PasswordBox">
+    <Style x:Key="FormPasswordBox"
+           BasedOn="{StaticResource PasswordBoxExtend}"
+           TargetType="PasswordBox">
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
 
-    <Style
-        x:Key="FormBorder"
-        BasedOn="{StaticResource BorderRegion}"
-        TargetType="Border">
+    <Style x:Key="FormBorder"
+           BasedOn="{StaticResource BorderRegion}"
+           TargetType="Border">
         <Setter Property="Effect" Value="{StaticResource EffectShadow2}" />
         <Setter Property="Margin" Value="4" />
     </Style>

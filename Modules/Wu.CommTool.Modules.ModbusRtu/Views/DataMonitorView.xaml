@@ -206,7 +206,7 @@
                                     hc:InfoElement.Title="串口"
                                     IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                     ItemsSource="{Binding ModbusRtuModel.ComPorts}"
-                                    SelectedValue="{Binding ModbusRtuModel.ComConfig.Port, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    SelectedValue="{Binding ModbusRtuModel.ComConfig.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                     Style="{StaticResource FormComboBox}" />
                                 <Button
                                     Width="30"

@@ -9,7 +9,7 @@ public partial class ComConfig : ObservableObject
     /// Com口
     /// </summary>
     [ObservableProperty]
-    KeyValuePair<string, string> port;
+    ComPort comPort = new();
 
     /// <summary>
     /// 波特率

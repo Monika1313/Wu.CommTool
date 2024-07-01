@@ -84,8 +84,8 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 串口列表
     /// </summary>
-    public ObservableCollection<KeyValuePair<string, string>> ComPorts { get => _ComPorts; set => SetProperty(ref _ComPorts, value); }
-    private ObservableCollection<KeyValuePair<string, string>> _ComPorts = [];
+    public ObservableCollection<ComPort> ComPorts { get => _ComPorts; set => SetProperty(ref _ComPorts, value); }
+    private ObservableCollection<ComPort> _ComPorts = [];
 
     /// <summary>
     /// Com口配置
@@ -237,62 +237,71 @@ public class ModbusRtuModel : ObservableObject
             return;
         }
 
+        //缓存最后一次选择的串口
+        ComPort lastComPort = null;
+        if (ComConfig.ComPort != null)
+        {
+            lastComPort = new ComPort(ComConfig.ComPort.Port, ComConfig.ComPort.DeviceName);
+        }
+
         //清空列表
         ComPorts.Clear();
+
         //查找Com口
         using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
         var hardInfos = searcher.Get();
+        //获取串口设备列表
         foreach (var hardInfo in hardInfos)
         {
             if (hardInfo.Properties["Name"].Value != null)
             {
                 string deviceName = hardInfo.Properties["Name"].Value.ToString()!;         //获取名称
-                List<string> dList = new();                                                 //从名称中截取串口
+                List<string> portList = [];
+                //从名称中截取串口编号
                 foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
                 {
                     string x = mch.Value.Trim();
-                    dList.Add(x);
+                    portList.Add(x);
                 }
                 int startIndex = deviceName.IndexOf("(");
-                //int endIndex = deviceName.IndexOf(")");
-                //string key = deviceName.Substring(startIndex + 1, deviceName.Length - startIndex - 2);
-                string key = dList[0];
+                string port = portList[0];
                 string name = deviceName[..(startIndex - 1)];
-                ComPorts.Add(new KeyValuePair<string, string>(key, name));       //添加进列表
+                ComPorts.Add(new ComPort(port, name));
             }
         }
         if (ComPorts.Count != 0)
         {
             //查找第一个USB设备
-            var usbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb"));
-            //上次选中的usb设备
-            var lastUsbDevice = ComPorts.FindFirst(x => x.Value.ToLower().Contains("usb") && x.Key.Equals(ComConfig.Port.Key) && x.Value.Equals(ComConfig.Port.Value));
-            if (lastUsbDevice.Key != null)
+            var usbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb"));
+
+            //若最后一次选择的是usb设备 则保持当前选择
+            var lastUsbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb") && x.Port.Equals(ComConfig.ComPort.Port) && x.DeviceName.Equals(ComConfig.ComPort.DeviceName));
+            if (lastUsbDevice != null)
             {
                 usbDevice = lastUsbDevice;
             }
 
             //有USB设备则选择第一个USB
-            if (usbDevice.Key != null)
+            if (usbDevice != null)
             {
                 //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
-                ComConfig.Port = usbDevice;
+                ComConfig.ComPort = usbDevice;
             }
             //其次保持不变
-            else if (ComPorts.Any(x => x.Key == ComConfig.Port.Key && x.Value == ComConfig.Port.Value))//保留原选项
+            else if (lastComPort != null && ComPorts.Any(x => x.Port == lastComPort.Port && x.DeviceName == lastComPort.DeviceName))//保留原选项
             {
-                ComConfig.Port = ComPorts.FirstOrDefault(x => x.Key == ComConfig.Port.Key && x.Value == ComConfig.Port.Value);
+                ComConfig.ComPort = ComPorts.FirstOrDefault(x => x.Port == lastComPort.Port && x.DeviceName == lastComPort.DeviceName);
             }
             //都没有则选中第一个
             else
             {
-                ComConfig.Port = ComPorts[0];
+                ComConfig.ComPort = ComPorts[0];
             }
         }
         string str = $"获取串口成功, 共{ComPorts.Count}个。";
         foreach (var item in ComPorts)
         {
-            str += $"   {item.Key}: {item.Value};";
+            str += $"   {item.Port}: {item.DeviceName};";
         }
         ShowMessage(str);
     }
@@ -312,7 +321,7 @@ public class ModbusRtuModel : ObservableObject
             }
 
             //配置串口
-            SerialPort.PortName = ComConfig.Port.Key;                              //串口
+            SerialPort.PortName = ComConfig.ComPort.Port;                              //串口
             SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
             SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
             SerialPort.DataBits = ComConfig.DataBits;                              //数据位
@@ -321,7 +330,7 @@ public class ModbusRtuModel : ObservableObject
             {
                 SerialPort.Open();               //打开串口
                 ComConfig.IsOpened = true;      //标记串口已打开
-                ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
+                ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.ComPort.DeviceName}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
             }
             catch (Exception ex)
             {
@@ -381,7 +390,7 @@ public class ModbusRtuModel : ObservableObject
             if (SerialPort.IsOpen == false)
             {
                 //配置串口
-                SerialPort.PortName = ComConfig.Port.Key;                              //串口
+                SerialPort.PortName = ComConfig.ComPort.Port;                              //串口
                 SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
                 SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
                 SerialPort.DataBits = ComConfig.DataBits;                              //数据位
@@ -390,7 +399,7 @@ public class ModbusRtuModel : ObservableObject
                 {
                     SerialPort.Open();               //打开串口
                     ComConfig.IsOpened = true;      //标记串口已打开
-                    ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.Port.Value}");
+                    ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.ComPort.DeviceName}");
                 }
                 catch (Exception ex)
                 {
@@ -847,7 +856,7 @@ public class ModbusRtuModel : ObservableObject
                             {
                                 frame = frameCache.Take(frame[6] + 9).ToList();
                             }
-                            else if(frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
+                            else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
                             {
                                 continue;//数据量不够则继续接收
                             }
@@ -1310,7 +1319,7 @@ public class ModbusRtuModel : ObservableObject
                 foreach (var parity in SelectedParitys)
                 {
                     //搜索
-                    ShowMessage($"搜索: {ComConfig.Port.Key}:{ComConfig.Port.Value} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
+                    ShowMessage($"搜索: {ComConfig.ComPort.Port}:{ComConfig.ComPort.DeviceName} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
 
                     for (int i = 0; i <= 255; i++)
                     {
