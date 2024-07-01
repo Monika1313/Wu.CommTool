@@ -271,7 +271,7 @@ public class ModbusRtuModel : ObservableObject
             var usbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb"));
 
             //若最后一次选择的是usb设备 则保持当前选择
-            var lastUsbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb") && x.Port.Equals(ComConfig.ComPort.Port) && x.DeviceName.Equals(ComConfig.ComPort.DeviceName));
+            var lastUsbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb") && x.Port.Equals(lastComPort.Port) && x.DeviceName.Equals(lastComPort.DeviceName));
             if (lastUsbDevice != null)
             {
                 usbDevice = lastUsbDevice;
@@ -748,7 +748,7 @@ public class ModbusRtuModel : ObservableObject
     }
 
     /// <summary>
-    /// 接收串口消息
+    /// 接收串口消息 该方法必须必须必须使用同步不能用异步
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -778,7 +778,6 @@ public class ModbusRtuModel : ObservableObject
                 if (ComConfig.IsOpened == false)
                     return;
                 times++;//计时
-
                 //串口接收到新的数据时执行
                 if (SerialPort.BytesToRead > 0)
                 {
@@ -789,7 +788,6 @@ public class ModbusRtuModel : ObservableObject
                     frameCache.AddRange(tempBuffer);                 //添加进接收的数据缓存列表
                     //isDone = false;                                  //标记frameCache未处理完成
                 }
-
                 //二级缓存frameCache中还有未处理完的数据
                 if (frameCache.Count > 0)
                 {
@@ -836,6 +834,7 @@ public class ModbusRtuModel : ObservableObject
                     //由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则先解析
                     //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
                     //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
+
                     //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
                     if (!isNot && frameCache.Count >= 8)
                     {
@@ -854,8 +853,9 @@ public class ModbusRtuModel : ObservableObject
                             }
                             else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
                             {
-                                continue;//数据量不够则继续接收
+                                //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
                             }
+
                             //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
                             else if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
                             {
@@ -863,7 +863,7 @@ public class ModbusRtuModel : ObservableObject
                             }
                             else if (frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
                             {
-                                continue;//数据量不够则继续接收
+                                //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
                             }
                             //0x04响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
                             else if (frame[1] == 0x04 && frameCache.Count >= (frame[2] + 5))
@@ -872,7 +872,7 @@ public class ModbusRtuModel : ObservableObject
                             }
                             else if (frame[1] == 0x04 && frameCache.Count < (frame[2] + 5))
                             {
-                                continue;//数据量不够则继续接收
+                                //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
                             }
 
                             //解析出可能的帧并校验成功
@@ -910,7 +910,7 @@ public class ModbusRtuModel : ObservableObject
                 //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
                 if (frameCache.Count > ComConfig.MaxLength)
                     break;
-                Thread.Sleep(1);
+                Thread.Sleep(1);//同步等待
             } while (times < ComConfig.TimeOut);
             #endregion
 
