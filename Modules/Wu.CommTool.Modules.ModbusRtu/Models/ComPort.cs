@@ -1,5 +1,8 @@
 ﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
+/// <summary>
+/// 串口类
+/// </summary>
 public partial class ComPort : ObservableObject
 {
     public ComPort()

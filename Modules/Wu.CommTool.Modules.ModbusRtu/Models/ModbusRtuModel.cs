@@ -238,11 +238,7 @@ public class ModbusRtuModel : ObservableObject
         }
 
         //缓存最后一次选择的串口
-        ComPort lastComPort = null;
-        if (ComConfig.ComPort != null)
-        {
-            lastComPort = new ComPort(ComConfig.ComPort.Port, ComConfig.ComPort.DeviceName);
-        }
+        var lastComPort = ComConfig.ComPort;
 
         //清空列表
         ComPorts.Clear();
