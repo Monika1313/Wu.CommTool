@@ -1,4 +1,4 @@
-﻿namespace Wu.CommTool.Modules.MqttClient.Models;
+﻿namespace Wu.CommTool.Core.Models;
 
 public class MqttMessageData : MessageData
 {

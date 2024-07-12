@@ -667,8 +667,44 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     }
 
     protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
-    protected void ShowReceiveMessage(string message, string title = "") => ShowMessage(message, MessageType.Receive, title);
-    protected void ShowSendMessage(string message, string title = "") => ShowMessage(message, MessageType.Send, title);
+
+    protected void ShowReceiveMessage(string message, string title = "")
+    {
+        try
+        {
+            void action()
+            {
+                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
+                while (Messages.Count > 100)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFun(action);
+        }
+        catch (Exception)
+        {
+        }
+    }
+
+    protected void ShowSendMessage(string message, string title = "")
+    {
+        try
+        {
+            void action()
+            {
+                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Send, title));
+                while (Messages.Count > 100)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFun(action);
+        }
+        catch (Exception)
+        {
+        }
+    }
 
     /// <summary>
     /// 界面显示数据
