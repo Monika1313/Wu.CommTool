@@ -1125,8 +1125,8 @@ public class ModbusRtuModel : ObservableObject
 
                 #region 对接收的数据分功能码展示
 
-                //03功能码
-                if (mFrame.Type.Equals(ModbusRtuFrameType._0x03响应帧))
+                //03功能码或04功能码
+                if (mFrame.Type.Equals(ModbusRtuFrameType._0x03响应帧) || mFrame.Type.Equals(ModbusRtuFrameType._0x04响应帧))
                 {
                     //若自动读取开启则解析接收的数据
                     if (DataMonitorConfig.IsOpened)
@@ -1159,7 +1159,7 @@ public class ModbusRtuModel : ObservableObject
     private void Analyse(List<byte> list)
     {
         //TODO 解析数据
-        //目前仅支持03功能码
+        //目前仅支持03功能码和04功能码
 
         //判断字节数为奇数还是偶数
         //偶数为主站请求
