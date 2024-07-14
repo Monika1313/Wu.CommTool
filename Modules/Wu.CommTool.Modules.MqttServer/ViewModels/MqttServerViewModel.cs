@@ -169,9 +169,61 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            var message = new MqttApplicationMessageBuilder()
-                .WithTopic(MqttServerConfig.PublishTopic)
-                .WithPayload(PublishMessage).Build();
+            //var message = new MqttApplicationMessageBuilder()
+            //    .WithTopic(MqttServerConfig.PublishTopic)
+            //    .WithQualityOfServiceLevel(MqttServerConfig.QosLevel)
+            //    .WithPayload(PublishMessage).Build();
+
+
+            //根据选择的消息质量进行设置
+            var mqttAMB = new MqttApplicationMessageBuilder();
+
+            //根据设置的消息质量发布消息
+            switch (MqttServerConfig.QosLevel)
+            {
+                case QosLevel.AtLeastOnce:
+                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
+                    //mqttAMB.WithAtLeastOnceQoS();
+                    break;
+                case QosLevel.AtMostOnce:
+                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
+                    //mqttAMB.WithAtMostOnceQoS();
+                    break;
+                case QosLevel.ExactlyOnce:
+                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
+                    //mqttAMB.WithExactlyOnceQoS();
+                    break;
+                default:
+                    break;
+            }
+
+            switch (MqttServerConfig.SendPaylodType)
+            {
+                case MqttPayloadType.Json:
+                case MqttPayloadType.Plaintext:
+                    mqttAMB.WithPayload(PublishMessage);
+                    break;
+                case MqttPayloadType.Base64:
+                    mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage)));
+                    break;
+                case MqttPayloadType.Hex:
+                    mqttAMB.WithPayload(StringExtention.GetBytes(PublishMessage.Replace(" ", string.Empty)));
+                    break;
+            }
+
+            //保留消息
+            if (MqttServerConfig.IsRetain)
+            {
+                mqttAMB.WithRetainFlag();
+            }
+            else
+            {
+                mqttAMB.WithRetainFlag(false);
+            }
+
+            var message = mqttAMB.WithTopic(MqttServerConfig.PublishTopic).Build();
+            ShowSendMessage($"{PublishMessage}", $"主题：{MqttServerConfig.PublishTopic}");
+
             await mqttServer.InjectApplicationMessage(
                 new InjectedMqttApplicationMessage(message)
                 {
