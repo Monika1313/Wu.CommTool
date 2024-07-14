@@ -45,7 +45,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty] 
+    [ObservableProperty]
     ObservableCollection<MessageData> messages = [];
 
     /// <summary>
@@ -69,14 +69,14 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// MqttUsers
     /// </summary>
-    [ObservableProperty] 
+    [ObservableProperty]
     ObservableCollection<MqttUser> mqttUsers = [];
 
     /// <summary>
     /// definity
     /// </summary>
     [ObservableProperty]
-    string  publishMessage = string.Empty;
+    string publishMessage = string.Empty;
     #endregion
 
 
@@ -222,8 +222,8 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             }
 
             var message = mqttAMB.WithTopic(MqttServerConfig.PublishTopic).Build();
-            ShowSendMessage($"{PublishMessage}", $"主题：{MqttServerConfig.PublishTopic}");
 
+            ShowSendMessage($"{PublishMessage}", $"主题：{MqttServerConfig.PublishTopic}");
             await mqttServer.InjectApplicationMessage(
                 new InjectedMqttApplicationMessage(message)
                 {
@@ -232,7 +232,8 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
         catch (Exception ex)
         {
-            HcGrowlExtensions.Warning(ex.Message);
+            ShowErrorMessage(ex.Message);
+            //HcGrowlExtensions.Warning(ex.Message);
         }
     }
 
@@ -287,7 +288,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     case MqttPayloadType.Json:
                     case MqttPayloadType.Plaintext:
                         //接收的数据以UTF8解码
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     //case MqttPayloadType.Json:
                     //    ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题:{arg.ApplicationMessage.Topic}");
@@ -297,7 +298,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                         ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
-                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                 }
             }
