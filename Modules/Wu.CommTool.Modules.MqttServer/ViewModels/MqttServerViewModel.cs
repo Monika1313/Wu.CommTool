@@ -71,6 +71,12 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// </summary>
     [ObservableProperty] 
     ObservableCollection<MqttUser> mqttUsers = [];
+
+    /// <summary>
+    /// definity
+    /// </summary>
+    [ObservableProperty]
+    string  publishMessage = string.Empty;
     #endregion
 
 
@@ -158,14 +164,24 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// Mqtt服务器发布消息
     /// </summary>
     /// <returns></returns>
-    public async Task Publish_Message_From_Broker()
+    [RelayCommand]
+    private async Task PublishMessageFromBroker()
     {
-        var message = new MqttApplicationMessageBuilder().WithTopic("HelloWorld").WithPayload("Test").Build();
-        await mqttServer.InjectApplicationMessage(
-            new InjectedMqttApplicationMessage(message)
-            {
-                SenderClientId = "SenderClientId"
-            });
+        try
+        {
+            var message = new MqttApplicationMessageBuilder()
+                .WithTopic(MqttServerConfig.PublishTopic)
+                .WithPayload(PublishMessage).Build();
+            await mqttServer.InjectApplicationMessage(
+                new InjectedMqttApplicationMessage(message)
+                {
+                    SenderClientId = "SenderClientId"
+                });
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
 
@@ -629,7 +645,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 发布消息
     /// </summary>
-    public void PublishMessage()
+    public void PublishMessageToAllClient()
     {
         //该方法发布至所有客户端
         //foreach (var user in MqttUsers)

@@ -1,35 +1,53 @@
 ﻿namespace Wu.CommTool.Modules.MqttServer.Models;
 
-public class MqttServerConfig : BindableBase
+public partial class MqttServerConfig : ObservableObject
 {
     /// <summary>
     /// IP
     /// </summary>
-    public string ServerIp { get => _ServerIp; set => SetProperty(ref _ServerIp, value); }
-    private string _ServerIp = "127.0.0.1";
+    [ObservableProperty]
+    string serverIp = "127.0.0.1";
 
     /// <summary>
     /// 端口
     /// </summary>
-    public int ServerPort { get => _ServerPort; set => SetProperty(ref _ServerPort, value); }
-    private int _ServerPort = 1883;
+    [ObservableProperty]
+    int serverPort = 1883;
 
     /// <summary>
     /// 是否开启
     /// </summary>
     [JsonIgnore]
-    public bool IsOpened { get => _IsOpened; set => SetProperty(ref _IsOpened, value); }
-    private bool _IsOpened = false;
+    [ObservableProperty]
+    bool isOpened = false;
 
     /// <summary>
     /// 接收消息的格式
     /// </summary>
-    public MqttPayloadType ReceivePaylodType { get => _ReceivePaylodType; set => SetProperty(ref _ReceivePaylodType, value); }
-    private MqttPayloadType _ReceivePaylodType = MqttPayloadType.Plaintext;
+    [ObservableProperty]
+    MqttPayloadType receivePaylodType = MqttPayloadType.Plaintext;
 
     /// <summary>
     /// 发送消息的格式
     /// </summary>
-    public MqttPayloadType SendPaylodType { get => _SendPaylodType; set => SetProperty(ref _SendPaylodType, value); }
-    private MqttPayloadType _SendPaylodType = MqttPayloadType.Plaintext;
+    [ObservableProperty]
+    MqttPayloadType sendPaylodType = MqttPayloadType.Plaintext;
+
+    /// <summary>
+    /// 发布的主题
+    /// </summary>
+    [ObservableProperty]
+    string publishTopic = string.Empty;
+
+    /// <summary>
+    /// 消息质量等级
+    /// </summary>
+    [ObservableProperty]
+    QosLevel qosLevel = QosLevel.AtMostOnce;
+
+    /// <summary>
+    /// 是否为保留消息
+    /// </summary>
+    [ObservableProperty]
+    bool isRetain;
 }
