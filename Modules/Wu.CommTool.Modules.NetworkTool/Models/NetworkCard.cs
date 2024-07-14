@@ -69,7 +69,7 @@ public partial class NetworkCard : ObservableObject
             foreach (ManagementObject configObj in searcherConfig.Get().Cast<ManagementObject>())
             {
                 DhcpEnabled = Convert.ToBoolean(configObj["DHCPEnabled"]);//网卡DHCP状态
-
+                Ipv4List.Clear();
                 string[] ipAddresses = (string[])configObj["IPAddress"];
                 string[] subnets = (string[])configObj["IPSubnet"];
                 if (ipAddresses != null && subnets != null)
