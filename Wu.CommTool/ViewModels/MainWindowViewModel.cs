@@ -68,8 +68,8 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
             new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
             new() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
-#if DEBUG
             new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
+#if DEBUG
 #endif
             new() { Icon = "Clyde", Title = "关于", NameSpace = nameof(AboutView) },
         ];

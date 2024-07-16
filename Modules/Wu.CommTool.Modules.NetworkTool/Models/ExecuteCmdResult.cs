@@ -8,6 +8,8 @@ public partial class ExecuteCmdResult : ObservableObject
         Message = message;
     }
 
+
+
     /// <summary>
     /// 状态 false失败 true成功
     /// </summary>

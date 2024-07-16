@@ -21,3 +21,6 @@ global using Wu.CommTool.Modules.NetworkTool.Views;
 global using Wu.ViewModels;
 global using Wu.Wpf.Common;
 global using Wu.Wpf.Extensions;
+global using Newtonsoft.Json;
+global using Microsoft.Win32;
+global using System.IO;

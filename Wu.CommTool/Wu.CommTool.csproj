@@ -48,7 +48,7 @@
 		<None Remove="Configs\ModbusRtuConfig\西门子MAG6000流量计.jsonDMC" />
 		<None Remove="Configs\MqttClientConfig\Default.jsonMCC" />
 		<None Remove="Configs\MqttServerConfig\Default.jsonMSC" />
-		<None Remove="Configs\NetworkCardConfig\Default.jsonNWC" />
+		<None Remove="Configs\NetworkCardConfig\Default.jsonNCC" />
 		<None Remove="Images\AI.png" />
 		<None Remove="Images\En.png" />
 		<None Remove="Images\GKD.png" />
@@ -77,7 +77,7 @@
 		<Content Include="Configs\MqttServerConfig\Default.jsonMSC">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Configs\NetworkCardConfig\Default.jsonNWC">
+		<Content Include="Configs\NetworkCardConfig\Default.jsonNCC">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 	</ItemGroup>
