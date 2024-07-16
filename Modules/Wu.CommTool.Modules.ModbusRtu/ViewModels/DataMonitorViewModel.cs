@@ -47,7 +47,7 @@ public partial class DataMonitorViewModel : NavigationViewModel, IDialogHostAwar
 
     #region **************************************** 方法 ****************************************
     [RelayCommand]
-    void Execute(string obj)
+    private void Execute(string obj)
     {
         switch (obj)
         {

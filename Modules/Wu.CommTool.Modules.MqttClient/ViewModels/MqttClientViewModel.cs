@@ -418,7 +418,9 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             var options = new MqttClientOptionsBuilder()
                 .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
                 .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
-                .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password).Build();         //账号
+                .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password)                  //账号
+                .Build();
+            //TODO 可选是否使用账号
             client = new MqttFactory().CreateMqttClient();
             client.ConnectingAsync += Client_ConnectingAsync;
             client.ConnectedAsync += Client_ConnectedAsync;

@@ -378,15 +378,17 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 return Task.CompletedTask;
             }
 
-            //验证账号密码
-            bool acceptflag = !(string.IsNullOrWhiteSpace(arg.UserName) || string.IsNullOrWhiteSpace(arg.Password));
-            //验证失败
-            if (!acceptflag)
-            {
-                arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
-                ShowErrorMessage($"用户名：“{arg.UserName}”  客户端ID：“{arg.ClientId}” 请求登录验证失败!");
-                return Task.CompletedTask;
-            }
+            #region 验证账号密码
+            ////验证账号密码
+            //bool acceptflag = !(string.IsNullOrWhiteSpace(arg.UserName) || string.IsNullOrWhiteSpace(arg.Password));
+            ////验证失败
+            //if (!acceptflag)
+            //{
+            //    arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+            //    ShowErrorMessage($"用户名：“{arg.UserName}”  客户端ID：“{arg.ClientId}” 请求登录验证失败!");
+            //    return Task.CompletedTask;
+            //} 
+            #endregion
             arg.ReasonCode = MqttConnectReasonCode.Success;                //验证成功
         }
         catch (Exception ex)
