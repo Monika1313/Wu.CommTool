@@ -7,6 +7,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     private readonly IDialogHostService dialogHost;
     //public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
     private MQTTnet.Server.MqttServer mqttServer;                                 //Mqtt服务器
+    private readonly string mqttServerConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
     #endregion
 
     public MqttServerViewModel() { }
@@ -18,13 +19,13 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         //从默认配置文件中读取配置
         try
         {
-            string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig\Default.jsonMSC");
-            var xx = Core.Common.Utils.ReadJsonFile(p);
+            var xx = Core.Common.Utils.ReadJsonFile(Path.Combine(mqttServerConfigFolder, @"Default.jsonMSC"));
             var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
-            if (x == null)
-                return;
-            MqttServerConfig = x;
-            ShowMessage("读取配置成功");
+            if (x != null)
+            {
+                MqttServerConfig = x;
+                ShowMessage("读取配置成功");
+            }
         }
         catch (Exception ex)
         {
@@ -138,7 +139,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-
     /// <summary>
     /// 关闭Mqtt服务器
     /// </summary>
@@ -158,7 +158,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             ShowMessage(ex.Message, MessageType.Error);
         }
     }
-
 
     /// <summary>
     /// Mqtt服务器发布消息
@@ -183,15 +182,12 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             {
                 case QosLevel.AtLeastOnce:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
-                    //mqttAMB.WithAtLeastOnceQoS();
                     break;
                 case QosLevel.AtMostOnce:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
-                    //mqttAMB.WithAtMostOnceQoS();
                     break;
                 case QosLevel.ExactlyOnce:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
-                    //mqttAMB.WithExactlyOnceQoS();
                     break;
                 default:
                     break;
@@ -237,7 +233,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-
     /// <summary>
     /// 强制踢客户端
     /// </summary>
@@ -270,7 +265,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             //若暂停更新接收数据 则不显示
             if (IsPause)
                 return Task.CompletedTask;
-
 
             //处理接收的消息
             if (arg.ApplicationMessage.PayloadSegment.Array == null)//若接收的数据为空则
@@ -479,18 +473,17 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig"); //配置文件目录
-            Wu.Utils.IoUtil.Exists(dict);                                                                   //验证文件夹是否存在, 不存在则创建
-            SaveFileDialog sfd = new SaveFileDialog()
+            Wu.Utils.IoUtil.Exists(mqttServerConfigFolder);                                                                   //验证文件夹是否存在, 不存在则创建
+            SaveFileDialog sfd = new()
             {
-                Title = "请选择导出配置文件...",                             //对话框标题
-                Filter = "json files(*.jsonMSC)|*.jsonMSC",                 //文件格式过滤器
-                FilterIndex = 1,                                            //默认选中的过滤器
-                FileName = "Default",                                       //默认文件名
-                DefaultExt = "jsonMSC",                                     //默认扩展名
-                InitialDirectory = dict,                                    //指定初始的目录
-                OverwritePrompt = true,                                     //文件已存在警告
-                AddExtension = true,                                        //若用户省略扩展名将自动添加扩展名
+                Title = "请选择导出配置文件...",                  //对话框标题
+                Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
+                FilterIndex = 1,                               //默认选中的过滤器
+                FileName = "Default",                          //默认文件名
+                DefaultExt = "jsonMSC",                        //默认扩展名
+                InitialDirectory = mqttServerConfigFolder,     //指定初始的目录
+                OverwritePrompt = true,                        //文件已存在警告
+                AddExtension = true,                           //若用户省略扩展名将自动添加扩展名
             };
             if (sfd.ShowDialog() != true)
                 return;
@@ -515,15 +508,14 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
-            Wu.Utils.IoUtil.Exists(dict);
+            Wu.Utils.IoUtil.Exists(mqttServerConfigFolder);
             //选中配置文件
             OpenFileDialog dlg = new()
             {
                 Title = "请选择导入配置文件...",                                              //对话框标题
                 Filter = "json files(*.jsonMSC)|*.jsonMSC",    //文件格式过滤器
                 FilterIndex = 1,                                                         //默认选中的过滤器
-                InitialDirectory = dict
+                InitialDirectory = mqttServerConfigFolder
             };
 
             if (dlg.ShowDialog() != true)
