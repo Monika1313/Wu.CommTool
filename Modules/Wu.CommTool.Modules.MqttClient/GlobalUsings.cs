@@ -1,4 +1,5 @@
-﻿global using CommunityToolkit.Mvvm.Input;
+﻿global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
 global using MaterialDesignThemes.Wpf;
 global using Microsoft.Win32;
 global using MQTTnet;

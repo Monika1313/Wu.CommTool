@@ -1,7 +1,4 @@
-﻿using ImTools;
-using System.Linq;
-
-namespace Wu.CommTool.Modules.NetworkTool.Models;
+﻿namespace Wu.CommTool.Modules.NetworkTool.Models;
 
 public partial class NetworkCardConfig : ObservableObject
 {

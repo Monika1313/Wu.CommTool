@@ -1,6 +1,4 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-
-namespace Wu.CommTool.Modules.MqttClient.ViewModels;
+﻿namespace Wu.CommTool.Modules.MqttClient.ViewModels;
 
 public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 {
