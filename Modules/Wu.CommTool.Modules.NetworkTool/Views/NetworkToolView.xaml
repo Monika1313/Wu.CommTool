@@ -71,9 +71,20 @@
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
+
+                        <!--  新增配置文件  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="新增配置文件"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="AddConfig"
+                                Content="{md:PackIcon Kind=Add}"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
                     </DockPanel>
 
-                    <ItemsControl Background="Transparent" ItemsSource="{Binding NetworkCardConfig.Ipv4s}">
+                    <!--<ItemsControl Background="Transparent" ItemsSource="{Binding NetworkCardConfig.Ipv4s}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Vertical" />
@@ -81,7 +92,6 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate DataType="models:Ipv4">
-                                <!--<DockPanel Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ItemsControl}}}">-->
                                 <DockPanel Tag="{Binding DataContext.NetworkCardConfig, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                     <DockPanel.ContextMenu>
                                         <ContextMenu>
@@ -113,8 +123,65 @@
                                 </DockPanel>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
-                    </ItemsControl>
+                    </ItemsControl>-->
 
+                    <ListView ItemsSource="{Binding NetworkCardConfigs}" SelectedItem="{Binding SelectedConfig}">
+                        <ListView.ItemTemplate>
+                            <DataTemplate DataType="models:NetworkCardConfig">
+                                <ContentControl Margin="2" Style="{StaticResource Effect2Control}">
+                                    <StackPanel>
+                                        <hc:TextBox hc:InfoElement.Placeholder="请输入配置名..."
+                                                    BorderThickness="0"
+                                                    FontSize="14"
+                                                    FontWeight="Bold"
+                                                    Text="{Binding ConfigName}" />
+                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Ipv4s}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Vertical" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="models:Ipv4">
+                                                    <DockPanel Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}}">
+                                                        <DockPanel.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.AddNewLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                          CommandParameter="{Binding}"
+                                                                          Header="新增行" />
+                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                          CommandParameter="{Binding}"
+                                                                          Header="删除" />
+                                                            </ContextMenu>
+                                                        </DockPanel.ContextMenu>
+
+                                                        <ContentControl Style="{StaticResource Effect2Control}">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <TextBlock Margin="4,0,4,0"
+                                                                           VerticalAlignment="Center"
+                                                                           Foreground="Black"
+                                                                           Text="IP地址" />
+                                                                <TextBox Width="110"
+                                                                         VerticalContentAlignment="Center"
+                                                                         Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                                <TextBlock Margin="10,0,4,0"
+                                                                           VerticalAlignment="Center"
+                                                                           Foreground="Black"
+                                                                           Text="子网掩码" />
+                                                                <TextBox Width="110"
+                                                                         VerticalContentAlignment="Center"
+                                                                         Text="{Binding SubnetMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </StackPanel>
+                                                        </ContentControl>
+                                                    </DockPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </ContentControl>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
                     <!--<ItemsControl Background="Transparent" ItemsSource="{Binding NetworkCardConfigs}">
                         <ItemsControl.ItemsPanel>

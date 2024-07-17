@@ -13,10 +13,10 @@ public partial class NetworkToolViewModel : NavigationViewModel
         try
         {
             var re = Core.Common.Utils.ReadJsonFile(Path.Combine(networkCardConfigFolder, @"Default.jsonNCC"));
-            var x = JsonConvert.DeserializeObject<NetworkCardConfig>(re);
+            var x = JsonConvert.DeserializeObject<ObservableCollection<NetworkCardConfig>>(re);
             if (x != null)
             {
-                NetworkCardConfig = x;
+                NetworkCardConfigs = x;
             }
         }
         catch (Exception ex)
@@ -25,11 +25,23 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
 
         //TODO 后续更新为多个配置文件
-        //var n = new NetworkCardConfig();
-        //n.Ipv4s.Add(new Ipv4("192.168.3.3", "255.255.255.0"));
-        //n.Ipv4s.Add(new Ipv4("192.168.4.3", "255.255.255.0"));
-        //n.Ipv4s.Add(new Ipv4("192.168.5.3", "255.255.255.0"));
-        //NetworkCardConfigs.Add(n);
+        NetworkCardConfig n1 = new()
+        {
+            Ipv4s = [new Ipv4("192.168.1.3", "255.255.255.0"),
+                     new Ipv4("192.168.2.3", "255.255.255.0"),
+                     new Ipv4("192.168.3.3", "255.255.255.0"),
+                    ]
+        };
+        NetworkCardConfig n2 = new()
+        {
+            Ipv4s = [new Ipv4("192.168.1.3", "255.255.255.0"),
+                     new Ipv4("192.168.2.3", "255.255.255.0"),
+                     new Ipv4("192.168.3.3", "255.255.255.0"),
+                    ]
+        };
+        NetworkCardConfigs.Add(n1);
+        NetworkCardConfigs.Add(n2);
+        SelectedConfig = NetworkCardConfigs.First();
     }
 
     #region 字段
@@ -44,6 +56,12 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// </summary>
     [ObservableProperty]
     ObservableCollection<NetworkCard> networkCards = [];
+
+    /// <summary>
+    /// 选中的配置文件
+    /// </summary>
+    [ObservableProperty]
+    NetworkCardConfig selectedConfig = new();
 
     /// <summary>
     ///  当前选中的网卡配置
@@ -71,7 +89,13 @@ public partial class NetworkToolViewModel : NavigationViewModel
             case "打开网络连接": await 打开网络连接(); break;
             case "ExportConfig": ExportConfig(); break;
             case "ImportConfig": ImportConfig(); break;
+            case "AddConfig": AddConfig(); break;
         }
+    }
+
+    private void AddConfig()
+    {
+        NetworkCardConfigs.Add(new NetworkCardConfig());
     }
 
     /// <summary>
@@ -95,8 +119,8 @@ public partial class NetworkToolViewModel : NavigationViewModel
             if (dlg.ShowDialog() != true)
                 return;
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
-            var x = JsonConvert.DeserializeObject<NetworkCardConfig>(xx);
-            NetworkCardConfig = x;
+            var x = JsonConvert.DeserializeObject<ObservableCollection<NetworkCardConfig>>(xx);
+            NetworkCardConfigs = x;
             HcGrowlExtensions.Success("配置文件导入成功");
         }
         catch (Exception ex)
@@ -113,7 +137,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
         try
         {
             Wu.Utils.IoUtil.Exists(networkCardConfigFolder);                                                                   //验证文件夹是否存在, 不存在则创建
-            SaveFileDialog sfd = new SaveFileDialog()
+            SaveFileDialog sfd = new()
             {
                 Title = "请选择导出配置文件...",                             //对话框标题
                 Filter = "json files(*.jsonNCC)|*.jsonNCC",                 //文件格式过滤器
@@ -126,7 +150,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
             };
             if (sfd.ShowDialog() != true)
                 return;
-            var content = JsonConvert.SerializeObject(NetworkCardConfig);    //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(NetworkCardConfigs);    //将当前的配置序列化为json字符串
             Core.Common.Utils.WriteJsonFile(sfd.FileName, content);              //保存文件
             HcGrowlExtensions.Success("配置文件导出成功");
         }
@@ -163,18 +187,20 @@ public partial class NetworkToolViewModel : NavigationViewModel
 
             List<ExecuteCmdResult> results = [];
 
+            NetworkCardConfig xx = SelectedConfig;//将选中项作为配置文件设置
+
             //TODO 测试用netsh和cmd都只能一次执行一条命令,还需要再优化
             #region 使用cmd执行
-            string cmd = $"netsh interface ipv4 set address {nwc.NetConnectionId} static {NetworkCardConfig.Ipv4s[0].Address} {NetworkCardConfig.Ipv4s[0].SubnetMask}";
+            string cmd = $"netsh interface ipv4 set address {nwc.NetConnectionId} static {xx.Ipv4s[0].Address} {xx.Ipv4s[0].SubnetMask}";
             results.Add(ExecuteCommands(cmd));
             // 添加额外的IP地址
-            for (int i = 1; i < NetworkCardConfig.Ipv4s.Count; i++)
+            for (int i = 1; i < xx.Ipv4s.Count; i++)
             {
-                if (string.IsNullOrWhiteSpace(NetworkCardConfig.Ipv4s[i].Address))
+                if (string.IsNullOrWhiteSpace(xx.Ipv4s[i].Address))
                 {
                     continue;
                 }
-                cmd = $"netsh interface ipv4 add address {nwc.NetConnectionId} {NetworkCardConfig.Ipv4s[i].Address} {NetworkCardConfig.Ipv4s[i].SubnetMask}";
+                cmd = $"netsh interface ipv4 add address {nwc.NetConnectionId} {xx.Ipv4s[i].Address} {xx.Ipv4s[i].SubnetMask}";
                 results.Add(ExecuteCommands(cmd));
             }
             string result = string.Empty;

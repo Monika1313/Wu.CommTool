@@ -12,7 +12,7 @@ public partial class NetworkCardConfig : ObservableObject
     /// Ipv4地址列表
     /// </summary>
     [ObservableProperty]
-    ObservableCollection<Ipv4> ipv4s = [];
+    ObservableCollection<Ipv4> ipv4s = [new ()];
 
 
     [RelayCommand]
@@ -24,6 +24,10 @@ public partial class NetworkCardConfig : ObservableObject
         if (Ipv4s.Contains(obj))
         {
             Ipv4s.Remove(obj);
+            if (Ipv4s.Count == 0)
+            {
+                Ipv4s.Add(new Ipv4());
+            }
         }
     }
 
