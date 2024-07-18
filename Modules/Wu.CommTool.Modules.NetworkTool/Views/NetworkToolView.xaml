@@ -11,8 +11,8 @@
              xmlns:viewmodels="clr-namespace:Wu.CommTool.Modules.NetworkTool.ViewModels"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:NetworkToolDesignViewModel.Instance}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
+             d:DesignHeight="650"
+             d:DesignWidth="1000"
              mc:Ignorable="d">
     <UserControl.Resources>
         <Style TargetType="TextBlock">
@@ -125,8 +125,10 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>-->
 
-                    <ListView ItemsSource="{Binding NetworkCardConfigs}" SelectedItem="{Binding SelectedConfig}">
-                        <ListView.ItemTemplate>
+                    <ListBox ItemsSource="{Binding NetworkCardConfigs}"
+                             SelectedItem="{Binding SelectedConfig}"
+                             SelectionMode="Single">
+                        <ListBox.ItemTemplate>
                             <DataTemplate DataType="models:NetworkCardConfig">
                                 <ContentControl Margin="2" Style="{StaticResource Effect2Control}">
                                     <StackPanel>
@@ -180,68 +182,8 @@
                                     </StackPanel>
                                 </ContentControl>
                             </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
-
-                    <!--<ItemsControl Background="Transparent" ItemsSource="{Binding NetworkCardConfigs}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel Orientation="Vertical" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="models:Ipv4">
-                                <ContentControl Style="{StaticResource Effect2Control}">
-                                    <StackPanel>
-                                        <hc:TextBox hc:InfoElement.Placeholder="XXXX"
-                                                    hc:TitleElement.Title="配置名:"
-                                                    hc:TitleElement.TitleWidth="55"
-                                                    FontSize="14"
-                                                    Style="{StaticResource FormTextBox}"
-                                                    Text="{Binding ConfigName}" />
-                                        <ItemsControl Background="Transparent" ItemsSource="{Binding Ipv4s}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <StackPanel Orientation="Vertical" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate DataType="models:Ipv4">
-                                                    <DockPanel Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                                        <DockPanel.ContextMenu>
-                                                            <ContextMenu>
-                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                                          CommandParameter="{Binding}"
-                                                                          Header="删除" />
-                                                            </ContextMenu>
-                                                        </DockPanel.ContextMenu>
-
-                                                        <ContentControl Style="{StaticResource Effect2Control}">
-                                                            <StackPanel Orientation="Horizontal">
-                                                                <TextBlock Margin="4,0,4,0"
-                                                                           VerticalAlignment="Center"
-                                                                           Text="IP地址" />
-                                                                <TextBox Width="110"
-                                                                         VerticalContentAlignment="Center"
-                                                                         Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                                <TextBlock Margin="10,0,4,0"
-                                                                           VerticalAlignment="Center"
-                                                                           Text="子网掩码" />
-                                                                <TextBox Width="110"
-                                                                         VerticalContentAlignment="Center"
-                                                                         Text="{Binding SubnetMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                                            </StackPanel>
-                                                        </ContentControl>
-                                                    </DockPanel>
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </StackPanel>
-                                </ContentControl>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>-->
-
+                        </ListBox.ItemTemplate>
+                    </ListBox>
                 </StackPanel>
             </hc:ScrollViewer>
         </ContentControl>
