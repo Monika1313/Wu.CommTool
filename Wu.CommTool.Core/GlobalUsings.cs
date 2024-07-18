@@ -17,4 +17,4 @@ global using Wu.CommTool.Core.Enums.Modbus;
 global using Wu.Extensions;
 global using Wu.Wpf.Converters;
 global using Wu.CommTool.Core.Models;
-
+global using System.Windows.Controls.Primitives;

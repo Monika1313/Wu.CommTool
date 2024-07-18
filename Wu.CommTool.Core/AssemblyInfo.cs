@@ -4,4 +4,5 @@
 [assembly:XmlnsDefinition("Wu.CommTool.Core", "Wu.CommTool.Core.Enums.Mqtt")]
 [assembly:XmlnsDefinition("Wu.CommTool.Core", "Wu.CommTool.Core.Models")]
 [assembly:XmlnsDefinition("Wu.CommTool.Core", "Wu.CommTool.Core.Converters")]
+[assembly:XmlnsDefinition("Wu.CommTool.Core", "Wu.CommTool.Core.Behavior")]
 [assembly:XmlnsPrefix("Wu.CommTool.Core", "core")]
