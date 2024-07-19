@@ -12,7 +12,7 @@ public partial class NetworkCardConfig : ObservableObject
     /// Ipv4地址列表
     /// </summary>
     [ObservableProperty]
-    ObservableCollection<Ipv4> ipv4s = [new ()];
+    ObservableCollection<Ipv4> ipv4s = [];
 
 
     [RelayCommand]

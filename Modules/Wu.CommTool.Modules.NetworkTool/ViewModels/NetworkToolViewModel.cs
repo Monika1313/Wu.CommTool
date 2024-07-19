@@ -23,24 +23,6 @@ public partial class NetworkToolViewModel : NavigationViewModel
         {
             HcGrowlExtensions.Warning($"{ex.Message}");
         }
-
-        //TODO 后续更新为多个配置文件
-        NetworkCardConfig n1 = new()
-        {
-            Ipv4s = [new Ipv4("192.168.1.3", "255.255.255.0"),
-                     new Ipv4("192.168.2.3", "255.255.255.0"),
-                     new Ipv4("192.168.3.3", "255.255.255.0"),
-                    ]
-        };
-        NetworkCardConfig n2 = new()
-        {
-            Ipv4s = [new Ipv4("192.168.1.3", "255.255.255.0"),
-                     new Ipv4("192.168.2.3", "255.255.255.0"),
-                     new Ipv4("192.168.3.3", "255.255.255.0"),
-                    ]
-        };
-        NetworkCardConfigs.Add(n1);
-        NetworkCardConfigs.Add(n2);
         SelectedConfig = NetworkCardConfigs.First();
     }
 
@@ -95,7 +77,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
 
     private void AddConfig()
     {
-        NetworkCardConfigs.Add(new NetworkCardConfig());
+        NetworkCardConfigs.Add(new NetworkCardConfig() { Ipv4s = [new()] });
     }
 
     /// <summary>
