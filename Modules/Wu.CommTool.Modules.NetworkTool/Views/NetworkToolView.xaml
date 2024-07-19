@@ -87,18 +87,6 @@
                                Style="{StaticResource TitleTextBlock}"
                                Text="IPv4设置" />
                     <DockPanel LastChildFill="False">
-                        <!--  导出配置文件  -->
-                        <Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="4"
-                                hc:Poptip.Content="导出配置文件"
-                                Command="{Binding ExecuteCommand}"
-                                CommandParameter="ExportConfig"
-                                Content="{md:PackIcon Kind=Upload}"
-                                Cursor="Hand"
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />
-
                         <!--  导入配置文件  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -111,6 +99,27 @@
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
 
+                        <!--  导出配置文件  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="导出配置文件"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="ExportConfig"
+                                Content="{md:PackIcon Kind=Upload}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
+                        <!--  删除配置文件  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="新增配置文件"
+                                Command="{Binding DeleteConfigCommand}"
+                                CommandParameter="{Binding SelectedConfig}"
+                                Content="{md:PackIcon Kind=Delete}"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Red_CircleButton}" />
                         <!--  新增配置文件  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -119,8 +128,10 @@
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="AddConfig"
                                 Content="{md:PackIcon Kind=Add}"
+                                Cursor="Hand"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
+
                     </DockPanel>
                 </StackPanel>
                 <ListBox ItemContainerStyle="{StaticResource NetworkCardConfigListBoxItem}"

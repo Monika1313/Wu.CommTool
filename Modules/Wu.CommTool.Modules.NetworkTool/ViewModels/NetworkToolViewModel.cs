@@ -75,6 +75,15 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
     }
 
+    [RelayCommand]
+    private void DeleteConfig(NetworkCardConfig obj)
+    {
+        if (NetworkCardConfigs.Contains(obj))
+        {
+            NetworkCardConfigs.Remove(obj);
+        }
+    }
+
     private void AddConfig()
     {
         NetworkCardConfigs.Add(new NetworkCardConfig() { Ipv4s = [new()] });
@@ -164,6 +173,12 @@ public partial class NetworkToolViewModel : NavigationViewModel
         {
             if (!await 有管理员权限吗())
             {
+                return;
+            }
+
+            if (SelectedConfig == null)
+            {
+                HcGrowlExtensions.Warning("请先选择右侧的配置文件...");
                 return;
             }
 
