@@ -1,4 +1,6 @@
 ﻿using AutoUpdaterDotNET;
+using HandyControl.Controls;
+using System.Resources;
 
 namespace Wu.CommTool.ViewModels;
 
@@ -133,8 +135,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         //TODO 后续修改为自定义窗口
         //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
 
-
-        AutoUpdater.InstalledVersion = new Version("1.3.10.4");//当前的App版本
+        AutoUpdater.InstalledVersion = new Version("1.4.0.0");//当前的App版本
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
