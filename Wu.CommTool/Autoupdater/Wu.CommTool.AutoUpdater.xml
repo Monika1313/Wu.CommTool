@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<item>
+	<!-- 版本号 -->
+	<version>1.3.10.3</version>
+	<!-- 下载此处提供的文件，并在用户按下“更新”按钮时安装它 -->
+	<url>http://salight.cn/downloads/Wu.CommTool.zip</url>
+	<!-- 应用程序更改日志的URL。不提供更改日志的URL，则更新对话框将不会显示更改日志 -->
+	<!--<changelog/>-->
+	<!-- 如果不希望用户跳过此版本，可以将其设置为 true。这将忽略提醒 稍后和跳过选项，并在更新对话框中隐藏“跳过”和“稍后提醒”按钮 -->
+	<!-- mandatory的可选属性mode: mode="1"将隐藏“关闭”按钮 mode="2"将跳过更新对话框并启动自动下载和更新应用程序 -->
+	<!-- mandatory的可选属性minVersion：仅当应用程序的安装版本低于最低版本时，才会触发强制选项 -->
+	<!-- <mandatory mode="0" mandatory="1.3.10.0">false </mandatory> -->
+	<mandatory>false </mandatory>
+	<!-- 可执行文件：如果可执行文件在更新中已更改，则可以提供可执行文件的路径。它应该是 相对于应用程序的安装目录。例如，如果新的可执行文件位于 bin 文件夹，那么您应该提供它 -->
+	<!-- <executable>bin\XX.exe</executable> -->
+</item>

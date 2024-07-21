@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.ViewModels;
+﻿using AutoUpdaterDotNET;
+
+namespace Wu.CommTool.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject, IConfigureService
 {
@@ -122,4 +124,32 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         if (journal != null && journal.CanGoForward)
             journal.GoForward();
     }
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void AppUpdate()
+    {
+        //TODO 后续修改为自定义窗口
+        //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
+
+
+        AutoUpdater.InstalledVersion = new Version("1.3.10.4");//当前的App版本
+        AutoUpdater.HttpUserAgent = "AutoUpdater";
+        AutoUpdater.ReportErrors = true;
+
+        AutoUpdater.ShowSkipButton = false;//禁用跳过
+        AutoUpdater.ShowRemindLaterButton = false;//禁用稍后提醒
+
+        //稍后提醒设置
+        AutoUpdater.LetUserSelectRemindLater = false;
+        AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Days;
+        AutoUpdater.RemindLaterAt = 2;
+        AutoUpdater.TopMost = true;
+
+        //AutoUpdater.UpdateFormSize = new System.Drawing.Size(800, 600);//设置窗口大小
+        //AutoUpdater.Icon = Resources.Icon;
+        AutoUpdater.Start("http://salight.cn/Downloads/Wu.CommTool.Autoupdater.xml");
+    }
+
 }
