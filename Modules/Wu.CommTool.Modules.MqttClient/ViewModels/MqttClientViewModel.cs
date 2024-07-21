@@ -100,7 +100,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// 配置文件列表
     /// </summary>
     public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
-    private ObservableCollection<ConfigFile> _ConfigFiles = new();
+    private ObservableCollection<ConfigFile> _ConfigFiles = [];
     #endregion
 
 
@@ -229,7 +229,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            DirectoryInfo Folder = new DirectoryInfo(MqttClientConfigDict);
+            DirectoryInfo Folder = new(MqttClientConfigDict);
             var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsonmcc")).Select(item => new ConfigFile(item));
             ConfigFiles.Clear();
             foreach (var item in a)
@@ -752,13 +752,15 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// 保存
     /// </summary>
     [RelayCommand]
-    void Save()
+    private void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
         //添加返回的参数
-        DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        DialogParameters param = new()
+        {
+            { "Value", CurrentDto }
+        };
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -767,7 +769,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// 取消
     /// </summary>
     [RelayCommand]
-    void Cancel()
+    private void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))

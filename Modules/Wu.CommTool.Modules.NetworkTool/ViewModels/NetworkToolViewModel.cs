@@ -116,7 +116,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
         catch (Exception ex)
         {
-            HcGrowlExtensions.Warning("配置文件导入失败");
+            HcGrowlExtensions.Warning($"配置文件导入失败...{ex.Message}");
         }
     }
 
@@ -147,7 +147,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
         catch (Exception ex)
         {
-            HcGrowlExtensions.Warning("配置文件导出失败");
+            HcGrowlExtensions.Warning($"配置文件导出失败...{ex.Message}");
         }
     }
 

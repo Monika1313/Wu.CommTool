@@ -24,6 +24,7 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
+		<PackageReference Include="Autoupdater.NET.Official" Version="1.9.1" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
 		<PackageReference Include="HandyControl" Version="3.4.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
