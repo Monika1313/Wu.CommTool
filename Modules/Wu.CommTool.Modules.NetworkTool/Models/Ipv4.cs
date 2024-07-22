@@ -24,4 +24,11 @@ public partial class Ipv4 : ObservableObject
     /// </summary>
     [ObservableProperty]
     string subnetMask;
+
+    /// <summary>
+    /// 网关
+    /// </summary>
+    [ObservableProperty]
+    string gateway;
+
 }

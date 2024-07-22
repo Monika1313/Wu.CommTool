@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.NetworkTool.Models;
+﻿using WindowsFirewallHelper.Addresses;
+
+namespace Wu.CommTool.Modules.NetworkTool.Models;
 
 /// <summary>
 /// 网卡
@@ -68,6 +70,25 @@ public partial class NetworkCard : ObservableObject
             ManagementObjectSearcher searcherConfig = new("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE Index = " + mo["Index"]);
             foreach (ManagementObject configObj in searcherConfig.Get().Cast<ManagementObject>())
             {
+                #region 遍历configObj每个属性
+                //Dictionary<string, object> dict = new Dictionary<string, object>();
+                //foreach (PropertyData property in configObj.Properties)
+                //{
+                //    var name = property.Name;
+                //    // 检查属性值是否为空
+                //    var value = property.Value ?? "null";
+                //    dict.Add(name, value);
+                //    // 如果属性是一个数组，将其转换为字符串
+                //    if (value is Array)
+                //    {
+                //        value = string.Join(", ", (Array)value);
+                //    }
+                //}
+                #endregion
+
+
+                DefaultGateways = new ObservableCollection<string>((string[])configObj["DefaultIPGateway"] ?? []);
+
                 DhcpEnabled = Convert.ToBoolean(configObj["DHCPEnabled"]);//网卡DHCP状态
                 Ipv4List.Clear();
                 string[] ipAddresses = (string[])configObj["IPAddress"];
@@ -122,4 +143,7 @@ public partial class NetworkCard : ObservableObject
 
     [ObservableProperty]
     ObservableCollection<Ipv4> ipv4List = [];
+
+    [ObservableProperty]
+    ObservableCollection<string> defaultGateways = [];
 }

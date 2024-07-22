@@ -266,21 +266,10 @@
                                             </TextBlock.Style>
                                         </TextBlock>
 
-
-                                        <!--<Button
-                                        Margin="4"
-                                        HorizontalAlignment="Left"
-                                        Command="{Binding DataContext.NetEnableCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                                        CommandParameter="{Binding .}"
-                                        Content="启用禁用网卡" />-->
-                                        <!--<Button
-                                        Margin="4"
-                                        HorizontalAlignment="Left"
-                                        Command="{Binding DataContext.ImportIpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                                        CommandParameter="{Binding .}"
-                                        Content="设置固定IP" />-->
                                     </StackPanel>
-                                    <ItemsControl Margin="6" ItemsSource="{Binding Ipv4List}">
+                                    <ItemsControl Margin="6"
+                                                  DockPanel.Dock="Top"
+                                                  ItemsSource="{Binding Ipv4List}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Vertical" />
@@ -301,6 +290,24 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+
+                                    <StackPanel Margin="6" Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="默认网关" />
+                                        <ItemsControl Margin="6" ItemsSource="{Binding DefaultGateways}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal" />
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate DataType="models:Ipv4">
+                                                    <StackPanel Margin="6" Orientation="Horizontal">
+                                                        <TextBlock Text="{Binding .}" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
                                 </DockPanel>
                             </StackPanel>
                         </ContentControl>

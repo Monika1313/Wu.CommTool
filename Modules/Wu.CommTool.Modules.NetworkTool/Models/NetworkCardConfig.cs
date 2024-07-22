@@ -14,6 +14,11 @@ public partial class NetworkCardConfig : ObservableObject
     [ObservableProperty]
     ObservableCollection<Ipv4> ipv4s = [];
 
+    /// <summary>
+    /// 默认网关
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<string> defaultIPGateway = [];
 
     [RelayCommand]
     [property: JsonIgnore]
