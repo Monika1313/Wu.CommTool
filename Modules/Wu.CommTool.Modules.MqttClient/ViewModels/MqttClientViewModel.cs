@@ -10,7 +10,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     private IMqttClient client;
     public string DialogHostName { get; set; } = "MqttClientView";
 
-    private string MqttClientConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
+    private string mqttClientConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig");
     private static string viewName = "MqttClientView";
 
     CancellationTokenSource connectCts = new();
@@ -28,26 +28,45 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
 
         MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
-
-        //从默认配置文件中读取配置
-        try
-        {
-            string p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientConfig\Default.jsonMCC");
-            var xx = Core.Common.Utils.ReadJsonFile(p);
-            var x = JsonConvert.DeserializeObject<MqttClientConfig>(xx);
-            if (x == null)
-                return;
-            MqttClientConfig = x;
-            ShowMessage("读取配置成功");
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage($"配置文件读取失败{ex.Message}");
-        }
+        GetDefaultConfig();
 
         //读取配置文件夹
         RefreshQuickImportList();
     }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+        //从默认配置文件中读取配置
+        try
+        {
+            var filePath = Path.Combine(mqttClientConfigDict, @"Default.jsonMCC");
+            if (File.Exists(filePath))
+            {
+                var obj = JsonConvert.DeserializeObject<MqttClientConfig>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (obj != null)
+                {
+                    MqttClientConfig = obj;
+                    ShowMessage("读取配置成功");
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                MqttClientConfig = new ();
+                //在默认文件目录生成默认配置文件
+                var content = JsonConvert.SerializeObject(MqttClientConfig);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage($"配置文件读取失败:{ex.Message}");
+        }
+    }
+
 
 
     #region **************************************** 属性 ****************************************
@@ -229,7 +248,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            DirectoryInfo Folder = new(MqttClientConfigDict);
+            DirectoryInfo Folder = new(mqttClientConfigDict);
             var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsonmcc")).Select(item => new ConfigFile(item));
             ConfigFiles.Clear();
             foreach (var item in a)
