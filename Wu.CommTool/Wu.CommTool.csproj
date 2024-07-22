@@ -61,10 +61,10 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Content Include="Configs\ModbusRtuAutoResponseConfig\Test.jsonARC">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		  <CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Configs\ModbusRtuAutoResponseConfig\Default.jsonARC">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Configs\ModbusRtuConfig\正泰DTSU666.jsonDMC">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

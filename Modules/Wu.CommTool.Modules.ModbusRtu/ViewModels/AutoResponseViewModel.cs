@@ -14,18 +14,46 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
         this.dialogHost = dialogHost;
         ModbusRtuModel = modbusRtuModel;
 
+        GetDefaultConfig();
+    }
+
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
         //导入默认自动应答配置
         try
         {
-            var xx = Core.Common.Utils.ReadJsonFile(Path.Combine(ModbusRtuModel.ModbusRtuAutoResponseConfigDict, "Default.jsonARC"));
-            ModbusRtuModel.MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
-            ModbusRtuModel.RefreshModbusRtuDataDataView();//更新数据视图
+            var filePath = Path.Combine(ModbusRtuModel.ModbusRtuAutoResponseConfigDict, "Default.jsonARC");
+
+            if (File.Exists(filePath))
+            {
+                var obj = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (obj != null)
+                {
+                    ModbusRtuModel.MosbusRtuAutoResponseDatas = obj;
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                ModbusRtuModel.MosbusRtuAutoResponseDatas = [new() { Name = "数据采集测试", Priority = 0, MateTemplate= "01030BCE0002A7D0", ResponseTemplate= "0103044005F16CBA4F"},
+                                                             new() { Name = "数据写入测试", Priority = 0, MateTemplate= "031000000002043F8CCCCDA17D", ResponseTemplate= "0310 0000 0002 402A"},
+                                                             new()];
+                var content = JsonConvert.SerializeObject(ModbusRtuModel.MosbusRtuAutoResponseDatas);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+            }
         }
         catch (Exception ex)
         {
             ModbusRtuModel.ShowErrorMessage(ex.Message);
         }
     }
+
+
+
 
 
     #region **************************************** 属性 ****************************************

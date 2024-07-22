@@ -1,1 +1,80 @@
-﻿[{"Name":"数据采集测试","Priority":0,"MateTemplate":"01030BCE0002A7D0","ResponseTemplate":"0103044005F16CBA4F"},{"Name":"数据写入测试","Priority":0,"MateTemplate":"031000000002043F8CCCCDA17D","ResponseTemplate":"0310 0000 0002 402A"},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""},{"Name":"","Priority":0,"MateTemplate":"","ResponseTemplate":""}]
+﻿[
+  {
+    "Name": "数据采集测试",
+    "Priority": 0,
+    "MateTemplate": "01030BCE0002A7D0",
+    "ResponseTemplate": "0103044005F16CBA4F"
+  },
+  {
+    "Name": "数据写入测试",
+    "Priority": 0,
+    "MateTemplate": "031000000002043F8CCCCDA17D",
+    "ResponseTemplate": "0310 0000 0002 402A"
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  },
+  {
+    "Name": "",
+    "Priority": 0,
+    "MateTemplate": "",
+    "ResponseTemplate": ""
+  }
+]
