@@ -76,7 +76,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Configs\MqttServerConfig\Default.jsonMSC">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Configs\NetworkCardConfig\Default.jsonNCC">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

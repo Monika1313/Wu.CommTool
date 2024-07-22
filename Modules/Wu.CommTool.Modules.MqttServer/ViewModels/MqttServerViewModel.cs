@@ -16,15 +16,34 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         this.provider = provider;
         this.dialogHost = dialogHost;
 
+        GetDefaultConfig();
+    }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
         //从默认配置文件中读取配置
         try
         {
-            var xx = Core.Common.Utils.ReadJsonFile(Path.Combine(mqttServerConfigFolder, @"Default.jsonMSC"));
-            var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
-            if (x != null)
+            var filePath = Path.Combine(mqttServerConfigFolder, @"Default.jsonMSC");
+            if (File.Exists(filePath))
             {
-                MqttServerConfig = x;
-                ShowMessage("读取配置成功");
+                var x = JsonConvert.DeserializeObject<MqttServerConfig>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (x != null)
+                {
+                    MqttServerConfig = x;
+                    ShowMessage("读取配置成功");
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                MqttServerConfig = new MqttServerConfig();
+                //在默认文件目录生成默认配置文件
+                var content = JsonConvert.SerializeObject(MqttServerConfig);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
         }
         catch (Exception ex)
