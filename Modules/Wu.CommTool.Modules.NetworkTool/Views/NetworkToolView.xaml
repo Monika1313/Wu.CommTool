@@ -149,7 +149,7 @@
                                             FontSize="14"
                                             FontWeight="Bold"
                                             Text="{Binding ConfigName}" />
-                                <ItemsControl Background="Transparent" ItemsSource="{Binding Ipv4s}">
+                                <!--<ItemsControl Background="Transparent" ItemsSource="{Binding Ipv4s}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
                                             <StackPanel Orientation="Vertical" />
@@ -197,7 +197,65 @@
                                             </DockPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                </ItemsControl>-->
+
+
+                                <ListView Background="Transparent"
+                                          ItemsSource="{Binding Ipv4s}"
+                                          Style="{StaticResource ListView.Small}"
+                                          Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}}">
+
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </Trigger>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+
+                                    <ListView.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.AddNewLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding}"
+                                                      Header="新增行" />
+                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding}"
+                                                      Header="删除" />
+                                        </ContextMenu>
+                                    </ListView.ContextMenu>
+
+                                    <ListView.View>
+                                        <GridView>
+                                            <GridViewColumn Width="125" Header="IP地址">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Width="110" Text="{Binding Address}" />
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Width="125" Header="子网掩码">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Width="110" Text="{Binding SubnetMask}" />
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Width="125" Header="默认网关">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Width="110" Text="{Binding DefaultGateway}" />
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
