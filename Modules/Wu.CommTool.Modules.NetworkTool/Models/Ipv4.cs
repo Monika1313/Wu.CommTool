@@ -29,6 +29,6 @@ public partial class Ipv4 : ObservableObject
     /// 网关
     /// </summary>
     [ObservableProperty]
-    string gateway;
+    string defaultGateway;
 
 }

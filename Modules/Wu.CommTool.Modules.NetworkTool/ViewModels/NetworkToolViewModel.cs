@@ -188,7 +188,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
 
             //TODO 测试用netsh和cmd都只能一次执行一条命令,还需要再优化
             #region 使用cmd执行
-            string cmd = $"netsh interface ipv4 set address {nwc.NetConnectionId} static {xx.Ipv4s[0].Address} {xx.Ipv4s[0].SubnetMask}";
+            string cmd = $"netsh interface ipv4 set address {nwc.NetConnectionId} static {xx.Ipv4s[0].Address} {xx.Ipv4s[0].SubnetMask} {xx.Ipv4s[0].DefaultGateway}";
             results.Add(ExecuteCommands(cmd));
             // 添加额外的IP地址
             for (int i = 1; i < xx.Ipv4s.Count; i++)
@@ -197,7 +197,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
                 {
                     continue;
                 }
-                cmd = $"netsh interface ipv4 add address {nwc.NetConnectionId} {xx.Ipv4s[i].Address} {xx.Ipv4s[i].SubnetMask}";
+                cmd = $"netsh interface ipv4 add address {nwc.NetConnectionId} {xx.Ipv4s[i].Address} {xx.Ipv4s[i].SubnetMask} {xx.Ipv4s[i].DefaultGateway}";
                 results.Add(ExecuteCommands(cmd));
             }
             string result = string.Empty;

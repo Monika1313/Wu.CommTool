@@ -185,6 +185,13 @@
                                                         <TextBox Width="110"
                                                                  VerticalContentAlignment="Center"
                                                                  Text="{Binding SubnetMask, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                        <TextBlock Margin="10,0,4,0"
+                                                                   VerticalAlignment="Center"
+                                                                   Foreground="Black"
+                                                                   Text="默认网关" />
+                                                        <TextBox Width="110"
+                                                                 VerticalContentAlignment="Center"
+                                                                 Text="{Binding DefaultGateway, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                                     </StackPanel>
                                                 </ContentControl>
                                             </DockPanel>
@@ -195,12 +202,10 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-                <!--<hc:ScrollViewer IsInertiaEnabled="True">
-                </hc:ScrollViewer>-->
             </DockPanel>
         </ContentControl>
 
-        <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="False" IsInertiaEnabled="True">
+        <hc:ScrollViewer IsInertiaEnabled="True">
             <ItemsControl Margin="0"
                           Background="Transparent"
                           IsTabStop="False"
