@@ -4,7 +4,8 @@ public partial class App
 {
     public static AppConfig AppConfig { get; set; } = new();
     public static string ConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs");
-    public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
+    public static readonly ILog log = LogManager.GetLogger(typeof(App));
+    //public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()!.DeclaringType);
 
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -48,7 +49,7 @@ public partial class App
 
         //注册页面
         containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
-        containerRegistry.RegisterInstance<ILog>(LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType));
+        //containerRegistry.RegisterInstance<ILog>(LogManager.GetLogger(typeof(App)));
         //RegisterSingleton
     }
 

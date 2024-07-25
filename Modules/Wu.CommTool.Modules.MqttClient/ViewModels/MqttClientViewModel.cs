@@ -5,7 +5,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    //public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+    public static readonly ILog log = LogManager.GetLogger(typeof(MqttClientViewModel));
 
     private IMqttClient client;
     public string DialogHostName { get; set; } = "MqttClientView";
@@ -694,6 +694,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             void action()
             {
                 Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
+                log.Info($"接收:{message}");
                 while (Messages.Count > 100)
                 {
                     Messages.RemoveAt(0);
@@ -713,6 +714,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             void action()
             {
                 Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Send, title));
+                log.Info($"发送:{message}");
                 while (Messages.Count > 100)
                 {
                     Messages.RemoveAt(0);
@@ -737,7 +739,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             void action()
             {
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
-                //log.Info(message);
+                log.Info(message);
                 while (Messages.Count > 100)
                 {
                     Messages.RemoveAt(0);

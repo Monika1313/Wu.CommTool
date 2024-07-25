@@ -1,10 +1,13 @@
-﻿namespace Wu.CommTool.Modules.ModbusTcp.Models;
+﻿using System.Windows.Forms;
+
+namespace Wu.CommTool.Modules.ModbusTcp.Models;
 
 /// <summary>
 /// Modbus Tcp 从站=Master
 /// </summary>
 public partial class MtcpMaster : ObservableObject
 {
+    private static readonly ILog log = LogManager.GetLogger(typeof(MtcpMaster));
     public MtcpMaster()
     {
         ShowMessage("开发中...");
@@ -252,7 +255,7 @@ public partial class MtcpMaster : ObservableObject
             {
                 re += $"{item.Content} ";
             }
-            Clipboard.SetDataObject(re);
+            System.Windows.Clipboard.SetDataObject(re);
         }
         catch (Exception ex)
         {
@@ -274,6 +277,7 @@ public partial class MtcpMaster : ObservableObject
             void action()
             {
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                log.Info(message);
                 while (Messages.Count > 260)
                 {
                     Messages.RemoveAt(0);
@@ -302,6 +306,7 @@ public partial class MtcpMaster : ObservableObject
             {
                 var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame);
                 Messages.Add(msg);
+                log.Info($"接收:{frame}");
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);
@@ -324,6 +329,7 @@ public partial class MtcpMaster : ObservableObject
             {
                 var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
                 Messages.Add(msg);
+                log.Info(message: $"发送:{frame}");
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);

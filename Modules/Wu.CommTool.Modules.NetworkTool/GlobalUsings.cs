@@ -24,4 +24,3 @@ global using Wu.Wpf.Extensions;
 global using Newtonsoft.Json;
 global using Microsoft.Win32;
 global using System.IO;
-global using CommunityToolkit.Mvvm.ComponentModel;

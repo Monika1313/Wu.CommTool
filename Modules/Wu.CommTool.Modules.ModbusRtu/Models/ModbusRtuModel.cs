@@ -1,11 +1,10 @@
 ﻿using ImTools;
-using Microsoft.Win32;
-using System.Collections;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Timers;
 using System.Windows.Data;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
@@ -49,7 +48,7 @@ public class ModbusRtuModel : ObservableObject
     protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
     private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
     public readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
-
+    private static readonly ILog log = LogManager.GetLogger(typeof(ModbusRtuModel));
 
     #region ******************************  命令  ******************************
     /// <summary>
@@ -154,19 +153,19 @@ public class ModbusRtuModel : ObservableObject
     /// 搜索到的ModbusRtu设备
     /// </summary>
     public ObservableCollection<ModbusRtuDevice> ModbusRtuDevices { get => _ModbusRtuDevices; set => SetProperty(ref _ModbusRtuDevices, value); }
-    private ObservableCollection<ModbusRtuDevice> _ModbusRtuDevices = new();
+    private ObservableCollection<ModbusRtuDevice> _ModbusRtuDevices = [];
 
     /// <summary>
     /// 选中的波特率
     /// </summary>
     public IList<BaudRate> SelectedBaudRates { get => _SelectedBaudRates; set => SetProperty(ref _SelectedBaudRates, value); }
-    private IList<BaudRate> _SelectedBaudRates = new List<BaudRate>();
+    private IList<BaudRate> _SelectedBaudRates = [];
 
     ///// <summary>
     ///// 选中的校验方式
     ///// </summary>
     public IList<Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
-    private IList<Parity> _SelectedParitys = new List<Parity>();
+    private IList<Parity> _SelectedParitys = [];
 
 
     /// <summary>
@@ -464,6 +463,7 @@ public class ModbusRtuModel : ObservableObject
             {
                 var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
                 Messages.Add(msg);
+                log.Info($"接收:{frame}");
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);
@@ -485,8 +485,8 @@ public class ModbusRtuModel : ObservableObject
             void action()
             {
                 var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame);
-
                 Messages.Add(msg);
+                log.Info($"发送:{frame}");
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);
@@ -509,28 +509,7 @@ public class ModbusRtuModel : ObservableObject
             void action()
             {
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type));
-                while (Messages.Count > 260)
-                {
-                    Messages.RemoveAt(0);
-                }
-            }
-            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
-        }
-        catch (Exception) { }
-    }
-
-    /// <summary>
-    /// 界面显示数据
-    /// </summary>
-    /// <param name="message"></param>
-    /// <param name="type"></param>
-    public void ShowMessage(ModbusRtuMessageData msg)
-    {
-        try
-        {
-            void action()
-            {
-                Messages.Add(msg);
+                log.Info(message);
                 while (Messages.Count > 260)
                 {
                     Messages.RemoveAt(0);
@@ -1679,7 +1658,6 @@ public class ModbusRtuModel : ObservableObject
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
             RefreshModbusRtuDataDataView();//更新数据视图
-            //ShowMessage("导入配置完成");
             HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入完成", nameof(ModbusRtuView));
         }
         catch (Exception ex)

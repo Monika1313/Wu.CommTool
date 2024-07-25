@@ -1,5 +1,6 @@
 ﻿global using CommunityToolkit.Mvvm.ComponentModel;
 global using CommunityToolkit.Mvvm.Input;
+global using log4net;
 global using MaterialDesignThemes.Wpf;
 global using Newtonsoft.Json;
 global using Prism.Commands;
@@ -9,6 +10,7 @@ global using Prism.Mvvm;
 global using Prism.Regions;
 global using Prism.Services.Dialogs;
 global using System;
+global using System.Collections;
 global using System.Collections.Generic;
 global using System.Collections.ObjectModel;
 global using System.ComponentModel;

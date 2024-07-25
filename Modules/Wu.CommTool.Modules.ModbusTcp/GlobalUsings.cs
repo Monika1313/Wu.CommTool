@@ -6,7 +6,7 @@ global using System.IO;
 global using System.Windows;
 global using System.Collections.Generic;
 global using System.ComponentModel;
-
+global using log4net;
 global using Prism.Commands;
 global using Prism.Ioc;
 global using Prism.Regions;
@@ -15,7 +15,6 @@ global using Prism.Mvvm;
 
 global using MaterialDesignThemes.Wpf;
 global using Newtonsoft.Json;
-
 
 global using Wu.ViewModels;
 global using Wu.Wpf.Models;
