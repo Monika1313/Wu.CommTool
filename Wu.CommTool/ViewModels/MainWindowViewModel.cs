@@ -135,7 +135,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         //TODO 后续修改为自定义窗口
         //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
 
-        AutoUpdater.InstalledVersion = new Version("1.4.0.2");//当前的App版本
+        AutoUpdater.InstalledVersion = new Version("1.4.0.3");//当前的App版本
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
