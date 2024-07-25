@@ -47,7 +47,9 @@ public partial class App
         containerRegistry.Register<IDialogHostService, DialogHostService>();
 
         //注册页面
-        containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();                                               //消息提示窗口
+        containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
+        containerRegistry.RegisterInstance<ILog>(LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType));
+        //RegisterSingleton
     }
 
     /// <summary>
