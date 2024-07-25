@@ -287,7 +287,7 @@
                                                 DockPanel.Dock="Right" />
                                         <hc:TextBox VerticalContentAlignment="Top"
                                                     hc:InfoElement.Placeholder="右键菜单可以生成帧、新增行、删除行"
-                                                    hc:InfoElement.ShowClearButton="True"
+                                                    hc:InfoElement.ShowClearButton="False"
                                                     Style="{StaticResource TextBoxPlusBaseStyle}"
                                                     Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
                                                     Text="{Binding Frame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

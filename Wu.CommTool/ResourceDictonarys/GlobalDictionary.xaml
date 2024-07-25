@@ -175,6 +175,8 @@
 
     <!--  DataGrid 默认第一列显示选中复选框  -->
     <Style BasedOn="{StaticResource DataGridBaseStyle}" TargetType="DataGrid">
+        <!--  HeadersVisibility 修改改属性以显示或隐藏列标题行标题  -->
+        <Setter Property="HeadersVisibility" Value="All" />
         <Setter Property="RowHeaderWidth" Value="60" />
         <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="False" />
         <Setter Property="RowHeaderTemplate">
@@ -206,6 +208,11 @@
 
     <!--  DataGrid 列标题  -->
     <Style BasedOn="{StaticResource DataGridColumnHeaderStyle}" TargetType="DataGridColumnHeader">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <!--  DataGridTextColumnStyle 文本居中  -->
+    <Style x:Key="CenterDataGridTextColumn" TargetType="{x:Type TextBlock}">
         <Setter Property="HorizontalAlignment" Value="Center" />
     </Style>
 

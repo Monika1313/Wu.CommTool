@@ -146,9 +146,89 @@
                                             hc:InfoElement.Placeholder="请输入配置名..."
                                             Background="Transparent"
                                             BorderThickness="0"
+                                            ContextMenu="{x:Null}"
                                             FontSize="14"
                                             FontWeight="Bold"
                                             Text="{Binding ConfigName}" />
+
+                                <DataGrid Width="Auto"
+                                          AutoGenerateColumns="False"
+                                          Background="Transparent"
+                                          CanUserSortColumns="False"
+                                          HeadersVisibility="Column"
+                                          ItemsSource="{Binding Ipv4s}">
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="Transparent" />
+                                        </Style>
+                                    </DataGrid.RowStyle>
+
+                                    <DataGrid.RowHeaderTemplate>
+                                        <DataTemplate>
+                                            <Grid Width="110">
+                                                <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </DataGrid.RowHeaderTemplate>
+
+                                    <DataGrid.CellStyle>
+                                        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                            <Setter Property="IsTabStop" Value="False" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsKeyboardFocused" Value="False">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.CellStyle>
+
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu StaysOpen="true">
+                                            <MenuItem Margin="2"
+                                                      Command="{Binding AddNewLineCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                      Header="新增行" />
+                                            <MenuItem Margin="2"
+                                                      Command="{Binding DeleteLineCommand}"
+                                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                      Foreground="Red"
+                                                      Header="删除" />
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="IP地址">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="110"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="子网掩码">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="110"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding SubnetMask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTemplateColumn Header="默认网关">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="110"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding DefaultGateway, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+
                                 <!--<ItemsControl Background="Transparent" ItemsSource="{Binding Ipv4s}">
                                     <ItemsControl.ItemsPanel>
                                         <ItemsPanelTemplate>
@@ -199,8 +279,7 @@
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>-->
 
-
-                                <ListView Background="Transparent"
+                                <!--<ListView Background="Transparent"
                                           ItemsSource="{Binding Ipv4s}"
                                           Style="{StaticResource ListView.Small}"
                                           Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContentControl}}}">
@@ -255,7 +334,7 @@
                                             </GridViewColumn>
                                         </GridView>
                                     </ListView.View>
-                                </ListView>
+                                </ListView>-->
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

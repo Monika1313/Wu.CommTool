@@ -106,7 +106,9 @@
                                               Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                               WindowChrome.IsHitTestVisibleInChrome="True" />
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
-                                    <md:PopupBox StaysOpen="True" WindowChrome.IsHitTestVisibleInChrome="True">
+                                    <md:PopupBox IsTabStop="False"
+                                                 StaysOpen="True"
+                                                 WindowChrome.IsHitTestVisibleInChrome="True">
                                         <md:PopupBox.ToggleContent>
                                             <Image Width="25"
                                                    Height="25"
