@@ -38,8 +38,16 @@ public partial class NetworkCardConfig : ObservableObject
 
     [RelayCommand]
     [property: JsonIgnore]
-    public void AddNewLine()
+    public void AddNewLine(Ipv4 obj)
     {
-        Ipv4s.Add(new Ipv4());
+        if (obj == null || !Ipv4s.Contains(obj))
+        {
+            Ipv4s.Add(new Ipv4());
+            return;
+        }
+        else
+        {
+            Ipv4s.Insert(Ipv4s.IndexOf(obj)+1, new Ipv4());
+        }
     }
 }

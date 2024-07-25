@@ -202,6 +202,7 @@
                                                 <DataTemplate>
                                                     <TextBox Width="110"
                                                              HorizontalContentAlignment="Center"
+                                                             ContextMenu="{x:Null}"
                                                              Text="{Binding Address, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -212,6 +213,7 @@
                                                 <DataTemplate>
                                                     <TextBox Width="110"
                                                              HorizontalContentAlignment="Center"
+                                                             ContextMenu="{x:Null}"
                                                              Text="{Binding SubnetMask, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -222,6 +224,7 @@
                                                 <DataTemplate>
                                                     <TextBox Width="110"
                                                              HorizontalContentAlignment="Center"
+                                                             ContextMenu="{x:Null}"
                                                              Text="{Binding DefaultGateway, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
