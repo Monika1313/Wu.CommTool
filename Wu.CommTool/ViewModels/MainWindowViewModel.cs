@@ -1,13 +1,10 @@
-﻿using AutoUpdaterDotNET;
-using HandyControl.Controls;
-using System.Resources;
-
-namespace Wu.CommTool.ViewModels;
+﻿namespace Wu.CommTool.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject, IConfigureService
 {
     #region    *****************************************  字段  *****************************************
     private readonly IRegionManager regionManager;
+    private readonly IDialogHostService dialogHost;
     private IRegionNavigationJournal journal;
     public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
     #endregion *****************************************  字段  *****************************************
@@ -15,10 +12,12 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
 
     #region    *****************************************  构造函数  *****************************************
     public MainWindowViewModel() { }
-    public MainWindowViewModel(IRegionManager regionManager)
+    public MainWindowViewModel(IRegionManager regionManager, IDialogHostService dialogHost)
     {
         this.regionManager = regionManager;
+        this.dialogHost = dialogHost;
         CreateMenuBar();
+        AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;//AutoUpdater使用自定义的窗口
     }
     #endregion *****************************************  构造函数  *****************************************
 
@@ -132,25 +131,71 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     [property: JsonIgnore]
     private void AppUpdate()
     {
-        //TODO 后续修改为自定义窗口
-        //AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;
-
-        AutoUpdater.InstalledVersion = new Version("1.4.0.5");//当前的App版本
+        AutoUpdater.InstalledVersion = new Version("1.4.0.6");//当前的App版本
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
-        AutoUpdater.ShowSkipButton = false;//禁用跳过
-        AutoUpdater.ShowRemindLaterButton = false;//禁用稍后提醒
+        //AutoUpdater.ShowSkipButton = false;//禁用跳过
+        //AutoUpdater.ShowRemindLaterButton = false;//禁用稍后提醒
 
-        //稍后提醒设置
-        AutoUpdater.LetUserSelectRemindLater = false;
-        AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Days;
-        AutoUpdater.RemindLaterAt = 2;
-        AutoUpdater.TopMost = true;
+        ////稍后提醒设置
+        //AutoUpdater.LetUserSelectRemindLater = false;
+        //AutoUpdater.RemindLaterTimeSpan = RemindLaterFormat.Days;
+        //AutoUpdater.RemindLaterAt = 2;
+        //AutoUpdater.TopMost = true;
 
-        //AutoUpdater.UpdateFormSize = new System.Drawing.Size(800, 600);//设置窗口大小
-        //AutoUpdater.Icon = Resources.Icon;
         AutoUpdater.Start("http://salight.cn/Downloads/Wu.CommTool.Autoupdater.xml");
     }
 
+    private async void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
+    {
+        if (args.Error == null)
+        {
+            if (args.IsUpdateAvailable)
+            {
+                var result = await dialogHost.Question("发现新版本", $"发现新版本 V{args.CurrentVersion}\n当前版本为 V{args.InstalledVersion}", "Root");
+
+                #region 强制更新
+                ////强制更新
+                //if (args.Mandatory.Value)
+                //{
+                //}
+                ////非强制更新
+                //else
+                //{
+                //} 
+                #endregion
+
+                if (result.Result == ButtonResult.OK)
+                {
+                    try
+                    {
+                        if (AutoUpdater.DownloadUpdate(args))
+                        {
+                            Environment.Exit(0);
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        HcGrowlExtensions.Warning(exception.Message);
+                    }
+                }
+            }
+            else
+            {
+                var result = await dialogHost.Question("更新检测", "当前已是最新版本啦!", "Root");
+            }
+        }
+        else
+        {
+            if (args.Error is WebException)
+            {
+                var result = await dialogHost.Question("网络错误", "无法连接到服务器!", "Root");
+            }
+            else
+            {
+                HcGrowlExtensions.Warning(args.Error.Message);
+            }
+        }
+    }
 }

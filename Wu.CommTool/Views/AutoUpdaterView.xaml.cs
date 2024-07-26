@@ -10,16 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace Wu.CommTool.Views
 {
     /// <summary>
-    /// AutoupdaterWindow.xaml 的交互逻辑
+    /// AutoUpdaterView.xaml 的交互逻辑
     /// </summary>
-    public partial class AutoupdaterWindow : Window
+    public partial class AutoUpdaterView : UserControl
     {
-        public AutoupdaterWindow()
+        public AutoUpdaterView()
         {
             InitializeComponent();
         }

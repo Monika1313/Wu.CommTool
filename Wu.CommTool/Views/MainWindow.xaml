@@ -107,7 +107,7 @@
                                               WindowChrome.IsHitTestVisibleInChrome="True" />
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                                     <md:PopupBox IsTabStop="False"
-                                                 StaysOpen="True"
+                                                 StaysOpen="False"
                                                  WindowChrome.IsHitTestVisibleInChrome="True">
                                         <md:PopupBox.ToggleContent>
                                             <Image Width="25"
@@ -123,8 +123,7 @@
                                         </md:PopupBox.ToggleContent>
                                         <StackPanel>
                                             <Button Command="{Binding AppUpdateCommand}"
-                                                    CommandParameter="更新"
-                                                    Content="更新"
+                                                    Content="检测更新"
                                                     Cursor="" />
                                         </StackPanel>
                                     </md:PopupBox>
