@@ -55,6 +55,7 @@
 		<None Remove="Images\KU.png" />
 		<None Remove="Images\Kun.png" />
 		<None Remove="Images\logo.ico" />
+		<None Remove="Images\Logo.png" />
 		<None Remove="Images\Wu.png" />
 		<None Remove="Images\Ww.png" />
 		<None Remove="Images\XX.png" />
@@ -89,6 +90,7 @@
 		<Resource Include="Images\KU.png" />
 		<Resource Include="Images\Kun.png" />
 		<Resource Include="Images\logo.ico" />
+		<Resource Include="Images\Logo.png" />
 		<Resource Include="Images\Wu.png" />
 		<Resource Include="Images\Ww.png" />
 		<Resource Include="Images\XX.png" />

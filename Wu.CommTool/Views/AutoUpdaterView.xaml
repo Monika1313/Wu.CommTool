@@ -4,8 +4,46 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:Wu.CommTool.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
+             d:DesignHeight="300"
+             d:DesignWidth="450"
              mc:Ignorable="d">
-    <Grid />
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+        <TextBlock Margin="10,0"
+                   Padding="5"
+                   d:Text="发现新版本"
+                   FontSize="14"
+                   Text="{Binding Title}" />
+
+        <TextBox Grid.Row="1"
+                 Padding="15,0"
+                 VerticalAlignment="Center"
+                 d:Text="发现新版本"
+                 Background="Transparent"
+                 BorderBrush="Transparent"
+                 BorderThickness="0"
+                 Cursor="IBeam"
+                 FontSize="14"
+                 IsReadOnly="True"
+                 Text="{Binding Content}"
+                 TextBlock.LineHeight="23"
+                 TextWrapping="Wrap" />
+        <StackPanel Grid.Row="2"
+                    Margin="10"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+            <Button Margin="10,0"
+                    Command="{Binding CancelCommand}"
+                    Content="取消"
+                    Style="{StaticResource MaterialDesignOutlinedButton}" />
+            <Button Margin="10,0"
+                    Command="{Binding SaveCommand}"
+                    Content="更新"
+                    Cursor="Hand" />
+        </StackPanel>
+    </Grid>
 </UserControl>

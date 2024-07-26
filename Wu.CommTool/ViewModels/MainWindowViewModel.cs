@@ -1,4 +1,7 @@
-﻿namespace Wu.CommTool.ViewModels;
+﻿using System.Drawing;
+using System.Windows.Media.Imaging;
+
+namespace Wu.CommTool.ViewModels;
 
 public partial class MainWindowViewModel : ObservableObject, IConfigureService
 {
@@ -131,7 +134,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     [property: JsonIgnore]
     private void AppUpdate()
     {
-        AutoUpdater.InstalledVersion = new Version("1.4.0.6");//当前的App版本
+        AutoUpdater.InstalledVersion = new Version("1.4.0.5");//当前的App版本
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
@@ -144,7 +147,24 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         //AutoUpdater.RemindLaterAt = 2;
         //AutoUpdater.TopMost = true;
 
+        //窗口使用的logo
+        Uri iconUri = new("pack://application:,,,/Wu.CommTool;component/Images/Logo.png", UriKind.RelativeOrAbsolute);
+        BitmapImage bitmap = new(iconUri);
+        AutoUpdater.Icon = BitmapImage2Bitmap(bitmap);
+
         AutoUpdater.Start("http://salight.cn/Downloads/Wu.CommTool.Autoupdater.xml");
+    }
+
+    private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
+    {
+        using (MemoryStream outStream = new MemoryStream())
+        {
+            BitmapEncoder encoder = new BmpBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+            encoder.Save(outStream);
+            Bitmap bitmap = new Bitmap(outStream);
+            return new Bitmap(bitmap);
+        }
     }
 
     private async void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
@@ -190,7 +210,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         {
             if (args.Error is WebException)
             {
-                var result = await dialogHost.Question("网络错误", "无法连接到服务器!", "Root");
+                var result = await dialogHost.Question("网络错误", "无法连接到服务器诶!", "Root");
             }
             else
             {
