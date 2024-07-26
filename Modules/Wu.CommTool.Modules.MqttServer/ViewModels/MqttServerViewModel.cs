@@ -34,6 +34,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 if (x != null)
                 {
                     MqttServerConfig = x;
+                    MqttServerConfig.IsOpened = false;//解决旧版本导出配置的问题
                     ShowMessage("读取配置成功");
                 }
             }
@@ -165,10 +166,9 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
+            MqttServerConfig.IsOpened = false;
             //关闭服务器
             await mqttServer.StopAsync();
-
-            MqttServerConfig.IsOpened = false;
             MqttUsers.Clear();//清除已登录的用户列表
             ShowMessage($"Mqtt服务器关闭");
         }
@@ -542,6 +542,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var x = JsonConvert.DeserializeObject<MqttServerConfig>(xx);
             MqttServerConfig = x;
+            MqttServerConfig.IsOpened = false;//解决旧版本导出配置的问题
             HcGrowlExtensions.Success("配置文件导入成功", MqttServerView.ViewName);
         }
         catch (Exception ex)

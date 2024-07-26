@@ -17,8 +17,8 @@ public partial class MqttServerConfig : ObservableObject
     /// <summary>
     /// 是否开启
     /// </summary>
-    [JsonIgnore]
     [ObservableProperty]
+    [property:JsonIgnore]
     bool isOpened = false;
 
     /// <summary>
