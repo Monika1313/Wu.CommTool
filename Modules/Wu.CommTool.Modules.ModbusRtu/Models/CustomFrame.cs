@@ -12,4 +12,6 @@ public partial class CustomFrame : ObservableObject
     /// </summary>
     [ObservableProperty]
     string _Frame = "";
+
+
 }

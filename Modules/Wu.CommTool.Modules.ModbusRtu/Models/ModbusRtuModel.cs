@@ -1,23 +1,14 @@
-﻿using ImTools;
-using System.IO.Ports;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Timers;
-using System.Windows.Data;
-using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
-
+﻿using System.IO.Ports;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 /// <summary>
 /// ModbusRtu共享实例
 /// </summary>
-public class ModbusRtuModel : ObservableObject
+public partial class ModbusRtuModel : ObservableObject
 {
     public ModbusRtuModel()
     {
         SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);           //串口接收事件
-
         //数据帧处理子线程
         publishHandleTask = new Task(PublishFrame);
         receiveHandleTask = new Task(ReceiveFrame);
@@ -32,10 +23,6 @@ public class ModbusRtuModel : ObservableObject
         DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
 
         RefreshModbusRtuDataDataView();
-
-        GetComPortsCommand = new DelegateCommand(GetComPorts);
-        MessageClearCommand = new DelegateCommand(MessageClear);
-        PauseCommand = new DelegateCommand(Pause);
     }
 
     private readonly SerialPort SerialPort = new();              //串口
@@ -50,85 +37,68 @@ public class ModbusRtuModel : ObservableObject
     public readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
     private static readonly ILog log = LogManager.GetLogger(typeof(ModbusRtuModel));
 
-    #region ******************************  命令  ******************************
-    /// <summary>
-    /// 查找串口命令
-    /// </summary>
-    public DelegateCommand GetComPortsCommand { get; private set; }
-
-    /// <summary>
-    /// 清空消息命令
-    /// </summary>
-    public DelegateCommand MessageClearCommand { get; private set; }
-
-    /// <summary>
-    /// 暂停页面消息更新
-    /// </summary>
-    public DelegateCommand PauseCommand { get; private set; }
-    #endregion
-
     #region 属性
     /// <summary>
     /// 页面消息
     /// </summary>
-    public ObservableCollection<MessageData> Messages { get => _Messages; set => SetProperty(ref _Messages, value); }
-    private ObservableCollection<MessageData> _Messages = [];
+    [ObservableProperty]
+    ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 暂停
     /// </summary>
-    public bool IsPause { get => _IsPause; set => SetProperty(ref _IsPause, value); }
-    private bool _IsPause;
+    [ObservableProperty]
+    bool isPause;
 
     /// <summary>
     /// 串口列表
     /// </summary>
-    public ObservableCollection<ComPort> ComPorts { get => _ComPorts; set => SetProperty(ref _ComPorts, value); }
-    private ObservableCollection<ComPort> _ComPorts = [];
+    [ObservableProperty]
+    ObservableCollection<ComPort> comPorts = [];
 
     /// <summary>
     /// Com口配置
     /// </summary>
-    public ComConfig ComConfig { get => _ComConfig; set => SetProperty(ref _ComConfig, value); }
-    private ComConfig _ComConfig = new();
+    [ObservableProperty]
+    ComConfig comConfig = new();
 
     /// <summary>
     /// 接收的数据总数
     /// </summary>
-    public int ReceiveBytesCount { get => _ReceiveBytesCount; set => SetProperty(ref _ReceiveBytesCount, value); }
-    private int _ReceiveBytesCount = 0;
+    [ObservableProperty]
+    int receiveBytesCount = 0;
 
     /// <summary>
     /// 发送的数据总数
     /// </summary>
-    public int SendBytesCount { get => _SendBytesCount; set => SetProperty(ref _SendBytesCount, value); }
-    private int _SendBytesCount = 0;
+    [ObservableProperty]
+    int sendBytesCount = 0;
 
     /// <summary>
     /// 字节序
     /// </summary>
-    public ModbusByteOrder ByteOrder { get => _ByteOrder; set => SetProperty(ref _ByteOrder, value); }
-    private ModbusByteOrder _ByteOrder = ModbusByteOrder.DCBA;
+    [ObservableProperty]
+    ModbusByteOrder byteOrder = ModbusByteOrder.DCBA;
     #endregion
 
     #region ******************************  自定义帧模块 属性  ******************************
     /// <summary>
     /// 输入消息 用于发送
     /// </summary>
-    public string InputMessage { get => _InputMessage; set => SetProperty(ref _InputMessage, value); }
-    private string _InputMessage = "01 03 0000 0001";
+    [ObservableProperty]
+    private string inputMessage = "01 03 0000 0001";
 
     /// <summary>
     /// 自动校验模式选择 Crc校验模式
     /// </summary>
-    public CrcMode CrcMode { get => _CrcMode; set => SetProperty(ref _CrcMode, value); }
-    private CrcMode _CrcMode = CrcMode.Modbus;
+    [ObservableProperty]
+    private CrcMode crcMode = CrcMode.Modbus;
 
     /// <summary>
     /// 自定义帧的输入框
     /// </summary>
-    public ObservableCollection<CustomFrame> CustomFrames { get => _CustomFrames; set => SetProperty(ref _CustomFrames, value); }
-    private ObservableCollection<CustomFrame> _CustomFrames =
+    [ObservableProperty]
+    private ObservableCollection<CustomFrame> customFrames =
     [
         new ("01 03 0000 0001 "),
         new ("01 04 0000 0001 "),
@@ -140,51 +110,51 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 搜索设备的状态 0=未开始搜索 1=搜索中 2=搜索结束/搜索中止
     /// </summary>
-    public int SearchDeviceState { get => _SearchDeviceState; set => SetProperty(ref _SearchDeviceState, value); }
-    private int _SearchDeviceState = 0;
+    [ObservableProperty]
+    private int searchDeviceState = 0;
 
     /// <summary>
     /// 当前搜索的ModbusRtu设备
     /// </summary>
-    public ModbusRtuDevice CurrentDevice { get => _CurrentDevice; set => SetProperty(ref _CurrentDevice, value); }
-    private ModbusRtuDevice _CurrentDevice = new();
+    [ObservableProperty]
+    private ModbusRtuDevice currentDevice = new();
 
     /// <summary>
     /// 搜索到的ModbusRtu设备
     /// </summary>
-    public ObservableCollection<ModbusRtuDevice> ModbusRtuDevices { get => _ModbusRtuDevices; set => SetProperty(ref _ModbusRtuDevices, value); }
-    private ObservableCollection<ModbusRtuDevice> _ModbusRtuDevices = [];
+    [ObservableProperty]
+    private ObservableCollection<ModbusRtuDevice> modbusRtuDevices = [];
 
     /// <summary>
     /// 选中的波特率
     /// </summary>
-    public IList<BaudRate> SelectedBaudRates { get => _SelectedBaudRates; set => SetProperty(ref _SelectedBaudRates, value); }
-    private IList<BaudRate> _SelectedBaudRates = [];
+    [ObservableProperty]
+    private List<BaudRate> selectedBaudRates = [];
 
     ///// <summary>
     ///// 选中的校验方式
     ///// </summary>
-    public IList<Parity> SelectedParitys { get => _SelectedParitys; set => SetProperty(ref _SelectedParitys, value); }
-    private IList<Parity> _SelectedParitys = [];
+    [ObservableProperty]
+    private List<Parity> selectedParitys = [];
 
 
     /// <summary>
     /// 搜索使用的功能码
     /// </summary>
-    public byte SearchFunctionCode { get => _SearchFunctionCode; set => SetProperty(ref _SearchFunctionCode, value); }
-    private byte _SearchFunctionCode = 3;
+    [ObservableProperty]
+    private byte searchFunctionCode = 3;
 
     /// <summary>
     /// 搜索时读取数据的起始地址
     /// </summary>
-    public int SearchStartAddr { get => _SearchStartAddr; set => SetProperty(ref _SearchStartAddr, value); }
-    private int _SearchStartAddr = 0000;
+    [ObservableProperty]
+    private int searchStartAddr = 0000;
 
     /// <summary>
     /// 搜索时读取的数量
     /// </summary>
-    public int SearchReadNum { get => _SearchReadNum; set => SetProperty(ref _SearchReadNum, value); }
-    private int _SearchReadNum = 1;
+    [ObservableProperty]
+    private int searchReadNum = 1;
     #endregion
 
 
@@ -192,20 +162,21 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 数据监控配置
     /// </summary>
-    public DataMonitorConfig DataMonitorConfig { get => _DataMonitorConfig; set => SetProperty(ref _DataMonitorConfig, value); }
-    private DataMonitorConfig _DataMonitorConfig = new();
+    [ObservableProperty]
+
+    private DataMonitorConfig dataMonitorConfig = new();
 
     /// <summary>
     /// ModbusRtuDataDataView
     /// </summary>
-    public ListCollectionView ModbusRtuDataDataView { get => _ModbusRtuDataDataView; set => SetProperty(ref _ModbusRtuDataDataView, value); }
-    private ListCollectionView _ModbusRtuDataDataView;
+    [ObservableProperty]
+    private ListCollectionView modbusRtuDataDataView;
 
     /// <summary>
     /// 配置文件列表
     /// </summary>
-    public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
-    private ObservableCollection<ConfigFile> _ConfigFiles = new();
+    [ObservableProperty]
+    private ObservableCollection<ConfigFile> configFiles = [];
 
     #endregion
 
@@ -213,15 +184,14 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 是否开启自动应答
     /// </summary>
-    public bool IsAutoResponse { get => _IsAutoResponse; set => SetProperty(ref _IsAutoResponse, value); }
-    private bool _IsAutoResponse = false;
+    [ObservableProperty]
+    private bool isAutoResponse = false;
 
     /// <summary>
     /// ModbusRtu自动应答
     /// </summary>
-    public ObservableCollection<ModbusRtuAutoResponseData> MosbusRtuAutoResponseDatas { get => _MosbusRtuAutoResponseDatas; set => SetProperty(ref _MosbusRtuAutoResponseDatas, value); }
-    private ObservableCollection<ModbusRtuAutoResponseData> _MosbusRtuAutoResponseDatas = new();
-
+    [ObservableProperty]
+    private ObservableCollection<ModbusRtuAutoResponseData> mosbusRtuAutoResponseDatas = [];
     #endregion
 
 
@@ -229,6 +199,7 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 获取串口完整名字（包括驱动名字）
     /// </summary>
+    [RelayCommand]
     public void GetComPorts()
     {
         if (ComConfig.IsOpened)
@@ -523,7 +494,8 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 清空消息
     /// </summary>
-    public void MessageClear()
+    [RelayCommand]
+    private void MessageClear()
     {
         ReceiveBytesCount = 0;
         SendBytesCount = 0;
@@ -533,7 +505,8 @@ public class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 暂停更新接收的数据
     /// </summary>
-    public void Pause()
+    [RelayCommand]
+    private void Pause()
     {
         IsPause = !IsPause;
         if (IsPause)
