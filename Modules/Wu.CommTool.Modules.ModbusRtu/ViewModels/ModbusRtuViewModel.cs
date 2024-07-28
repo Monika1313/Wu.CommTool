@@ -48,6 +48,9 @@ public partial class ModbusRtuViewModel : NavigationViewModel, IDialogHostAware
             new MenuBar() { Icon = "Number2", Title = "搜索设备", NameSpace = nameof(SearchDeviceView) },
             new MenuBar() { Icon = "Number3", Title = "数据监控", NameSpace = nameof(DataMonitorView) },
             new MenuBar() { Icon = "Number4", Title = "自动应答", NameSpace = nameof(AutoResponseView) },
+#if DEBUG
+            new MenuBar() { Icon = "Number5", Title = "设备监控", NameSpace = nameof(MrtuDeviceMonitorView) },
+#endif
         ];
     #endregion
 

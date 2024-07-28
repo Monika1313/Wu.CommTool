@@ -10,7 +10,6 @@ public class ModbusRtuModule : IModule
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterSingleton<ModbusRtuModel>();
-
         containerRegistry.RegisterForNavigation<ModbusRtuView, ModbusRtuViewModel>();
         containerRegistry.RegisterForNavigation<CustomFrameView, CustomFrameViewModel>();
         containerRegistry.RegisterForNavigation<SearchDeviceView, SearchDeviceViewModel>();
@@ -19,5 +18,6 @@ public class ModbusRtuModule : IModule
         containerRegistry.RegisterForNavigation<ModbusRtuAutoResponseDataEditView, ModbusRtuAutoResponseDataEditViewModel>();
         containerRegistry.RegisterForNavigation<AnalyzeFrameView, AnalyzeFrameViewModel>();
         containerRegistry.RegisterForNavigation<EditFrameView, EditFrameViewModel>();
+        containerRegistry.RegisterForNavigation<MrtuDeviceMonitorView, MrtuDeviceMonitorViewModel>();
     }
 }
