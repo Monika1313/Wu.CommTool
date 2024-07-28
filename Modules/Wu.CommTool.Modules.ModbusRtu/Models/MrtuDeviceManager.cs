@@ -5,7 +5,6 @@
 /// </summary>
 public partial class MrtuDeviceManager : ObservableObject
 {
-
     /// <summary>
     /// ModbusRtu设备列表
     /// </summary>

@@ -1,4 +1,5 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
+﻿
+namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
 public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -57,7 +58,6 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         switch (obj)
         {
-            case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
@@ -68,8 +68,10 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
         //添加返回的参数
-        DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        DialogParameters param = new()
+        {
+            { "Value", CurrentDto }
+        };
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -83,30 +85,29 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     }
 
     /// <summary>
-    /// 弹窗
+    /// 配置ModbusRtu设备
     /// </summary>
-    private void OpenDialogView()
-    {
-        //try
-        //{
-        //    DialogParameters param = new()
-        //    {
-        //        { "Value", CurrentDto }
-        //    };
-        //    //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        //}
-        //catch (Exception ex)
-        //{
-        //    HcGrowlExtensions.Warning(ex.Message);
-        //}
-    }
-
-
     [RelayCommand]
     [property: JsonIgnore]
-    private void ConfigMrtuDevice()
+    private async Task ConfigMrtuDevice(MrtuDevice mrtuDevice)
     {
+        try
+        {
+            DialogParameters param = new()
+            {
+                { "Value", mrtuDevice }
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(ConfigMrtuDeviceView), param, nameof(ModbusRtuView));
 
+            if (dialogResult.Result == ButtonResult.OK)
+            {
+                //更新配置
+            }
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
 
