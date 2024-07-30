@@ -11,4 +11,22 @@ public partial class MrtuDeviceManager : ObservableObject
     [ObservableProperty]
     ObservableCollection<MrtuDevice> mrtuDevices = [];
 
+
+    /// <summary>
+    /// 先做只有一台设备的通讯,后续再做多台
+    /// </summary>
+    /// <param name="md"></param>
+    private void GetData(MrtuDevice md)
+    {
+        //先做只有一台设备的通讯
+        foreach (var request in md.SendFrames)
+        {
+            //发送请求帧
+            //接收数据
+            var response = new ModbusRtuFrame();
+            //接收成功,更新数据
+            md.AnalyzeResponse(request, response);
+        }
+    }
+
 }

@@ -15,13 +15,13 @@ public partial class MrtuDevice : ObservableObject
     /// 通讯口 串口号
     /// </summary>
     [ObservableProperty]
-    string port;
+    string communicationPort;
 
     /// <summary>
     /// 通讯口
     /// </summary>
     [ObservableProperty]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     ComPort comPort;
 
     /// <summary>
@@ -34,11 +34,13 @@ public partial class MrtuDevice : ObservableObject
     /// 设备状态
     /// </summary>
     [ObservableProperty]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     DeviceStatus status;
 
-    
 
+    /// <summary>
+    /// 对测点进行分析,得到获取所有测点数据需要发送的请求帧
+    /// </summary>
     [RelayCommand]
     [property: JsonIgnore]
     private void AnalyzeDataAddress()
@@ -52,6 +54,28 @@ public partial class MrtuDevice : ObservableObject
         //每接收一帧有效帧就更新一次对应地址的数据
     }
 
+    /// <summary>
+    /// 测点数据列表
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<MrtuData> mrtuDatas = [];
+
+    /// <summary>
+    /// 发送帧列表
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<ModbusRtuFrame> sendFrames = [];
+
+    /// <summary>
+    /// 根据发送的帧 对接收帧进行解析 并赋值测点数据
+    /// </summary>
+    /// <param name="send"></param>
+    /// <param name="receive"></param>
+    public void AnalyzeResponse(ModbusRtuFrame send,ModbusRtuFrame receive)
+    {
+        //从发送帧获取功能码+起始地址+数据数量
+        //根据得到的信息获取本次接收的数据可以对哪些测点赋值
+    }
 
 }
 
