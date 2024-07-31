@@ -48,13 +48,13 @@ public static class ModbusUtils
     }
 
     /// <summary>
-    /// 数据类型对应的字节数
+    /// 数据类型对应需读取的字节数
     /// </summary>
-    /// <param name="dataType"></param>
+    /// <param name="mrtuDataType"></param>
     /// <returns></returns>
-    public static int GetMrtuDataTypeLength(MrtuDataType dataType)
+    public static int GetMrtuDataTypeLengthForRead(MrtuDataType mrtuDataType)
     {
-        return dataType switch
+        return mrtuDataType switch
         {
             //MrtuDataType.Byte=>1,
             MrtuDataType.uShort => 2,

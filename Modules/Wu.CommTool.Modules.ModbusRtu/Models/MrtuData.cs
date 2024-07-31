@@ -36,7 +36,7 @@ public partial class MrtuData : ObservableObject
     /// <summary>
     /// 数据类型需读取的长度 单位:字节
     /// </summary>
-    public int DataTypeByteLength => ModbusUtils.GetMrtuDataTypeLength(MrtuDataType);
+    public int MrtuDataTypeByteLength => ModbusUtils.GetMrtuDataTypeLengthForRead(MrtuDataType);
 
     /// <summary>
     /// 转换后的显示值
