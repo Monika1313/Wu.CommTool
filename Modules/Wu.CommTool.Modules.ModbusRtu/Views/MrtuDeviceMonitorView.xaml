@@ -4,11 +4,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:wu="https://github.com/Monika1313/Wu"
-             d:DataContext="{x:Static dvm:DataMonitorDesignViewModel.Instance}"
+             xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
+             d:DataContext="{x:Static dvm:MrtuDeviceMonitorDesignViewModel.Instance}"
              d:DesignHeight="450"
              d:DesignWidth="800"
              mc:Ignorable="d">
@@ -19,16 +21,123 @@
                     <TextBlock HorizontalAlignment="Center"
                                Style="{StaticResource TitleTextBlock}"
                                Text="开发中..." />
+                    <StackPanel Orientation="Horizontal">
+                        <!--<Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                hc:Poptip.Content="配置串口"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenLeftDrawer"
+                                Content="{md:PackIcon Kind=Cog}"
+                                Cursor="Hand"
+                                Style="{StaticResource Blue_CircleButton}" />-->
+
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Background="{StaticResource Green_Background}"
+                                BorderBrush="{StaticResource Green_BorderBrush}"
+                                Command="{Binding MrtuDeviceManager.RunCommand}"
+                                Content="{md:PackIcon Kind=Play}"
+                                Cursor="Hand"
+                                Foreground="{StaticResource Green_Foreground}"
+                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
+
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding MrtuDeviceManager.StopCommand}"
+                                Content="{md:PackIcon Kind=Stop}"
+                                Cursor="Hand"
+                                Style="{StaticResource Red_CircleButton}" />
+                    </StackPanel>
                 </Grid>
                 <Grid DockPanel.Dock="Left">
                     <ContentControl Width="150" Style="{StaticResource Effect2Control}">
-                        <TextBlock Text="设备列表" />
+                        <StackPanel>
+                            <TextBlock HorizontalAlignment="Center" Text="设备列表" />
+
+                            <ItemsControl Margin="0"
+                                          Background="Transparent"
+                                          IsTabStop="False"
+                                          ItemsSource="{Binding MrtuDeviceManager.MrtuDevices, IsAsync=True}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Vertical" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate DataType="models:MrtuDevice">
+                                        <ContentControl Height="80" Style="{StaticResource Effect2Control}">
+                                            <StackPanel>
+                                                <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" />
+                                            </StackPanel>
+                                        </ContentControl>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
                     </ContentControl>
                 </Grid>
                 <Grid>
-                    <ContentControl Style="{StaticResource Effect2Control}">
-                        <TextBlock Text="设备数据" />
-                    </ContentControl>
+                    <DataGrid x:Name="dataGrid"
+                              Margin="4"
+                              AutoGenerateColumns="False"
+                              Background="Transparent"
+                              CanUserSortColumns="False"
+                              FrozenColumnCount="1"
+                              HeadersVisibility="Column"
+                              IsReadOnly="True"
+                              ItemsSource="{Binding CurrentDevice.MrtuDatas}">
+                        <!--  右键菜单  -->
+                        <DataGrid.ContextMenu>
+                            <ContextMenu StaysOpen="true">
+                                <MenuItem Margin="2"
+                                          Command="{Binding OpenMrtuDataEditViewCommand}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                          Header="编辑" />
+                            </ContextMenu>
+                        </DataGrid.ContextMenu>
+
+                        <!--  添加触发器,支持点击事件  -->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding DataContext.OpenMrtuDataEditViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding ElementName=dataGrid, Path=SelectedItem}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+
+                        <!--<DataGrid.RowStyle>
+                            <Style BasedOn="{StaticResource DataGridRowStyle}" TargetType="{x:Type DataGridRow}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsHandle}" Value="否">
+                                        <Setter Property="Foreground" Value="Red" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.RowStyle>-->
+
+
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Binding="{Binding Name}" Header="名称" />
+                            <DataGridTextColumn Binding="{Binding Status}" Header="状态" />
+                            <DataGridTextColumn Binding="{Binding Value}"
+                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
+                                                Header="值" />
+                            <DataGridTextColumn Binding="{Binding RegisterType}"
+                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
+                                                Header="寄存器类型" />
+                            <DataGridTextColumn Binding="{Binding RegisterAddr}"
+                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
+                                                Header="寄存器地址" />
+                            <DataGridTextColumn Binding="{Binding Type}"
+                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
+                                                Header="寄存器地址" />
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </DockPanel>
         </md:DrawerHost>

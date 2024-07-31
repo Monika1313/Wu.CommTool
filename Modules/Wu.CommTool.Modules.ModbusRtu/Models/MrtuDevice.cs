@@ -37,6 +37,12 @@ public partial class MrtuDevice : ObservableObject
     [property: JsonIgnore]
     DeviceStatus status;
 
+    /// <summary>
+    /// 字节序
+    /// </summary>
+    [ObservableProperty]
+    ModbusByteOrder modbusByteOrder;
+
 
     /// <summary>
     /// 对测点进行分析,得到获取所有测点数据需要发送的请求帧

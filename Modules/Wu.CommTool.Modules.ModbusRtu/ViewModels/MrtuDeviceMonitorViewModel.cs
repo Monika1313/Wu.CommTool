@@ -1,4 +1,6 @@
 ﻿
+using Wu.FzWater.Mqtt;
+
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
 public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHostAware
@@ -16,6 +18,18 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
+        ImportConfig();
+    }
+
+
+    protected void ImportConfig()
+    {
+        MrtuDeviceManager = new MrtuDeviceManager();
+        MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备1" });
+        CurrentDevice = MrtuDeviceManager.MrtuDevices[0];
+        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点1" });
+        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点2" });
+        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点3" });
     }
 
     /// <summary>
@@ -48,6 +62,9 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     /// </summary>
     [ObservableProperty]
     MrtuDeviceManager mrtuDeviceManager = new();
+
+    [ObservableProperty]
+    MrtuDevice currentDevice;
 
     #endregion **************************************** 属性 ****************************************
 
@@ -116,6 +133,29 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     private void Config()
     {
 
+    }
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private async Task OpenMrtuDataEditView(MrtuData obj)
+    {
+        try
+        {
+            if (obj == null)
+            {
+                return;
+            }
+            DialogParameters param = new()
+            {
+                { "Value", obj }
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(MrtuDataEditView), param, nameof(ModbusRtuView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
 

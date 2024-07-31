@@ -46,4 +46,86 @@ public static class ModbusUtils
         }
         return indices;
     }
+
+    /// <summary>
+    /// 数据类型对应的字节数
+    /// </summary>
+    /// <param name="dataType"></param>
+    /// <returns></returns>
+    public static int GetMrtuDataTypeLength(MrtuDataType dataType)
+    {
+        return dataType switch
+        {
+            //MrtuDataType.Byte=>1,
+            MrtuDataType.uShort => 2,
+            MrtuDataType.Short => 2,
+            MrtuDataType.uInt => 4,
+            MrtuDataType.Int => 4,
+            MrtuDataType.uLong => 8,
+            MrtuDataType.Long => 8,
+            MrtuDataType.Float => 4,
+            MrtuDataType.Double => 8,
+            MrtuDataType.Hex => 2,
+            //case DataType.Bool:
+            //    return 1;
+            _ => 1,
+        };
+    }
+
+    /// <summary>
+    /// 字节序转换
+    /// </summary>
+    /// <param name="val"></param>
+    /// <param name="byteOrder"></param>
+    /// <returns></returns>
+    public static byte[] ByteOrder(byte[] val, ModbusByteOrder byteOrder)
+    {
+        //若为单字节的则直接返回
+        if (val.Length <= 1)
+        {
+            return val;
+        }
+        //字节序处理
+        switch (byteOrder)
+        {
+            case ModbusByteOrder.ABCD:
+                return val;
+            case ModbusByteOrder.BADC:
+                byte[] re = new byte[val.Length];
+                for (int i = 0; i < val.Length; i++)
+                {
+                    byte item = val[i];
+                    if (i % 2 == 1)
+                    {
+                        re[i - 1] = item;
+                    }
+                    else
+                    {
+                        re[i + 1] = item;
+                    }
+                }
+                return re;
+            case ModbusByteOrder.CDAB:
+                var temp = val.Reverse().ToArray();
+                byte[] result = new byte[temp.Length];
+                for (int i = 0; i < temp.Length; i++)
+                {
+                    byte item = temp[i];
+                    if (i % 2 == 1)
+                    {
+                        result[i - 1] = item;
+                    }
+                    else
+                    {
+                        result[i + 1] = item;
+                    }
+                }
+                return val;
+            case ModbusByteOrder.DCBA:
+                return val.Reverse().ToArray();
+            default:
+                return val;
+        }
+    }
+
 }

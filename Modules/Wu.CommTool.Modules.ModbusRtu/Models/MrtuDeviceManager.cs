@@ -11,6 +11,11 @@ public partial class MrtuDeviceManager : ObservableObject
     [ObservableProperty]
     ObservableCollection<MrtuDevice> mrtuDevices = [];
 
+    /// <summary>
+    /// 状态
+    /// </summary>
+    [ObservableProperty]
+    bool status;
 
     /// <summary>
     /// 先做只有一台设备的通讯,后续再做多台
@@ -27,6 +32,21 @@ public partial class MrtuDeviceManager : ObservableObject
             //接收成功,更新数据
             md.AnalyzeResponse(request, response);
         }
+    }
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private async Task Run()
+    {
+        Status = true;
+    }
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private async Task Stop()
+    {
+        Status = Status;
     }
 
 }

@@ -18,4 +18,6 @@ public static class ModbusUtils
         Array.Reverse(code);
         return $"{str}{BitConverter.ToString(code).Replace("-", string.Empty)}";
     }
+
+   
 }
