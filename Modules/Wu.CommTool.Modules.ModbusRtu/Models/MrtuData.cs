@@ -16,14 +16,15 @@ public partial class MrtuData : ObservableObject
     [ObservableProperty]
     private string name = string.Empty;
 
-    /// <summary>
+
     /// <summary>
     /// 寄存器类型
     /// </summary>
     [ObservableProperty]
     RegisterType registerType;
 
-    /// 寄存器地址
+    /// <summary>
+    /// 寄存器地址 起始地址 单位:word
     /// </summary>
     [ObservableProperty]
     private int registerAddr;
@@ -32,6 +33,11 @@ public partial class MrtuData : ObservableObject
     /// </summary>
     [ObservableProperty]
     private int registerAddrHex;
+
+    /// <summary>
+    /// 寄存器地址 最后一个地址 单位:word
+    /// </summary>
+    public double RegisterLastWordAddr => RegisterAddr + MrtuDataTypeByteLength / 2;
 
     /// <summary>
     /// 数据类型需读取的长度 单位:字节
@@ -49,13 +55,14 @@ public partial class MrtuData : ObservableObject
     /// </summary>
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Value))]
+    [NotifyPropertyChangedFor(nameof(MrtuDataTypeByteLength))]
     MrtuDataType mrtuDataType = MrtuDataType.Int;
 
     /// <summary>
     /// 数据更新时间
     /// </summary>
     [ObservableProperty]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     private DateTime? updateTime = null;
 
     /// <summary>
