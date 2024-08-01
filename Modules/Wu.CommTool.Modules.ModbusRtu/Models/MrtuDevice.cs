@@ -1,5 +1,4 @@
-﻿using Microsoft.Web.WebView2.Core;
-
+﻿global using Wu.CommTool.Core.Common;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 /// <summary>
@@ -17,7 +16,7 @@ public partial class MrtuDevice : ObservableObject
     /// 从站地址
     /// </summary>
     [ObservableProperty]
-    int slaveAddr;
+    byte slaveAddr = 1;
 
     /// <summary>
     /// 通讯口 串口号
@@ -51,15 +50,20 @@ public partial class MrtuDevice : ObservableObject
     [ObservableProperty]
     ModbusByteOrder modbusByteOrder;
 
+    /// <summary>
+    /// 读取数据的请求帧
+    /// </summary>
+    [JsonIgnore]
+    public List<string> RequestFrames = [];
 
     /// <summary>
     /// 对测点进行分析,得到获取所有测点数据需要发送的请求帧
     /// </summary>
     [RelayCommand]
     [property: JsonIgnore]
-    private void AnalyzeDataAddress()
+    public void AnalyzeDataAddress()
     {
-        List<string> frames = new List<string>();
+        List<string> frames = [];
         #region 读取保持寄存器 03 功能码
         //将需要读取数据按字节的起始地址进行排序
         //根据寄存器类型生成两组
@@ -71,8 +75,8 @@ public partial class MrtuDevice : ObservableObject
         foreach (var item in holdingList)
         {
             // points  [X1,Y1] [X2,Y2] [X3,Y3]
-            //由于列表已经是排序过的,故当item的起始地址不在区间列表的最后一个区间上,就需要另起一个区间了
-            if (holdingPoints.Count == 0 || holdingPoints.LastOrDefault().Y < item.RegisterAddr)
+            //由于列表已经是排序过的,故当item的起始地址不在区间列表的最后一个区间上或下一个地址,就需要另起一个区间了
+            if (holdingPoints.Count == 0 || holdingPoints.LastOrDefault().Y + 1 < item.RegisterAddr)
             {
                 holdingPoints.Add(new Point(item.RegisterAddr, item.RegisterLastWordAddr));
             }
@@ -84,39 +88,93 @@ public partial class MrtuDevice : ObservableObject
         }
 
         //根据区间生成请求帧
-        foreach (var item in holdingPoints)
+        foreach (var p in holdingPoints)
         {
-            if (item.Y - item.X < 99)
+            if (p.Y - p.X < 99)
             {
-                frames.Add($"{SlaveAddr:X2}03{item.X:X2}{item.Y:X2}");//TODO需要加CRC校验码
+                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{(int)p.X:X4}{(int)(p.Y - p.X + 1):X4}"));
             }
-            //TODO若有超过100字节的则再次拆分(设备厂商不同,有些设备支持最大读取数量不同)
-            if (item.Y - item.X >= 99)
+            //若有超过100字节的则再次拆分(设备厂商不同,有些设备支持最大读取数量不同)
+            else
             {
-                //int last = ((int)item.Y - (int)item.X + 1) / 2;
-                frames.Add($"{SlaveAddr:X2}03{item.X:X2}{item.Y:X2}");//TODO需要加CRC校验码
-
+                var startAddr = (int)p.X;
+                //拆分成一帧读62字
+                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+                startAddr += 58;//两帧之间读取的地址重叠4字,可以保证在临界的数据至少在其中一帧是完整的
+                while (true)
+                {
+                    if (p.Y - startAddr < 99)
+                    {
+                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{(int)(p.Y - startAddr + 1):X4}"));
+                        break;//退出循环
+                    }
+                    else
+                    {
+                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+                    }
+                    startAddr += 58;
+                }
             }
         }
-
-        //将帧列表输出
-
-
-        //按顺序发送请求帧
-        //每接收一帧有效帧就更新一次对应地址的数据
         #endregion
-
 
 
         #region 读取输入寄存器 04功能码
-        //TODO 读取输入寄存器 04功能码
-        //List<MrtuData> inputList = [.. MrtuDatas.Where(x => x.RegisterType == RegisterType.Input).ToList().OrderBy(x => x.RegisterAddr)];
+        //将需要读取数据按字节的起始地址进行排序
+        //输入寄存器
+        List<MrtuData> inputList = [.. MrtuDatas.Where(x => x.RegisterType == RegisterType.Input).ToList().OrderBy(x => x.RegisterAddr)];
+        //对排序后的列表求并集获取所有需要读取的字节地址区间
+        List<Point> inputPoints = [];//使用Point表示闭区间
+        //遍历需要读取的数据
+        //当前仅做字和双字的处理  字节、bit等功能后续再完善
+        foreach (var item in inputList)
+        {
+            // points  [X1,Y1] [X2,Y2] [X3,Y3]
+            //由于列表已经是排序过的,故当item的起始地址不在区间列表的最后一个区间上或下一个地址,就需要另起一个区间了
+            if (inputPoints.Count == 0 || inputPoints.LastOrDefault().Y + 1 < item.RegisterAddr)
+            {
+                inputPoints.Add(new Point(item.RegisterAddr, item.RegisterLastWordAddr));
+            }
+            //该数据的起始地址在最后一个区间但长度大于Y将最后一个区间扩大
+            else if (inputPoints.LastOrDefault().Y < item.RegisterLastWordAddr)
+            {
+                inputPoints[^1] = new Point(inputPoints.LastOrDefault().X, item.RegisterLastWordAddr);
+            }
+        }
+
+        //根据区间生成请求帧
+        foreach (var p in inputPoints)
+        {
+            if (p.Y - p.X < 99)
+            {
+                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{(int)p.X:X4}{(int)(p.Y - p.X + 1):X4}"));
+            }
+            //若有超过100字节的则再次拆分(设备厂商不同,有些设备支持最大读取数量不同)
+            else
+            {
+                var startAddr = (int)p.X;
+                //拆分成一帧读62字
+                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+                startAddr += 58;//两帧之间读取的地址重叠4字,可以保证在临界的数据至少在其中一帧是完整的
+                while (true)
+                {
+                    if (p.Y - startAddr < 99)
+                    {
+                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{startAddr:X4}{(int)(p.Y - startAddr + 1):X4}"));
+                        break;//退出循环
+                    }
+                    else
+                    {
+                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{startAddr:X4}{62:X4}"));
+                    }
+                    startAddr += 58;
+                }
+            }
+        }
         #endregion
 
-
-
-
-
+        //赋值帧列表
+        RequestFrames = frames;
     }
 
     /// <summary>
@@ -124,12 +182,6 @@ public partial class MrtuDevice : ObservableObject
     /// </summary>
     [ObservableProperty]
     ObservableCollection<MrtuData> mrtuDatas = [];
-
-    /// <summary>
-    /// 发送帧列表
-    /// </summary>
-    [ObservableProperty]
-    ObservableCollection<ModbusRtuFrame> sendFrames = [];
 
     /// <summary>
     /// 根据发送的帧 对接收帧进行解析 并赋值测点数据

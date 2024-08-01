@@ -290,7 +290,7 @@ public class ModbusRtuFrameCreator : BindableBase
                 //TODO 0x05请求帧的输出值只能是0xFF00或0x0000
                 unCrcFrame = $"{SlaveId:X2} {Function:X2} {StartAddr:X4} {RegisterNum:X4} ";
                 CrcCode = Wu.Utils.Crc.Crc16Modbus(unCrcFrame.GetBytes());
-                return Wu.CommTool.Modules.ModbusRtu.Utils.ModbusUtils.StrCombineCrcCode(unCrcFrame);
+                return Wu.CommTool.Core.Common.ModbusUtils.StrCombineCrcCode(unCrcFrame);
 
 
             case ModbusRtuFrameType._0x0F请求帧:

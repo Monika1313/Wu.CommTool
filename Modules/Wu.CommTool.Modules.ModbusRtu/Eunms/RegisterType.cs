@@ -6,11 +6,11 @@
 public enum RegisterType
 {
     /// <summary>
-    /// 输入寄存器
-    /// </summary>
-    Input,
-    /// <summary>
     /// 保持寄存器
     /// </summary>
-    Holding
+    Holding,
+    /// <summary>
+    /// 输入寄存器
+    /// </summary>
+    Input
 }

@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.Win32;
 using Wu.FzWater.Mqtt;
 
 namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
@@ -9,6 +10,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
     private static readonly ILog log = LogManager.GetLogger(typeof(MrtuDeviceMonitorViewModel));
+    private readonly string mrtuDeviceManagerConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MrtuDeviceMOnitorConfig");
     #endregion **************************************** 字段 ****************************************
 
 
@@ -18,18 +20,82 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        ImportConfig();
+        InitialTestData();
     }
 
 
-    protected void ImportConfig()
+    protected void InitialTestData()
     {
         MrtuDeviceManager = new MrtuDeviceManager();
         MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备1" });
         CurrentDevice = MrtuDeviceManager.MrtuDevices[0];
-        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点1" });
-        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点2" });
-        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点3" });
+        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点1", RegisterAddr = 0, MrtuDataType = MrtuDataType.Float });
+        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点2", RegisterAddr = 2, MrtuDataType = MrtuDataType.Short });
+        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点3", RegisterAddr = 10, MrtuDataType = MrtuDataType.uInt });
+    }
+
+    /// <summary>
+    /// 导入配置文件
+    /// </summary>
+    [RelayCommand]
+    private void ImportConfig()
+    {
+        try
+        {
+            //配置文件目录
+            Wu.Utils.IoUtil.Exists(mrtuDeviceManagerConfigFolder);
+            //选中配置文件
+            OpenFileDialog dlg = new()
+            {
+                Title = "请选择导入配置文件...",                                              //对话框标题
+                Filter = "json files(*.jsonMDM)|*.jsonMDM",    //文件格式过滤器
+                FilterIndex = 1,                                                         //默认选中的过滤器
+                InitialDirectory = mrtuDeviceManagerConfigFolder
+            };
+
+            if (dlg.ShowDialog() != true)
+                return;
+            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
+            var x = JsonConvert.DeserializeObject<MrtuDeviceManager>(xx);
+            MrtuDeviceManager = x;
+            HcGrowlExtensions.Success("配置文件导入成功");
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"配置文件导入失败...{ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 导出配置文件
+    /// </summary>
+    [RelayCommand]
+    private void ExportConfig()
+    {
+        try
+        {
+            Wu.Utils.IoUtil.Exists(mrtuDeviceManagerConfigFolder);                                                                   //验证文件夹是否存在, 不存在则创建
+            SaveFileDialog sfd = new()
+            {
+                Title = "请选择导出配置文件...",                             //对话框标题
+                Filter = "json files(*.jsonMDM)|*.jsonMDM",                 //文件格式过滤器
+                FilterIndex = 1,                                            //默认选中的过滤器
+                FileName = "Default",                                       //默认文件名
+                DefaultExt = "jsonMDM",                                     //默认扩展名
+                InitialDirectory = mrtuDeviceManagerConfigFolder,                                    //指定初始的目录
+                OverwritePrompt = true,                                     //文件已存在警告
+                AddExtension = true,                                        //若用户省略扩展名将自动添加扩展名
+            };
+            if (sfd.ShowDialog() != true)
+                return;
+            var content = JsonConvert.SerializeObject(MrtuDeviceManager);    //将当前的配置序列化为json字符串
+            Core.Common.Utils.WriteJsonFile(sfd.FileName, content);              //保存文件
+            HcGrowlExtensions.Success("配置文件导出成功");
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"配置文件导出失败...{ex.Message}");
+        }
     }
 
     /// <summary>

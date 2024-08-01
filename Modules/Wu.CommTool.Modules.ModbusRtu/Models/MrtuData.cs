@@ -21,7 +21,7 @@ public partial class MrtuData : ObservableObject
     /// 寄存器类型
     /// </summary>
     [ObservableProperty]
-    RegisterType registerType;
+    RegisterType registerType = RegisterType.Holding;
 
     /// <summary>
     /// 寄存器地址 起始地址 单位:word
@@ -37,7 +37,7 @@ public partial class MrtuData : ObservableObject
     /// <summary>
     /// 寄存器地址 最后一个地址 单位:word
     /// </summary>
-    public double RegisterLastWordAddr => RegisterAddr + MrtuDataTypeByteLength / 2;
+    public double RegisterLastWordAddr => RegisterAddr + MrtuDataTypeByteLength / 2 - 1;
 
     /// <summary>
     /// 数据类型需读取的长度 单位:字节

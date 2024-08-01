@@ -54,6 +54,25 @@
                                 Content="{md:PackIcon Kind=Stop}"
                                 Cursor="Hand"
                                 Style="{StaticResource Red_CircleButton}" />
+
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="导出配置文件"
+                                Command="{Binding ImportConfigCommand}"
+                                Content="{md:PackIcon Kind=Upload}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="导入配置文件"
+                                Command="{Binding ExportConfigCommand}"
+                                Content="{md:PackIcon Kind=Download}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
                     </StackPanel>
                 </Grid>
                 <Grid DockPanel.Dock="Left">
@@ -134,7 +153,7 @@
                             <DataGridTextColumn Binding="{Binding RegisterAddr}"
                                                 ElementStyle="{StaticResource CenterDataGridTextColumn}"
                                                 Header="寄存器地址" />
-                            <DataGridTextColumn Binding="{Binding MrtuType}"
+                            <DataGridTextColumn Binding="{Binding MrtuDataType}"
                                                 ElementStyle="{StaticResource CenterDataGridTextColumn}"
                                                 Header="数据类型" />
                         </DataGrid.Columns>
