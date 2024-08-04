@@ -1,8 +1,4 @@
-﻿
-using Microsoft.Win32;
-using Wu.FzWater.Mqtt;
-
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
 public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -20,8 +16,45 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        InitialTestData();
+        //InitialTestData();
+        GetDefaultConfig();
     }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+        //导入默认自动应答配置
+        try
+        {
+            var filePath = Path.Combine(mrtuDeviceManagerConfigFolder, "Default.jsonMDM");
+
+            if (File.Exists(filePath))
+            {
+                var obj = JsonConvert.DeserializeObject<MrtuDeviceManager>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (obj != null)
+                {
+                    MrtuDeviceManager = obj;
+                    CurrentDevice = MrtuDeviceManager.MrtuDevices.FirstOrDefault();
+                }
+            }
+            else
+            {
+                ////文件不存在则生成默认配置 
+                //ModbusRtuModel.MosbusRtuAutoResponseDatas = [new() { Name = "数据采集测试", Priority = 0, MateTemplate= "01030BCE0002A7D0", ResponseTemplate= "0103044005F16CBA4F"},
+                //                                             new() { Name = "数据写入测试", Priority = 0, MateTemplate= "031000000002043F8CCCCDA17D", ResponseTemplate= "0310 0000 0002 402A"},
+                //                                             new()];
+                //var content = JsonConvert.SerializeObject(ModbusRtuModel.MosbusRtuAutoResponseDatas);       //将当前的配置序列化为json字符串
+                //Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+            }
+        }
+        catch (Exception ex)
+        {
+            
+        }
+    }
+
 
 
     protected void InitialTestData()
@@ -58,6 +91,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var x = JsonConvert.DeserializeObject<MrtuDeviceManager>(xx);
             MrtuDeviceManager = x;
+            CurrentDevice= MrtuDeviceManager.MrtuDevices.FirstOrDefault();
             HcGrowlExtensions.Success("配置文件导入成功");
         }
         catch (Exception ex)
@@ -132,6 +166,8 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     [ObservableProperty]
     MrtuDevice currentDevice;
 
+    [ObservableProperty]
+    OpenDrawers openDrawers = new();
     #endregion **************************************** 属性 ****************************************
 
 
@@ -141,6 +177,9 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         switch (obj)
         {
+            case "OpenRightDrawer":
+                OpenDrawers.RightDrawer = true;
+                break;
             default: break;
         }
     }
@@ -216,7 +255,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
             {
                 { "Value", obj }
             };
-            var dialogResult = await dialogHost.ShowDialog(nameof(MrtuDataEditView), param, nameof(ModbusRtuView));
+            var dialogResult = await dialogHost.ShowDialog(nameof(MrtuDataEditView), param, nameof(MrtuDeviceMonitorView));
         }
         catch (Exception ex)
         {

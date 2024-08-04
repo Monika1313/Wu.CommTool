@@ -1,5 +1,4 @@
-﻿global using Wu.CommTool.Core.Common;
-namespace Wu.CommTool.Modules.ModbusRtu.Models;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 /// <summary>
 /// ModbusRtu设备
@@ -54,7 +53,22 @@ public partial class MrtuDevice : ObservableObject
     /// 读取数据的请求帧
     /// </summary>
     [JsonIgnore]
-    public List<string> RequestFrames = [];
+    public List<string> RequestFrames
+    {
+        get
+        {
+            if (!RequestFramesUpdated)
+            {
+                AnalyzeDataAddress();
+            }
+            return requestFrames;
+        }
+
+        set => SetProperty(ref requestFrames, value);
+    }
+    private List<string> requestFrames;
+
+    private bool RequestFramesUpdated = false;
 
     /// <summary>
     /// 对测点进行分析,得到获取所有测点数据需要发送的请求帧
@@ -154,7 +168,7 @@ public partial class MrtuDevice : ObservableObject
             {
                 var startAddr = (int)p.X;
                 //拆分成一帧读62字
-                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{startAddr:X4}{62:X4}"));
                 startAddr += 58;//两帧之间读取的地址重叠4字,可以保证在临界的数据至少在其中一帧是完整的
                 while (true)
                 {
@@ -175,6 +189,7 @@ public partial class MrtuDevice : ObservableObject
 
         //赋值帧列表
         RequestFrames = frames;
+        RequestFramesUpdated = true;
     }
 
     /// <summary>
@@ -193,6 +208,17 @@ public partial class MrtuDevice : ObservableObject
         //从发送帧获取功能码+起始地址+数据数量
         //根据得到的信息获取本次接收的数据可以对哪些测点赋值
     }
+
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void AddNewMrtuData()
+    {
+        MrtuDatas.Add(new MrtuData());
+    }
+
+
 
 }
 

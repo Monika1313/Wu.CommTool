@@ -17,25 +17,10 @@ public partial class MrtuDeviceManager : ObservableObject
     /// 状态
     /// </summary>
     [ObservableProperty]
+    [property:JsonIgnore]
     bool status;
 
-    /// <summary>
-    /// 先做只有一台设备的通讯,后续再做多台
-    /// </summary>
-    /// <param name="md"></param>
-    private void GetData(MrtuDevice md)
-    {
-        ////先做只有一台设备的通讯
-        //foreach (var request in md.RequestFrames)
-        //{
-        //    //发送请求帧
-        //    //接收数据
-        //    var response = new ModbusRtuFrame();
-        //    //接收成功,更新数据
-        //    md.AnalyzeResponse(request, response);
-        //}
-    }
-
+   
 
     [RelayCommand]
     [property: JsonIgnore]
@@ -43,12 +28,19 @@ public partial class MrtuDeviceManager : ObservableObject
     {
         Status = true;
 
-        MrtuDevices[0].AnalyzeDataAddress();
-        foreach (var item in MrtuDevices[0].RequestFrames)
-        {
-            Debug.Write(item + "\n");
-        }
+        //TODO 遍历MrtuDevice,获取需要使用的串口 先完成只开一个串口
+        //
 
+        foreach (var request in MrtuDevices[0].RequestFrames)
+        {
+            Debug.Write(request + "\n");
+
+            ////发送请求帧
+            ////接收数据
+            //var response = new ModbusRtuFrame();
+            ////接收成功,更新数据
+            //md.AnalyzeResponse(request, response);
+        }
     }
 
     [RelayCommand]

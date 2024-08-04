@@ -68,6 +68,9 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         MenuBars =
         [
             new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
+#if DEBUG
+            new() { Icon = "LanConnect", Title = "ModbusRtu设备监控", NameSpace = nameof(MrtuDeviceMonitorView) },
+#endif
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
 
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },

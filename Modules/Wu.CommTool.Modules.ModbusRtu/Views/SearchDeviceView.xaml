@@ -218,7 +218,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock HorizontalAlignment="Center"
                                                FontSize="16"
-                                               Text="可选设置项" />
+                                               Text="高级设置项" />
                                     <TextBox hc:TitleElement.Title="功能码"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding ModbusRtuModel.SearchFunctionCode}" />

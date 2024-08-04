@@ -16,7 +16,6 @@ public partial class MrtuData : ObservableObject
     [ObservableProperty]
     private string name = string.Empty;
 
-
     /// <summary>
     /// 寄存器类型
     /// </summary>
