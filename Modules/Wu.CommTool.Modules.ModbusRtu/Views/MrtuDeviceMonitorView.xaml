@@ -256,7 +256,18 @@
 
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate DataType="models:MrtuDevice">
-                                        <ContentControl Height="80" Style="{StaticResource Effect2Control}">
+                                        <ContentControl Height="80"
+                                                        Style="{StaticResource Effect2Control}"
+                                                        Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                            <ContentControl.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.EditMrtuDeviceCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="设置" />
+                                                </ContextMenu>
+                                            </ContentControl.ContextMenu>
+
+
                                             <StackPanel>
                                                 <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" />
                                             </StackPanel>

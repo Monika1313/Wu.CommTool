@@ -30,7 +30,10 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
     /// </summary>
     public void OnDialogOpened(IDialogParameters parameters)
     {
-
+        if (parameters != null && parameters.ContainsKey("Value"))
+        {
+            MrtuDevice = parameters.GetValue<MrtuDevice>("Value");
+        }
     }
     #endregion
 
@@ -39,7 +42,7 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
     public string DialogHostName { get; set; }
 
     [ObservableProperty]
-    object currentDto = new();
+    MrtuDevice mrtuDevice = new();
     #endregion **************************************** 属性 ****************************************
 
 
@@ -62,7 +65,7 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
             return;
         //添加返回的参数
         DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        param.Add("Value", MrtuDevice);
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -80,18 +83,18 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
     /// </summary>
     private void OpenDialogView()
     {
-        try
-        {
-            DialogParameters param = new()
-            {
-                { "Value", CurrentDto }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning(ex.Message);
-        }
+        //try
+        //{
+        //    DialogParameters param = new()
+        //    {
+        //        { "Value", MrtuDevice }
+        //    };
+        //    //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
+        //}
+        //catch (Exception ex)
+        //{
+        //    HcGrowlExtensions.Warning(ex.Message);
+        //}
     }
 
     /// <summary>

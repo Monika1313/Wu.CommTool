@@ -16,7 +16,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        //InitialTestData();
+
         GetDefaultConfig();
     }
 
@@ -41,23 +41,16 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
             }
             else
             {
-                ////文件不存在则生成默认配置 
-                //ModbusRtuModel.MosbusRtuAutoResponseDatas = [new() { Name = "数据采集测试", Priority = 0, MateTemplate= "01030BCE0002A7D0", ResponseTemplate= "0103044005F16CBA4F"},
-                //                                             new() { Name = "数据写入测试", Priority = 0, MateTemplate= "031000000002043F8CCCCDA17D", ResponseTemplate= "0310 0000 0002 402A"},
-                //                                             new()];
-                //var content = JsonConvert.SerializeObject(ModbusRtuModel.MosbusRtuAutoResponseDatas);       //将当前的配置序列化为json字符串
-                //Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+                //文件不存在则生成默认配置 
+                InitialDefaultData();
+                var content = JsonConvert.SerializeObject(MrtuDeviceManager);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
         }
-        catch (Exception ex)
-        {
-            
-        }
+        catch { }
     }
 
-
-
-    protected void InitialTestData()
+    protected void InitialDefaultData()
     {
         MrtuDeviceManager = new MrtuDeviceManager();
         MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备1" });
@@ -91,7 +84,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var x = JsonConvert.DeserializeObject<MrtuDeviceManager>(xx);
             MrtuDeviceManager = x;
-            CurrentDevice= MrtuDeviceManager.MrtuDevices.FirstOrDefault();
+            CurrentDevice = MrtuDeviceManager.MrtuDevices.FirstOrDefault();
             HcGrowlExtensions.Success("配置文件导入成功");
         }
         catch (Exception ex)
@@ -235,9 +228,24 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
 
     [RelayCommand]
     [property: JsonIgnore]
-    private void Config()
+    private async Task EditMrtuDevice(MrtuDevice obj)
     {
-
+        try
+        {
+            if (obj == null)
+            {
+                return;
+            }
+            DialogParameters param = new()
+            {
+                { "Value", obj }
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(MrtuDeviceEditView), param, nameof(MrtuDeviceMonitorView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
 
