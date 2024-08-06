@@ -18,17 +18,10 @@ public partial class MrtuDevice : ObservableObject
     byte slaveAddr = 1;
 
     /// <summary>
-    /// 通讯口 串口号
+    /// 串口配置
     /// </summary>
     [ObservableProperty]
-    string communicationPort;
-
-    /// <summary>
-    /// 通讯口
-    /// </summary>
-    [ObservableProperty]
-    [property: JsonIgnore]
-    ComPort comPort;
+    ComConfig comConfig = new();
 
     /// <summary>
     /// 备注

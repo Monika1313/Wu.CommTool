@@ -2,21 +2,18 @@
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
-public class MrtuSerialPort
+public class MrtuSerialPort : IDisposable
 {
-    public MrtuSerialPort()
+    public MrtuSerialPort(ComConfig config)
     {
-        
+        //配置串口
+        SerialPort.PortName = config.ComPort.Port;                          //串口
+        SerialPort.BaudRate = (int)config.BaudRate;                         //波特率
+        SerialPort.Parity = (System.IO.Ports.Parity)config.Parity;          //校验
+        SerialPort.DataBits = config.DataBits;                              //数据位
+        SerialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
     }
-    public MrtuSerialPort(ComPort comPort)
-    {
-        ////配置串口
-        //SerialPort.PortName = comPort.Port;                              //串口
-        //SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
-        //SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
-        //SerialPort.DataBits = ComConfig.DataBits;                              //数据位
-        //SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
-    }
+
     public SerialPort SerialPort = new();              //串口
 
     /// <summary>
@@ -68,6 +65,20 @@ public class MrtuSerialPort
         catch (Exception ex)
         {
             //ShowMessage(ex.Message, MessageType.Error);
+        }
+    }
+
+    //TODO Dispose
+    public void Dispose()
+    {
+        
+        try
+        {
+            CloseSerialPort();//关闭串口
+        }
+        catch (Exception ex)
+        {
+            //
         }
     }
 }

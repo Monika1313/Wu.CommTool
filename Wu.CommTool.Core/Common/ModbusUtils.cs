@@ -145,4 +145,36 @@ public static class ModbusUtils
         }
     }
 
+
+    /// <summary>
+    /// 获取当前设备的串口列表
+    /// </summary>
+    /// <returns></returns>
+    public static List<ComPort> GetComPorts()
+    {
+        List<ComPort > ports = [];
+        //查找Com口
+        using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
+        var hardInfos = searcher.Get();
+        //获取串口设备列表
+        foreach (var hardInfo in hardInfos)
+        {
+            if (hardInfo.Properties["Name"].Value != null)
+            {
+                string deviceName = hardInfo.Properties["Name"].Value.ToString()!;         //获取名称
+                List<string> portList = [];
+                //从名称中截取串口编号
+                foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
+                {
+                    string x = mch.Value.Trim();
+                    portList.Add(x);
+                }
+                int startIndex = deviceName.IndexOf("(");
+                string port = portList[0];
+                string name = deviceName[..(startIndex - 1)];
+                ports.Add(new ComPort(port, name));
+            }
+        }
+        return ports;
+    }
 }

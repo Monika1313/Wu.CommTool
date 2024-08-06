@@ -19,7 +19,7 @@
         <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
             <TextBox hc:TitleElement.Title="通讯口"
                      Style="{StaticResource FormTextBox}"
-                     Text="{Binding MrtuDevice.CommunicationPort}" />
+                     Text="{Binding MrtuDevice.ComConfig.ComPort.Port}" />
         </StackPanel>
         <StackPanel Grid.Row="2"
                     Margin="10"

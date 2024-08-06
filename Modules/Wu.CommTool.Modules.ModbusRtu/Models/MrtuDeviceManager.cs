@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
+﻿using DryIoc;
+
+namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 /// <summary>
 /// ModbusRtu设备 管理
@@ -18,42 +20,39 @@ public partial class MrtuDeviceManager : ObservableObject
     [property: JsonIgnore]
     bool status;
 
-
-
     [RelayCommand]
     [property: JsonIgnore]
     private async Task Run()
     {
-        
-        GetComPorts();
+        ComPorts = ModbusUtils.GetComPorts();//获取当前设备的串口
 
+        ComTaskDict = [];//TODO 关闭时需要正确退出所有串口子线程
         //TODO 遍历MrtuDevice,获取需要使用的串口
         foreach (var device in MrtuDevices)
         {
-            if (!string.IsNullOrWhiteSpace(device.CommunicationPort))
+            if (!string.IsNullOrWhiteSpace(device.ComConfig.ComPort.Port))
             {
                 //判断是否已存在,已存在则不创建
-                //if (ComTaskDict.FindFirst(x => x.Key == device.CommunicationPort).Key == null)
-                //{
-
-                //}
-                Task task = new(() => ComTask(device.CommunicationPort));
-                ComTaskDict.Add(device.CommunicationPort, task);
+                if (ComTaskDict.FindFirst(x => x.Key == device.ComConfig.ComPort.Port).Key != null)
+                {
+                    continue;
+                }
+                Task task = new(() => ComTask(device.ComConfig));
+                ComTaskDict.Add(device.ComConfig.ComPort.Port, task);
                 task.Start();
             }
         }
 
+        //foreach (var request in MrtuDevices[0].RequestFrames)
+        //{
+        //    Debug.Write(request + "\n");
 
-        foreach (var request in MrtuDevices[0].RequestFrames)
-        {
-            Debug.Write(request + "\n");
-
-            ////发送请求帧
-            ////接收数据
-            //var response = new ModbusRtuFrame();
-            ////接收成功,更新数据
-            //md.AnalyzeResponse(request, response);
-        }
+        //    ////发送请求帧
+        //    ////接收数据
+        //    //var response = new ModbusRtuFrame();
+        //    ////接收成功,更新数据
+        //    //md.AnalyzeResponse(request, response);
+        //}
 
         Status = true;
     }
@@ -63,20 +62,42 @@ public partial class MrtuDeviceManager : ObservableObject
     /// 串口线程  执行读写
     /// </summary>
     /// <param name="com"></param>
-    public async void ComTask(string com)
+    public async void ComTask(ComConfig config)
     {
         while (true)
         {
             //尝试获取指定串口
-            var comport = ComPorts.FirstOrDefault(x => x.Port == com);
+            var comport = ComPorts.FirstOrDefault(x => x.Port == config.ComPort.Port);
             //若没有指定的串口则退出循环
-            if (comport != null)
+            if (comport == null)
             {
                 break;
             }
 
+            //串口实例
+            MrtuSerialPort mrtuSerialPort = new(config);
+            
+            //遍历设备列表
+            foreach (var device in MrtuDevices)
+            {
+                if (device.ComConfig.ComPort.Port == config.ComPort.Port)
+                {
+                    //遍历发送请求帧
+                    foreach (var frame in device.RequestFrames)
+                    {
+                        Debug.Write(frame + "\n");
+                        await Task.Delay(1000);
+                        ////发送请求帧
+                        ////接收数据
+                        //var response = new ModbusRtuFrame();
+                        ////接收成功,更新数据
+                        //md.AnalyzeResponse(request, response);
+                    }
+                }
+            }
+
             //TODO 指定读写操作
-            await Task.Delay(10000);
+            //await Task.Delay(1000);
         }
     }
 
@@ -108,30 +129,7 @@ public partial class MrtuDeviceManager : ObservableObject
     [property: JsonIgnore]
     public void GetComPorts()
     {
-        //清空列表
-        ComPorts.Clear();
-        //查找Com口
-        using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
-        var hardInfos = searcher.Get();
-        //获取串口设备列表
-        foreach (var hardInfo in hardInfos)
-        {
-            if (hardInfo.Properties["Name"].Value != null)
-            {
-                string deviceName = hardInfo.Properties["Name"].Value.ToString()!;         //获取名称
-                List<string> portList = [];
-                //从名称中截取串口编号
-                foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
-                {
-                    string x = mch.Value.Trim();
-                    portList.Add(x);
-                }
-                int startIndex = deviceName.IndexOf("(");
-                string port = portList[0];
-                string name = deviceName[..(startIndex - 1)];
-                ComPorts.Add(new ComPort(port, name));
-            }
-        }
+        ComPorts = ModbusUtils.GetComPorts();
     }
 
 }
