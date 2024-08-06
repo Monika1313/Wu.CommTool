@@ -17,10 +17,16 @@ public partial class ComPort : ObservableObject
     }
 
     /// <summary>
-    /// Com n
+    /// COM1
     /// </summary>
     [ObservableProperty]
     string port;
+
+    ///// <summary>
+    ///// 串口号:COM1
+    ///// </summary>
+    //[ObservableProperty]
+    //int comId;
 
     /// <summary>
     /// 设备名称

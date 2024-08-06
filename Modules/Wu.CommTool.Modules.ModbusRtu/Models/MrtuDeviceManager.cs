@@ -24,7 +24,8 @@ public partial class MrtuDeviceManager : ObservableObject
     [property: JsonIgnore]
     private async Task Run()
     {
-        Status = true;
+        
+        GetComPorts();
 
         //TODO 遍历MrtuDevice,获取需要使用的串口
         foreach (var device in MrtuDevices)
@@ -38,7 +39,7 @@ public partial class MrtuDeviceManager : ObservableObject
                 //}
                 Task task = new(() => ComTask(device.CommunicationPort));
                 ComTaskDict.Add(device.CommunicationPort, task);
-                //task.Start();
+                task.Start();
             }
         }
 
@@ -53,12 +54,30 @@ public partial class MrtuDeviceManager : ObservableObject
             ////接收成功,更新数据
             //md.AnalyzeResponse(request, response);
         }
+
+        Status = true;
     }
 
 
-    public void ComTask(string com)
+    /// <summary>
+    /// 串口线程  执行读写
+    /// </summary>
+    /// <param name="com"></param>
+    public async void ComTask(string com)
     {
+        while (true)
+        {
+            //尝试获取指定串口
+            var comport = ComPorts.FirstOrDefault(x => x.Port == com);
+            //若没有指定的串口则退出循环
+            if (comport != null)
+            {
+                break;
+            }
 
+            //TODO 指定读写操作
+            await Task.Delay(10000);
+        }
     }
 
     [RelayCommand]
