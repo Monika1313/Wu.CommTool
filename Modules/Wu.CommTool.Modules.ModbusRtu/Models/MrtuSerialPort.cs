@@ -130,113 +130,116 @@ public class MrtuSerialPort : IDisposable
                 if (frameCache.Count > 0)
                 {
                     #region 根据功能码调整帧至正确的起始位置(由于数据中可能存在类似功能码的数据, 可能会有错误)
-                    if (comConfig.AutoFrame == Enable.启用 && frameCache.Count >= 8 && (times > 1))
-                    {
-                        //TODO 根据接收数据中功能码位置调整帧至正确的起始位置
-                        //获取缓存中所有的功能码位置
-                        var funcs = ModbusUtils.GetIndicesOfFunctions(frameCache);
-                        //接收缓存至少2字节,且功能码至少1个
+                    //做主站不需要该功能
+                    //if (comConfig.AutoFrame == Enable.启用 && frameCache.Count >= 8 && (times > 1))
+                    //{
+                    //    //TODO 根据接收数据中功能码位置调整帧至正确的起始位置
+                    //    //获取缓存中所有的功能码位置
+                    //    var funcs = ModbusUtils.GetIndicesOfFunctions(frameCache);
+                    //    //接收缓存至少2字节,且功能码至少1个
 
-                        //将功能码调整至第二字节的位置
-                        if (frameCache.Count >= 1 && funcs.Count > 0)
-                        {
-                            //若前2个功能码是连续的, 则第一个功能码应判定为地址
-                            if (funcs.Count >= 2                         //有多个功能码
-                                && (funcs[1] - funcs[0] == 1) //前两个功能码是连续的
-                                && funcs[0] != 0)                   //第一字节不是地址
-                            {
-                                frame = frameCache.Take(funcs[0]).ToList();//将这一帧前面的输出
-                                //输出接收到的数据
-                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
-                                isNot = false;
-                                continue;
-                            }
-                            //前2字节都没有功能码,则将功能码调整至第二字节
-                            else if (funcs[0] > 2)
-                            {
-                                frame = frameCache.Take(funcs[0] - 1).ToList();//功能码前一个字节为地址要保留,所以要-1
-                                //输出接收到的数据
-                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
-                                isNot = false;
-                                continue;
-                            }
-                        }
-                    }
+                    //    //将功能码调整至第二字节的位置
+                    //    if (frameCache.Count >= 1 && funcs.Count > 0)
+                    //    {
+                    //        //若前2个功能码是连续的, 则第一个功能码应判定为地址
+                    //        if (funcs.Count >= 2                         //有多个功能码
+                    //            && (funcs[1] - funcs[0] == 1) //前两个功能码是连续的
+                    //            && funcs[0] != 0)                   //第一字节不是地址
+                    //        {
+                    //            frame = frameCache.Take(funcs[0]).ToList();//将这一帧前面的输出
+                    //            //输出接收到的数据
+                    //            ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                    //            frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                    //            isNot = false;
+                    //            continue;
+                    //        }
+                    //        //前2字节都没有功能码,则将功能码调整至第二字节
+                    //        else if (funcs[0] > 2)
+                    //        {
+                    //            frame = frameCache.Take(funcs[0] - 1).ToList();//功能码前一个字节为地址要保留,所以要-1
+                    //            //输出接收到的数据
+                    //            ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                    //            frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                    //            isNot = false;
+                    //            continue;
+                    //        }
+                    //    }
+                    //}
                     #endregion
 
                     #region 防粘包处理 前8字节为请求帧的处理
+                    //做主站不需要该功能
+
                     //由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则先解析
                     //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧数量不定 0x10请求帧数量不定
                     //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
-                    //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
-                    if (!isNot && frameCache.Count >= 8)
-                    {
-                        frame = frameCache.Take(8).ToList();   //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
-                        var crcOk = ModbusUtils.IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
+                    ////当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
+                    //if (!isNot && frameCache.Count >= 8)
+                    //{
+                    //    frame = frameCache.Take(8).ToList();   //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
+                    //    var crcOk = ModbusUtils.IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
 
-                        #region TODO 这部分未完成
-                        //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
-                        //若8字节校验未通过,则可能不是上述描述的请求帧,应根据对应帧的具体内容具体解析
-                        if (!crcOk)
-                        {
-                            //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
-                            if (frame[1] == 0x10 && frameCache.Count >= (frame[6] + 9))
-                            {
-                                frame = frameCache.Take(frame[6] + 9).ToList();
-                            }
-                            else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
-                            {
-                                //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
-                            }
+                    //    #region TODO 这部分未完成
+                    //    //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
+                    //    //若8字节校验未通过,则可能不是上述描述的请求帧,应根据对应帧的具体内容具体解析
+                    //    if (!crcOk)
+                    //    {
+                    //        //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
+                    //        if (frame[1] == 0x10 && frameCache.Count >= (frame[6] + 9))
+                    //        {
+                    //            frame = frameCache.Take(frame[6] + 9).ToList();
+                    //        }
+                    //        else if (frame[1] == 0x10 && frameCache.Count < (frame[6] + 9))
+                    //        {
+                    //            //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
+                    //        }
 
-                            //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
-                            else if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
-                            {
-                                frame = frameCache.Take(frame[2] + 5).ToList();
-                            }
-                            else if (frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
-                            {
-                                //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
-                            }
-                            //0x04响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
-                            else if (frame[1] == 0x04 && frameCache.Count >= (frame[2] + 5))
-                            {
-                                frame = frameCache.Take(frame[2] + 5).ToList();
-                            }
-                            else if (frame[1] == 0x04 && frameCache.Count < (frame[2] + 5))
-                            {
-                                //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
-                            }
+                    //        //0x03响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
+                    //        else if (frame[1] == 0x03 && frameCache.Count >= (frame[2] + 5))
+                    //        {
+                    //            frame = frameCache.Take(frame[2] + 5).ToList();
+                    //        }
+                    //        else if (frame[1] == 0x03 && frameCache.Count < (frame[2] + 5))
+                    //        {
+                    //            //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
+                    //        }
+                    //        //0x04响应帧   从站ID(1) 功能码(1) 字节数(1)  寄存器值(N*×2) 校验码(2)
+                    //        else if (frame[1] == 0x04 && frameCache.Count >= (frame[2] + 5))
+                    //        {
+                    //            frame = frameCache.Take(frame[2] + 5).ToList();
+                    //        }
+                    //        else if (frame[1] == 0x04 && frameCache.Count < (frame[2] + 5))
+                    //        {
+                    //            //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
+                    //        }
 
-                            //解析出可能的帧并校验成功
-                            if (frame.Count > 0 && ModbusUtils.IsModbusCrcOk(frame))
-                            {
-                                //输出接收到的数据
-                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
-                                times = 0;                                     //重置计时器
-                                continue;
-                            }
-                        }
-                        #endregion
+                    //        //解析出可能的帧并校验成功
+                    //        if (frame.Count > 0 && ModbusUtils.IsModbusCrcOk(frame))
+                    //        {
+                    //            //输出接收到的数据
+                    //            ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                    //            frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                    //            times = 0;                                     //重置计时器
+                    //            continue;
+                    //        }
+                    //    }
+                    //    #endregion
 
-                        //CRC校验通过
-                        if (crcOk)
-                        {
-                            //输出接收到的数据
-                            ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                            frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
-                            times = 0;                                     //重置计时器
-                        }
-                        //验证失败,标记并不再重复校验
-                        else
-                        {
-                            isNot = true;
-                        }
-                    }
+                    //    //CRC校验通过
+                    //    if (crcOk)
+                    //    {
+                    //        //输出接收到的数据
+                    //        ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                    //        frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                    //        times = 0;                                     //重置计时器
+                    //    }
+                    //    //验证失败,标记并不再重复校验
+                    //    else
+                    //    {
+                    //        isNot = true;
+                    //    }
+                    //}
                     #endregion
                 }
 
