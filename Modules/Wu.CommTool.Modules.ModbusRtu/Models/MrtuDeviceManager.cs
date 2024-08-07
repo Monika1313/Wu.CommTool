@@ -1,6 +1,4 @@
-﻿using DryIoc;
-
-namespace Wu.CommTool.Modules.ModbusRtu.Models;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 /// <summary>
 /// ModbusRtu设备 管理
@@ -75,8 +73,11 @@ public partial class MrtuDeviceManager : ObservableObject
             }
 
             //串口实例
-            MrtuSerialPort mrtuSerialPort = new(config);
-            
+            MrtuSerialPort mrtuSerialPort = new(config)
+            {
+                Owner = this//设置所有者
+            };
+
             //遍历设备列表
             foreach (var device in MrtuDevices)
             {

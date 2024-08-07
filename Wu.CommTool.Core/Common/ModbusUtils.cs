@@ -177,4 +177,31 @@ public static class ModbusUtils
         }
         return ports;
     }
+
+
+    /// <summary>
+    /// 返回该数组是否Modbus校验通过
+    /// </summary>
+    /// <param name="frame"></param>
+    /// <returns></returns>
+    public static bool IsModbusCrcOk(byte[] frame)
+    {
+        var code = Wu.Utils.Crc.Crc16Modbus(frame);
+
+        //校验通过
+        if (code.All(x => x == 0))
+            return true;
+        else
+            return false;
+    }
+
+    /// <summary>
+    /// 验证帧是否通过CRC校验
+    /// </summary>
+    /// <param name="frame"></param>
+    /// <returns></returns>
+    public static bool IsModbusCrcOk(List<byte> frame)
+    {
+        return IsModbusCrcOk(frame.ToArray());
+    }
 }
