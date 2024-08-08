@@ -18,6 +18,7 @@ public class MrtuSerialPort : IDisposable
     ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
     ComConfig comConfig;
     string currentRequest = string.Empty;
+    MrtuDevice currentDevice;
     #endregion
 
     public MrtuSerialPort(ComConfig config)
@@ -53,6 +54,7 @@ public class MrtuSerialPort : IDisposable
                     //不使用该串口的设备跳过
                     if (device.ComConfig.ComPort.Port != comConfig.ComPort.Port)
                         continue;
+                    currentDevice = device;
                     foreach (var frame in device.RequestFrames)
                     {
                         WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
@@ -395,13 +397,16 @@ public class MrtuSerialPort : IDisposable
             try
             {
                 string request = "";
+                MrtuDevice device;
                 //若无消息需要处理则进入等待
                 if (ReceiveFrameQueue.Count == 0)
                 {
                     WaitUartReceived.WaitOne(); //等待接收消息
-                    request = currentRequest;
-                    WaitNextOne.Set();//接收到数据了,可以发送下一个请求
                 }
+                //先缓存当前信息
+                request = currentRequest;
+                device = currentDevice;
+                WaitNextOne.Set();//接收到数据了,可以发送下一个请求
 
                 //从接收消息队列中取出一条消息
                 ReceiveFrameQueue.TryDequeue(out var frame);
@@ -427,44 +432,48 @@ public class MrtuSerialPort : IDisposable
                 //从站地址不相同
                 //功能码不相同
                 //读取数量与应答数量不能对应
-                if (requestFrame.SlaveId != receiveFrame.SlaveId 
+                if (requestFrame.SlaveId != receiveFrame.SlaveId
                     || requestFrame.Function != receiveFrame.Function
-                    || requestFrame.RegisterNum != receiveFrame.BytesNum/2)
+                    || requestFrame.RegisterNum != receiveFrame.BytesNum / 2)
                 {
                     continue;
                 }
 
                 //根据请求帧 确定本次读取的地址范围
-                Point point = new(requestFrame.StartAddr,requestFrame.StartAddr + requestFrame.RegisterNum);
+                Point point = new(requestFrame.StartAddr, requestFrame.StartAddr + requestFrame.RegisterNum - 1);
+
+
+                List<MrtuData> data = [];
 
                 //写入不同的存储区
                 switch (func)
                 {
+                    //保持寄存器
                     case 3:
                         {
-
+                            var holdings = device.MrtuDatas.Where(x => x.RegisterType == RegisterType.Holding).ToList();
+                            data = holdings;
                             break;
                         }
+                    //输入寄存器
                     case 4:
                         {
+                            var inputs = device.MrtuDatas.Where(x => x.RegisterType == RegisterType.Input).ToList();
+                            data = inputs;
                             break;
                         }
                 }
 
-                //TODO 解析接收的帧并赋值
-                //03功能码或04功能码
-                //if (mFrame.Type.Equals(ModbusRtuFrameType._0x03响应帧) || mFrame.Type.Equals(ModbusRtuFrameType._0x04响应帧))
-                //{
-                //    //若自动读取开启则解析接收的数据
-                //    if (DataMonitorConfig.IsOpened)
-                //    {
-                //        //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
-                //        if (frameList[0] == DataMonitorConfig.SlaveId && frameList[2] == DataMonitorConfig.Quantity * 2)
-                //        {
-                //            Analyse(frameList);
-                //        }
-                //    }
-                //}
+                foreach (var x in data)
+                {
+                    //地址在范围内的进行赋值
+                    if (point.X <= x.RegisterAddr && x.RegisterLastWordAddr <= point.Y)
+                    {
+                        Debug.WriteLine($"[{x.RegisterAddr},{x.RegisterLastWordAddr}]");
+                        x.UpdateTime = DateTime.Now;
+
+                    }
+                }
                 #endregion
             }
             catch (Exception ex)

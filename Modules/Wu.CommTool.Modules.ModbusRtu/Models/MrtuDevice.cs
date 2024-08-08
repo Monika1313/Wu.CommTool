@@ -40,7 +40,7 @@ public partial class MrtuDevice : ObservableObject
     /// 字节序
     /// </summary>
     [ObservableProperty]
-    ModbusByteOrder modbusByteOrder;
+    ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA;
 
     /// <summary>
     /// 读取数据的请求帧
@@ -211,8 +211,15 @@ public partial class MrtuDevice : ObservableObject
         MrtuDatas.Add(new MrtuData());
     }
 
-
-
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void DeleteMrtuData(MrtuData mrtuData)
+    {
+        if (MrtuDatas.Contains(mrtuData))
+        {
+            MrtuDatas.Remove(mrtuData);
+        }
+    }
 }
 
 public enum DeviceStatus

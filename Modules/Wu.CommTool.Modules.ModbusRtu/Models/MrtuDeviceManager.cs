@@ -23,7 +23,7 @@ public partial class MrtuDeviceManager : ObservableObject
     private async Task Run()
     {
         ComPorts = ModbusUtils.GetComPorts();//获取当前设备的串口
-
+        Status = true;
         ComTaskDict = [];//TODO 关闭时需要正确退出所有串口子线程
         //TODO 遍历MrtuDevice,获取需要使用的串口
         foreach (var device in MrtuDevices)
@@ -49,19 +49,6 @@ public partial class MrtuDeviceManager : ObservableObject
                 task.Start();
             }
         }
-
-        //foreach (var request in MrtuDevices[0].RequestFrames)
-        //{
-        //    Debug.Write(request + "\n");
-
-        //    ////发送请求帧
-        //    ////接收数据
-        //    //var response = new ModbusRtuFrame();
-        //    ////接收成功,更新数据
-        //    //md.AnalyzeResponse(request, response);
-        //}
-
-        Status = true;
     }
 
     /// <summary>
@@ -93,7 +80,6 @@ public partial class MrtuDeviceManager : ObservableObject
         ComTaskDict = [];
     }
 
-
     /// <summary>
     /// 串口列表
     /// </summary>
@@ -103,9 +89,6 @@ public partial class MrtuDeviceManager : ObservableObject
     /// 用于管理串口线程
     /// </summary>
     public Dictionary<string, Task> ComTaskDict { get; set; } = [];
-
-
-
 
     /// <summary>
     /// 获取串口完整名字（包括驱动名字）

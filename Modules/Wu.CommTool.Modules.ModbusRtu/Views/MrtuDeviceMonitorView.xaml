@@ -296,6 +296,11 @@
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                           Header="编辑" />
                                 <MenuItem Margin="2"
+                                          Command="{Binding CurrentDevice.DeleteMrtuDataCommand}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                          Foreground="Red"
+                                          Header="删除行" />
+                                <MenuItem Margin="2"
                                           Command="{Binding CurrentDevice.AddNewMrtuDataCommand}"
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                           Header="新建行" />
@@ -346,11 +351,13 @@
                             <DataGridTemplateColumn Header="数据类型">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MrtuDataType}}}" SelectedValue="{Binding MrtuDataType}" />
+                                        <ComboBox ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MrtuDataType}}}" SelectedValue="{Binding MrtuDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
+                            <DataGridTextColumn Binding="{Binding UpdateTime}"
+                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
+                                                Header="更新时间" />
 
 
 
