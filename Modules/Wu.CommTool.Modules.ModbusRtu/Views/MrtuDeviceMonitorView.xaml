@@ -323,10 +323,79 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <DataGridTextColumn Binding="{Binding Status}" Header="状态" />
-                            <DataGridTextColumn Binding="{Binding Value}"
-                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
-                                                Header="值" />
+                            <!--<DataGridTextColumn Binding="{Binding Status}" Header="状态" />-->
+
+                            <DataGridTemplateColumn Header="状态">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Ellipse Width="20"
+                                                 Height="20"
+                                                 Margin="{Binding ElementName=self, Path=Margin}"
+                                                 d:Fill="LawnGreen">
+                                            <Ellipse.Effect>
+                                                <BlurEffect Radius="{Binding ElementName=self, Path=BlurEffectRadius}" />
+                                            </Ellipse.Effect>
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Fill" Value="Red" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Status}" Value="true">
+                                                            <Setter Property="Fill" Value="LawnGreen" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Path=Status}" Value="false">
+                                                            <Setter Property="Fill" Value="Red" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+
+                            <DataGridTemplateColumn Header="值">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border MinWidth="60"
+                                                Padding="8,4"
+                                                BorderThickness="1"
+                                                CornerRadius="4">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                            <Setter Property="Background" Value="{StaticResource Purple_Background}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock FontSize="13" Text="{Binding Value}">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
+                                                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                            </DataTrigger>
+                                                            <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
+                                                                <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Border>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
 
                             <DataGridTemplateColumn Header="寄存器类型">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -355,7 +424,7 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-                            <DataGridTextColumn Binding="{Binding UpdateTime}"
+                            <DataGridTextColumn Binding="{Binding UpdateTime, StringFormat={}{0:HH:mm:ss}}"
                                                 ElementStyle="{StaticResource CenterDataGridTextColumn}"
                                                 Header="更新时间" />
 

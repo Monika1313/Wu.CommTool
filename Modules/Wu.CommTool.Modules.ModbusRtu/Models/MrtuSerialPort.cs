@@ -415,7 +415,7 @@ public class MrtuSerialPort : IDisposable
                     continue;
                 }
                 //Debug.WriteLine($"接收:{frame}");
-                var receiveFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
+                var responseFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
                 var requestFrame = new ModbusRtuFrame(request);
 
                 //对接收的消息直接进行crc校验
@@ -432,9 +432,9 @@ public class MrtuSerialPort : IDisposable
                 //从站地址不相同
                 //功能码不相同
                 //读取数量与应答数量不能对应
-                if (requestFrame.SlaveId != receiveFrame.SlaveId
-                    || requestFrame.Function != receiveFrame.Function
-                    || requestFrame.RegisterNum != receiveFrame.BytesNum / 2)
+                if (requestFrame.SlaveId != responseFrame.SlaveId
+                    || requestFrame.Function != responseFrame.Function
+                    || requestFrame.RegisterNum != responseFrame.BytesNum / 2)
                 {
                     continue;
                 }
@@ -471,7 +471,37 @@ public class MrtuSerialPort : IDisposable
                     {
                         Debug.WriteLine($"[{x.RegisterAddr},{x.RegisterLastWordAddr}]");
                         x.UpdateTime = DateTime.Now;
-
+                        switch (x.MrtuDataType)
+                        {
+                            case MrtuDataType.uShort:
+                                x.Value = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.Short:
+                                x.Value = Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.uInt:
+                                x.Value = Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.Int:
+                                x.Value = Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.uLong:
+                                x.Value = Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.Long:
+                                x.Value = Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.Float:
+                                x.Value = Math.Round(Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2),4);
+                                break;
+                            case MrtuDataType.Double:
+                                x.Value = Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                break;
+                            case MrtuDataType.Hex:
+                                break;
+                            default:
+                                break;
+                        }
                     }
                 }
                 #endregion
