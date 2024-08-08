@@ -38,14 +38,14 @@ public class ModbusRtuFrame : BindableBase
     /// <summary>
     /// 起始地址/输出地址 2字节
     /// </summary>
-    public byte[] StartAddr { get => _StartAddr; set => SetProperty(ref _StartAddr, value); }
-    private byte[] _StartAddr;
+    public ushort StartAddr { get => _StartAddr; set => SetProperty(ref _StartAddr, value); }
+    private ushort _StartAddr;
 
     /// <summary>
     /// 寄存器数量/线圈数量(读输出线圈)/输入数量(读离散输入) 2字节 单位word
     /// </summary>
-    public byte[] RegisterNum { get => _RegisterNum; set => SetProperty(ref _RegisterNum, value); }
-    private byte[] _RegisterNum;
+    public ushort RegisterNum { get => _RegisterNum; set => SetProperty(ref _RegisterNum, value); }
+    private ushort _RegisterNum;
 
     /// <summary>
     /// 字节数量 1字节
@@ -150,8 +150,8 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x05响应帧:
                     messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
                     messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
-                    messages.Add(new MessageSubContent($"{DatasFormat(StartAddr)}", ModbusRtuMessageType.StartAddr));
-                    messages.Add(new MessageSubContent($"{DatasFormat(RegisterNum)}", ModbusRtuMessageType.RegisterNum));
+                    messages.Add(new MessageSubContent($"{StartAddr:X4}", ModbusRtuMessageType.StartAddr));
+                    messages.Add(new MessageSubContent($"{RegisterNum:X4}", ModbusRtuMessageType.RegisterNum));
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
 
@@ -177,8 +177,8 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x10请求帧:
                     messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
                     messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
-                    messages.Add(new MessageSubContent($"{DatasFormat(StartAddr)}", ModbusRtuMessageType.StartAddr));
-                    messages.Add(new MessageSubContent($"{DatasFormat(RegisterNum)}", ModbusRtuMessageType.RegisterNum));
+                    messages.Add(new MessageSubContent($"{StartAddr:X4}", ModbusRtuMessageType.StartAddr));
+                    messages.Add(new MessageSubContent($"{RegisterNum:X4}", ModbusRtuMessageType.RegisterNum));
                     messages.Add(new MessageSubContent($"{BytesNum:X2}", ModbusRtuMessageType.BytesNum));
                     messages.Add(new MessageSubContent($"{DatasFormat(RegisterValues)}", ModbusRtuMessageType.RegisterValues));
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
@@ -188,8 +188,8 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x10响应帧:
                     messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
                     messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
-                    messages.Add(new MessageSubContent($"{DatasFormat(StartAddr)}", ModbusRtuMessageType.StartAddr));
-                    messages.Add(new MessageSubContent($"{DatasFormat(RegisterNum)}", ModbusRtuMessageType.RegisterNum));
+                    messages.Add(new MessageSubContent($"{StartAddr:X4}", ModbusRtuMessageType.StartAddr));
+                    messages.Add(new MessageSubContent($"{RegisterNum:X4}", ModbusRtuMessageType.RegisterNum));
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
 
@@ -212,7 +212,7 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x06响应帧:
                     messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
                     messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
-                    messages.Add(new MessageSubContent($"{DatasFormat(StartAddr)}", ModbusRtuMessageType.StartAddr));
+                    messages.Add(new MessageSubContent($"{StartAddr:X4}", ModbusRtuMessageType.StartAddr));
                     messages.Add(new MessageSubContent($"{DatasFormat(RegisterValues)}", ModbusRtuMessageType.RegisterValues));
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
@@ -264,7 +264,7 @@ public class ModbusRtuFrame : BindableBase
                 case ModbusRtuFrameType._0x04请求帧:
                 case ModbusRtuFrameType._0x05请求帧:
                 case ModbusRtuFrameType._0x05响应帧:
-                    return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
+                    return $"{SlaveId:X2} {(byte)Function:X2} {StartAddr:X4} {RegisterNum:X4} {DatasFormat(CrcCode)}";
 
                 case ModbusRtuFrameType._0x01响应帧:
                 case ModbusRtuFrameType._0x02响应帧:
@@ -276,11 +276,11 @@ public class ModbusRtuFrame : BindableBase
 
                 case ModbusRtuFrameType._0x0F请求帧:
                 case ModbusRtuFrameType._0x10请求帧:
-                    return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+                    return $"{SlaveId:X2} {(byte)Function:X2} {StartAddr:X4} {RegisterNum:X4} {BytesNum:X2} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
 
                 case ModbusRtuFrameType._0x0F响应帧:
                 case ModbusRtuFrameType._0x10响应帧:
-                    return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterNum)} {DatasFormat(CrcCode)}";
+                    return $"{SlaveId:X2} {(byte)Function:X2} {StartAddr:X4} {RegisterNum:X4} {DatasFormat(CrcCode)}";
 
                 case ModbusRtuFrameType._0x81错误帧:
                 case ModbusRtuFrameType._0x82错误帧:
@@ -295,7 +295,7 @@ public class ModbusRtuFrame : BindableBase
 
                 case ModbusRtuFrameType._0x06请求帧:
                 case ModbusRtuFrameType._0x06响应帧:
-                    return $"{SlaveId:X2} {(byte)Function:X2} {DatasFormat(StartAddr)} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
+                    return $"{SlaveId:X2} {(byte)Function:X2} {StartAddr:X4} {DatasFormat(RegisterValues)} {DatasFormat(CrcCode)}";
 
                 default:
                     return BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " ");
@@ -349,8 +349,9 @@ public class ModbusRtuFrame : BindableBase
                 //请求帧   从站ID(1) 功能码(1) 起始地址(2) 线圈(2) 校验码(2)
                 if (Frame.Length.Equals(8) && !Frame[2].Equals(3))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    //RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x01请求帧;
                 }
@@ -393,8 +394,8 @@ public class ModbusRtuFrame : BindableBase
                 //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输入数量(2) 校验码(2)
                 if (Frame.Length.Equals(8) && !Frame[2].Equals(3))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x02请求帧;
                 }
@@ -435,8 +436,8 @@ public class ModbusRtuFrame : BindableBase
                 //请求帧8字节   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 校验码(2)
                 if (Frame.Length.Equals(8))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x03请求帧;
                 }
@@ -482,8 +483,8 @@ public class ModbusRtuFrame : BindableBase
                 //请求帧8字节   从站ID(1) 功能码(1) 起始地址(2) 输入寄存器数量(2) 校验码(2)
                 if (Frame.Length.Equals(8))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x04请求帧;
                 }
@@ -525,16 +526,16 @@ public class ModbusRtuFrame : BindableBase
                 //请求帧总8字节   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
                 if (Frame.Length.Equals(8) && Frame[4] == 0 && (Frame[5] == 0 || Frame[5] == 0xFF) && Frame[6] == 0)
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x05请求帧;
                 }
                 //响应帧   从站ID(1) 功能码(1) 输出地址(2) 输出值(2) 校验码(2)
                 else if (Frame.Length.Equals(8))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x05响应帧;
                 }
@@ -569,7 +570,7 @@ public class ModbusRtuFrame : BindableBase
                 //响应帧/请求帧 8字节   从站ID(1) 功能码(1) 寄存器地址(2) 寄存器值(2) 校验码(2)
                 if (Frame.Length.Equals(8))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
                     RegisterValues = Frame.Skip(4).Take(2).ToArray();
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x06请求帧;
@@ -603,16 +604,16 @@ public class ModbusRtuFrame : BindableBase
                 //响应帧   从站ID(1) 功能码(1) 起始地址(2) 输出数量(2) 校验码(2)
                 if (Frame.Length.Equals(8))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x0F响应帧;
                 }
                 //请求帧   从站ID(1) 功能码(1) 起始地址(2) 输出数量(2) 字节数(1) 输出值(N*) 校验码(2)
                 else if (Frame.Length >= 10)
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     BytesNum = Frame[6];
                     RegisterValues = Frame.Skip(7).Take(Frame.Length - 9).ToArray();
                     CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
@@ -647,16 +648,16 @@ public class ModbusRtuFrame : BindableBase
                 //响应帧   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 校验码(2)
                 if (Frame.Length.Equals(8))
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     CrcCode = Frame.Skip(6).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x10响应帧;
                 }
                 //请求帧   从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
                 else if (Frame.Length >= 9 && Frame.Length % 2 == 1)
                 {
-                    StartAddr = Frame.Skip(2).Take(2).ToArray();
-                    RegisterNum = Frame.Skip(4).Take(2).ToArray();
+                    StartAddr = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 2);
+                    RegisterNum = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
                     BytesNum = Frame[6];
                     RegisterValues = Frame.Skip(7).Take(Frame.Length - 9).ToArray();
                     CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();

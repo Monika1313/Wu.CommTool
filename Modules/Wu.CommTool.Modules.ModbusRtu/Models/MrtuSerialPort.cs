@@ -423,13 +423,20 @@ public class MrtuSerialPort : IDisposable
                 #region 解析接收的数据值
                 //TODO 遍历对象的测点, 在该帧范围内的进行赋值
 
-                //从站地址或功能码无法对应的则丢弃
-                if (requestFrame.SlaveId != receiveFrame.SlaveId || requestFrame.Function != receiveFrame.Function)
+                //不满足任意一项的帧丢弃
+                //从站地址不相同
+                //功能码不相同
+                //读取数量与应答数量不能对应
+                if (requestFrame.SlaveId != receiveFrame.SlaveId 
+                    || requestFrame.Function != receiveFrame.Function
+                    || requestFrame.RegisterNum != receiveFrame.BytesNum/2)
                 {
                     continue;
                 }
-                var 地址 = requestFrame.StartAddr;
-                //根据请求帧 确定地址范围
+
+                //根据请求帧 确定本次读取的地址范围
+                Point point = new(requestFrame.StartAddr,requestFrame.StartAddr + requestFrame.RegisterNum);
+
                 //写入不同的存储区
                 switch (func)
                 {
