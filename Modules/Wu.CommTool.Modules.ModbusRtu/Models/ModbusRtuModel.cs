@@ -905,7 +905,7 @@ public partial class ModbusRtuModel : ObservableObject
     /// <param name="delay">发送完成后等待的时间,期间不会发送消息</param>
     private void PublishFrameEnqueue(string msg, int delay = 10)
     {
-        if (msg == null)
+        if (string.IsNullOrEmpty(msg))
         {
             return;
         }
@@ -1268,7 +1268,6 @@ public partial class ModbusRtuModel : ObservableObject
                 {
                     //搜索
                     ShowMessage($"搜索: {ComConfig.ComPort.Port}:{ComConfig.ComPort.DeviceName} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
-
                     for (int i = 0; i <= 255; i++)
                     {
                         //当前搜索的设备

@@ -35,6 +35,15 @@ public partial class MrtuDeviceManager : ObservableObject
                 {
                     continue;
                 }
+
+                var config = device.ComConfig;
+                //尝试获取指定串口
+                var comport = ComPorts.FirstOrDefault(x => x.Port == config.ComPort.Port);
+                //若没有指定的串口则不执行
+                if (comport == null)
+                {
+                    continue;
+                }
                 Task task = new(() => ComTask(device.ComConfig));
                 ComTaskDict.Add(device.ComConfig.ComPort.Port, task);
                 task.Start();
@@ -55,51 +64,25 @@ public partial class MrtuDeviceManager : ObservableObject
         Status = true;
     }
 
-
     /// <summary>
     /// 串口线程  执行读写
     /// </summary>
     /// <param name="com"></param>
     public async void ComTask(ComConfig config)
     {
-        while (true)
+        //尝试获取指定串口
+        var comport = ComPorts.FirstOrDefault(x => x.Port == config.ComPort.Port);
+        //若没有指定的串口则退出循环
+        if (comport == null)
         {
-            //尝试获取指定串口
-            var comport = ComPorts.FirstOrDefault(x => x.Port == config.ComPort.Port);
-            //若没有指定的串口则退出循环
-            if (comport == null)
-            {
-                break;
-            }
-
-            //串口实例
-            MrtuSerialPort mrtuSerialPort = new(config)
-            {
-                Owner = this//设置所有者
-            };
-
-            //遍历设备列表
-            foreach (var device in MrtuDevices)
-            {
-                if (device.ComConfig.ComPort.Port == config.ComPort.Port)
-                {
-                    //遍历发送请求帧
-                    foreach (var frame in device.RequestFrames)
-                    {
-                        Debug.Write(frame + "\n");
-                        await Task.Delay(1000);
-                        ////发送请求帧
-                        ////接收数据
-                        //var response = new ModbusRtuFrame();
-                        ////接收成功,更新数据
-                        //md.AnalyzeResponse(request, response);
-                    }
-                }
-            }
-
-            //TODO 指定读写操作
-            //await Task.Delay(1000);
+            return;
         }
+        //串口实例
+        MrtuSerialPort mrtuSerialPort = new(config)
+        {
+            Owner = this//设置所有者
+        };
+        await mrtuSerialPort.Run();
     }
 
     [RelayCommand]
@@ -107,6 +90,7 @@ public partial class MrtuDeviceManager : ObservableObject
     private async Task Stop()
     {
         Status = false;
+        ComTaskDict = [];
     }
 
 

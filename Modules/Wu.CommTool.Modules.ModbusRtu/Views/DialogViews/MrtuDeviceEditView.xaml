@@ -16,10 +16,30 @@
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
     </UserControl.InputBindings>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-            <TextBox hc:TitleElement.Title="通讯口"
-                     Style="{StaticResource FormTextBox}"
-                     Text="{Binding MrtuDevice.ComConfig.ComPort.Port}" />
+        <TextBox hc:TitleElement.Title="从站地址"
+                 DockPanel.Dock="Top"
+                 Style="{StaticResource FormTextBox}"
+                 Text="{Binding MrtuDevice.SlaveAddr}" />
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+            <ComboBox Width="230"
+                      hc:InfoElement.Placeholder="请选择串口..."
+                      hc:InfoElement.Title="串口"
+                      ItemsSource="{Binding ComPorts}"
+                      SelectedValue="{Binding MrtuDevice.ComConfig.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      Style="{StaticResource FormComboBox}" />
+            <Button Width="30"
+                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                    Margin="5"
+                    HorizontalAlignment="Left"
+                    hc:Poptip.Content="查找串口设备"
+                    Command="{Binding GetComPortsCommand}"
+                    Content="{md:PackIcon Kind=Search}"
+                    DockPanel.Dock="Left"
+                    Style="{StaticResource Blue_CircleButton}" />
+            <hc:TextBox Width="150"
+                        Margin="4"
+                        hc:InfoElement.Placeholder="可手动输入COMx"
+                        Text="{Binding MrtuDevice.ComConfig.ComPort.Port}" />
         </StackPanel>
         <StackPanel Grid.Row="2"
                     Margin="10"

@@ -34,15 +34,28 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
         {
             MrtuDevice = parameters.GetValue<MrtuDevice>("Value");
         }
+
+        GetComPorts();
+        var x = ComPorts.FirstOrDefault(x=>x.Port == MrtuDevice.ComConfig.ComPort.Port);
+        if (x != null) 
+        {
+            MrtuDevice.ComConfig.ComPort = x;
+        }
+
     }
     #endregion
 
+
+    
 
     #region **************************************** 属性 ****************************************
     public string DialogHostName { get; set; }
 
     [ObservableProperty]
     MrtuDevice mrtuDevice = new();
+
+    [ObservableProperty]
+    ObservableCollection<ComPort> comPorts=[];
     #endregion **************************************** 属性 ****************************************
 
 
@@ -52,8 +65,6 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
     {
         switch (obj)
         {
-            case "Search": Search(); break;
-            case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
@@ -78,31 +89,11 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
     }
 
-    /// <summary>
-    /// 弹窗
-    /// </summary>
-    private void OpenDialogView()
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void GetComPorts()
     {
-        //try
-        //{
-        //    DialogParameters param = new()
-        //    {
-        //        { "Value", MrtuDevice }
-        //    };
-        //    //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
-        //}
-        //catch (Exception ex)
-        //{
-        //    HcGrowlExtensions.Warning(ex.Message);
-        //}
-    }
-
-    /// <summary>
-    /// 查询数据
-    /// </summary>
-    private void Search()
-    {
-
+        ComPorts = new ObservableCollection<ComPort>(ModbusUtils.GetComPorts());
     }
     #endregion
 }

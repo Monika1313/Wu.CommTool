@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.IO.Ports;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 public class MrtuSerialPort : IDisposable
@@ -12,9 +13,11 @@ public class MrtuSerialPort : IDisposable
     Task receiveHandleTask; //接收消息处理线程
     EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
     EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
+    EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
     ConcurrentQueue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
     ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
-    ComConfig comConfig; 
+    ComConfig comConfig;
+    string currentRequest = string.Empty;
     #endregion
 
     public MrtuSerialPort(ComConfig config)
@@ -35,7 +38,37 @@ public class MrtuSerialPort : IDisposable
         this.comConfig = config;
     }
 
+    //运行数据采集
+    public async Task Run()
+    {
+        try
+        {
+            OpenSerialPort();//打开串口
+            WaitNextOne.Set();
+            while (Owner.Status)
+            {
+                //遍历设备 对于需要使用该串口通讯的执行读
+                foreach (var device in Owner.MrtuDevices)
+                {
+                    //不使用该串口的设备跳过
+                    if (device.ComConfig.ComPort.Port != comConfig.ComPort.Port)
+                        continue;
+                    foreach (var frame in device.RequestFrames)
+                    {
+                        WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
+                        currentRequest = frame;//设置当前发送的帧,用于接收数据时确定测点地址范围
+                        PublishFrameEnqueue(frame, 1000);
+                        //Debug.WriteLine(frame);
+                    }
+                }
+            }
+            this.Dispose();
+        }
+        catch (Exception ex)
+        {
 
+        }
+    }
 
     #region 串口操作
     /// <summary>
@@ -87,7 +120,7 @@ public class MrtuSerialPort : IDisposable
         {
             Debug.WriteLine(ex.Message, MessageType.Error);
         }
-    } 
+    }
     #endregion
 
     /// <summary>
@@ -254,7 +287,6 @@ public class MrtuSerialPort : IDisposable
             msg = BitConverter.ToString(frameCache.ToArray());
             msg = msg.Replace('-', ' ');
             ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
-
             WaitUartReceived.Set();//置位数据接收完成标志
         }
         catch (Exception ex)
@@ -272,63 +304,48 @@ public class MrtuSerialPort : IDisposable
     /// </summary>
     private bool ExecutePublishMessage(string message)
     {
-        throw new NotImplementedException();
-        //try
-        //{
-        //    //发送数据不能为空
-        //    if (message is null || message.Length.Equals(0))
-        //    {
-        //        ShowErrorMessage("发送的数据不能为空");
-        //        return false;
-        //    }
+        try
+        {
+            //发送数据不能为空
+            if (message is null || message.Length.Equals(0))
+            {
+                return false;
+            }
 
-        //    //验证数据字符必须符合16进制
-        //    Regex regex = new(@"^[0-9 a-f A-F -]*$");
-        //    if (!regex.IsMatch(message))
-        //    {
-        //        ShowErrorMessage("数据字符仅限 0123456789 ABCDEF");
-        //        return false;
-        //    }
+            //验证数据字符必须符合16进制
+            Regex regex = new(@"^[0-9 a-f A-F -]*$");
+            if (!regex.IsMatch(message))
+            {
+                return false;
+            }
 
-        //    byte[] data;
-        //    try
-        //    {
-        //        data = message.Replace("-", string.Empty).GetBytes();
-        //    }
-        //    catch (Exception)
-        //    {
-        //        ShowErrorMessage($"数据转换16进制失败，发送数据位数量必须为偶数(16进制一个字节2位数)。");
-        //        return false;
-        //    }
+            byte[] data;
+            try
+            {
+                data = message.Replace("-", string.Empty).GetBytes();
+            }
+            catch
+            {
+                return false;
+            }
 
-        //    if (SerialPort.IsOpen)
-        //    {
-        //        try
-        //        {
-        //            if (!IsPause)
-        //                ShowSendMessage(new ModbusRtuFrame(data));
-        //            SerialPort.Write(data, 0, data.Length);     //发送数据
-        //            SendBytesCount += data.Length;                    //统计发送数据总数
-
-        //            return true;
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ShowErrorMessage(ex.Message);
-        //        }
-        //    }
-        //    else
-        //    {
-        //        ShowErrorMessage("串口未打开");
-        //    }
-        //    return false;
-        //}
-        //catch (Exception ex)
-        //{
-        //    ShowErrorMessage(ex.Message);
-        //    return false;
-        //}
-
+            if (SerialPort.IsOpen)
+            {
+                try
+                {
+                    SerialPort.Write(data, 0, data.Length);     //发送数据
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return false;
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     /// <summary>
@@ -348,9 +365,8 @@ public class MrtuSerialPort : IDisposable
                     continue;//需要再次验证队列是否为空
                 }
                 //判断串口是否已打开,若已关闭则不执行
-                if (comConfig.IsOpened)
+                if (SerialPort.IsOpen)
                 {
-                    comConfig.IsSending = true;
                     PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
                     ExecutePublishMessage(frame.Item1);              //请求发送数据帧
                     await Task.Delay(frame.Item2);            //等待一段时间
@@ -378,10 +394,13 @@ public class MrtuSerialPort : IDisposable
         {
             try
             {
+                string request = "";
                 //若无消息需要处理则进入等待
                 if (ReceiveFrameQueue.Count == 0)
                 {
                     WaitUartReceived.WaitOne(); //等待接收消息
+                    request = currentRequest;
+                    WaitNextOne.Set();//接收到数据了,可以发送下一个请求
                 }
 
                 //从接收消息队列中取出一条消息
@@ -390,36 +409,40 @@ public class MrtuSerialPort : IDisposable
                 {
                     continue;
                 }
-                //实例化ModbusRtu帧
-                var mFrame = new ModbusRtuFrame(frame.GetBytes());
+                //Debug.WriteLine($"接收:{frame}");
+                var receiveFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
+                var requestFrame = new ModbusRtuFrame(request);
 
                 //对接收的消息直接进行crc校验
                 var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
-
-                #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
-                if (false)
-                {
-                    //若暂停更新显示则不输出
-                }
-                else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
-                {
-                    //ShowReceiveMessage(mFrame);
-
-                    continue;
-                }
-                //校验成功
-                else
-                {
-                    //ShowReceiveMessage(mFrame);
-                }
-                #endregion
-
 
                 List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
                 int slaveId = frameList[0];                 //从站地址
                 int func = frameList[1];                    //功能码
 
-                #region 对接收的数据分功能码展示
+                #region 解析接收的数据值
+                //TODO 遍历对象的测点, 在该帧范围内的进行赋值
+
+                //从站地址或功能码无法对应的则丢弃
+                if (requestFrame.SlaveId != receiveFrame.SlaveId || requestFrame.Function != receiveFrame.Function)
+                {
+                    continue;
+                }
+                var 地址 = requestFrame.StartAddr;
+                //根据请求帧 确定地址范围
+                //写入不同的存储区
+                switch (func)
+                {
+                    case 3:
+                        {
+
+                            break;
+                        }
+                    case 4:
+                        {
+                            break;
+                        }
+                }
 
                 //TODO 解析接收的帧并赋值
                 //03功能码或04功能码
@@ -444,10 +467,26 @@ public class MrtuSerialPort : IDisposable
         }
     }
 
+    /// <summary>
+    /// 发送消息帧入队
+    /// </summary>
+    /// <param name="msg">发送的消息</param>
+    /// <param name="delay">发送完成后等待的时间,期间不会发送消息</param>
+    private void PublishFrameEnqueue(string msg, int delay = 100)
+    {
+        if (string.IsNullOrEmpty(msg))
+        {
+            return;
+        }
+        PublishFrameQueue.Enqueue((msg, delay));       //发布消息入队
+        WaitPublishFrameEnqueue.Set();                 //置位发布消息入队标志
+    }
+
+
     //TODO Dispose
     public void Dispose()
     {
-        
+
         try
         {
             CloseSerialPort();//关闭串口
