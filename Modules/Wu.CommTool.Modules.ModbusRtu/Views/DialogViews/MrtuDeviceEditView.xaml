@@ -18,7 +18,9 @@
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
     </UserControl.InputBindings>
     <DockPanel>
-        <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+        <StackPanel Margin="4"
+                    DockPanel.Dock="Top"
+                    Orientation="Vertical">
             <TextBox hc:TitleElement.Title="设备名称"
                      DockPanel.Dock="Top"
                      Style="{StaticResource FormTextBox}"
