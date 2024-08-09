@@ -99,6 +99,7 @@ public partial class MrtuDeviceManager : ObservableObject
     /// Mrtu串口列表
     /// </summary>
     [ObservableProperty]
+    [property:JsonIgnore]
     ObservableCollection<MrtuSerialPort> mrtuSerialPorts = [];
 
     /// <summary>

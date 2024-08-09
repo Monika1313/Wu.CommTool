@@ -4,6 +4,7 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 public partial class MrtuSerialPort :ObservableObject, IDisposable
 {
+    [JsonIgnore]
     public MrtuDeviceManager Owner { get; set; }
 
     
