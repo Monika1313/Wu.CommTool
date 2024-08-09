@@ -206,9 +206,17 @@ public partial class MrtuDevice : ObservableObject
 
     [RelayCommand]
     [property: JsonIgnore]
-    private void AddNewMrtuData()
+    private void AddNewMrtuData(MrtuData mrtuData)
     {
-        MrtuDatas.Add(new MrtuData());
+        if (mrtuData == null || !MrtuDatas.Contains(mrtuData))
+        {
+            MrtuDatas.Add(new MrtuData());
+            return;
+        }
+        else
+        {
+            MrtuDatas.Insert(MrtuDatas.IndexOf(mrtuData) + 1, new MrtuData());
+        }
     }
 
     [RelayCommand]

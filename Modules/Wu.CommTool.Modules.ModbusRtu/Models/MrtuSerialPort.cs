@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.IO.Ports;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using System.Windows.Controls;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 public class MrtuSerialPort : IDisposable
@@ -58,7 +58,6 @@ public class MrtuSerialPort : IDisposable
                     foreach (var frame in device.RequestFrames)
                     {
                         WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
-                        currentRequest = frame;//设置当前发送的帧,用于接收数据时确定测点地址范围
                         PublishFrameEnqueue(frame, 1000);
                         //Debug.WriteLine(frame);
                     }
@@ -335,6 +334,7 @@ public class MrtuSerialPort : IDisposable
             {
                 try
                 {
+                    currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
                     SerialPort.Write(data, 0, data.Length);     //发送数据
                     return true;
                 }
@@ -370,6 +370,7 @@ public class MrtuSerialPort : IDisposable
                 if (SerialPort.IsOpen)
                 {
                     PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
+                    Debug.Write($"发送:{frame.Item1}");
                     ExecutePublishMessage(frame.Item1);              //请求发送数据帧
                     await Task.Delay(frame.Item2);            //等待一段时间
                 }
@@ -406,15 +407,13 @@ public class MrtuSerialPort : IDisposable
                 //先缓存当前信息
                 request = currentRequest;
                 device = currentDevice;
-                WaitNextOne.Set();//接收到数据了,可以发送下一个请求
-
                 //从接收消息队列中取出一条消息
                 ReceiveFrameQueue.TryDequeue(out var frame);
                 if (string.IsNullOrWhiteSpace(frame))
                 {
                     continue;
                 }
-                //Debug.WriteLine($"接收:{frame}");
+                Debug.WriteLine($"接收:{frame}");
                 var responseFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
                 var requestFrame = new ModbusRtuFrame(request);
 
@@ -469,7 +468,7 @@ public class MrtuSerialPort : IDisposable
                     //地址在范围内的进行赋值
                     if (point.X <= x.RegisterAddr && x.RegisterLastWordAddr <= point.Y)
                     {
-                        Debug.WriteLine($"[{x.RegisterAddr},{x.RegisterLastWordAddr}]");
+                        Debug.WriteLine($"解析数据:[{x.RegisterAddr},{x.RegisterLastWordAddr}]");
                         x.UpdateTime = DateTime.Now;
                         switch (x.MrtuDataType)
                         {
@@ -505,6 +504,8 @@ public class MrtuSerialPort : IDisposable
                     }
                 }
                 #endregion
+
+                WaitNextOne.Set();//接收到数据了,可以发送下一个请求
             }
             catch (Exception ex)
             {
