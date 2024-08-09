@@ -474,28 +474,28 @@ public class MrtuSerialPort : IDisposable
                         switch (x.MrtuDataType)
                         {
                             case MrtuDataType.uShort:
-                                x.Value = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Short:
-                                x.Value = Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.uInt:
-                                x.Value = Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Int:
-                                x.Value = Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.uLong:
-                                x.Value = Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Long:
-                                x.Value = Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Float:
-                                x.Value = Math.Round(Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, x.RegisterAddr * 2),4);
+                                x.Value = Math.Round(Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2),2);
                                 break;
                             case MrtuDataType.Double:
-                                x.Value = Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, x.RegisterAddr * 2);
+                                x.Value = Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Hex:
                                 break;

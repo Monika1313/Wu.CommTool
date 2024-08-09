@@ -266,10 +266,16 @@
                                                               Header="设置" />
                                                 </ContextMenu>
                                             </ContentControl.ContextMenu>
-
-
                                             <StackPanel>
-                                                <TextBlock HorizontalAlignment="Center" Text="{Binding Name}" />
+                                                <TextBlock Margin="4"
+                                                           HorizontalAlignment="Center"
+                                                           FontSize="14"
+                                                           Text="{Binding Name}" />
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="10,0" Text="{Binding ComConfig.ComPort.Port}" />
+                                                    <TextBlock Margin="5,0" Text="从站地址:" />
+                                                    <TextBlock Text="{Binding SlaveAddr}" />
+                                                </StackPanel>
                                             </StackPanel>
                                         </ContentControl>
                                     </DataTemplate>
@@ -296,14 +302,14 @@
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                           Header="编辑" />
                                 <MenuItem Margin="2"
+                                          Command="{Binding CurrentDevice.AddNewMrtuDataCommand}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                          Header="新建行" />
+                                <MenuItem Margin="2"
                                           Command="{Binding CurrentDevice.DeleteMrtuDataCommand}"
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                           Foreground="Red"
                                           Header="删除行" />
-                                <MenuItem Margin="2"
-                                          Command="{Binding CurrentDevice.AddNewMrtuDataCommand}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                          Header="新建行" />
                             </ContextMenu>
                         </DataGrid.ContextMenu>
 
@@ -330,10 +336,9 @@
                                     <DataTemplate>
                                         <Ellipse Width="20"
                                                  Height="20"
-                                                 Margin="{Binding ElementName=self, Path=Margin}"
                                                  d:Fill="LawnGreen">
                                             <Ellipse.Effect>
-                                                <BlurEffect Radius="{Binding ElementName=self, Path=BlurEffectRadius}" />
+                                                <BlurEffect />
                                             </Ellipse.Effect>
                                             <Ellipse.Style>
                                                 <Style TargetType="Ellipse">

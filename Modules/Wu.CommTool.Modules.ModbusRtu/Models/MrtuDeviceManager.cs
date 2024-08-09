@@ -30,6 +30,9 @@ public partial class MrtuDeviceManager : ObservableObject
         {
             if (!string.IsNullOrWhiteSpace(device.ComConfig.ComPort.Port))
             {
+                //TODO 需要在测点修改后实现自动更新
+                device.AnalyzeDataAddress();//更新请求帧列表
+
                 //判断是否已存在,已存在则不创建
                 if (ComTaskDict.FindFirst(x => x.Key == device.ComConfig.ComPort.Port).Key != null)
                 {
