@@ -1,11 +1,12 @@
 ﻿using System.Collections.Concurrent;
 using System.IO.Ports;
-using System.Windows.Controls;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
-public class MrtuSerialPort : IDisposable
+public partial class MrtuSerialPort :ObservableObject, IDisposable
 {
     public MrtuDeviceManager Owner { get; set; }
+
+    
 
     #region 字段
     SerialPort SerialPort = new();              //串口
@@ -19,7 +20,17 @@ public class MrtuSerialPort : IDisposable
     ComConfig comConfig;
     string currentRequest = string.Empty;
     MrtuDevice currentDevice;
+    private static readonly ILog log = LogManager.GetLogger(typeof(ModbusRtuModel));
     #endregion
+
+    [ObservableProperty]
+    bool isPause;
+
+    /// <summary>
+    /// 页面消息
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<MessageData> messages = [];
 
     public MrtuSerialPort(ComConfig config)
     {
@@ -44,6 +55,7 @@ public class MrtuSerialPort : IDisposable
     {
         try
         {
+            //TODO 需修改为开启子线程执行以下操作
             OpenSerialPort();//打开串口
             WaitNextOne.Set();
             while (Owner.Status)
@@ -370,7 +382,7 @@ public class MrtuSerialPort : IDisposable
                 if (SerialPort.IsOpen)
                 {
                     PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
-                    Debug.Write($"发送:{frame.Item1}");
+                    Debug.Write($"发送:{frame.Item1}\n");
                     ExecutePublishMessage(frame.Item1);              //请求发送数据帧
                     await Task.Delay(frame.Item2);            //等待一段时间
                 }
@@ -438,9 +450,10 @@ public class MrtuSerialPort : IDisposable
                     continue;
                 }
 
+                Debug.WriteLine($"解析:[{requestFrame.StartAddr},{requestFrame.StartAddr + requestFrame.RegisterNum - 1}]");
+
                 //根据请求帧 确定本次读取的地址范围
                 Point point = new(requestFrame.StartAddr, requestFrame.StartAddr + requestFrame.RegisterNum - 1);
-
 
                 List<MrtuData> data = [];
 
@@ -468,7 +481,6 @@ public class MrtuSerialPort : IDisposable
                     //地址在范围内的进行赋值
                     if (point.X <= x.RegisterAddr && x.RegisterLastWordAddr <= point.Y)
                     {
-                        Debug.WriteLine($"解析数据:[{x.RegisterAddr},{x.RegisterLastWordAddr}]");
                         x.UpdateTime = DateTime.Now;
                         switch (x.MrtuDataType)
                         {
@@ -543,4 +555,103 @@ public class MrtuSerialPort : IDisposable
             //
         }
     }
+
+    #region******************************  页面消息  ******************************
+    public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+
+    /// <summary>
+    /// 页面展示接收数据消息
+    /// </summary>
+    /// <param name="frame"></param>
+    public void ShowReceiveMessage(ModbusRtuFrame frame)
+    {
+        try
+        {
+            void action()
+            {
+                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
+                Messages.Add(msg);
+                log.Info($"接收:{frame}");
+                while (Messages.Count > 200)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (Exception) { }
+    }
+
+    /// <summary>
+    /// 页面展示发送数据消息
+    /// </summary>
+    /// <param name="frame"></param>
+    public void ShowSendMessage(ModbusRtuFrame frame)
+    {
+        try
+        {
+            void action()
+            {
+                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame);
+                Messages.Add(msg);
+                log.Info($"发送:{frame}");
+                while (Messages.Count > 200)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (System.Exception) { }
+    }
+
+    /// <summary>
+    /// 界面显示数据
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="type"></param>
+    public void ShowMessage(string message, MessageType type = MessageType.Info)
+    {
+        try
+        {
+            void action()
+            {
+                Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                log.Info(message);
+                while (Messages.Count > 260)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (Exception) { }
+    }
+
+    /// <summary>
+    /// 清空消息
+    /// </summary>
+    [RelayCommand]
+    private void MessageClear()
+    {
+        Messages.Clear();
+    }
+
+    /// <summary>
+    /// 暂停更新接收的数据
+    /// </summary>
+    [RelayCommand]
+    private void Pause()
+    {
+        IsPause = !IsPause;
+        if (IsPause)
+        {
+            ShowMessage("暂停更新接收的数据");
+        }
+        else
+        {
+            ShowMessage("恢复更新接收的数据");
+        }
+    }
+    #endregion
 }
