@@ -400,6 +400,27 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
+                            <DataGridTemplateColumn Header="单位">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox MinWidth="40"
+                                                 HorizontalContentAlignment="Center"
+                                                 Text="{Binding Unit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="倍率">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox MinWidth="40"
+                                                 HorizontalContentAlignment="Center"
+                                                 Text="{Binding Rate, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
 
 
                             <DataGridTemplateColumn Header="寄存器类型">
