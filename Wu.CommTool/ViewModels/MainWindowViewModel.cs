@@ -137,7 +137,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     [property: JsonIgnore]
     private void AppUpdate()
     {
-        AutoUpdater.InstalledVersion = new Version("1.4.0.6");//当前的App版本
+        AutoUpdater.InstalledVersion = new Version("1.4.0.7");//当前的App版本
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
