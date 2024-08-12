@@ -28,20 +28,15 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
     /// <summary>
     /// 打开该弹窗时执行
     /// </summary>
-    public void OnDialogOpened(IDialogParameters parameters)
+    public async void OnDialogOpened(IDialogParameters parameters)
     {
         if (parameters != null && parameters.ContainsKey("Value"))
         {
             MrtuDevice = parameters.GetValue<MrtuDevice>("Value");
         }
 
-        GetComPorts();
-        var x = ComPorts.FirstOrDefault(x=>x.Port == MrtuDevice.ComConfig.ComPort.Port);
-        if (x != null) 
-        {
-            MrtuDevice.ComConfig.ComPort = x;
-        }
-
+        var task = new Task(GetComPortsAndSet);
+        task.Start();
     }
     #endregion
 
@@ -75,8 +70,10 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
         //添加返回的参数
-        DialogParameters param = new DialogParameters();
-        param.Add("Value", MrtuDevice);
+        DialogParameters param = new()
+        {
+            { "Value", MrtuDevice }
+        };
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -91,9 +88,15 @@ public partial class MrtuDeviceEditViewModel : NavigationViewModel, IDialogHostA
 
     [RelayCommand]
     [property: JsonIgnore]
-    private void GetComPorts()
+    private void GetComPortsAndSet()
     {
+        var oldSelected = MrtuDevice.ComConfig?.ComPort?.Port;
         ComPorts = new ObservableCollection<ComPort>(ModbusUtils.GetComPorts());
+        var x = ComPorts.FirstOrDefault(x => x.Port == oldSelected);
+        if (x != null)
+        {
+            MrtuDevice.ComConfig.ComPort = x;
+        }
     }
     #endregion
 }

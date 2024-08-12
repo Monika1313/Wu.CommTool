@@ -107,11 +107,11 @@
                         Margin="10"
                         HorizontalAlignment="Center"
                         Orientation="Horizontal">
-                <Button Margin="0,0,10,0"
+                <!--<Button Margin="0,0,10,0"
                         Command="{Binding CancelCommand}"
                         Content="取消"
-                        Style="{StaticResource MaterialDesignOutlinedButton}" />
-                <Button Command="{Binding SaveCommand}" Content="确定" />
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />-->
+                <Button Command="{Binding SaveCommand}" Content="{md:PackIcon Kind=CheckboxBlankCircleOutline, Size=18}" />
             </StackPanel>
         </StackPanel>
     </DockPanel>

@@ -58,6 +58,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
         device.MrtuDatas.Add(new MrtuData() { Name = "测点1", RegisterAddr = 0, MrtuDataType = MrtuDataType.Float });
         device.MrtuDatas.Add(new MrtuData() { Name = "测点2", RegisterAddr = 2, MrtuDataType = MrtuDataType.Short });
         device.MrtuDatas.Add(new MrtuData() { Name = "测点3", RegisterAddr = 10, MrtuDataType = MrtuDataType.uInt });
+        MrtuDeviceManager.SelectedMrtuDevice = device;
     }
 
     /// <summary>
