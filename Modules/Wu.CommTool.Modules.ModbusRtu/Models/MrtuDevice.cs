@@ -191,19 +191,6 @@ public partial class MrtuDevice : ObservableObject
     [ObservableProperty]
     ObservableCollection<MrtuData> mrtuDatas = [];
 
-    /// <summary>
-    /// 根据发送的帧 对接收帧进行解析 并赋值测点数据
-    /// </summary>
-    /// <param name="send"></param>
-    /// <param name="receive"></param>
-    public void AnalyzeResponse(ModbusRtuFrame send, ModbusRtuFrame receive)
-    {
-        //从发送帧获取功能码+起始地址+数据数量
-        //根据得到的信息获取本次接收的数据可以对哪些测点赋值
-    }
-
-
-
     [RelayCommand]
     [property: JsonIgnore]
     private void AddNewMrtuData(MrtuData mrtuData)

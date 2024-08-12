@@ -12,6 +12,12 @@ public partial class MrtuDeviceManager : ObservableObject
     ObservableCollection<MrtuDevice> mrtuDevices = [];
 
     /// <summary>
+    /// 选中的Mrtu设备
+    /// </summary>
+    [ObservableProperty]
+    MrtuDevice selectedMrtuDevice;
+
+    /// <summary>
     /// 状态
     /// </summary>
     [ObservableProperty]
@@ -111,5 +117,33 @@ public partial class MrtuDeviceManager : ObservableObject
     {
         ComPorts = ModbusUtils.GetComPorts();
     }
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void AddNewMrtuDevice(MrtuDevice mrtuDevice)
+    {
+        if (mrtuDevice == null || !MrtuDevices.Contains(mrtuDevice))
+        {
+            MrtuDevices.Add(new MrtuDevice() { Name ="未命名"});
+            return;
+        }
+        else
+        {
+            MrtuDevices.Insert(MrtuDevices.IndexOf(mrtuDevice) + 1, new MrtuDevice() { Name = "未命名" });
+        }
+    }
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void DeleteMrtuDevice(MrtuDevice mrtuDevice)
+    {
+        if (MrtuDevices.Contains(mrtuDevice))
+        {
+            MrtuDevices.Remove(mrtuDevice);
+        }
+    }
+
 
 }

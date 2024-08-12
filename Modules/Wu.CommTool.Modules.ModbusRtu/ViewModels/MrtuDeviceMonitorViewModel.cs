@@ -36,7 +36,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
                 if (obj != null)
                 {
                     MrtuDeviceManager = obj;
-                    CurrentDevice = MrtuDeviceManager.MrtuDevices.FirstOrDefault();
+                    MrtuDeviceManager.SelectedMrtuDevice = MrtuDeviceManager.MrtuDevices.FirstOrDefault();
                 }
             }
             else
@@ -54,10 +54,10 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         MrtuDeviceManager = new MrtuDeviceManager();
         MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备1" });
-        CurrentDevice = MrtuDeviceManager.MrtuDevices[0];
-        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点1", RegisterAddr = 0, MrtuDataType = MrtuDataType.Float });
-        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点2", RegisterAddr = 2, MrtuDataType = MrtuDataType.Short });
-        CurrentDevice.MrtuDatas.Add(new MrtuData() { Name = "测点3", RegisterAddr = 10, MrtuDataType = MrtuDataType.uInt });
+        var device = MrtuDeviceManager.MrtuDevices[0];
+        device.MrtuDatas.Add(new MrtuData() { Name = "测点1", RegisterAddr = 0, MrtuDataType = MrtuDataType.Float });
+        device.MrtuDatas.Add(new MrtuData() { Name = "测点2", RegisterAddr = 2, MrtuDataType = MrtuDataType.Short });
+        device.MrtuDatas.Add(new MrtuData() { Name = "测点3", RegisterAddr = 10, MrtuDataType = MrtuDataType.uInt });
     }
 
     /// <summary>
@@ -84,7 +84,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var x = JsonConvert.DeserializeObject<MrtuDeviceManager>(xx);
             MrtuDeviceManager = x;
-            CurrentDevice = MrtuDeviceManager.MrtuDevices.FirstOrDefault();
+            MrtuDeviceManager.SelectedMrtuDevice = MrtuDeviceManager.MrtuDevices.FirstOrDefault();
             HcGrowlExtensions.Success("配置文件导入成功");
         }
         catch (Exception ex)
@@ -156,8 +156,8 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     [ObservableProperty]
     MrtuDeviceManager mrtuDeviceManager = new();
 
-    [ObservableProperty]
-    MrtuDevice currentDevice;
+    //[ObservableProperty]
+    //MrtuDevice currentDevice;
 
     [ObservableProperty]
     OpenDrawers openDrawers = new();

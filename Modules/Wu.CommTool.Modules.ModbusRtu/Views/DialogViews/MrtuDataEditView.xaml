@@ -11,6 +11,7 @@
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
     </UserControl.InputBindings>
     <DockPanel>
+        <TextBlock DockPanel.Dock="Top" Margin="4" Style="{StaticResource TitleTextBlock}" Text="功能还没做,凑合着用吧" />
         <StackPanel Grid.Row="2"
                     Margin="10"
                     HorizontalAlignment="Right"
