@@ -21,8 +21,11 @@ public partial class ModbusRtuModel : ObservableObject
 
         //初始化一个10个数据的列表
         DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
-
         RefreshModbusRtuDataDataView();
+        //Task.Run(() =>
+        //{
+
+        //});
     }
 
     private readonly SerialPort SerialPort = new();              //串口

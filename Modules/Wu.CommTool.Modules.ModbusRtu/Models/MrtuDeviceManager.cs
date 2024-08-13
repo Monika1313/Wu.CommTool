@@ -80,7 +80,8 @@ public partial class MrtuDeviceManager : ObservableObject
             Owner = this//设置所有者
         };
         MrtuSerialPorts.Add(mrtuSerialPort);
-        await mrtuSerialPort.Run();
+        //await mrtuSerialPort.Run();
+        Task.Run(() =>  mrtuSerialPort.Run());
     }
 
     [RelayCommand]
@@ -115,9 +116,8 @@ public partial class MrtuDeviceManager : ObservableObject
     [property: JsonIgnore]
     public void GetComPorts()
     {
-        ComPorts = ModbusUtils.GetComPorts();
+        Task.Run(()=> ComPorts = ModbusUtils.GetComPorts());
     }
-
 
     [RelayCommand]
     [property: JsonIgnore]
@@ -134,7 +134,6 @@ public partial class MrtuDeviceManager : ObservableObject
         }
     }
 
-
     [RelayCommand]
     [property: JsonIgnore]
     private void DeleteMrtuDevice(MrtuDevice mrtuDevice)
@@ -144,6 +143,4 @@ public partial class MrtuDeviceManager : ObservableObject
             MrtuDevices.Remove(mrtuDevice);
         }
     }
-
-
 }

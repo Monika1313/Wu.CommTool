@@ -2,17 +2,16 @@
 using System.IO.Ports;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
-public partial class MrtuSerialPort :ObservableObject, IDisposable
+public partial class MrtuSerialPort : ObservableObject, IDisposable
 {
     [JsonIgnore]
     public MrtuDeviceManager Owner { get; set; }
-
-    
 
     #region 字段
     SerialPort SerialPort = new();              //串口
     Task publishHandleTask; //发布消息处理线程
     Task receiveHandleTask; //接收消息处理线程
+    //Task ReadDataTask;
     EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
     EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
     EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
@@ -24,6 +23,7 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
     private static readonly ILog log = LogManager.GetLogger(typeof(ModbusRtuModel));
     #endregion
 
+    #region 属性
     [ObservableProperty]
     bool isPause;
 
@@ -32,6 +32,8 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
     /// </summary>
     [ObservableProperty]
     ObservableCollection<MessageData> messages = [];
+
+    #endregion
 
     public MrtuSerialPort(ComConfig config)
     {
@@ -71,8 +73,8 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
                     foreach (var frame in device.RequestFrames)
                     {
                         WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
+                        //TODO当速度快时会出问题
                         PublishFrameEnqueue(frame, 1000);
-                        //Debug.WriteLine(frame);
                     }
                 }
             }
@@ -385,6 +387,8 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
                     PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
                     Debug.Write($"发送:{frame.Item1}\n");
                     ExecutePublishMessage(frame.Item1);              //请求发送数据帧
+                    //await Task.Delay(50);            //等待一段时间
+                    //TODO 取消了该处的等待
                     await Task.Delay(frame.Item2);            //等待一段时间
                 }
             }
@@ -486,7 +490,7 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
                         switch (x.MrtuDataType)
                         {
                             case MrtuDataType.uShort:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
+                                x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
                                 break;
                             case MrtuDataType.Short:
                                 x.Value = x.Rate * Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
@@ -495,7 +499,7 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
                                 x.Value = x.Rate * Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Int:
-                                x.Value = x.Rate *  Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
+                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.uLong:
                                 x.Value = x.Rate * Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
@@ -504,7 +508,7 @@ public partial class MrtuSerialPort :ObservableObject, IDisposable
                                 x.Value = x.Rate * Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
                                 break;
                             case MrtuDataType.Float:
-                                x.Value =  Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2),2);
+                                x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
                                 break;
                             case MrtuDataType.Double:
                                 x.Value = x.Rate * Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);

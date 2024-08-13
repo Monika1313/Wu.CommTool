@@ -219,61 +219,61 @@
                     <TextBlock HorizontalAlignment="Center"
                                Style="{StaticResource TitleTextBlock}"
                                Text="ModbusRTU 设备监控 开发中..." />
-                    <StackPanel Orientation="Horizontal">
-
+                    <DockPanel Margin="0">
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
-                                HorizontalAlignment="Left"
-                                Background="{StaticResource Green_Background}"
-                                BorderBrush="{StaticResource Green_BorderBrush}"
-                                Command="{Binding MrtuDeviceManager.RunCommand}"
-                                Content="{md:PackIcon Kind=Play}"
-                                Cursor="Hand"
-                                Foreground="{StaticResource Green_Foreground}"
-                                IsEnabled="{Binding MrtuDeviceManager.Status, Converter={wu:ReverseBool}}"
-                                Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
-
-                        <Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="5"
-                                HorizontalAlignment="Left"
-                                Command="{Binding MrtuDeviceManager.StopCommand}"
-                                Content="{md:PackIcon Kind=Stop}"
-                                Cursor="Hand"
-                                IsEnabled="{Binding MrtuDeviceManager.Status}"
-                                Style="{StaticResource Red_CircleButton}" />
-
-                        <Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="4"
-                                hc:Poptip.Content="导出配置文件"
-                                Command="{Binding ExportConfigCommand}"
-                                Content="{md:PackIcon Kind=Upload}"
-                                Cursor="Hand"
-                                DockPanel.Dock="Right"
-                                IsEnabled="{Binding MrtuDeviceManager.Status, Converter={wu:ReverseBool}}"
-                                Style="{StaticResource Blue_CircleButton}" />
-                        <Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="4"
-                                hc:Poptip.Content="导入配置文件"
-                                Command="{Binding ImportConfigCommand}"
-                                Content="{md:PackIcon Kind=Download}"
-                                Cursor="Hand"
-                                DockPanel.Dock="Right"
-                                IsEnabled="{Binding MrtuDeviceManager.Status, Converter={wu:ReverseBool}}"
-                                Style="{StaticResource Blue_CircleButton}" />
-                        <!--<Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="5"
-                                hc:Poptip.Content="查看消息"
-                                Command="{Binding ExecuteCommand}"
-                                CommandParameter="OpenRightDrawer"
+                                Command="{Binding OpenMrtuDeviceManagerLogViewCommand}"
                                 Content="{md:PackIcon Kind=Eye}"
+                                Cursor="Hand"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />-->
-                    </StackPanel>
+                                Style="{StaticResource Blue_CircleButton}" />
+                        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
+
+                            <Button Width="30"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="5"
+                                    HorizontalAlignment="Left"
+                                    Background="{StaticResource Green_Background}"
+                                    BorderBrush="{StaticResource Green_BorderBrush}"
+                                    Command="{Binding MrtuDeviceManager.RunCommand}"
+                                    Content="{md:PackIcon Kind=Play}"
+                                    Cursor="Hand"
+                                    Foreground="{StaticResource Green_Foreground}"
+                                    IsEnabled="{Binding MrtuDeviceManager.Status, Converter={wu:ReverseBool}}"
+                                    Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
+
+                            <Button Width="30"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="5"
+                                    HorizontalAlignment="Left"
+                                    Command="{Binding MrtuDeviceManager.StopCommand}"
+                                    Content="{md:PackIcon Kind=Stop}"
+                                    Cursor="Hand"
+                                    IsEnabled="{Binding MrtuDeviceManager.Status}"
+                                    Style="{StaticResource Red_CircleButton}" />
+
+                            <Button Width="30"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="4"
+                                    hc:Poptip.Content="导出配置文件"
+                                    Command="{Binding ExportConfigCommand}"
+                                    Content="{md:PackIcon Kind=Upload}"
+                                    Cursor="Hand"
+                                    IsEnabled="{Binding MrtuDeviceManager.Status, Converter={wu:ReverseBool}}"
+                                    Style="{StaticResource Blue_CircleButton}" />
+                            <Button Width="30"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="4"
+                                    hc:Poptip.Content="导入配置文件"
+                                    Command="{Binding ImportConfigCommand}"
+                                    Content="{md:PackIcon Kind=Download}"
+                                    Cursor="Hand"
+                                    IsEnabled="{Binding MrtuDeviceManager.Status, Converter={wu:ReverseBool}}"
+                                    Style="{StaticResource Blue_CircleButton}" />
+                        </StackPanel>
+
+                    </DockPanel>
                 </Grid>
                 <Grid DockPanel.Dock="Left">
                     <ContentControl Width="150" Style="{StaticResource Effect2Control}">
@@ -329,7 +329,8 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>-->
 
-                            <ListBox BorderThickness="0"
+                            <ListBox Padding="0"
+                                     BorderThickness="0"
                                      ItemContainerStyle="{StaticResource MrtuDeviceListBoxItem}"
                                      ItemsSource="{Binding MrtuDeviceManager.MrtuDevices}"
                                      SelectedItem="{Binding MrtuDeviceManager.SelectedMrtuDevice}"
@@ -573,13 +574,8 @@
                             </DataGridTemplateColumn>
                             <DataGridTextColumn Binding="{Binding UpdateTime, StringFormat={}{0:HH:mm:ss}}"
                                                 ElementStyle="{StaticResource CenterDataGridTextColumn}"
+                                                Foreground="Black"
                                                 Header="更新时间" />
-
-
-
-                            <!--<DataGridTextColumn Binding="{Binding MrtuDataType}"
-                                                ElementStyle="{StaticResource CenterDataGridTextColumn}"
-                                                Header="数据类型" />-->
                         </DataGrid.Columns>
                     </DataGrid>
                 </Grid>

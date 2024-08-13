@@ -41,7 +41,7 @@
                         Margin="5"
                         HorizontalAlignment="Left"
                         hc:Poptip.Content="查找串口设备"
-                        Command="{Binding GetComPortsCommand}"
+                        Command="{Binding GetComPortsAndSetCommand}"
                         Content="{md:PackIcon Kind=Search}"
                         DockPanel.Dock="Left"
                         Style="{StaticResource Blue_CircleButton}" />

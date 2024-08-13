@@ -17,7 +17,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
         this.provider = provider;
         this.dialogHost = dialogHost;
 
-        GetDefaultConfig();
+        Task.Run(() => GetDefaultConfig());
     }
 
     /// <summary>
@@ -272,6 +272,22 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
         }
     }
 
-
+    [RelayCommand]
+    [property: JsonIgnore]
+    private async Task OpenMrtuDeviceManagerLogView()
+    {
+        try
+        {
+            DialogParameters param = new()
+            {
+                { "Value", MrtuDeviceManager }
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(MrtuDeviceManagerLogView), param, nameof(MrtuDeviceMonitorView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
     #endregion
 }

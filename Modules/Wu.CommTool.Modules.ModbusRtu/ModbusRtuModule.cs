@@ -21,5 +21,6 @@ public class ModbusRtuModule : IModule
         containerRegistry.RegisterForNavigation<MrtuDeviceMonitorView, MrtuDeviceMonitorViewModel>();
         containerRegistry.RegisterForNavigation<MrtuDataEditView, MrtuDataEditViewModel>();
         containerRegistry.RegisterForNavigation<MrtuDeviceEditView, MrtuDeviceEditViewModel>();
+        containerRegistry.RegisterForNavigation<MrtuDeviceManagerLogView, MrtuDeviceManagerLogViewModel>();
     }
 }
