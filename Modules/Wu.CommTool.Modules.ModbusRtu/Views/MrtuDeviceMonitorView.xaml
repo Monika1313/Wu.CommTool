@@ -373,6 +373,27 @@
                                                                    Text="从站:" />
                                                         <TextBlock FontSize="12" Text="{Binding SlaveAddr}" />
                                                     </StackPanel>
+                                                    <Ellipse Width="20"
+                                                             Height="20"
+                                                             Margin="4"
+                                                             d:Fill="LawnGreen">
+                                                        <Ellipse.Effect>
+                                                            <BlurEffect />
+                                                        </Ellipse.Effect>
+                                                        <Ellipse.Style>
+                                                            <Style TargetType="Ellipse">
+                                                                <Setter Property="Fill" Value="Red" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding DeviceState}" Value="1">
+                                                                        <Setter Property="Fill" Value="LawnGreen" />
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding DeviceState}" Value="2">
+                                                                        <Setter Property="Fill" Value="Orange" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Ellipse.Style>
+                                                    </Ellipse>
                                                 </StackPanel>
                                             </Button.Content>
 
