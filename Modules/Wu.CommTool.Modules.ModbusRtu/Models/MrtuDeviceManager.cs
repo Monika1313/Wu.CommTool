@@ -26,70 +26,49 @@ public partial class MrtuDeviceManager : ObservableObject
 
     [RelayCommand]
     [property: JsonIgnore]
-    private async Task Run()
+    private void Run()
     {
         ComPorts = ModbusUtils.GetComPorts();//获取当前设备的串口
         Status = true;
-        ComTaskDict = [];//TODO 关闭时需要正确退出所有串口子线程
         MrtuSerialPorts = [];
-        //TODO 遍历MrtuDevice,获取需要使用的串口
+        //遍历MrtuDevice,获取需要使用的串口
         foreach (var device in MrtuDevices)
         {
             if (!string.IsNullOrWhiteSpace(device.ComConfig.ComPort.Port))
             {
-                //TODO 需要在测点修改后实现自动更新
                 device.AnalyzeDataAddress();//更新请求帧列表
 
                 //判断是否已存在,已存在则不创建
-                if (ComTaskDict.FindFirst(x => x.Key == device.ComConfig.ComPort.Port).Key != null)
+                if (MrtuSerialPorts.FindFirst(x => x.ComConfig.ComPort.Port == device.ComConfig.ComPort.Port) != null)
                 {
                     continue;
                 }
 
-                var config = device.ComConfig;
                 //尝试获取指定串口
-                var comport = ComPorts.FirstOrDefault(x => x.Port == config.ComPort.Port);
-                //若没有指定的串口则不执行
+                var comport = ComPorts.FirstOrDefault(x => x.Port == device.ComConfig.ComPort.Port);
+                //若没有指定的串口则退出循环
                 if (comport == null)
                 {
                     continue;
                 }
-                Task task = new(() => ComTask(device.ComConfig));
-                ComTaskDict.Add(device.ComConfig.ComPort.Port, task);
-                task.Start();
+
+                //串口实例
+                MrtuSerialPort mrtuSerialPort = new(device.ComConfig)
+                {
+                    Owner = this//设置所有者
+                };
+                MrtuSerialPorts.Add(mrtuSerialPort);
+                mrtuSerialPort.Run();
             }
         }
     }
 
-    /// <summary>
-    /// 串口线程  执行读写
-    /// </summary>
-    /// <param name="com"></param>
-    public async Task ComTask(ComConfig config)
-    {
-        //尝试获取指定串口
-        var comport = ComPorts.FirstOrDefault(x => x.Port == config.ComPort.Port);
-        //若没有指定的串口则退出循环
-        if (comport == null)
-        {
-            return;
-        }
-        //串口实例
-        MrtuSerialPort mrtuSerialPort = new(config)
-        {
-            Owner = this//设置所有者
-        };
-        MrtuSerialPorts.Add(mrtuSerialPort);
-        //await mrtuSerialPort.Run();
-        Task.Run(() =>  mrtuSerialPort.Run());
-    }
-
     [RelayCommand]
     [property: JsonIgnore]
-    private async Task Stop()
+    private void Stop()
     {
         Status = false;
-        ComTaskDict = [];
+        MrtuSerialPorts = null;
     }
 
     /// <summary>
@@ -98,15 +77,10 @@ public partial class MrtuDeviceManager : ObservableObject
     public List<ComPort> ComPorts { get; set; } = [];
 
     /// <summary>
-    /// 用于管理串口线程
-    /// </summary>
-    public Dictionary<string, Task> ComTaskDict { get; set; } = [];
-
-    /// <summary>
     /// Mrtu串口列表
     /// </summary>
     [ObservableProperty]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     ObservableCollection<MrtuSerialPort> mrtuSerialPorts = [];
 
     /// <summary>
@@ -116,7 +90,7 @@ public partial class MrtuDeviceManager : ObservableObject
     [property: JsonIgnore]
     public void GetComPorts()
     {
-        Task.Run(()=> ComPorts = ModbusUtils.GetComPorts());
+        Task.Run(() => ComPorts = ModbusUtils.GetComPorts());
     }
 
     [RelayCommand]
@@ -125,7 +99,7 @@ public partial class MrtuDeviceManager : ObservableObject
     {
         if (mrtuDevice == null || !MrtuDevices.Contains(mrtuDevice))
         {
-            MrtuDevices.Add(new MrtuDevice() { Name ="未命名"});
+            MrtuDevices.Add(new MrtuDevice() { Name = "未命名" });
             return;
         }
         else

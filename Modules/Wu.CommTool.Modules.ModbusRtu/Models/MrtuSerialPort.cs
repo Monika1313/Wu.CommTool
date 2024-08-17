@@ -8,7 +8,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     public MrtuDeviceManager Owner { get; set; }
 
     #region 字段
-    SerialPort SerialPort = new();              //串口
+    SerialPort serialPort = new();              //串口
     Task publishHandleTask; //发布消息处理线程
     Task receiveHandleTask; //接收消息处理线程
     //Task ReadDataTask;
@@ -17,7 +17,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
     ConcurrentQueue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
     ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
-    ComConfig comConfig;
+    public ComConfig ComConfig;
     string currentRequest = string.Empty;
     MrtuDevice currentDevice;
     private static readonly ILog log = LogManager.GetLogger(typeof(ModbusRtuModel));
@@ -38,23 +38,31 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     public MrtuSerialPort(ComConfig config)
     {
         //配置串口
-        SerialPort.PortName = config.ComPort.Port;                          //串口
-        SerialPort.BaudRate = (int)config.BaudRate;                         //波特率
-        SerialPort.Parity = (System.IO.Ports.Parity)config.Parity;          //校验
-        SerialPort.DataBits = config.DataBits;                              //数据位
-        SerialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
-        SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);//串口接收事件
+        serialPort.PortName = config.ComPort.Port;                          //串口
+        serialPort.BaudRate = (int)config.BaudRate;                         //波特率
+        serialPort.Parity = (System.IO.Ports.Parity)config.Parity;          //校验
+        serialPort.DataBits = config.DataBits;                              //数据位
+        serialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
+        serialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);//串口接收事件
 
         //数据帧处理子线程
         publishHandleTask = new Task(PublishFrame);
         receiveHandleTask = new Task(ReceiveFrame);
         publishHandleTask.Start();
         receiveHandleTask.Start();
-        this.comConfig = config;
+        this.ComConfig = config;
     }
 
     //运行数据采集
-    public async Task Run()
+    public void Run()
+    {
+        Task.Run(SerialPortTask);
+    }
+
+    /// <summary>
+    /// 串口任务
+    /// </summary>
+    private void SerialPortTask()
     {
         try
         {
@@ -67,7 +75,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 foreach (var device in Owner.MrtuDevices)
                 {
                     //不使用该串口的设备跳过
-                    if (device.ComConfig.ComPort.Port != comConfig.ComPort.Port)
+                    if (device.ComConfig.ComPort.Port != ComConfig.ComPort.Port)
                         continue;
                     currentDevice = device;
                     foreach (var frame in device.RequestFrames)
@@ -94,15 +102,15 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     {
         try
         {
-            if (SerialPort.IsOpen)
+            if (serialPort.IsOpen)
             {
                 return;
             }
 
             try
             {
-                SerialPort.Open();               //打开串口
-                Debug.WriteLine($"打开串口 {SerialPort.PortName} : {comConfig.ComPort.DeviceName}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
+                serialPort.Open();               //打开串口
+                Debug.WriteLine($"打开串口 {serialPort.PortName} : {ComConfig.ComPort.DeviceName}  波特率: {serialPort.BaudRate} 校验: {serialPort.Parity}");
             }
             catch (Exception ex)
             {
@@ -124,13 +132,13 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         try
         {
             //若串口未开启则返回
-            if (!SerialPort.IsOpen)
+            if (!serialPort.IsOpen)
             {
                 return;
             }
 
-            Debug.WriteLine($"关闭串口{SerialPort.PortName}");
-            SerialPort.Close();                   //关闭串口 
+            Debug.WriteLine($"关闭串口{serialPort.PortName}");
+            serialPort.Close();                   //关闭串口 
         }
         catch (Exception ex)
         {
@@ -149,9 +157,9 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         try
         {
             //若串口未开启则返回
-            if (SerialPort == null || !SerialPort.IsOpen)
+            if (serialPort == null || !serialPort.IsOpen)
             {
-                SerialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
+                serialPort?.DiscardInBuffer();//丢弃接收缓冲区的数据
                 return;
             }
             #region 接收数据
@@ -163,16 +171,16 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
             do
             {
                 //若串口已被关闭则退出
-                if (SerialPort.IsOpen == false)
+                if (serialPort.IsOpen == false)
                     return;
                 times++;//计时
                 //串口接收到新的数据时执行
-                if (SerialPort.BytesToRead > 0)
+                if (serialPort.BytesToRead > 0)
                 {
                     times = 0;                                       //重置等待时间
-                    int dataCount = SerialPort.BytesToRead;          //获取串口缓存中的数据量
+                    int dataCount = serialPort.BytesToRead;          //获取串口缓存中的数据量
                     byte[] tempBuffer = new byte[dataCount];         //声明数组
-                    SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
+                    serialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
                     frameCache.AddRange(tempBuffer);                 //添加进接收的数据缓存列表
                 }
                 //二级缓存frameCache中还有未处理完的数据
@@ -294,10 +302,10 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
 
                 //ModbusRtu标准协议 一帧最大长度是256字节
                 //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
-                if (frameCache.Count > comConfig.MaxLength)
+                if (frameCache.Count > ComConfig.MaxLength)
                     break;
                 Thread.Sleep(1);//同步等待
-            } while (times < comConfig.TimeOut);
+            } while (times < ComConfig.TimeOut);
             #endregion
 
             msg = BitConverter.ToString(frameCache.ToArray());
@@ -345,12 +353,12 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 return false;
             }
 
-            if (SerialPort.IsOpen)
+            if (serialPort.IsOpen)
             {
                 try
                 {
                     currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
-                    SerialPort.Write(data, 0, data.Length);     //发送数据
+                    serialPort.Write(data, 0, data.Length);     //发送数据
                     return true;
                 }
                 catch (Exception ex)
@@ -382,7 +390,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                     continue;//需要再次验证队列是否为空
                 }
                 //判断串口是否已打开,若已关闭则不执行
-                if (SerialPort.IsOpen)
+                if (serialPort.IsOpen)
                 {
                     PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
                     Debug.Write($"发送:{frame.Item1}\n");
