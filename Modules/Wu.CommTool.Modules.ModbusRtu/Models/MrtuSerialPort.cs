@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.IO.Ports;
+using System.Windows.Controls;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 public partial class MrtuSerialPort : ObservableObject, IDisposable
@@ -9,17 +10,18 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
 
     #region 字段
     SerialPort serialPort = new();              //串口
-    Task publishHandleTask; //发布消息处理线程
+    //Task publishHandleTask; //发布消息处理线程
     Task receiveHandleTask; //接收消息处理线程
     //Task ReadDataTask;
     EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
     EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
     EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
-    ConcurrentQueue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
+    //ConcurrentQueue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
     ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
     public ComConfig ComConfig;
     string currentRequest = string.Empty;
     MrtuDevice currentDevice;
+    List<MrtuDevice> devices = [];//使用该串口的设备
     private static readonly ILog log = LogManager.GetLogger(typeof(ModbusRtuModel));
     #endregion
 
@@ -46,9 +48,9 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         serialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);//串口接收事件
 
         //数据帧处理子线程
-        publishHandleTask = new Task(PublishFrame);
+        //publishHandleTask = new Task(PublishFrame);
         receiveHandleTask = new Task(ReceiveFrame);
-        publishHandleTask.Start();
+        //publishHandleTask.Start();
         receiveHandleTask.Start();
         this.ComConfig = config;
     }
@@ -62,27 +64,25 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     /// <summary>
     /// 串口任务
     /// </summary>
-    private void SerialPortTask()
+    private async void SerialPortTask()
     {
         try
         {
-            //TODO 需修改为开启子线程执行以下操作
             OpenSerialPort();//打开串口
             WaitNextOne.Set();
             while (Owner.Status)
             {
-                //遍历设备 对于需要使用该串口通讯的执行读
-                foreach (var device in Owner.MrtuDevices)
+                //获取使用该串口的设备列表
+                devices = Owner.MrtuDevices.Where(x => x.ComConfig.ComPort.Port == this.ComConfig.ComPort.Port).ToList();
+                //遍历设备列表 对于需要使用该串口通讯的执行读
+                foreach (var device in devices)
                 {
-                    //不使用该串口的设备跳过
-                    if (device.ComConfig.ComPort.Port != ComConfig.ComPort.Port)
-                        continue;
-                    currentDevice = device;
+                    currentDevice = device;//设置当前设备
                     foreach (var frame in device.RequestFrames)
                     {
+                        ExecutePublishMessage(frame);
+                        await Task.Delay(50);//该处可以设定延时
                         WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
-                        //TODO当速度快时会出问题
-                        PublishFrameEnqueue(frame, 1000);
                     }
                 }
             }
@@ -359,6 +359,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 {
                     currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
                     serialPort.Write(data, 0, data.Length);     //发送数据
+                    Debug.Write($"发送:{message}");
                     return true;
                 }
                 catch (Exception ex)
@@ -373,43 +374,45 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         }
     }
 
-    /// <summary>
-    /// 发送数据帧处理线程
-    /// </summary>
-    private async void PublishFrame()
-    {
-        WaitPublishFrameEnqueue.Reset();
-        while (true)
-        {
-            try
-            {
-                //判断队列是否不空 若为空则等待
-                if (PublishFrameQueue.Count == 0)
-                {
-                    WaitPublishFrameEnqueue.WaitOne();
-                    continue;//需要再次验证队列是否为空
-                }
-                //判断串口是否已打开,若已关闭则不执行
-                if (serialPort.IsOpen)
-                {
-                    PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
-                    Debug.Write($"发送:{frame.Item1}\n");
-                    ExecutePublishMessage(frame.Item1);              //请求发送数据帧
-                    //await Task.Delay(50);            //等待一段时间
-                    //TODO 取消了该处的等待
-                    await Task.Delay(frame.Item2);            //等待一段时间
-                }
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-            finally
-            {
+    #region 发送数据帧处理线程
+    ///// <summary>
+    ///// 发送数据帧处理线程
+    ///// </summary>
+    //private async void PublishFrame()
+    //{
+    //    WaitPublishFrameEnqueue.Reset();
+    //    while (true)
+    //    {
+    //        try
+    //        {
+    //            //判断队列是否不空 若为空则等待
+    //            if (PublishFrameQueue.Count == 0)
+    //            {
+    //                WaitPublishFrameEnqueue.WaitOne();
+    //                continue;//需要再次验证队列是否为空
+    //            }
+    //            //判断串口是否已打开,若已关闭则不执行
+    //            if (serialPort.IsOpen)
+    //            {
+    //                PublishFrameQueue.TryDequeue(out var frame);  //出队 数据帧
+    //                Debug.Write($"发送:{frame.Item1}\n");
+    //                ExecutePublishMessage(frame.Item1);              //请求发送数据帧
+    //                //await Task.Delay(50);            //等待一段时间
+    //                //TODO 取消了该处的等待
+    //                await Task.Delay(frame.Item2);            //等待一段时间
+    //            }
+    //        }
+    //        catch (Exception ex)
+    //        {
+    //            Debug.WriteLine(ex.Message);
+    //        }
+    //        finally
+    //        {
 
-            }
-        }
-    }
+    //        }
+    //    }
+    //} 
+    #endregion
 
 
     /// <summary>
@@ -443,19 +446,22 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 var requestFrame = new ModbusRtuFrame(request);
 
                 //对接收的消息直接进行crc校验
-                var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
+                if (!ModbusUtils.IsModbusCrcOk(frame.GetBytes()))
+                {
+                    Debug.WriteLine("应答帧校验失败了");
+                }
 
                 List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
                 int slaveId = frameList[0];                 //从站地址
                 int func = frameList[1];                    //功能码
 
                 #region 解析接收的数据值
-                //TODO 遍历对象的测点, 在该帧范围内的进行赋值
+                //遍历对象的测点, 在该帧范围内的进行赋值
 
                 //不满足任意一项的帧丢弃
                 //从站地址不相同
                 //功能码不相同
-                //读取数量与应答数量不能对应
+                //读取数量与应答数量不能对应 读取数量单位word 应答单位是byte 数量关系是2倍
                 if (requestFrame.SlaveId != responseFrame.SlaveId
                     || requestFrame.Function != responseFrame.Function
                     || requestFrame.RegisterNum != responseFrame.BytesNum / 2)
@@ -538,22 +544,6 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
             }
         }
     }
-
-    /// <summary>
-    /// 发送消息帧入队
-    /// </summary>
-    /// <param name="msg">发送的消息</param>
-    /// <param name="delay">发送完成后等待的时间,期间不会发送消息</param>
-    private void PublishFrameEnqueue(string msg, int delay = 100)
-    {
-        if (string.IsNullOrEmpty(msg))
-        {
-            return;
-        }
-        PublishFrameQueue.Enqueue((msg, delay));       //发布消息入队
-        WaitPublishFrameEnqueue.Set();                 //置位发布消息入队标志
-    }
-
 
     //TODO Dispose
     public void Dispose()

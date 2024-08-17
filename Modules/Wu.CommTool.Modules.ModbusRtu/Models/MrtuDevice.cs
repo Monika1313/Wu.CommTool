@@ -215,6 +215,11 @@ public partial class MrtuDevice : ObservableObject
             MrtuDatas.Remove(mrtuData);
         }
     }
+
+    public override string ToString()
+    {
+        return $"{Name} {ComConfig.ComPort.Port} 从站:{SlaveAddr}";
+    }
 }
 
 public enum DeviceStatus
