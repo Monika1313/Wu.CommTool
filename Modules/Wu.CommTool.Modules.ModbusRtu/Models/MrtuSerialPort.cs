@@ -1,6 +1,5 @@
 ﻿using System.Collections.Concurrent;
 using System.IO.Ports;
-using System.Windows.Controls;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 public partial class MrtuSerialPort : ObservableObject, IDisposable
@@ -9,15 +8,11 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     public MrtuDeviceManager Owner { get; set; }
 
     #region 字段
-    SerialPort serialPort = new();              //串口
-    //Task publishHandleTask; //发布消息处理线程
-    Task receiveHandleTask; //接收消息处理线程
-    //Task ReadDataTask;
-    EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
-    EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
-    EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
-    //ConcurrentQueue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
-    ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
+    private readonly SerialPort serialPort = new();              //串口
+    private readonly Task receiveHandleTask; //接收消息处理线程
+    private readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
+    private readonly EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
+    private readonly ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
     public ComConfig ComConfig;
     string currentRequest = string.Empty;
     MrtuDevice currentDevice;
@@ -34,7 +29,6 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     /// </summary>
     [ObservableProperty]
     ObservableCollection<MessageData> messages = [];
-
     #endregion
 
     public MrtuSerialPort(ComConfig config)
@@ -47,10 +41,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         serialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
         serialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);//串口接收事件
 
-        //数据帧处理子线程
-        //publishHandleTask = new Task(PublishFrame);
         receiveHandleTask = new Task(ReceiveFrame);
-        //publishHandleTask.Start();
         receiveHandleTask.Start();
         this.ComConfig = config;
     }
@@ -98,7 +89,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     /// <summary>
     /// 打开串口
     /// </summary>
-    public void OpenSerialPort()
+    private void OpenSerialPort()
     {
         try
         {
@@ -127,7 +118,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     /// <summary>
     /// 关闭串口
     /// </summary>
-    public void CloseSerialPort()
+    private void CloseSerialPort()
     {
         try
         {
@@ -428,15 +419,14 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 string request = "";
                 MrtuDevice device;
                 //若无消息需要处理则进入等待
-                if (ReceiveFrameQueue.Count == 0)
+                if (ReceiveFrameQueue.IsEmpty)
                 {
                     WaitUartReceived.WaitOne(); //等待接收消息
                 }
-                //先缓存当前信息
-                request = currentRequest;
-                device = currentDevice;
-                //从接收消息队列中取出一条消息
-                ReceiveFrameQueue.TryDequeue(out var frame);
+                request = currentRequest;       //缓存当前的请求帧
+                device = currentDevice;         //缓存当前的设备
+                ReceiveFrameQueue.TryDequeue(out var frame);//从接收消息队列中取出一条消息
+                WaitNextOne.Set();              //接收到数据了,可以发送下一个请求
                 if (string.IsNullOrWhiteSpace(frame))
                 {
                     continue;
@@ -482,14 +472,24 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                     //保持寄存器
                     case 3:
                         {
-                            var holdings = device.MrtuDatas.Where(x => x.RegisterType == RegisterType.Holding).ToList();
+                            //查询该设备符合该应答帧的测点数据
+                            var holdings = device.MrtuDatas
+                                .Where(x => x.RegisterType == RegisterType.Holding
+                                                   && point.X <= x.RegisterAddr
+                                                   && x.RegisterLastWordAddr <= point.Y)
+                                .ToList();
                             data = holdings;
                             break;
                         }
                     //输入寄存器
                     case 4:
                         {
-                            var inputs = device.MrtuDatas.Where(x => x.RegisterType == RegisterType.Input).ToList();
+                            //查询该设备符合该应答帧的测点数据
+                            var inputs = device.MrtuDatas
+                                .Where(x => x.RegisterType == RegisterType.Input
+                                                   && point.X <= x.RegisterAddr
+                                                   && x.RegisterLastWordAddr <= point.Y)
+                                .ToList();
                             data = inputs;
                             break;
                         }
@@ -497,46 +497,40 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
 
                 foreach (var x in data)
                 {
-                    //地址在范围内的进行赋值
-                    if (point.X <= x.RegisterAddr && x.RegisterLastWordAddr <= point.Y)
+                    x.UpdateTime = DateTime.Now;
+                    switch (x.MrtuDataType)
                     {
-                        x.UpdateTime = DateTime.Now;
-                        switch (x.MrtuDataType)
-                        {
-                            case MrtuDataType.uShort:
-                                x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
-                                break;
-                            case MrtuDataType.Short:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
-                                break;
-                            case MrtuDataType.uInt:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
-                                break;
-                            case MrtuDataType.Int:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
-                                break;
-                            case MrtuDataType.uLong:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
-                                break;
-                            case MrtuDataType.Long:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
-                                break;
-                            case MrtuDataType.Float:
-                                x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
-                                break;
-                            case MrtuDataType.Double:
-                                x.Value = x.Rate * Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2);
-                                break;
-                            case MrtuDataType.Hex:
-                                break;
-                            default:
-                                break;
-                        }
+                        case MrtuDataType.uShort:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.Short:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.uInt:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.Int:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.uLong:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.Long:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.Float:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.Double:
+                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            break;
+                        case MrtuDataType.Hex:
+                            break;
+                        default:
+                            break;
                     }
                 }
                 #endregion
-
-                WaitNextOne.Set();//接收到数据了,可以发送下一个请求
             }
             catch (Exception ex)
             {
@@ -552,6 +546,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         try
         {
             CloseSerialPort();//关闭串口
+
         }
         catch (Exception ex)
         {
@@ -560,13 +555,13 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     }
 
     #region******************************  页面消息  ******************************
-    public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+    private void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
     /// <summary>
     /// 页面展示接收数据消息
     /// </summary>
     /// <param name="frame"></param>
-    public void ShowReceiveMessage(ModbusRtuFrame frame)
+    private void ShowReceiveMessage(ModbusRtuFrame frame)
     {
         try
         {
@@ -589,7 +584,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     /// 页面展示发送数据消息
     /// </summary>
     /// <param name="frame"></param>
-    public void ShowSendMessage(ModbusRtuFrame frame)
+    private void ShowSendMessage(ModbusRtuFrame frame)
     {
         try
         {
@@ -613,7 +608,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     /// </summary>
     /// <param name="message"></param>
     /// <param name="type"></param>
-    public void ShowMessage(string message, MessageType type = MessageType.Info)
+    private void ShowMessage(string message, MessageType type = MessageType.Info)
     {
         try
         {

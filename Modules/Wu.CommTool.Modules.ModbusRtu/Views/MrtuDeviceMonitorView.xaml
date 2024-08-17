@@ -218,7 +218,7 @@
                 <Grid DockPanel.Dock="Top">
                     <TextBlock HorizontalAlignment="Center"
                                Style="{StaticResource TitleTextBlock}"
-                               Text="ModbusRTU 设备监控 开发中..." />
+                               Text="ModbusRTU 设备监控" />
                     <DockPanel Margin="0">
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
