@@ -34,7 +34,7 @@ public partial class MrtuDevice : ObservableObject
     /// </summary>
     [ObservableProperty]
     [property: JsonIgnore]
-    DeviceStatus status;
+    DeviceState deviceState;
 
     /// <summary>
     /// 字节序
@@ -220,12 +220,32 @@ public partial class MrtuDevice : ObservableObject
     {
         return $"{Name} {ComConfig.ComPort.Port} 从站:{SlaveAddr}";
     }
+
+    /// <summary>
+    /// 更新设备通讯状态
+    /// </summary>
+    public void UpdateState()
+    {
+        var onlineCount = MrtuDatas.Where(x => x.State == true).Count();
+        if (onlineCount == MrtuDatas.Count)
+        {
+            DeviceState = DeviceState.Online;
+        }
+        else if (onlineCount < MrtuDatas.Count)
+        {
+            DeviceState = DeviceState.Warning;//警告 存在通讯失败的测点
+        }
+        else if(onlineCount == 0)
+        {
+            DeviceState = DeviceState.Offline;
+        }
+    }
 }
 
-public enum DeviceStatus
+public enum DeviceState
 {
     Offline,
     Online,
-    Error,
     Warning,
+    //Error,
 }

@@ -7,7 +7,7 @@ public class MrtuDeviceMonitorDesignViewModel : MrtuDeviceMonitorViewModel
     public MrtuDeviceMonitorDesignViewModel()
     {
         MrtuDeviceManager = new MrtuDeviceManager();
-        MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备1", Status = DeviceStatus.Online });
+        MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备1", DeviceState = DeviceState.Online });
         MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备2" });
         MrtuDeviceManager.MrtuDevices.Add(new MrtuDevice() { Name = "测试设备3" });
         var device = MrtuDeviceManager.MrtuDevices[0];

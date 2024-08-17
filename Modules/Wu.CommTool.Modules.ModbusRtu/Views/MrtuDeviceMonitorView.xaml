@@ -453,8 +453,6 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
 
-                            <!--<DataGridTextColumn Binding="{Binding Status}" Header="状态" />-->
-
                             <DataGridTemplateColumn Header="状态">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -468,10 +466,10 @@
                                                 <Style TargetType="Ellipse">
                                                     <Setter Property="Fill" Value="Red" />
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding Status}" Value="true">
+                                                        <DataTrigger Binding="{Binding State}" Value="true">
                                                             <Setter Property="Fill" Value="LawnGreen" />
                                                         </DataTrigger>
-                                                        <DataTrigger Binding="{Binding Path=Status}" Value="false">
+                                                        <DataTrigger Binding="{Binding Path=State}" Value="false">
                                                             <Setter Property="Fill" Value="Red" />
                                                         </DataTrigger>
                                                     </Style.Triggers>

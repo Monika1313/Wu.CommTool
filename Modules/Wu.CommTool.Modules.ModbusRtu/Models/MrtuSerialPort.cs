@@ -10,6 +10,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     #region 字段
     private readonly SerialPort serialPort = new();              //串口
     private readonly Task receiveHandleTask; //接收消息处理线程
+    CancellationTokenSource receiveHandleTaskCts = new();
     private readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
     private readonly EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
     private readonly ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
@@ -41,7 +42,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         serialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
         serialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);//串口接收事件
 
-        receiveHandleTask = new Task(ReceiveFrame);
+        receiveHandleTask = new Task(ReceiveFrame,receiveHandleTaskCts.Token);
         receiveHandleTask.Start();
         this.ComConfig = config;
     }
@@ -426,12 +427,11 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 request = currentRequest;       //缓存当前的请求帧
                 device = currentDevice;         //缓存当前的设备
                 ReceiveFrameQueue.TryDequeue(out var frame);//从接收消息队列中取出一条消息
-                WaitNextOne.Set();              //接收到数据了,可以发送下一个请求
                 if (string.IsNullOrWhiteSpace(frame))
                 {
                     continue;
                 }
-                Debug.WriteLine($"接收:{frame}");
+                Debug.WriteLine($"接收:{frame.RemoveSpace()}");
                 var responseFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
                 var requestFrame = new ModbusRtuFrame(request);
 
@@ -531,6 +531,8 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                     }
                 }
                 #endregion
+
+                WaitNextOne.Set();              //接收到数据了,可以发送下一个请求
             }
             catch (Exception ex)
             {
@@ -546,11 +548,11 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         try
         {
             CloseSerialPort();//关闭串口
-
+            receiveHandleTaskCts.Cancel();
         }
         catch (Exception ex)
         {
-            //
+            Debug.WriteLine($"{ex.Message}");
         }
     }
 

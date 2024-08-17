@@ -61,6 +61,10 @@ public partial class MrtuDeviceManager : ObservableObject
                 mrtuSerialPort.Run();
             }
         }
+
+        updateDeviceStateTaskCts = new();
+        updateDeviceStateTask = new Task(UpdateDeviceState,updateDeviceStateTaskCts.Token);
+        updateDeviceStateTask.Start();
     }
 
     [RelayCommand]
@@ -69,7 +73,31 @@ public partial class MrtuDeviceManager : ObservableObject
     {
         Status = false;
         MrtuSerialPorts = null;
+        updateDeviceStateTaskCts.Cancel();
     }
+
+    private CancellationTokenSource updateDeviceStateTaskCts;
+    private Task updateDeviceStateTask;
+
+    private async void UpdateDeviceState()
+    {
+        while(true)
+        {
+            try
+            {
+                foreach (var x in MrtuDevices)
+                {
+                    x.UpdateState();
+                }
+                await Task.Delay(1000);
+            }
+            catch (Exception)
+            {
+
+            }
+        }
+    }
+
 
     /// <summary>
     /// 串口列表

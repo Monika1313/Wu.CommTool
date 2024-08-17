@@ -6,9 +6,9 @@
 public partial class MrtuData : ObservableObject
 {
     /// <summary>
-    /// 通讯状态
+    /// 通讯状态 1通讯正常 0通讯失败
     /// </summary>
-    public bool Status => UpdateTime != null && ((DateTime)UpdateTime).AddSeconds(10) > DateTime.Now;
+    public bool State => UpdateTime != null && ((DateTime)UpdateTime).AddSeconds(10) > DateTime.Now;
 
     /// <summary>
     /// 名称
@@ -61,7 +61,7 @@ public partial class MrtuData : ObservableObject
     /// 数据更新时间
     /// </summary>
     [ObservableProperty]
-    [NotifyPropertyChangedFor (nameof(Status))]
+    [NotifyPropertyChangedFor (nameof(State))]
     [property: JsonIgnore]
     private DateTime? updateTime = null;
 
