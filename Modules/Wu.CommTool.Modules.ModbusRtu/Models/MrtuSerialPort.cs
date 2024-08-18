@@ -544,7 +544,6 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         }
     }
 
-    //TODO Dispose
     public void Dispose()
     {
 

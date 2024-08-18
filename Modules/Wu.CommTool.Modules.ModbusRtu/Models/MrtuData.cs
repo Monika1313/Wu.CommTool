@@ -26,12 +26,12 @@ public partial class MrtuData : ObservableObject
     /// 寄存器地址 起始地址 单位:word
     /// </summary>
     [ObservableProperty]
-    private int registerAddr;
+    private ushort registerAddr;
 
-    /// 寄存器地址16进制
-    /// </summary>
-    [ObservableProperty]
-    private int registerAddrHex;
+    ///// 寄存器地址16进制
+    ///// </summary>
+    //[ObservableProperty]
+    //private ushort registerAddrHex;
 
     /// <summary>
     /// 寄存器地址 最后一个地址 单位:word

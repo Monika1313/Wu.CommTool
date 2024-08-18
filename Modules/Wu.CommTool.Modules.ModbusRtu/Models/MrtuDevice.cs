@@ -229,16 +229,15 @@ public partial class MrtuDevice : ObservableObject
         var onlineCount = MrtuDatas.Where(x => x.State == true).Count();
         if (onlineCount == MrtuDatas.Count)
         {
-            DeviceState = DeviceState.Online;
+            DeviceState = DeviceState.Online;//全部在线
         }
         else if (onlineCount == 0)
         {
-            DeviceState = DeviceState.Offline;
+            DeviceState = DeviceState.Offline;//全部离线
         }
         else if (onlineCount < MrtuDatas.Count)
         {
-            DeviceState = DeviceState.Warning;//警告 存在通讯失败的测点
+            DeviceState = DeviceState.Warning;//存在离线的测点
         }
-        
     }
 }
