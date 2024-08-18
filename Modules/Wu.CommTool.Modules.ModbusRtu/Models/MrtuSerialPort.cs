@@ -10,7 +10,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     #region 字段
     private readonly SerialPort serialPort = new();              //串口
     private readonly Task receiveHandleTask; //接收消息处理线程
-    CancellationTokenSource receiveHandleTaskCts = new();
+    private CancellationTokenSource receiveHandleTaskCts = new();
     private readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
     private readonly EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
     private readonly ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
@@ -42,7 +42,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
         serialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
         serialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);//串口接收事件
 
-        receiveHandleTask = new Task(ReceiveFrame,receiveHandleTaskCts.Token);
+        receiveHandleTask = new Task(ReceiveFrame, receiveHandleTaskCts.Token);
         receiveHandleTask.Start();
         this.ComConfig = config;
     }
@@ -435,11 +435,13 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 var responseFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
                 var requestFrame = new ModbusRtuFrame(request);
 
+#if DEBUG
                 //对接收的消息直接进行crc校验
                 if (!ModbusUtils.IsModbusCrcOk(frame.GetBytes()))
                 {
                     Debug.WriteLine("应答帧校验失败了");
                 }
+#endif
 
                 List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
                 int slaveId = frameList[0];                 //从站地址
@@ -498,31 +500,32 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 foreach (var x in data)
                 {
                     x.UpdateTime = DateTime.Now;
+                    var bytenum = (x.RegisterAddr - requestFrame.StartAddr) * 2;//该数据的字节数
                     switch (x.MrtuDataType)
                     {
                         case MrtuDataType.uShort:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.Short:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetInt16FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.uInt:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt32(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.Int:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetIntFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.uLong:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetUInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.Long:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetInt64FromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.Float:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetFloatFromBigEndianBytes(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetFloat(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.Double:
-                            x.Value = Math.Round(x.Rate * Wu.Utils.ConvertUtil.GetDouble(responseFrame.RegisterValues, (x.RegisterAddr - requestFrame.StartAddr) * 2), 2);
+                            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetDouble(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
                             break;
                         case MrtuDataType.Hex:
                             break;

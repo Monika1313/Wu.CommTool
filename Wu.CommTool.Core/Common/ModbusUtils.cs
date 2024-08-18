@@ -90,12 +90,12 @@ public static class ModbusUtils
     }
 
     /// <summary>
-    /// 字节序转换
+    /// 字节序转换 输入字节序视为ABCD, 再根据输入字节序进行转换
     /// </summary>
     /// <param name="val"></param>
     /// <param name="byteOrder"></param>
     /// <returns></returns>
-    public static byte[] ByteOrder(byte[] val, ModbusByteOrder byteOrder)
+    public static byte[] ConvertByteOrder(byte[] val, ModbusByteOrder byteOrder)
     {
         //若为单字节的则直接返回
         if (val.Length <= 1)
@@ -152,7 +152,7 @@ public static class ModbusUtils
     /// <returns></returns>
     public static List<ComPort> GetComPorts()
     {
-        List<ComPort > ports = [];
+        List<ComPort> ports = [];
         //查找Com口
         using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
         var hardInfos = searcher.Get();
@@ -204,4 +204,116 @@ public static class ModbusUtils
     {
         return IsModbusCrcOk(frame.ToArray());
     }
+
+
+
+
+    #region 字节数组处理
+    /// <summary>
+    /// 截取字节数组
+    /// </summary>
+    /// <param name="input">字节数组</param>
+    /// <param name="skip">起始位置</param>
+    /// <param name="take">读取数量</param>
+    /// <returns></returns>
+    public static byte[] TakeBytes(byte[] input, int skip, int take)
+    {
+        return input.Skip(skip).Take(take).ToArray();
+    }
+
+    /// <summary>
+    /// 从字节数据中截取 16位无符号整型
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static ushort GetUInt16(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToUInt16(ConvertByteOrder(TakeBytes(data, p, 2), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从字节数据中截取 16位有符号整型
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static short GetInt16(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToInt16(ConvertByteOrder(TakeBytes(data, p, 2), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从字节数据中截取 32位无符号整型
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static uint GetUInt32(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToUInt32(ConvertByteOrder(TakeBytes(data, p, 4), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从字节数据中截取 32位有符号整型
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static int GetInt(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToInt32(ConvertByteOrder(TakeBytes(data, p, 4), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从字节数组中指定位置读取float数据 32位浮点型
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p">指示数据在数组中的起始位置</param>
+    /// <returns></returns>
+    public static float GetFloat(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToSingle(ConvertByteOrder(TakeBytes(data, p, 4), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从大端数组指定位置读取unsigned Long数据
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static ulong GetUInt64(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToUInt64(ConvertByteOrder(TakeBytes(data, p, 8), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从大端数组指定位置读取Long数据
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static long GetInt64(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToInt64(ConvertByteOrder(TakeBytes(data, p, 8), modbusByteOrder), 0);
+    }
+
+    /// <summary>
+    /// 从大端数组指定位置读取Double数据
+    /// </summary>
+    /// <param name="data"></param>
+    /// <param name="p"></param>
+    /// /// <param name="modbusByteOrder"></param>
+    /// <returns></returns>
+    public static double GetDouble(byte[] data, int p, ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA)
+    {
+        return BitConverter.ToDouble(ConvertByteOrder(TakeBytes(data, p, 8), modbusByteOrder), 0);
+    }
+    #endregion
 }

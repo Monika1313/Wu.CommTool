@@ -231,21 +231,14 @@ public partial class MrtuDevice : ObservableObject
         {
             DeviceState = DeviceState.Online;
         }
+        else if (onlineCount == 0)
+        {
+            DeviceState = DeviceState.Offline;
+        }
         else if (onlineCount < MrtuDatas.Count)
         {
             DeviceState = DeviceState.Warning;//警告 存在通讯失败的测点
         }
-        else if(onlineCount == 0)
-        {
-            DeviceState = DeviceState.Offline;
-        }
+        
     }
-}
-
-public enum DeviceState
-{
-    Offline,
-    Online,
-    Warning,
-    //Error,
 }

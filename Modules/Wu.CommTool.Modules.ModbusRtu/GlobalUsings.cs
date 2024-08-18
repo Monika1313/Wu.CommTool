@@ -46,3 +46,4 @@ global using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 global using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
 global using Microsoft.Win32;
 global using System.Diagnostics;
+global using Wu.CommTool.Core.Extensions;

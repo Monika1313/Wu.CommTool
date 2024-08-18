@@ -8,7 +8,7 @@ public partial class MrtuData : ObservableObject
     /// <summary>
     /// 通讯状态 1通讯正常 0通讯失败
     /// </summary>
-    public bool State => UpdateTime != null && ((DateTime)UpdateTime).AddSeconds(10) > DateTime.Now;
+    public bool State => UpdateTime is not null && ((DateTime)UpdateTime).AddSeconds(10) > DateTime.Now;
 
     /// <summary>
     /// 名称
@@ -82,43 +82,5 @@ public partial class MrtuData : ObservableObject
     /// </summary>
     [ObservableProperty]
     private string writeValue;
-
-
-
-    ///// <summary>
-    ///// 原始数据字节数组
-    ///// </summary>
-    //[ObservableProperty]
-    //[NotifyPropertyChangedFor(nameof(Value))]
-    //private byte[] originBytes;
-
-    ///// <summary>
-    ///// 根据字节数据 数据类型 获取值
-    ///// </summary>
-    ///// <param name="databytes"></param>
-    ///// <param name="dataType"></param>
-    ///// <param name="rate"></param>
-    ///// <returns></returns>
-    //public static dynamic GetVal(byte[] databytes, DataType dataType, double rate)
-    //{
-    //    if (databytes == null)
-    //    {
-    //        return 0;
-    //    }
-
-    //    return dataType switch
-    //    {
-    //        DataType.uShort => Math.Round(BitConverter.ToUInt16(databytes, 0) * rate, 3),
-    //        DataType.Short => Math.Round(BitConverter.ToInt16(databytes, 0) * rate, 3),
-    //        DataType.uInt => Math.Round(BitConverter.ToUInt32(databytes, 0) * rate, 3),
-    //        DataType.Int => Math.Round(BitConverter.ToInt32(databytes, 0) * rate, 3),
-    //        DataType.uLong => Math.Round(BitConverter.ToUInt64(databytes, 0) * rate, 3),
-    //        DataType.Long => Math.Round(BitConverter.ToInt64(databytes, 0) * rate, 3),
-    //        DataType.Float => Math.Round((BitConverter.ToSingle(databytes, 0) * rate), 2),
-    //        DataType.Double => Math.Round(BitConverter.ToDouble(databytes, 0) * rate, 2),
-    //        DataType.Hex => $"0x{BitConverter.ToString(databytes.Reverse().ToArray()).Replace("-", "")}",
-    //        _ => (dynamic)0,
-    //    };
-    //}
 
 }
