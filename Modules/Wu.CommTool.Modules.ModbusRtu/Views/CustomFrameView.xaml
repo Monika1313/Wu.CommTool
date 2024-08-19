@@ -341,7 +341,7 @@
                                         <TextBlock Margin="3"
                                                    VerticalAlignment="Center"
                                                    Style="{StaticResource MessageTextBlock}"
-                                                   Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                   Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
                                         <TextBlock Margin="5,0"
                                                    VerticalAlignment="Center"
                                                    Style="{StaticResource MessageTextBlock}"

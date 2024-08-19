@@ -15,8 +15,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-
-        GetDefaultConfig();
+        Task.Run(GetDefaultConfig);
     }
 
     /// <summary>
@@ -120,7 +119,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             default: break;
         }
     }
-
 
     #region Mqtt服务器事件
     /// <summary>
@@ -279,7 +277,14 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             //更新用户最新接收消息的时间
             var user = MqttUsers.FirstOrDefault(x => x.ClientId.Equals(arg.ClientId));
             if (user is not null)
+            {
                 user.LastDataTime = DateTime.Now;
+            }
+            //若该消息是该服务器发送的 则不再进一步处理
+            else if (arg.ClientId.Equals("SenderClientId"))
+            {
+                return Task.CompletedTask;
+            }
 
             //若暂停更新接收数据 则不显示
             if (IsPause)
@@ -295,7 +300,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             {
                 var payload = arg.ApplicationMessage.PayloadSegment.ToArray();
                 //var payload = arg.ApplicationMessage.Payload ?? Array.Empty<byte>();
-
                 switch (MqttServerConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Json:
@@ -517,8 +521,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-
-
     /// <summary>
     /// 导入配置文件
     /// </summary>
@@ -552,7 +554,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
     #endregion
-
 
     /// <summary>
     /// 暂停更新接收的数据
@@ -605,7 +606,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     }
 
     [RelayCommand]
-    void Save()
+    private void Save()
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
@@ -619,7 +620,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     }
 
     [RelayCommand]
-    void Cancel()
+    private void Cancel()
     {
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))
@@ -686,7 +687,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         {
         }
     }
-
 
     /// <summary>
     /// 界面显示数据
@@ -769,7 +769,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     }
     #endregion
 
-    async void AddFwRule()
+    private async void AddFwRule()
     {
         try
         {
@@ -840,7 +840,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-    void DeleteFwRule()
+    private void DeleteFwRule()
     {
         var myRule = FirewallManager.Instance.Rules.SingleOrDefault(r => r.Name == "My Rule");
         if (myRule != null)
