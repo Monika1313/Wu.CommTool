@@ -765,6 +765,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 frame = frameCache.Take(funcs[0]).ToList();//将这一帧前面的输出
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                WaitUartReceived.Set();                                                                           //置位数据接收完成标志
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
@@ -776,6 +777,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 frame = frameCache.Take(funcs[0] - 1).ToList();//功能码前一个字节为地址要保留,所以要-1
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                WaitUartReceived.Set();                                                                           //置位数据接收完成标志
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
@@ -835,6 +837,7 @@ public partial class ModbusRtuModel : ObservableObject
                             {
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                WaitUartReceived.Set();                                                                           //置位数据接收完成标志
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 times = 0;                                     //重置计时器
@@ -848,6 +851,7 @@ public partial class ModbusRtuModel : ObservableObject
                         {
                             //输出接收到的数据
                             ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                            WaitUartReceived.Set();                                                                           //置位数据接收完成标志
                             frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
                             ReceiveBytesCount += frame.Count;              //计算总接收数据量
                             times = 0;                                     //重置计时器
@@ -869,36 +873,33 @@ public partial class ModbusRtuModel : ObservableObject
             } while (times < ComConfig.TimeOut);
             #endregion
 
-            msg = BitConverter.ToString(frameCache.ToArray());
-            msg = msg.Replace('-', ' ');
-
-            if (msg.Length.Equals(0))
+            //上部已经处理完分帧了 已经没有数据了
+            if (frameCache.Count.Equals(0))
             {
                 return;
             }
+
+            msg = BitConverter.ToString(frameCache.ToArray());
+            msg = msg.Replace('-', ' ');
+
             //搜索时将验证通过的添加至搜索到的设备列表
             if (SearchDeviceState == 1)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                if (msg.Length >= 2)
                 {
-                    CurrentDevice.ReceiveMessage = msg;
-                    CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
-                    ModbusRtuDevices.Add(CurrentDevice);
-                }));
-                HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
-                //if (msg.Length >= 2)
-                //{
-                //}
-                //else
-                //{
-
-                //}
+                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+                    {
+                        CurrentDevice.ReceiveMessage = msg;
+                        CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
+                        ModbusRtuDevices.Add(CurrentDevice);
+                    }));
+                    HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
+                }
             }
 
             ReceiveFrameQueue.Enqueue(msg); //接收到的消息入队
             ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
             WaitUartReceived.Set();         //置位数据接收完成标志
-
         }
         catch (Exception ex)
         {
