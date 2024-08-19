@@ -6,7 +6,7 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
     private static readonly ILog log = LogManager.GetLogger(typeof(MrtuDeviceMonitorViewModel));
-    private readonly string mrtuDeviceManagerConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MrtuDeviceMOnitorConfig");
+    private readonly string mrtuDeviceManagerConfigFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MrtuDeviceMonitorConfig");
     #endregion **************************************** 字段 ****************************************
 
 

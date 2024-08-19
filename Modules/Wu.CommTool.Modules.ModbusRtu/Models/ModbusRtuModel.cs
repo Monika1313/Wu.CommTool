@@ -22,10 +22,6 @@ public partial class ModbusRtuModel : ObservableObject
         //初始化一个10个数据的列表
         DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
         RefreshModbusRtuDataDataView();
-        //Task.Run(() =>
-        //{
-
-        //});
     }
 
     private readonly SerialPort SerialPort = new();              //串口
@@ -158,6 +154,12 @@ public partial class ModbusRtuModel : ObservableObject
     /// </summary>
     [ObservableProperty]
     private int searchReadNum = 1;
+
+    /// <summary>
+    /// 搜索到的设备总数
+    /// </summary>
+    [ObservableProperty]
+    int foundCount = 0;
     #endregion
 
 
@@ -290,14 +292,14 @@ public partial class ModbusRtuModel : ObservableObject
             }
 
             //配置串口
-            SerialPort.PortName = ComConfig.ComPort.Port;                              //串口
+            SerialPort.PortName = ComConfig.ComPort.Port;                          //串口
             SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
             SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
             SerialPort.DataBits = ComConfig.DataBits;                              //数据位
             SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
             try
             {
-                SerialPort.Open();               //打开串口
+                SerialPort.Open();              //打开串口
                 ComConfig.IsOpened = true;      //标记串口已打开
                 ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.ComPort.DeviceName}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
             }
@@ -835,10 +837,14 @@ public partial class ModbusRtuModel : ObservableObject
                             //解析出可能的帧并校验成功
                             if (frame.Count > 0 && IsModbusCrcOk(frame))
                             {
+                                msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                                 //输出接收到的数据
-                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                                WaitUartReceived.Set();                                                                           //置位数据接收完成标志
-                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                                ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
+                                WaitUartReceived.Set();
+                                DeviceFound(msg);
+
+                                //置位数据接收完成标志
+                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 times = 0;                                     //重置计时器
                                 continue;
@@ -849,9 +855,11 @@ public partial class ModbusRtuModel : ObservableObject
                         //CRC校验通过
                         if (crcOk)
                         {
+                            msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                             //输出接收到的数据
-                            ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
-                            WaitUartReceived.Set();                                                                           //置位数据接收完成标志
+                            ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
+                            WaitUartReceived.Set();                         //置位数据接收完成标志
+                            DeviceFound(msg);
                             frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
                             ReceiveBytesCount += frame.Count;              //计算总接收数据量
                             times = 0;                                     //重置计时器
@@ -879,24 +887,9 @@ public partial class ModbusRtuModel : ObservableObject
                 return;
             }
 
-            msg = BitConverter.ToString(frameCache.ToArray());
-            msg = msg.Replace('-', ' ');
+            msg = BitConverter.ToString(frameCache.ToArray()).Replace('-', ' ');
 
-            //搜索时将验证通过的添加至搜索到的设备列表
-            if (SearchDeviceState == 1)
-            {
-                if (msg.Length >= 2)
-                {
-                    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-                    {
-                        CurrentDevice.ReceiveMessage = msg;
-                        CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
-                        ModbusRtuDevices.Add(CurrentDevice);
-                    }));
-                    HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
-                }
-            }
-
+            DeviceFound(msg);//搜索到设备
             ReceiveFrameQueue.Enqueue(msg); //接收到的消息入队
             ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
             WaitUartReceived.Set();         //置位数据接收完成标志
@@ -908,6 +901,26 @@ public partial class ModbusRtuModel : ObservableObject
         finally
         {
             ComConfig.IsReceiving = false;
+        }
+    }
+
+    /// <summary>
+    /// 搜索到设备了
+    /// </summary>
+    private void DeviceFound(string msg)
+    {
+        //搜索时将验证通过的添加至搜索到的设备列表
+        if (SearchDeviceState == 1 && msg.Length >= 2)
+        {
+            var device = CurrentDevice;//缓存当前设备。否则搜索速度快时,会有异步问题
+            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                device.ReceiveMessage = msg;
+                device.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
+                ModbusRtuDevices.Add(CurrentDevice);
+                FoundCount++;
+            }));
+            //HcGrowlExtensions.Success($"搜索到设备 {device.Address}...", ModbusRtuView.ViewName);
         }
     }
 
@@ -1267,11 +1280,12 @@ public partial class ModbusRtuModel : ObservableObject
                 OpenCom();
             }
 
-            HcGrowlExtensions.Info("开始搜索...", ModbusRtuView.ViewName);
+            //HcGrowlExtensions.Info("开始搜索...", ModbusRtuView.ViewName);
 
             ComConfig.TimeOut = 20;//搜索时设置帧超时时间为20
             SearchDeviceState = 1;//标记状态为搜索设备中
             ModbusRtuDevices.Clear();//清空搜索到的设备列表
+            FoundCount = 0;
 
             //遍历选项
             //Flag:

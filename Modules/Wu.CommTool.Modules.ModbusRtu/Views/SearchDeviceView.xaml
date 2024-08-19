@@ -306,6 +306,21 @@
                                    DockPanel.Dock="Top"
                                    FontSize="16"
                                    Text="搜索到的设备" />
+                        <StackPanel HorizontalAlignment="Center"
+                                    DockPanel.Dock="Top"
+                                    Orientation="Horizontal"
+                                    Visibility="{Binding ModbusRtuModel.FoundCount, Converter={wu:Zero2Collapsed}}">
+                            <TextBlock Margin="5"
+                                       HorizontalAlignment="Center"
+                                       DockPanel.Dock="Top"
+                                       FontSize="16"
+                                       Text="{Binding ModbusRtuModel.FoundCount}" />
+                            <TextBlock Margin="5"
+                                       HorizontalAlignment="Center"
+                                       DockPanel.Dock="Top"
+                                       FontSize="16"
+                                       Text="台" />
+                        </StackPanel>
                         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                             <!--  搜索到的设备  -->
                             <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.ModbusRtuDevices, IsAsync=True}">
