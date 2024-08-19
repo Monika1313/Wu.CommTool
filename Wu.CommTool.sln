@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{3BC1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Core", "Wu.CommTool.Core\Wu.CommTool.Core.csproj", "{148FD692-6990-46A1-9659-D48BAC6DC1FA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F3EDE274-21EF-4108-B0F8-ACCAF64D4B2B}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusTcp", "Modules\Wu.CommTool.Modules.ModbusTcp\Wu.CommTool.Modules.ModbusTcp.csproj", "{79149B11-F3E0-4B05-B8E4-EFA27A11A0A0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.About", "Modules\Wu.CommTool.Modules.About\Wu.CommTool.Modules.About.csproj", "{43ED2DE9-95B7-4F52-BDEE-E1A72F5D611E}"
@@ -31,12 +29,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.MqttClient", "Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj", "{37A93862-E7A0-4D7B-AF79-E66D3BAF7F98}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusRtu", "Modules\Wu.CommTool.Modules.ModbusRtu\Wu.CommTool.Modules.ModbusRtu.csproj", "{9B266E31-CFAA-48FE-81ED-CD2F85778E32}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "参考资料", "参考资料", "{BC08EA19-6543-4CFE-A1A0-DE80BFFAADF1}"
-	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\OneDrive\说明书\1 国标\GBT Modbus协议.pdf = ..\..\..\..\OneDrive\说明书\1 国标\GBT Modbus协议.pdf
-		..\..\..\..\Desktop\ModbusRtu PDU.xlsx = ..\..\..\..\Desktop\ModbusRtu PDU.xlsx
-	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.NetworkTool", "Modules\Wu.CommTool.Modules.NetworkTool\Wu.CommTool.Modules.NetworkTool.csproj", "{E678465E-75A2-45EA-9BFD-4F69F2F11691}"
 EndProject
