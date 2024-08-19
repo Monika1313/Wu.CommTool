@@ -871,8 +871,11 @@ public partial class ModbusRtuModel : ObservableObject
 
             msg = BitConverter.ToString(frameCache.ToArray());
             msg = msg.Replace('-', ' ');
-            ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
 
+            if (msg.Length.Equals(0))
+            {
+                return;
+            }
             //搜索时将验证通过的添加至搜索到的设备列表
             if (SearchDeviceState == 1)
             {
@@ -883,17 +886,23 @@ public partial class ModbusRtuModel : ObservableObject
                     ModbusRtuDevices.Add(CurrentDevice);
                 }));
                 HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
+                //if (msg.Length >= 2)
+                //{
+                //}
+                //else
+                //{
+
+                //}
             }
 
+            ReceiveFrameQueue.Enqueue(msg); //接收到的消息入队
             ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
-            //若暂停更新接收数据 则不显示
-            if (IsPause)
-                return;
-            WaitUartReceived.Set();//置位数据接收完成标志
+            WaitUartReceived.Set();         //置位数据接收完成标志
+
         }
         catch (Exception ex)
         {
-            ShowMessage(ex.Message, MessageType.Receive);
+            ShowErrorMessage(ex.Message);
         }
         finally
         {
@@ -1440,7 +1449,6 @@ public partial class ModbusRtuModel : ObservableObject
             timer.Start();
         }
     }
-
 
     /// <summary>
     /// 更新数据监控视图
