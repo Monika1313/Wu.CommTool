@@ -1,4 +1,5 @@
-﻿using System.IO.Ports;
+﻿using System.Collections.Concurrent;
+using System.IO.Ports;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
 /// <summary>
@@ -26,7 +27,7 @@ public partial class ModbusRtuModel : ObservableObject
 
     private readonly SerialPort SerialPort = new();              //串口
     private readonly Queue<(string, int)> PublishFrameQueue = new();      //数据帧发送队列
-    private readonly Queue<string> ReceiveFrameQueue = new();    //数据帧处理队列
+    private readonly ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
     readonly Task publishHandleTask; //发布消息处理线程
     readonly Task receiveHandleTask; //接收消息处理线程
     readonly EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
@@ -337,7 +338,13 @@ public partial class ModbusRtuModel : ObservableObject
             ComConfig.IsOpened = false;          //标记串口已关闭
             //先清空队列再关闭
             PublishFrameQueue.Clear();      //清空发送帧队列
-            ReceiveFrameQueue.Clear();      //清空接收帧队列
+
+            //清空接收帧队列
+            while (!ReceiveFrameQueue.IsEmpty)
+            {
+                ReceiveFrameQueue.TryDequeue(out var item);
+            }
+
             if (ComConfig.IsSending)
             {
                 await Task.Delay(100);
@@ -768,7 +775,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
                                 WaitUartReceived.Set();                                                                           //置位数据接收完成标志
-                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
                                 continue;
@@ -780,7 +787,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
                                 WaitUartReceived.Set();                                                                           //置位数据接收完成标志
-                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
+                                frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
                                 continue;
@@ -795,7 +802,7 @@ public partial class ModbusRtuModel : ObservableObject
                     //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
 
                     //当二级缓存大于等于8字节时 对其进行crc校验,验证通过则为一帧
-                    if (!isNot && frameCache.Count >= 8)
+                    if (/*!isNot && */frameCache.Count >= 8)
                     {
                         frame = frameCache.Take(8).ToList();   //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
                         var crcOk = IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
@@ -1041,7 +1048,10 @@ public partial class ModbusRtuModel : ObservableObject
                 }
 
                 //从接收消息队列中取出一条消息
-                var frame = ReceiveFrameQueue.Dequeue();
+                if(!ReceiveFrameQueue.TryDequeue(out var frame))
+                {
+                    continue;
+                }
                 if (string.IsNullOrWhiteSpace(frame))
                 {
                     continue;

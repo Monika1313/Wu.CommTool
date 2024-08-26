@@ -66,7 +66,7 @@ public partial class ComConfig : ObservableObject
     /// 分包最大字节
     /// </summary>
     [ObservableProperty]
-    int maxLength = 10240;
+    int maxLength = 256;
 
     /// <summary>
     /// 自动搜索设备的间隔 单位ms
