@@ -60,13 +60,13 @@ public partial class ComConfig : ObservableObject
     /// 分包超时时间
     /// </summary>
     [ObservableProperty]
-    int timeOut = 25;
+    int timeOut = 50;
 
     /// <summary>
     /// 分包最大字节
     /// </summary>
     [ObservableProperty]
-    int maxLength = 256;
+    int maxLength = 500;
 
     /// <summary>
     /// 自动搜索设备的间隔 单位ms
@@ -78,5 +78,5 @@ public partial class ComConfig : ObservableObject
     /// 自动分帧 对于连续时间间隔较短的帧,可自动识别正确的帧起止位置
     /// </summary>
     [ObservableProperty]
-    Enable autoFrame = Enable.禁用;
+    Enable autoFrame = Enable.启用;
 }
