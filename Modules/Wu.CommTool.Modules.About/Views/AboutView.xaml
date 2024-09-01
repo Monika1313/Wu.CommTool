@@ -10,84 +10,125 @@
                    DialogTheme="Inherit"
                    Identifier="AboutView11">
         <md:DrawerHost>
-            <DockPanel LastChildFill="False">
-                <Grid Height="40" DockPanel.Dock="Top">
-                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="关于" />
-                </Grid>
+            <ScrollViewer>
 
-                <Image Width="200"
-                       DockPanel.Dock="Top"
-                       Source="/Wu.CommTool;component/Images/AI.png" />
-                <StackPanel HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            DockPanel.Dock="TOP ">
-                    <TextBox Margin="5"
-                             hc:Poptip.Content="联系作者"
-                             hc:TitleElement.Title="作者QQ"
-                             hc:TitleElement.TitleWidth="60"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="961501261" />
-                    <TextBox Margin="5"
-                             hc:TitleElement.Title="QQ群"
-                             hc:TitleElement.TitleWidth="60"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="746533921" />
-                    <TextBox Margin="5"
-                             hc:Poptip.Content="在这里下载源码"
-                             hc:TitleElement.Title="GitHub"
-                             hc:TitleElement.TitleWidth="60"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="https://github.com/Monika1313/Wu.CommTool">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://github.com/Monika1313/Wu.CommTool" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
+                <DockPanel LastChildFill="False">
+                    <Grid Height="40" DockPanel.Dock="Top">
+                        <TextBlock Style="{StaticResource TitleTextBlock}" Text="关于" />
+                    </Grid>
 
-                    <TextBox Margin="5"
-                             hc:Poptip.Content="在这里下载源码"
-                             hc:TitleElement.Title="Gitee"
-                             hc:TitleElement.TitleWidth="60"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="https://gitee.com/Monika551/Wu.CommTool">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://gitee.com/Monika551/Wu.CommTool" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
-                    <TextBox Margin="5"
-                             hc:TitleElement.Title="官网"
-                             hc:TitleElement.TitleWidth="60"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="http://salight.cn">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="http://salight.cn" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
+                    <Image Width="160"
+                           DockPanel.Dock="Top"
+                           Source="/Wu.CommTool;component/Images/AI.png" />
 
-                    <TextBox Margin="5"
-                             hc:TitleElement.Title="说明书"
-                             hc:TitleElement.TitleWidth="60"
-                             IsReadOnly="True"
-                             Style="{StaticResource FormTextBox}"
-                             Text="https://www.yuque.com/monika-gwcnp/hrbp29/imwhp85fxv4xy67z?singleDoc#">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="GotFocus">
-                                <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://www.yuque.com/monika-gwcnp/hrbp29/imwhp85fxv4xy67z?singleDoc#" />
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TextBox>
-                </StackPanel>
-            </DockPanel>
+                    <StackPanel HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                DockPanel.Dock="TOP ">
+                        <TextBox Margin="5"
+                                 hc:Poptip.Content="联系作者"
+                                 hc:TitleElement.Title="作者QQ"
+                                 hc:TitleElement.TitleWidth="60"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="961501261" />
+                        <TextBox Margin="5"
+                                 hc:TitleElement.Title="QQ群"
+                                 hc:TitleElement.TitleWidth="60"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="746533921" />
+                        <TextBox Margin="5"
+                                 hc:Poptip.Content="在这里下载源码"
+                                 hc:TitleElement.Title="GitHub"
+                                 hc:TitleElement.TitleWidth="60"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="https://github.com/Monika1313/Wu.CommTool">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://github.com/Monika1313/Wu.CommTool" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+
+                        <TextBox Margin="5"
+                                 hc:Poptip.Content="在这里下载源码"
+                                 hc:TitleElement.Title="Gitee"
+                                 hc:TitleElement.TitleWidth="60"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="https://gitee.com/Monika551/Wu.CommTool">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://gitee.com/Monika551/Wu.CommTool" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+                        <TextBox Margin="5"
+                                 hc:TitleElement.Title="官网"
+                                 hc:TitleElement.TitleWidth="60"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="http://salight.cn">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="http://salight.cn" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+
+                        <TextBox Margin="5"
+                                 hc:TitleElement.Title="说明书"
+                                 hc:TitleElement.TitleWidth="60"
+                                 IsReadOnly="True"
+                                 Style="{StaticResource FormTextBox}"
+                                 Text="https://www.yuque.com/monika-gwcnp/hrbp29/imwhp85fxv4xy67z?singleDoc#">
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="GotFocus">
+                                    <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://www.yuque.com/monika-gwcnp/hrbp29/imwhp85fxv4xy67z?singleDoc#" />
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+                        </TextBox>
+
+                        <TextBlock HorizontalAlignment="Center"
+                                   Foreground="{StaticResource Orange_Foreground}"
+                                   Text="感谢您使用本软件" />
+                        <TextBlock HorizontalAlignment="Center"
+                                   Foreground="{StaticResource Orange_Foreground}"
+                                   Text="如果您觉得本软件有帮助，欢迎赞助支持开发者" />
+
+                        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Grid Margin="30,10" HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Image Height="150"
+                                       DockPanel.Dock="Top"
+                                       Source="../Images/wx.png" />
+                                <TextBlock Grid.Row="1"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#07C060"
+                                           Text="微信扫码支付" />
+                            </Grid>
+
+                            <Grid Margin="30,10" HorizontalAlignment="Center">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="auto" />
+                                </Grid.RowDefinitions>
+                                <Image Height="150"
+                                       DockPanel.Dock="Top"
+                                       Source="../Images/zfb.png" />
+                                <TextBlock Grid.Row="1"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#1678FF"
+                                           Text="支付宝扫码支付" />
+                            </Grid>
+                        </StackPanel>
+                    </StackPanel>
+                </DockPanel>
+            </ScrollViewer>
         </md:DrawerHost>
     </md:DialogHost>
 </UserControl>

@@ -50,6 +50,7 @@ public partial class App
         //注册页面
         containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
         containerRegistry.RegisterForNavigation<AutoUpdaterView, AutoUpdaterViewModel>();//自动更新窗口
+        //containerRegistry.RegisterForNavigation<ProgressView>();
         //containerRegistry.RegisterInstance<ILog>(LogManager.GetLogger(typeof(App)));
         //RegisterSingleton
     }

@@ -1,12 +1,24 @@
-﻿namespace Wu.CommTool.Views;
+﻿using Prism.Events;
+
+namespace Wu.CommTool.Views;
 
 public partial class MainWindow : Window
 {
     public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
+    private readonly IEventAggregator aggregator;
 
-    public MainWindow()
+    public MainWindow(IEventAggregator aggregator)
     {
         InitializeComponent();
+
+        //注册等待消息窗口
+        aggregator.Resgiter(arg =>
+        {
+            DialogHost.IsOpen = arg.IsOpen;
+            if (DialogHost.IsOpen)
+                DialogHost.DialogContent = new ProgressView();
+        }, "Main");
+
 
         //最小化
         btnMin.Click += (s, e) =>
@@ -31,6 +43,7 @@ public partial class MainWindow : Window
         {
             drawerHost.IsLeftDrawerOpen = false;
         };
+        this.aggregator = aggregator;
     }
 
     protected override void OnClosed(EventArgs e)

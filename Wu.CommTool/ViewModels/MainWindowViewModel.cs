@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Threading.Tasks;
 using System.Windows.Media.Imaging;
 
 namespace Wu.CommTool.ViewModels;
@@ -52,6 +53,20 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         {
             default:
                 break;
+        }
+    }
+
+    [RelayCommand]
+    private async Task Support()
+    {
+        try
+        {
+            DialogParameters param = [];
+            var dialogResult = await dialogHost.ShowDialog(nameof(SupportView), param);
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 
@@ -137,7 +152,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     [property: JsonIgnore]
     private void AppUpdate()
     {
-        AutoUpdater.InstalledVersion = new Version("1.4.0.12");//当前的App版本
+        AutoUpdater.InstalledVersion = new Version(AppInfo.Version);//当前的App版本
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
@@ -160,14 +175,12 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
 
     private Bitmap BitmapImage2Bitmap(BitmapImage bitmapImage)
     {
-        using (MemoryStream outStream = new MemoryStream())
-        {
-            BitmapEncoder encoder = new BmpBitmapEncoder();
-            encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
-            encoder.Save(outStream);
-            Bitmap bitmap = new Bitmap(outStream);
-            return new Bitmap(bitmap);
-        }
+        using MemoryStream outStream = new();
+        BitmapEncoder encoder = new BmpBitmapEncoder();
+        encoder.Frames.Add(BitmapFrame.Create(bitmapImage));
+        encoder.Save(outStream);
+        Bitmap bitmap = new Bitmap(outStream);
+        return new Bitmap(bitmap);
     }
 
     private async void AutoUpdaterOnCheckForUpdateEvent(UpdateInfoEventArgs args)
@@ -206,7 +219,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             }
             else
             {
-                var result = await dialogHost.Question("更新检测", "当前已是最新版本啦!", "Root");
+                var result = await dialogHost.Question("更新检测", $"当前已是最新版本啦! V{AppInfo.Version}", "Root");
             }
         }
         else

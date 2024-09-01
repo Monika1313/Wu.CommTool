@@ -122,9 +122,8 @@
                                             </Image>
                                         </md:PopupBox.ToggleContent>
                                         <StackPanel>
-                                            <Button Command="{Binding AppUpdateCommand}"
-                                                    Content="检测更新"
-                                                    Cursor="" />
+                                            <Button Command="{Binding AppUpdateCommand}" Content="检测更新" />
+                                            <Button Command="{Binding SupportCommand}" Content="支持开发者" />
                                         </StackPanel>
                                     </md:PopupBox>
 

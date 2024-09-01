@@ -23,9 +23,17 @@
     <DebugType>none</DebugType>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Images\wx.png" />
+    <None Remove="Images\zfb.png" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\wx.png" />
+    <Resource Include="Images\zfb.png" />
   </ItemGroup>
 </Project>

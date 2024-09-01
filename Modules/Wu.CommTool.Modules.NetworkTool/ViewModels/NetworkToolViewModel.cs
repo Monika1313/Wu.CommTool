@@ -4,7 +4,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
 {
     public NetworkToolViewModel() { }
 
-    public NetworkToolViewModel(IDialogHostService dialogHost)
+    public NetworkToolViewModel(IContainerProvider provider,IDialogHostService dialogHost) : base(provider)
     {
         获取物理网卡信息();
         this.dialogHost = dialogHost;
@@ -181,7 +181,7 @@ public partial class NetworkToolViewModel : NavigationViewModel
                 HcGrowlExtensions.Warning("请先选择右侧的配置文件...");
                 return;
             }
-
+            UpdateLoading(true);
             List<ExecuteCmdResult> results = [];
 
             NetworkCardConfig xx = SelectedConfig;//将选中项作为配置文件设置
@@ -224,6 +224,10 @@ public partial class NetworkToolViewModel : NavigationViewModel
         catch (Exception ex)
         {
             HcGrowlExtensions.Warning(ex.Message);
+        }
+        finally
+        {
+            UpdateLoading(false);
         }
     }
 
@@ -362,10 +366,11 @@ public partial class NetworkToolViewModel : NavigationViewModel
         }
     }
 
-    protected void 获取物理网卡信息()
+    protected async void 获取物理网卡信息()
     {
         try
         {
+            UpdateLoading(true);
             #region 查询Win32_NetworkAdapter
             string query = @"SELECT * FROM Win32_NetworkAdapter WHERE Manufacturer!='Microsoft' AND NOT PNPDeviceID LIKE 'ROOT\\%'";
             ManagementObjectSearcher mos = new(query);
@@ -379,10 +384,15 @@ public partial class NetworkToolViewModel : NavigationViewModel
 
             NetworkCards = [];
             NetworkCards.AddRange(moc.OfType<ManagementObject>().Select(mo => new NetworkCard(mo)));
+            await Task.Delay(1000);
         }
         catch (Exception ex)
         {
             HcGrowlExtensions.Warning(ex.Message);
+        }
+        finally
+        {
+            UpdateLoading(false);
         }
     }
 
