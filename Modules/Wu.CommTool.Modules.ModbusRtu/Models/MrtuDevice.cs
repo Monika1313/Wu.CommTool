@@ -202,7 +202,14 @@ public partial class MrtuDevice : ObservableObject
         }
         else
         {
-            MrtuDatas.Insert(MrtuDatas.IndexOf(mrtuData) + 1, new MrtuData());
+            //基于选择的测点,生成新的测点数据
+            var n = new MrtuData() 
+            { 
+                RegisterType = mrtuData.RegisterType,//相同的寄存器类型
+                MrtuDataType = mrtuData.MrtuDataType,//相同的数据类型
+                RegisterAddr = (ushort)Math.Floor(mrtuData.RegisterLastWordAddr+1),//根据上一个数据计算当前的地址
+            };
+            MrtuDatas.Insert(MrtuDatas.IndexOf(mrtuData) + 1, n);
         }
     }
 

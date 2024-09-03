@@ -1423,7 +1423,17 @@ public partial class ModbusRtuModel : ObservableObject
                     DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData()
                     {
                         Addr = i
-                    }); ;
+                    });
+                }
+            }
+            //数量相同时 但是测点地址不同 更新地址
+            else if(DataMonitorConfig.ModbusRtuDatas.FirstOrDefault().Addr != DataMonitorConfig.StartAddr)
+            {
+                int addr = DataMonitorConfig.StartAddr;
+                foreach (var item in DataMonitorConfig.ModbusRtuDatas)
+                {
+                    item.Addr = addr;
+                    addr++;
                 }
             }
         }
