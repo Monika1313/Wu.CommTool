@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.MqttClient.ViewModels;
+﻿using MQTTnet.Formatter;
+
+namespace Wu.CommTool.Modules.MqttClient.ViewModels;
 
 public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -325,15 +327,12 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             {
                 case QosLevel.AtLeastOnce:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
-                    //mqttAMB.WithAtLeastOnceQoS();
                     break;
                 case QosLevel.AtMostOnce:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
-                    //mqttAMB.WithAtMostOnceQoS();
                     break;
                 case QosLevel.ExactlyOnce:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
-                    //mqttAMB.WithExactlyOnceQoS();
                     break;
                 default:
                     break;
@@ -436,6 +435,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
                 .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
                 .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password)                  //账号
+                //.WithProtocolVersion(MqttProtocolVersion.V500)                                        //指定Mqtt版本
                 .Build();
             //TODO 可选是否使用账号
             client = new MqttFactory().CreateMqttClient();

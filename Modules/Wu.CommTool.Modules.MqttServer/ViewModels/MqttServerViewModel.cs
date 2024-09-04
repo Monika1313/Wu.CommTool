@@ -1,4 +1,7 @@
-﻿namespace Wu.CommTool.Modules.MqttServer.ViewModels;
+﻿using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
+
+namespace Wu.CommTool.Modules.MqttServer.ViewModels;
 
 public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -128,14 +131,31 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            var mqttFactory = new MqttFactory();
-            var mqttServerOptions =
-                new MqttServerOptionsBuilder()
+            MqttServerOptionsBuilder optionsBuilder = new();// 创建MQTT服务配置的构建器
+            var mqttServerOptions = optionsBuilder
                 .WithDefaultEndpoint()
                 .WithDefaultEndpointBoundIPAddress(IPAddress.Parse(MqttServerConfig.ServerIp))//设置MQTT服务器的IP
                 .WithDefaultEndpointPort(MqttServerConfig.ServerPort)//设置服务器的端口
                 .Build();
-            mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
+
+            #region 测试SSL/TLS
+            //// 读取证书文件
+            //X509Certificate2 certificate = new("证书文件路径", "证书文件密匙", X509KeyStorageFlags.Exportable);
+            //// 关闭默认端口（1883端口）
+            //optionsBuilder.WithoutDefaultEndpoint();
+            //// 启用加密端口
+            //optionsBuilder.WithEncryptedEndpoint();
+            //// 设置加密端口号
+            //optionsBuilder.WithEncryptedEndpointPort(1884);
+            //// 设置加密端口所使用的证书
+            //optionsBuilder.WithEncryptionCertificate(certificate.Export(X509ContentType.Pfx));
+            //// 设置加密端口所使用的SSL协议
+            //optionsBuilder.WithEncryptionSslProtocol(SslProtocols.Tls12);
+            #endregion
+
+
+
+            mqttServer = new MqttFactory().CreateMqttServer(mqttServerOptions);
             mqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;//客户端连接时验证
             mqttServer.ClientConnectedAsync += MqttServer_ClientConnectedAsync;//客户端连接成功后
             mqttServer.ClientDisconnectedAsync += MqttServer_ClientDisconnectedAsync;//客户端断开连接
