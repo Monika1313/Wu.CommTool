@@ -72,7 +72,7 @@ public partial class ComConfig : ObservableObject
     /// 自动搜索设备的间隔 单位ms
     /// </summary>
     [ObservableProperty]
-    int searchInterval = 50;
+    int searchInterval = 100;
 
     /// <summary>
     /// 自动分帧 对于连续时间间隔较短的帧,可自动识别正确的帧起止位置

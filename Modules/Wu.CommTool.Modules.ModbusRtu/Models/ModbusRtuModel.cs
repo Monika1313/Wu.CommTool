@@ -762,9 +762,8 @@ public partial class ModbusRtuModel : ObservableObject
                         //获取缓存中所有的功能码位置
                         var funcs = ModbusUtils.GetIndicesOfFunctions(frameCache);
                         //接收缓存至少2字节,且功能码至少1个
-
                         //将功能码调整至第二字节的位置
-                        if (frameCache.Count >= 1 && funcs.Count > 0)
+                        if (frameCache.Count >= 2 && funcs.Count > 0)
                         {
                             //若前2个功能码是连续的, 则第一个功能码应判定为地址
                             if (funcs.Count >= 2                         //有多个功能码
@@ -775,6 +774,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
                                 WaitUartReceived.Set();                                                                           //置位数据接收完成标志
+                                DeviceFound(msg);
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
@@ -787,6 +787,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
                                 WaitUartReceived.Set();                                                                           //置位数据接收完成标志
+                                DeviceFound(msg);
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
@@ -1042,7 +1043,7 @@ public partial class ModbusRtuModel : ObservableObject
             try
             {
                 //若无消息需要处理则进入等待
-                if (ReceiveFrameQueue.Count == 0)
+                if (ReceiveFrameQueue.IsEmpty)
                 {
                     WaitUartReceived.WaitOne(); //等待接收消息
                 }
