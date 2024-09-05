@@ -112,25 +112,27 @@
                                                HorizontalAlignment="Center"
                                                FontSize="16"
                                                Text="连接的服务器" />
-                                    <TextBox hc:InfoElement.Placeholder="请输入服务器IP或域名..."
+                                    <TextBox hc:InfoElement.Necessary="True"
+                                             hc:InfoElement.Placeholder="请输入服务器IP或域名..."
                                              hc:TitleElement.Title="服务器IP"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding MqttClientConfig.ServerIp}" />
-                                    <TextBox hc:InfoElement.Placeholder="请输入服务器端口..."
+                                    <TextBox hc:InfoElement.Necessary="True"
+                                             hc:InfoElement.Placeholder="请输入服务器端口..."
                                              hc:TitleElement.Title="服务器端口"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding MqttClientConfig.ServerPort}" />
-
 
                                     <TextBlock Margin="5"
                                                HorizontalAlignment="Center"
                                                FontSize="16"
                                                Text="客户端配置" />
-                                    <TextBox hc:InfoElement.Placeholder="请输入客户端ID..."
+                                    <TextBox hc:InfoElement.Necessary="True"
+                                             hc:InfoElement.Placeholder="请输入客户端ID..."
                                              hc:TitleElement.Title="客户端ID"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding MqttClientConfig.ClientId}" />
-                                    <TextBox hc:InfoElement.Placeholder="请输入客户端ID..."
+                                    <TextBox hc:InfoElement.Placeholder="请输入用户名..."
                                              hc:TitleElement.Title="用户名"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding MqttClientConfig.UserName}" />
@@ -153,6 +155,27 @@
                                                       IsChecked="{Binding MqttClientConfig.AutoReconnect}"
                                                       Style="{StaticResource ToggleButtonSwitch}" />
                                     </StackPanel>
+                                    <StackPanel Margin="0,5"
+                                                VerticalAlignment="Center"
+                                                Orientation="Horizontal">
+                                        <TextBlock Margin="5" Text="SSL/TLS" />
+                                        <ToggleButton Margin="30,0"
+                                                      IsChecked="{Binding MqttClientConfig.Encrypt}"
+                                                      Style="{StaticResource ToggleButtonSwitch}" />
+                                    </StackPanel>
+                                    <DockPanel IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wu:ReverseBool}}" Visibility="{Binding MqttClientConfig.Encrypt, Converter={wu:False2Collapsed}}">
+                                        <Button Width="30"
+                                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                Margin="4"
+                                                Command="{Binding SelectCaFileCommand}"
+                                                Content="{md:PackIcon Kind=FolderOpenOutline}"
+                                                DockPanel.Dock="Right"
+                                                Style="{StaticResource Blue_CircleButton}" />
+                                        <TextBox hc:InfoElement.Placeholder="请选择CA文件..."
+                                                 hc:TitleElement.Title="CA文件"
+                                                 Style="{StaticResource FormTextBox}"
+                                                 Text="{Binding MqttClientConfig.CaFile}" />
+                                    </DockPanel>
                                 </StackPanel>
 
                                 <StackPanel HorizontalAlignment="Center"

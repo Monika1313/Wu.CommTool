@@ -1,4 +1,7 @@
 ﻿using MQTTnet.Formatter;
+using System.Collections.Generic;
+using System.Security.Authentication;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Wu.CommTool.Modules.MqttClient.ViewModels;
 
@@ -57,7 +60,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             else
             {
                 //文件不存在则生成默认配置 
-                MqttClientConfig = new ();
+                MqttClientConfig = new();
                 //在默认文件目录生成默认配置文件
                 var content = JsonConvert.SerializeObject(MqttClientConfig);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
@@ -233,7 +236,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 return;
             }
             MqttClientConfig = x;
-            //ShowMessage("导入配置完成");
             HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(obj.FullName)}\"导入成功", viewName);
         }
         catch (Exception ex)
@@ -431,13 +433,56 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             {
                 return false;
             }
-            var options = new MqttClientOptionsBuilder()
-                .WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort)                  //服务器IP和端口
-                .WithClientId(MqttClientConfig.ClientId)                                                //客户端ID
-                .WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password)                  //账号
-                //.WithProtocolVersion(MqttProtocolVersion.V500)                                        //指定Mqtt版本
-                .Build();
-            //TODO 可选是否使用账号
+            if (string.IsNullOrWhiteSpace(MqttClientConfig.ClientId))
+            {
+                HcGrowlExtensions.Warning("客户端ID不能为空");
+                return false;
+            }
+
+            MqttClientOptionsBuilder optionsBuilder = new();//Mqtt客户端配置构造器
+            optionsBuilder.WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort);  //服务器IP和端口
+            optionsBuilder.WithClientId(MqttClientConfig.ClientId);                               //客户端ID
+            //optionsBuilder.WithTimeout(new TimeSpan(0,0,3));//超时没有生效
+
+            //当账号或密码不为空时使用账号登录
+            if (!string.IsNullOrWhiteSpace(MqttClientConfig.UserName) || !string.IsNullOrWhiteSpace(MqttClientConfig.Password))
+            {
+                optionsBuilder.WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password);//登录账号
+            }
+
+            //optionsBuilder.WithProtocolVersion(MqttProtocolVersion.V500);                                        //指定Mqtt版本
+
+#if NET
+            //加密
+            if (MqttClientConfig.Encrypt)
+            {
+                //CA文件验证
+                X509Certificate2Collection caChain = new();
+                caChain.ImportFromPemFile(MqttClientConfig.CaFile);
+                //optionsBuilder.WithTlsOptions(new MqttClientTlsOptionsBuilder().WithTrustChain(caChain).Build());
+                //optionsBuilder.WithTlsOptions(new MqttClientTlsOptionsBuilder().WithClientCertificates(caChain).Build());
+
+                //optionsBuilder.WithTlsOptions(
+                //    o =>
+                //    {
+                //        o.WithCertificateValidationHandler(_ => true);
+                //        o.WithSslProtocols(SslProtocols.Tls12);
+
+                //        var certificate = new X509Certificate(MqttClientConfig.CaFile);
+                //    });
+
+                //该方法过时了 但是能用
+                optionsBuilder.WithTls(o =>
+                {
+                    o.CertificateValidationHandler = _ => true;
+                    o.SslProtocol = SslProtocols.Tls12; ;
+                    var certificate = new X509Certificate(MqttClientConfig.CaFile);
+                    o.Certificates = new List<X509Certificate> { certificate };
+                });
+            }
+#endif
+
+            MqttClientOptions options = optionsBuilder.Build();
             client = new MqttFactory().CreateMqttClient();
             client.ConnectingAsync += Client_ConnectingAsync;
             client.ConnectedAsync += Client_ConnectedAsync;
@@ -446,8 +491,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             client.InspectPacketAsync += Client_InspectPacketAsync;
 
             connectCts = new();
-            connectCt = connectCts.Token;
-            await client.ConnectAsync(options, connectCt);                //启动连接
+            await client.ConnectAsync(options, connectCts.Token);//启动连接
             return true;
         }
         //若是取消操作 则不报警了
@@ -855,6 +899,33 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             var xx = MqttClientConfig.SubscribeTopics.Remove(obj);
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private void SelectCaFile()
+    {
+        try
+        {
+            //配置文件目录
+            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\CaFiles");
+            Wu.Utils.IoUtil.Exists(dict);
+            //选择配置文件
+            OpenFileDialog dlg = new()
+            {
+                Title = "请选择导入配置文件...",                      //对话框标题
+                Filter = "json files(*.pem)|*.pem",                //文件格式过滤器
+                FilterIndex = 1,                                   //默认选中的过滤器
+                InitialDirectory = dict
+            };
+
+            if (dlg.ShowDialog() != true)
+                return;
+            MqttClientConfig.CaFile = dlg.FileName;
         }
         catch (Exception ex)
         {

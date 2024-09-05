@@ -50,7 +50,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             }
         }
         catch (Exception ex)
-        {
+        { 
             ShowErrorMessage($"配置文件读取失败:{ex.Message}");
         }
     }
