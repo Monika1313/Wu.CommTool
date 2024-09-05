@@ -27,6 +27,7 @@ public partial class MqttServerConfig : ObservableObject
     [ObservableProperty]
     MqttPayloadType receivePaylodType = MqttPayloadType.Plaintext;
 
+    #region 发布消息设置
     /// <summary>
     /// 发送消息的格式
     /// </summary>
@@ -50,4 +51,14 @@ public partial class MqttServerConfig : ObservableObject
     /// </summary>
     [ObservableProperty]
     bool isRetain;
+    #endregion
+
+    #region 加密设置
+    /// <summary>
+    /// SSL/TLS加密
+    /// </summary>
+    [ObservableProperty]
+    bool encrypt; 
+
+    #endregion
 }

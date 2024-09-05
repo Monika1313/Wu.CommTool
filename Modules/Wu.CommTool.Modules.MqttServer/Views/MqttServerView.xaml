@@ -103,6 +103,15 @@
                                        Foreground="Red"
                                        Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
                                        TextWrapping="Wrap" />
+
+                            <!--<StackPanel Margin="0,5"
+                                        VerticalAlignment="Center"
+                                        Orientation="Horizontal">
+                                <TextBlock Margin="5" Text="SSL/TLS" />
+                                <ToggleButton Margin="30,0"
+                                              IsChecked="{Binding MqttServerConfig.Encrypt}"
+                                              Style="{StaticResource ToggleButtonSwitch}" />
+                            </StackPanel>-->
                         </StackPanel>
                     </ContentControl>
                 </md:DrawerHost.LeftDrawerContent>
