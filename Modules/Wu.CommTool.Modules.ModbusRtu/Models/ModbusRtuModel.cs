@@ -771,8 +771,9 @@ public partial class ModbusRtuModel : ObservableObject
                                 && funcs[0] != 0)                   //第一字节不是地址
                             {
                                 frame = frameCache.Take(funcs[0]).ToList();//将这一帧前面的输出
+                                msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                                 //输出接收到的数据
-                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
                                 WaitUartReceived.Set();                                                                           //置位数据接收完成标志
                                 DeviceFound(msg);
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
@@ -784,8 +785,9 @@ public partial class ModbusRtuModel : ObservableObject
                             else if (funcs[0] > 2)
                             {
                                 frame = frameCache.Take(funcs[0] - 1).ToList();//功能码前一个字节为地址要保留,所以要-1
+                                msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                                 //输出接收到的数据
-                                ReceiveFrameQueue.Enqueue(BitConverter.ToString(frame.ToArray()).Replace('-', ' '));//接收到的消息入队
+                                ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
                                 WaitUartReceived.Set();                                                                           //置位数据接收完成标志
                                 DeviceFound(msg);
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
