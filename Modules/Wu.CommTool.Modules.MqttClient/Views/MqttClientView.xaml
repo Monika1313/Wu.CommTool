@@ -71,7 +71,7 @@
                         </ContentControl>
 
                         <!--  Mqtt客户端配置  -->
-                        <ContentControl MaxWidth="600"
+                        <ContentControl MaxWidth="400"
                                         Padding="10"
                                         Style="{StaticResource Effect2Control}">
                             <DockPanel Cursor="">

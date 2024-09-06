@@ -452,35 +452,19 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 
             //optionsBuilder.WithProtocolVersion(MqttProtocolVersion.V500);                                        //指定Mqtt版本
 
-#if NET
             //加密
             if (MqttClientConfig.Encrypt)
             {
-                //CA文件验证
-                X509Certificate2Collection caChain = new();
-                caChain.ImportFromPemFile(MqttClientConfig.CaFile);
-                //optionsBuilder.WithTlsOptions(new MqttClientTlsOptionsBuilder().WithTrustChain(caChain).Build());
-                //optionsBuilder.WithTlsOptions(new MqttClientTlsOptionsBuilder().WithClientCertificates(caChain).Build());
-
-                //optionsBuilder.WithTlsOptions(
-                //    o =>
-                //    {
-                //        o.WithCertificateValidationHandler(_ => true);
-                //        o.WithSslProtocols(SslProtocols.Tls12);
-
-                //        var certificate = new X509Certificate(MqttClientConfig.CaFile);
-                //    });
-
-                //该方法过时了 但是能用
-                optionsBuilder.WithTls(o =>
-                {
-                    o.CertificateValidationHandler = _ => true;
-                    o.SslProtocol = SslProtocols.Tls12; ;
-                    var certificate = new X509Certificate(MqttClientConfig.CaFile);
-                    o.Certificates = new List<X509Certificate> { certificate };
-                });
+                optionsBuilder.WithTlsOptions(
+                    o =>
+                    {
+                        o.WithCertificateValidationHandler(_ => true);//启用证书验证
+                        o.WithSslProtocols(SslProtocols.Tls12);//SSL协议版本
+                        var certificate = new X509Certificate2(MqttClientConfig.CaFile);//CA文件
+                        //o.WithClientCertificates(new List<X509Certificate2> { certificate });
+                        o.WithClientCertificates(new X509Certificate2Collection(certificate));//证书
+                    });
             }
-#endif
 
             MqttClientOptions options = optionsBuilder.Build();
             client = new MqttFactory().CreateMqttClient();
