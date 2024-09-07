@@ -896,7 +896,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\CaFiles");
+            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientTlsFiles");
             Wu.Utils.IoUtil.Exists(dict);
             //选择配置文件
             OpenFileDialog dlg = new()

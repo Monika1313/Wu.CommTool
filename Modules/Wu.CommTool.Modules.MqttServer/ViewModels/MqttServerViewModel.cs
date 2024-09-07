@@ -1,4 +1,5 @@
 ﻿using System.Security.Authentication;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
 namespace Wu.CommTool.Modules.MqttServer.ViewModels;
@@ -50,7 +51,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             }
         }
         catch (Exception ex)
-        { 
+        {
             ShowErrorMessage($"配置文件读取失败:{ex.Message}");
         }
     }
@@ -105,7 +106,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 
     #region **************************************** 方法 ****************************************
     [RelayCommand]
-    private void Execute(string obj)
+    private async Task Execute(string obj)
     {
         switch (obj)
         {
@@ -115,7 +116,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             case "OpenRightDrawer": IsDrawersOpen.RightDrawer = true; break;
             case "OpenDialogView": OpenDialogView(); break;
             case "RunMqttServer": RunMqttServer(); break;                              //打开服务器
-            case "StopMqttServer": StopMqttServer(); break;                            //关闭服务器
+            case "StopMqttServer": await StopMqttServer(); break;                            //关闭服务器
             case "ImportConfig": ImportConfig(); break;
             case "ExportConfig": ExportConfig(); break;
             case "AddFwRule": AddFwRule(); break;//添加防火墙规则
@@ -137,23 +138,28 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 .WithDefaultEndpointBoundIPAddress(IPAddress.Parse(MqttServerConfig.ServerIp))//设置MQTT服务器的IP
                 .WithDefaultEndpointPort(MqttServerConfig.ServerPort);//设置服务器的端口
 
-
+#if NET
+#endif
             #region 测试SSL/TLS
-            //if (MqttServerConfig.Encrypt)
-            //{
-            //    // 读取证书文件
-            //    X509Certificate2 certificate = new("证书文件路径", "证书文件密匙", X509KeyStorageFlags.Exportable);
-            //    // 关闭默认端口（1883端口）
-            //    optionsBuilder.WithoutDefaultEndpoint();
-            //    // 启用加密端口
-            //    optionsBuilder.WithEncryptedEndpoint();
-            //    // 设置加密端口号
-            //    optionsBuilder.WithEncryptedEndpointPort(1884);
-            //    // 设置加密端口所使用的证书
-            //    optionsBuilder.WithEncryptionCertificate(certificate.Export(X509ContentType.Pfx));
-            //    // 设置加密端口所使用的SSL协议
-            //    optionsBuilder.WithEncryptionSslProtocol(SslProtocols.Tls12);
-            //}
+            if (MqttServerConfig.Encrypt)
+            {
+                #region 使用pem和key生成pfx 该方法.net framework不可用
+                //string pemPath = @"C:\pem.pem";
+                //string keyPath = @"C:\key.key";
+                //X509Certificate2 certificate = GetCertificateFromPem(pemPath, keyPath);
+                #endregion
+
+                //设置pfx证书和证书密码
+                X509Certificate2 certificate = new(MqttServerConfig.PfxFilePath, MqttServerConfig.PfxPassword, X509KeyStorageFlags.Exportable);
+                
+                optionsBuilder.WithoutDefaultEndpoint();// 关闭默认端口
+                optionsBuilder.WithEncryptedEndpoint();// 启用加密端口
+                optionsBuilder.WithEncryptedEndpointPort(MqttServerConfig.ServerPort);// 设置加密端口号
+                optionsBuilder.WithEncryptionCertificate(certificate.Export(X509ContentType.Pfx));// 设置加密端口所使用的证书
+
+                // 设置加密端口所使用的SSL协议
+                optionsBuilder.WithEncryptionSslProtocol(SslProtocols.Tls12);
+            }
             #endregion
 
 
@@ -179,10 +185,35 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
+
+
+#if NET
+    static X509Certificate2 GetCertificateFromPem(string certPath, string keyPath)
+    {
+        // 加载证书
+        var certPem = System.IO.File.ReadAllText(certPath);
+        var certBytes = Convert.FromBase64String(certPem.Replace("-----BEGIN CERTIFICATE-----", "").Replace("-----END CERTIFICATE-----", "").Trim());
+
+        // 加载私钥
+        var keyPem = System.IO.File.ReadAllText(keyPath);
+        var keyBytes = Convert.FromBase64String(keyPem.Replace("-----BEGIN PRIVATE KEY-----", "").Replace("-----END PRIVATE KEY-----", "").Trim());
+
+        // 创建RSA私钥
+        var rsa = RSA.Create();
+        rsa.ImportPkcs8PrivateKey(keyBytes, out _);
+
+        // 创建证书
+        var cert = new X509Certificate2(certBytes);
+        return cert.CopyWithPrivateKey(rsa);
+    } 
+#endif
+
+
+
     /// <summary>
     /// 关闭Mqtt服务器
     /// </summary>
-    private async void StopMqttServer()
+    private async Task StopMqttServer()
     {
         try
         {
@@ -868,6 +899,33 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         if (myRule != null)
         {
             FirewallManager.Instance.Rules.Remove(myRule);
+        }
+    }
+
+    [RelayCommand]
+    private void SelectPfxFile()
+    {
+        try
+        {
+            //配置文件目录
+            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerTlsFiles");
+            Wu.Utils.IoUtil.Exists(dict);
+            //选择配置文件
+            OpenFileDialog dlg = new()
+            {
+                Title = "请选择导入配置文件...",                      //对话框标题
+                Filter = "json files(*.pfx)|*.pfx",                //文件格式过滤器
+                FilterIndex = 1,                                   //默认选中的过滤器
+                InitialDirectory = dict
+            };
+
+            if (dlg.ShowDialog() != true)
+                return;
+            MqttServerConfig.PfxFilePath = dlg.FileName;
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex.Message);
         }
     }
 }

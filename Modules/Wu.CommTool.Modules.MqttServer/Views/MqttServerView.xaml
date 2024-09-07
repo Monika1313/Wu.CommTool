@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.MqttServer.ViewModels.DesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.MqttServer.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
@@ -92,7 +93,7 @@
                                         Style="{StaticResource RedButton}" />
                             </StackPanel>
 
-                            <Button Margin="20,50,20,5"
+                            <Button Margin="20,20,20,5"
                                     Command="{Binding ExecuteCommand}"
                                     CommandParameter="AddFwRule"
                                     Content="为该软件开放防火墙"
@@ -104,14 +105,45 @@
                                        Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
                                        TextWrapping="Wrap" />
 
-                            <!--<StackPanel Margin="0,5"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal">
-                                <TextBlock Margin="5" Text="SSL/TLS" />
-                                <ToggleButton Margin="30,0"
-                                              IsChecked="{Binding MqttServerConfig.Encrypt}"
-                                              Style="{StaticResource ToggleButtonSwitch}" />
-                            </StackPanel>-->
+                            <ContentControl Margin="0,20" Style="{StaticResource Effect2Control}">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Margin="0,5"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Orientation="Horizontal">
+                                        <TextBlock Margin="5" Text="SSL/TLS" />
+                                        <ToggleButton Margin="30,0"
+                                                      IsChecked="{Binding MqttServerConfig.Encrypt}"
+                                                      Style="{StaticResource ToggleButtonSwitch}" />
+                                    </StackPanel>
+                                    <StackPanel IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}" Visibility="{Binding MqttServerConfig.Encrypt, Converter={wu:False2Collapsed}}">
+                                        <DockPanel>
+                                            <Button Width="30"
+                                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                    Margin="4"
+                                                    Command="{Binding SelectPfxFileCommand}"
+                                                    Content="{md:PackIcon Kind=FolderOpenOutline}"
+                                                    DockPanel.Dock="Right"
+                                                    Style="{StaticResource Blue_CircleButton}" />
+                                            <TextBox hc:InfoElement.Placeholder="请选择PFX证书..."
+                                                     hc:TitleElement.Title="PFX证书"
+                                                     Style="{StaticResource FormTextBox}"
+                                                     Text="{Binding MqttServerConfig.PfxFilePath}" />
+                                        </DockPanel>
+
+                                        <PasswordBox hc:InfoElement.Placeholder="请输入PFX证书密码..."
+                                                     hc:TitleElement.Title="PFX证书密码"
+                                                     wu:PasswordExtensions.Password="{Binding MqttServerConfig.PfxPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                     Cursor="IBeam"
+                                                     DockPanel.Dock="Top"
+                                                     Style="{StaticResource FormPasswordBox}">
+                                            <i:Interaction.Behaviors>
+                                                <wu:PasswordBehavior />
+                                            </i:Interaction.Behaviors>
+                                        </PasswordBox>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ContentControl>
                         </StackPanel>
                     </ContentControl>
                 </md:DrawerHost.LeftDrawerContent>

@@ -58,7 +58,32 @@ public partial class MqttServerConfig : ObservableObject
     /// SSL/TLS加密
     /// </summary>
     [ObservableProperty]
-    bool encrypt; 
+    bool encrypt;
 
+    /// <summary>
+    /// PFX证书
+    /// </summary>
+    [ObservableProperty]
+    string pfxFilePath;
+
+    /// <summary>
+    /// PFX证书密码
+    /// </summary>
+    [ObservableProperty]
+    string pfxPassword;
+
+
+
+    ///// <summary>
+    ///// PEM证书
+    ///// </summary>
+    //[ObservableProperty]
+    //string pemPath;
+
+    ///// <summary>
+    ///// KEY
+    ///// </summary>
+    //[ObservableProperty]
+    //string keyPath;
     #endregion
 }

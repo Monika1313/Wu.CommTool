@@ -155,27 +155,32 @@
                                                       IsChecked="{Binding MqttClientConfig.AutoReconnect}"
                                                       Style="{StaticResource ToggleButtonSwitch}" />
                                     </StackPanel>
-                                    <StackPanel Margin="0,5"
-                                                VerticalAlignment="Center"
-                                                Orientation="Horizontal">
-                                        <TextBlock Margin="5" Text="SSL/TLS" />
-                                        <ToggleButton Margin="30,0"
-                                                      IsChecked="{Binding MqttClientConfig.Encrypt}"
-                                                      Style="{StaticResource ToggleButtonSwitch}" />
-                                    </StackPanel>
-                                    <DockPanel IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wu:ReverseBool}}" Visibility="{Binding MqttClientConfig.Encrypt, Converter={wu:False2Collapsed}}">
-                                        <Button Width="30"
-                                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                                Margin="4"
-                                                Command="{Binding SelectCaFileCommand}"
-                                                Content="{md:PackIcon Kind=FolderOpenOutline}"
-                                                DockPanel.Dock="Right"
-                                                Style="{StaticResource Blue_CircleButton}" />
-                                        <TextBox hc:InfoElement.Placeholder="请选择CA文件..."
-                                                 hc:TitleElement.Title="CA文件"
-                                                 Style="{StaticResource FormTextBox}"
-                                                 Text="{Binding MqttClientConfig.CaFile}" />
-                                    </DockPanel>
+                                    <ContentControl Margin="0" Style="{StaticResource Effect2Control}">
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Margin="0,5"
+                                                        HorizontalAlignment="Center"
+                                                        VerticalAlignment="Center"
+                                                        Orientation="Horizontal">
+                                                <TextBlock Margin="5" Text="SSL/TLS" />
+                                                <ToggleButton Margin="30,0"
+                                                              IsChecked="{Binding MqttClientConfig.Encrypt}"
+                                                              Style="{StaticResource ToggleButtonSwitch}" />
+                                            </StackPanel>
+                                            <DockPanel IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wu:ReverseBool}}" Visibility="{Binding MqttClientConfig.Encrypt, Converter={wu:False2Collapsed}}">
+                                                <Button Width="30"
+                                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                        Margin="4"
+                                                        Command="{Binding SelectCaFileCommand}"
+                                                        Content="{md:PackIcon Kind=FolderOpenOutline}"
+                                                        DockPanel.Dock="Right"
+                                                        Style="{StaticResource Blue_CircleButton}" />
+                                                <TextBox hc:InfoElement.Placeholder="请选择CA文件..."
+                                                         hc:TitleElement.Title="CA文件"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding MqttClientConfig.CaFile}" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </ContentControl>
                                 </StackPanel>
 
                                 <StackPanel HorizontalAlignment="Center"
