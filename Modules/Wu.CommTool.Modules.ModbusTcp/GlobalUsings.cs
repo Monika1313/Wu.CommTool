@@ -48,4 +48,4 @@ global using Wu.CommTool.Modules.ModbusTcp.ViewModels.DialogViewModels;
 global using Wu.CommTool.Modules.ModbusTcp.Views.DialogViews;
 global using Wu.CommTool.Modules.ModbusTcp.Interfaces;
 global using System.Windows.Controls;
-
+global using System.Threading;

@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-
-namespace Wu.CommTool.Modules.ModbusTcp.Models;
+﻿namespace Wu.CommTool.Modules.ModbusTcp.Models;
 
 /// <summary>
 /// Modbus Tcp 从站=Master
@@ -45,7 +43,7 @@ public partial class MtcpMaster : ObservableObject
 
     #region 方法
     [RelayCommand]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     private void Execute(string cmd)
     {
         switch (cmd)
@@ -191,6 +189,7 @@ public partial class MtcpMaster : ObservableObject
     /// <param name="mtcpFrame"></param>
     /// <returns></returns>
     [RelayCommand]
+    [property: JsonIgnore]
     public void SendMessage(MtcpFrame mtcpFrame)
     {
         ////若未初始化客户端或未连接,则先连接

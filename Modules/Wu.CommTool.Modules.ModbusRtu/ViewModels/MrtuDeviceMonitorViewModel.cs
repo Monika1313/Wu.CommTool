@@ -157,9 +157,6 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     [ObservableProperty]
     MrtuDeviceManager mrtuDeviceManager = new();
 
-    //[ObservableProperty]
-    //MrtuDevice currentDevice;
-
     [ObservableProperty]
     OpenDrawers openDrawers = new();
     #endregion **************************************** 属性 ****************************************
