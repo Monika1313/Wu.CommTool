@@ -69,10 +69,10 @@
                                  hc:TitleElement.TitleWidth="60"
                                  IsReadOnly="True"
                                  Style="{StaticResource FormTextBox}"
-                                 Text="http://salight.cn">
+                                 Text="https://salight.cn">
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="GotFocus">
-                                    <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="http://salight.cn" />
+                                    <i:InvokeCommandAction Command="hc:ControlCommands.OpenLink" CommandParameter="https://salight.cn" />
                                 </i:EventTrigger>
                             </i:Interaction.Triggers>
                         </TextBox>
