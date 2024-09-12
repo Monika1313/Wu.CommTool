@@ -937,7 +937,7 @@ public partial class ModbusRtuModel : ObservableObject
             System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
             {
                 device.ReceiveMessage = msg;
-                device.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
+                device.Address = byte.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
                 ModbusRtuDevices.Add(CurrentDevice);
                 FoundCount++;
             }));
@@ -1321,7 +1321,7 @@ public partial class ModbusRtuModel : ObservableObject
                     
                     byte min = Math.Min(SearchStartSlaveId, SearchEndSlaveId);
                     byte max = Math.Max(SearchStartSlaveId, SearchEndSlaveId);
-                    for (int i = min; i <= max; i++)
+                    for (byte i = min; i <= max; i++)
                     {
                         //当前搜索的设备
                         CurrentDevice = new()

@@ -9,7 +9,7 @@ public partial class ModbusRtuDevice : ObservableObject
     /// 从站地址
     /// </summary>
     [ObservableProperty]
-    private int address;
+    byte address;
 
     /// <summary>
     /// 波特率
