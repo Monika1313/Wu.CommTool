@@ -17,11 +17,8 @@ public partial class MtcpDevice : ObservableObject
     [ObservableProperty]
     byte slaveAddr = 1;
 
-    ///// <summary>
-    ///// 串口配置
-    ///// </summary>
-    //[ObservableProperty]
-    //ComConfig comConfig = new();
+    [ObservableProperty]
+    ModbusTcpClient modbusTcpClient = new();
 
     /// <summary>
     /// 备注
@@ -195,22 +192,22 @@ public partial class MtcpDevice : ObservableObject
     [property: JsonIgnore]
     private void AddNewMtcpData(MtcpData mtcpData)
     {
-        //if (mtcpData == null || !MtcpDatas.Contains(mtcpData))
-        //{
-        //    MtcpDatas.Add(new MtcpData());
-        //    return;
-        //}
-        //else
-        //{
-        //    //基于选择的测点,生成新的测点数据
-        //    var n = new MtcpData()
-        //    {
-        //        RegisterType = mtcpData.RegisterType,//相同的寄存器类型
-        //        MtcpDataType = mtcpData.MtcpDataType,//相同的数据类型
-        //        RegisterAddr = (ushort)Math.Floor(mtcpData.RegisterLastWordAddr + 1),//根据上一个数据计算当前的地址
-        //    };
-        //    MtcpDatas.Insert(MtcpDatas.IndexOf(mtcpData) + 1, n);
-        //}
+        if (mtcpData == null || !MtcpDatas.Contains(mtcpData))
+        {
+            MtcpDatas.Add(new MtcpData());
+            return;
+        }
+        else
+        {
+            //基于选择的测点,生成新的测点数据
+            var n = new MtcpData()
+            {
+                RegisterType = mtcpData.RegisterType,//相同的寄存器类型
+                ModbusDataType = mtcpData.ModbusDataType,//相同的数据类型
+                RegisterAddr = (ushort)Math.Floor(mtcpData.RegisterLastWordAddr + 1),//根据上一个数据计算当前的地址
+            };
+            MtcpDatas.Insert(MtcpDatas.IndexOf(mtcpData) + 1, n);
+        }
     }
 
     [RelayCommand]

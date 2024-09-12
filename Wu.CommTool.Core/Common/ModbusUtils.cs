@@ -90,6 +90,31 @@ public static class ModbusUtils
     }
 
     /// <summary>
+    /// 数据类型对应需读取的字节数
+    /// </summary>
+    /// <param name="modbusDataType"></param>
+    /// <returns></returns>
+    public static int GetModbusDataTypeLengthForRead(ModbusDataType modbusDataType)
+    {
+        return modbusDataType switch
+        {
+            //MrtuDataType.Byte=>1,
+            ModbusDataType.uShort => 2,
+            ModbusDataType.Short => 2,
+            ModbusDataType.uInt => 4,
+            ModbusDataType.Int => 4,
+            ModbusDataType.uLong => 8,
+            ModbusDataType.Long => 8,
+            ModbusDataType.Float => 4,
+            ModbusDataType.Double => 8,
+            ModbusDataType.Hex => 2,
+            //case DataType.Bool:
+            //    return 1;
+            _ => 1,
+        };
+    }
+
+    /// <summary>
     /// 字节序转换 输入字节序视为ABCD, 再根据输入字节序进行转换
     /// </summary>
     /// <param name="val"></param>

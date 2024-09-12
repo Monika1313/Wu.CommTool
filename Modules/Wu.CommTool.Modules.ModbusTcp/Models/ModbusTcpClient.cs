@@ -3,13 +3,12 @@
 /// <summary>
 /// Tcp客户端
 /// </summary>
-public partial class MbusTcpClient : TcpClient
+public partial class ModbusTcpClient : TcpClient
 {
-    public MbusTcpClient()
+    public ModbusTcpClient()
     {
 
     }
-
 
     #region 事件
     /// <summary>
@@ -135,9 +134,4 @@ public partial class MbusTcpClient : TcpClient
             this.Close();
         }
     }
-
-
-
-
-
 }

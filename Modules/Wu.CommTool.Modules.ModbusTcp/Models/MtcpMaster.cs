@@ -17,7 +17,6 @@ public partial class MtcpMaster : ObservableObject
     [ObservableProperty]
     ObservableCollection<MessageData> messages = [];
 
-
     #region ModbusTcp服务器参数
     [ObservableProperty]
     string serverIp = "127.0.0.1";
@@ -100,7 +99,7 @@ public partial class MtcpMaster : ObservableObject
 
 
 
-    MbusTcpClient mbusTcpClient;
+    ModbusTcpClient modbusTcpClient;
 
     [ObservableProperty]
     bool isOnline;
@@ -117,39 +116,39 @@ public partial class MtcpMaster : ObservableObject
         try
         {
             //建立TcpIp连接
-            mbusTcpClient?.Dispose();
-            mbusTcpClient = new MbusTcpClient();
-            mbusTcpClient.ClientConnecting += () =>
+            modbusTcpClient?.Dispose();
+            modbusTcpClient = new ModbusTcpClient();
+            modbusTcpClient.ClientConnecting += () =>
             {
                 ShowMessage($"连接中...");
             };
-            mbusTcpClient.ClientConnected += (e) =>
+            modbusTcpClient.ClientConnected += (e) =>
                 {
                     IsOnline = true;
                     ShowMessage($"连接服务器成功... {ServerIp}:{ServerPort}");
                 };
-            mbusTcpClient.ClientDisconnected += (e) =>
+            modbusTcpClient.ClientDisconnected += (e) =>
                 {
                     IsOnline = false;
                     ShowMessage("断开连接...");
                 };
-            mbusTcpClient.MessageSending += (s) =>
+            modbusTcpClient.MessageSending += (s) =>
             {
                 ShowSendMessage(new MtcpFrame(s));
             };
-            mbusTcpClient.MessageReceived += (s) =>
+            modbusTcpClient.MessageReceived += (s) =>
             {
                 ShowReceiveMessage(new MtcpFrame(s));
             };
-            mbusTcpClient.ErrorOccurred += (s) =>
+            modbusTcpClient.ErrorOccurred += (s) =>
             {
                 ShowErrorMessage(s);
             };
-            await mbusTcpClient.ConnectAsync(ServerIp, ServerPort);
+            await modbusTcpClient.ConnectAsync(ServerIp, ServerPort);
         }
         catch (Exception ex)
         {
-            IsOnline = mbusTcpClient.Connected;
+            IsOnline = modbusTcpClient.Connected;
             ShowErrorMessage($"连接失败...{ex.Message}");
         }
     }
@@ -169,7 +168,7 @@ public partial class MtcpMaster : ObservableObject
             return;
         }
         //若未初始化客户端或未连接,则先连接
-        if (mbusTcpClient == null || !mbusTcpClient.Connected)
+        if (modbusTcpClient == null || !modbusTcpClient.Connected)
         {
             await Connect();
         }
@@ -179,7 +178,7 @@ public partial class MtcpMaster : ObservableObject
             ShowErrorMessage("消息少个字符");
             return;
         }
-        mbusTcpClient.SendMessage(mtcpCustomFrame.Frame);
+        modbusTcpClient.SendMessage(mtcpCustomFrame.Frame);
     }
 
 
@@ -216,7 +215,7 @@ public partial class MtcpMaster : ObservableObject
     {
         try
         {
-            mbusTcpClient.Close();
+            modbusTcpClient.Close();
         }
         catch (Exception ex)
         {

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:core="Wu.CommTool.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusTcp.ViewModels.DesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Views"
@@ -10,6 +11,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
+             d:DataContext="{x:Static dvm:MtcpDeviceMonitorDesignViewModel.Instance}"
              d:DesignHeight="450"
              d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -117,53 +119,6 @@
                             <TextBlock HorizontalAlignment="Center"
                                        FontSize="14"
                                        Text="设备列表" />
-
-                            <!--<ItemsControl Margin="0"
-                                       Background="Transparent"
-                                       IsTabStop="False"
-                                       ItemsSource="{Binding MtcpDeviceManager.MtcpDevices}">
-                             <ItemsControl.ItemsPanel>
-                                 <ItemsPanelTemplate>
-                                     <StackPanel Orientation="Vertical" />
-                                 </ItemsPanelTemplate>
-                             </ItemsControl.ItemsPanel>
-
-                             <ItemsControl.ItemTemplate>
-                                 <DataTemplate DataType="models:MtcpDevice">
-                                     <ContentControl Height="80"
-                                                     Style="{StaticResource Effect2Control}"
-                                                     Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                         <ContentControl.ContextMenu>
-                                             <ContextMenu>
-                                                 <MenuItem Command="{Binding Path=PlacementTarget.Tag.EditMtcpDeviceCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                           CommandParameter="{Binding}"
-                                                           Header="设置" />
-                                                 <MenuItem Margin="2"
-                                                           Command="{Binding Path=PlacementTarget.Tag.MtcpDeviceManager.AddNewMtcpDeviceCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                           CommandParameter="{Binding}"
-                                                           Header="新建设备" />
-                                                 <MenuItem Margin="2"
-                                                           Command="{Binding Path=PlacementTarget.Tag.MtcpDeviceManager.DeleteMtcpDeviceCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                           CommandParameter="{Binding}"
-                                                           Foreground="Red"
-                                                           Header="删除设备" />
-                                             </ContextMenu>
-                                         </ContentControl.ContextMenu>
-                                         <StackPanel>
-                                             <TextBlock Margin="4"
-                                                        HorizontalAlignment="Center"
-                                                        FontSize="14"
-                                                        Text="{Binding Name}" />
-                                             <StackPanel Orientation="Horizontal">
-                                                 <TextBlock Margin="10,0" Text="{Binding ComConfig.ComPort.Port}" />
-                                                 <TextBlock Margin="5,0" Text="从站地址:" />
-                                                 <TextBlock Text="{Binding SlaveAddr}" />
-                                             </StackPanel>
-                                         </StackPanel>
-                                     </ContentControl>
-                                 </DataTemplate>
-                             </ItemsControl.ItemTemplate>
-                         </ItemsControl>-->
 
                             <ListBox Padding="0"
                                      BorderThickness="0"
@@ -420,7 +375,7 @@
                             <DataGridTemplateColumn Header="数据类型">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusDataType}}}" SelectedValue="{Binding MtcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <ComboBox ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusDataType}}}" SelectedValue="{Binding ModbusDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>

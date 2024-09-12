@@ -41,7 +41,7 @@ public partial class MtcpData : ObservableObject
     /// <summary>
     /// 数据类型需读取的长度 单位:字节
     /// </summary>
-    public int MrtuDataTypeByteLength => ModbusUtils.GetMrtuDataTypeLengthForRead(MrtuDataType);
+    public int MrtuDataTypeByteLength => ModbusUtils.GetModbusDataTypeLengthForRead(ModbusDataType);
 
     /// <summary>
     /// 转换后的显示值
@@ -55,7 +55,7 @@ public partial class MtcpData : ObservableObject
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(Value))]
     [NotifyPropertyChangedFor(nameof(MrtuDataTypeByteLength))]
-    MrtuDataType mrtuDataType = MrtuDataType.Int;
+    ModbusDataType modbusDataType = ModbusDataType.Int;
 
     /// <summary>
     /// 数据更新时间
