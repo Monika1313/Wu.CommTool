@@ -222,12 +222,24 @@
                                     <TextBox hc:TitleElement.Title="功能码"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding ModbusRtuModel.SearchFunctionCode}" />
-                                    <TextBox hc:TitleElement.Title="起始地址"
+                                    <TextBox hc:TitleElement.Title="寄存器起始地址"
+                                             hc:TitleElement.TitleWidth="auto"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding ModbusRtuModel.SearchStartAddr}" />
                                     <TextBox hc:TitleElement.Title="读取数量"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding ModbusRtuModel.SearchReadNum}" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               FontSize="16"
+                                               Text="从站范围" />
+                                    <TextBox hc:Poptip.Content="请输入[0,255]范围内的值"
+                                             hc:TitleElement.Title="起始从站地址"
+                                             Style="{StaticResource FormTextBox}"
+                                             Text="{Binding ModbusRtuModel.SearchStartSlaveId}" />
+                                    <TextBox hc:Poptip.Content="请输入[0,255]范围内的值"
+                                             hc:TitleElement.Title="结束从站地址"
+                                             Style="{StaticResource FormTextBox}"
+                                             Text="{Binding ModbusRtuModel.SearchEndSlaveId}" />
                                 </StackPanel>
                             </ContentControl>
                         </StackPanel>

@@ -111,50 +111,61 @@ public partial class ModbusRtuModel : ObservableObject
     /// 搜索设备的状态 0=未开始搜索 1=搜索中 2=搜索结束/搜索中止
     /// </summary>
     [ObservableProperty]
-    private int searchDeviceState = 0;
+    int searchDeviceState = 0;
 
     /// <summary>
     /// 当前搜索的ModbusRtu设备
     /// </summary>
     [ObservableProperty]
-    private ModbusRtuDevice currentDevice = new();
+    ModbusRtuDevice currentDevice = new();
 
     /// <summary>
     /// 搜索到的ModbusRtu设备
     /// </summary>
     [ObservableProperty]
-    private ObservableCollection<ModbusRtuDevice> modbusRtuDevices = [];
+    ObservableCollection<ModbusRtuDevice> modbusRtuDevices = [];
 
     /// <summary>
     /// 选中的波特率
     /// </summary>
     [ObservableProperty]
-    private List<BaudRate> selectedBaudRates = [];
+    List<BaudRate> selectedBaudRates = [];
 
     ///// <summary>
     ///// 选中的校验方式
     ///// </summary>
     [ObservableProperty]
-    private List<Parity> selectedParitys = [];
-
+    List<Parity> selectedParitys = [];
 
     /// <summary>
     /// 搜索使用的功能码
     /// </summary>
     [ObservableProperty]
-    private byte searchFunctionCode = 3;
+    byte searchFunctionCode = 3;
 
     /// <summary>
     /// 搜索时读取数据的起始地址
     /// </summary>
     [ObservableProperty]
-    private int searchStartAddr = 0000;
+    int searchStartAddr = 0000;
 
     /// <summary>
     /// 搜索时读取的数量
     /// </summary>
     [ObservableProperty]
-    private int searchReadNum = 1;
+    int searchReadNum = 1;
+
+    /// <summary>
+    /// 搜索 起始从站ID
+    /// </summary>
+    [ObservableProperty]
+    byte searchStartSlaveId = 1;
+
+    /// <summary>
+    /// 搜索 结束从站ID
+    /// </summary>
+    [ObservableProperty]
+    byte searchEndSlaveId = 247;
 
     /// <summary>
     /// 搜索到的设备总数
@@ -1051,7 +1062,7 @@ public partial class ModbusRtuModel : ObservableObject
                 }
 
                 //从接收消息队列中取出一条消息
-                if(!ReceiveFrameQueue.TryDequeue(out var frame))
+                if (!ReceiveFrameQueue.TryDequeue(out var frame))
                 {
                     continue;
                 }
@@ -1301,14 +1312,16 @@ public partial class ModbusRtuModel : ObservableObject
             FoundCount = 0;
 
             //遍历选项
-            //Flag:
             foreach (var baud in SelectedBaudRates)
             {
                 foreach (var parity in SelectedParitys)
                 {
                     //搜索
                     ShowMessage($"搜索: {ComConfig.ComPort.Port}:{ComConfig.ComPort.DeviceName} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
-                    for (int i = 0; i <= 255; i++)
+                    
+                    byte min = Math.Min(SearchStartSlaveId, SearchEndSlaveId);
+                    byte max = Math.Max(SearchStartSlaveId, SearchEndSlaveId);
+                    for (int i = min; i <= max; i++)
                     {
                         //当前搜索的设备
                         CurrentDevice = new()
@@ -1430,7 +1443,7 @@ public partial class ModbusRtuModel : ObservableObject
                 }
             }
             //数量相同时 但是测点地址不同 更新地址
-            else if(DataMonitorConfig.ModbusRtuDatas.FirstOrDefault().Addr != DataMonitorConfig.StartAddr)
+            else if (DataMonitorConfig.ModbusRtuDatas.FirstOrDefault().Addr != DataMonitorConfig.StartAddr)
             {
                 int addr = DataMonitorConfig.StartAddr;
                 foreach (var item in DataMonitorConfig.ModbusRtuDatas)
