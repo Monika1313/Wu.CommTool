@@ -125,7 +125,8 @@
                                                     Content="{md:PackIcon Kind=FolderOpenOutline}"
                                                     DockPanel.Dock="Right"
                                                     Style="{StaticResource Blue_CircleButton}" />
-                                            <TextBox hc:InfoElement.Placeholder="请选择PFX证书..."
+                                            <TextBox hc:InfoElement.Necessary="True"
+                                                     hc:InfoElement.Placeholder="请选择PFX证书..."
                                                      hc:TitleElement.Title="PFX证书"
                                                      Style="{StaticResource FormTextBox}"
                                                      Text="{Binding MqttServerConfig.PfxFilePath}" />
