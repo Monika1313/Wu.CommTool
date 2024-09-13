@@ -1,5 +1,9 @@
-﻿using System.Drawing;
+﻿using HandyControl.Controls;
+using HandyControl.Data;
+using Newtonsoft.Json.Linq;
+using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
 namespace Wu.CommTool.ViewModels;
@@ -220,14 +224,16 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             }
             else
             {
-                var result = await dialogHost.Question("更新检测", $"当前已是最新版本啦! V{AppInfo.Version}", "Root");
+                //var result = await dialogHost.Question("更新检测", $"当前已是最新版本啦! V{AppInfo.Version}", "Root");
+                HcGrowlExtensions.Success($"当前已是最新版本啦! V{AppInfo.Version}","",5);
             }
         }
         else
         {
             if (args.Error is WebException)
             {
-                var result = await dialogHost.Question("网络错误", "无法连接到服务器诶!", "Root");
+                //var result = await dialogHost.Question("网络错误", "无法连接到服务器诶!", "Root");
+                HcGrowlExtensions.Error("无法连接到更新服务器诶!");
             }
             else
             {

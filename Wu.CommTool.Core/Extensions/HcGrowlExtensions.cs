@@ -43,4 +43,13 @@ public static class HcGrowlExtensions
             ShowDateTime = showDateTime
         });
     }
+
+    public static void Error(string message, string token = "")
+    {
+        Growl.Error(new GrowlInfo()
+        {
+            Message = message,
+            Token = token
+        });
+    }
 }
