@@ -5,6 +5,8 @@
 /// </summary>
 public partial class MtcpDevice : ObservableObject
 {
+    private static readonly ILog log = LogManager.GetLogger(typeof(MtcpDevice));
+
     /// <summary>
     /// 设备名
     /// </summary>
@@ -18,6 +20,7 @@ public partial class MtcpDevice : ObservableObject
     byte slaveAddr = 1;
 
     [ObservableProperty]
+    [property:JsonIgnore]
     ModbusTcpClient modbusTcpClient = new();
 
     /// <summary>
@@ -44,6 +47,86 @@ public partial class MtcpDevice : ObservableObject
     /// </summary>
     [ObservableProperty]
     ObservableCollection<MtcpData> mtcpDatas = [];
+
+    /// <summary>
+    /// 页面消息
+    /// </summary>
+    [ObservableProperty]
+    ObservableCollection<MessageData> messages = [];
+
+    [ObservableProperty]
+    bool isOnline;
+
+    [ObservableProperty]
+    string serverIp = "127.0.0.1";
+
+    [ObservableProperty]
+    int serverPort = 502;
+
+    /// <summary>
+    /// 建立Tcp/Ip连接
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    [property: JsonIgnore]
+    public async Task Connect()
+    {
+        try
+        {
+            //建立TcpIp连接
+            ModbusTcpClient?.Dispose();
+            ModbusTcpClient = new ModbusTcpClient();
+            ModbusTcpClient.ClientConnecting += () =>
+            {
+                ShowMessage($"连接中...");
+            };
+            ModbusTcpClient.ClientConnected += (e) =>
+            {
+                IsOnline = true;
+                ShowMessage($"连接服务器成功... {ServerIp}:{ServerPort}");
+            };
+            ModbusTcpClient.ClientDisconnected += (e) =>
+            {
+                IsOnline = false;
+                ShowMessage("断开连接...");
+            };
+            ModbusTcpClient.MessageSending += (s) =>
+            {
+                ShowSendMessage(new MtcpFrame(s));
+            };
+            ModbusTcpClient.MessageReceived += (s) =>
+            {
+                ShowReceiveMessage(new MtcpFrame(s));
+            };
+            ModbusTcpClient.ErrorOccurred += (s) =>
+            {
+                ShowErrorMessage(s);
+            };
+            await ModbusTcpClient.ConnectAsync(ServerIp, ServerPort);
+        }
+        catch (Exception ex)
+        {
+            IsOnline = ModbusTcpClient.Connected;
+            ShowErrorMessage($"连接失败...{ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 断开Tcp连接
+    /// </summary>
+    /// <returns></returns>
+    [RelayCommand]
+    private void DisConnect()
+    {
+        try
+        {
+            ModbusTcpClient.Close();
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex.Message);
+        }
+    }
 
     /// <summary>
     /// 读取数据的请求帧
@@ -244,4 +327,110 @@ public partial class MtcpDevice : ObservableObject
         //    DeviceState = DeviceState.Warning;//存在离线的测点
         //}
     }
+
+
+    #region******************************  页面消息  ******************************
+    /// <summary>
+    /// 页面显示消息
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="type"></param>
+    public void ShowMessage(string message, MessageType type = MessageType.Info)
+    {
+        try
+        {
+            void action()
+            {
+                Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                log.Info(message);
+                while (Messages.Count > 260)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (Exception) { }
+    }
+
+    /// <summary>
+    /// 错误消息
+    /// </summary>
+    /// <param name="message"></param>
+    public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+
+    /// <summary>
+    /// 页面展示接收数据消息
+    /// </summary>
+    /// <param name="frame"></param>
+    public void ShowReceiveMessage(MtcpFrame frame)
+    {
+        try
+        {
+            void action()
+            {
+                var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame);
+                Messages.Add(msg);
+                log.Info($"接收:{frame}");
+                while (Messages.Count > 200)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (Exception) { }
+    }
+
+    /// <summary>
+    /// 页面展示发送数据消息
+    /// </summary>
+    /// <param name="frame"></param>
+    public void ShowSendMessage(MtcpFrame frame)
+    {
+        try
+        {
+            void action()
+            {
+                var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
+                Messages.Add(msg);
+                log.Info(message: $"发送:{frame}");
+                while (Messages.Count > 200)
+                {
+                    Messages.RemoveAt(0);
+                }
+            }
+            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+        }
+        catch (System.Exception) { }
+    }
+
+
+    /// <summary>
+    /// 清空消息
+    /// </summary>
+    [RelayCommand]
+    [property: JsonIgnore]
+    public void MessageClear()
+    {
+        Messages.Clear();
+    }
+
+    /// <summary>
+    /// 暂停更新接收的数据
+    /// </summary>
+    [RelayCommand]
+    public void Pause()
+    {
+        //IsPause = !IsPause;
+        //if (IsPause)
+        //{
+        //    ShowMessage("暂停更新接收的数据");
+        //}
+        //else
+        //{
+        //    ShowMessage("恢复更新接收的数据");
+        //}
+    }
+    #endregion
 }

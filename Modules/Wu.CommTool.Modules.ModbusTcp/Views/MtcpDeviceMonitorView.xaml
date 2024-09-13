@@ -58,14 +58,14 @@
                                Style="{StaticResource TitleTextBlock}"
                                Text="Modbus TCP 设备监控" />
                     <DockPanel Margin="0">
-                        <Button Width="30"
+                        <!--<Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
                                 Command="{Binding OpenMtcpDeviceManagerLogViewCommand}"
                                 Content="{md:PackIcon Kind=Eye}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />
+                                Style="{StaticResource Blue_CircleButton}" />-->
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
 
                             <Button Width="30"
@@ -78,7 +78,7 @@
                                     Content="{md:PackIcon Kind=Play}"
                                     Cursor="Hand"
                                     Foreground="{StaticResource Green_Foreground}"
-                                    IsEnabled="{Binding MtcpDeviceManager.Status, Converter={wu:ReverseBool}}"
+                                    IsEnabled="{Binding MtcpDeviceManager.State, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
                             <Button Width="30"
@@ -88,7 +88,7 @@
                                     Command="{Binding MtcpDeviceManager.StopCommand}"
                                     Content="{md:PackIcon Kind=Stop}"
                                     Cursor="Hand"
-                                    IsEnabled="{Binding MtcpDeviceManager.Status}"
+                                    IsEnabled="{Binding MtcpDeviceManager.State}"
                                     Style="{StaticResource Red_CircleButton}" />
 
                             <Button Width="30"
@@ -98,7 +98,7 @@
                                     Command="{Binding ExportConfigCommand}"
                                     Content="{md:PackIcon Kind=Upload}"
                                     Cursor="Hand"
-                                    IsEnabled="{Binding MtcpDeviceManager.Status, Converter={wu:ReverseBool}}"
+                                    IsEnabled="{Binding MtcpDeviceManager.State, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource Blue_CircleButton}" />
                             <Button Width="30"
                                     Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -107,7 +107,7 @@
                                     Command="{Binding ImportConfigCommand}"
                                     Content="{md:PackIcon Kind=Download}"
                                     Cursor="Hand"
-                                    IsEnabled="{Binding MtcpDeviceManager.Status, Converter={wu:ReverseBool}}"
+                                    IsEnabled="{Binding MtcpDeviceManager.State, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource Blue_CircleButton}" />
                         </StackPanel>
 
