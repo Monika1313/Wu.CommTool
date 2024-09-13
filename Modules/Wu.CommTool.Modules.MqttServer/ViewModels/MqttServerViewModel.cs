@@ -46,6 +46,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 //文件不存在则生成默认配置 
                 MqttServerConfig = new MqttServerConfig();
                 //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(mqttServerConfigFolder);
                 var content = JsonConvert.SerializeObject(MqttServerConfig);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }

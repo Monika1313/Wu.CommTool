@@ -62,6 +62,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 //文件不存在则生成默认配置 
                 MqttClientConfig = new();
                 //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(mqttClientConfigDict);
                 var content = JsonConvert.SerializeObject(MqttClientConfig);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
@@ -252,6 +253,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
+            Wu.Utils.IoUtil.Exists(mqttClientConfigDict);//验证文件夹是否存在
             DirectoryInfo Folder = new(mqttClientConfigDict);
             var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsonmcc")).Select(item => new ConfigFile(item));
             ConfigFiles.Clear();
