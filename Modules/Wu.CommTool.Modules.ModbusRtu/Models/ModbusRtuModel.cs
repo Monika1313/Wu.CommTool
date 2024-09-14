@@ -227,9 +227,7 @@ public partial class ModbusRtuModel : ObservableObject
         //缓存最后一次选择的串口
         var lastComPort = ComConfig.ComPort;
 
-        //清空列表
-        ComPorts.Clear();
-
+        List<ComPort> coms = [];//缓存查找到的串口
         //查找Com口
         using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
         var hardInfos = searcher.Get();
@@ -249,9 +247,10 @@ public partial class ModbusRtuModel : ObservableObject
                 int startIndex = deviceName.IndexOf("(");
                 string port = portList[0];
                 string name = deviceName[..(startIndex - 1)];
-                ComPorts.Add(new ComPort(port, name));
+                coms.Add(new ComPort(port,name));
             }
         }
+        ComPorts = new ObservableCollection<ComPort>(coms.OrderBy(x => x.Port));//串口列表
         if (ComPorts.Count != 0)
         {
             //查找第一个USB设备
