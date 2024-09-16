@@ -29,11 +29,11 @@ public partial class MtcpDeviceManager : ObservableObject
     private void Run()
     {
         State = true;
-
+        
         foreach (var mtcpDevice in MtcpDevices)
         {
-            //TODO 打开tcp通讯
-            //mtcpDevice.
+            mtcpDevice.Owner = this;
+            mtcpDevice.RunMonitorTask();  //打开数据监控任务
         }
 
         updateDeviceStateTaskCts = new();
@@ -45,20 +45,30 @@ public partial class MtcpDeviceManager : ObservableObject
     [property: JsonIgnore]
     private void Stop()
     {
-        State = false;
-        updateDeviceStateTaskCts.Cancel();
+        try
+        {
+            State = false;
+            updateDeviceStateTaskCts.Cancel();
+            foreach (var mtcpDevice in MtcpDevices)
+            {
+                mtcpDevice.DisConnect();
+            }
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
     private CancellationTokenSource updateDeviceStateTaskCts;
     private Task updateDeviceStateTask;
-
 
     /// <summary>
     /// 周期更新设备状态
     /// </summary>
     private async void UpdateDeviceState()
     {
-        while(true)
+        while (true)
         {
             try
             {

@@ -42,8 +42,6 @@ public partial class ModbusTcpClient : TcpClient
     public event Action<string> ErrorOccurred;
     #endregion
 
-
-
     /// <summary>
     /// 连接服务器
     /// </summary>
@@ -63,7 +61,7 @@ public partial class ModbusTcpClient : TcpClient
     /// <summary>
     /// 接收数据
     /// </summary>
-    void ReceiveData()
+    private void ReceiveData()
     {
         try
         {
@@ -96,8 +94,6 @@ public partial class ModbusTcpClient : TcpClient
             }
         }
     }
-
-
 
     public new void Close()
     {

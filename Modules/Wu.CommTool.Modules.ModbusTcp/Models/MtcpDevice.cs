@@ -1,17 +1,23 @@
-﻿namespace Wu.CommTool.Modules.ModbusTcp.Models;
+﻿using System.Diagnostics;
+using System.IO.Ports;
+using System.Text.RegularExpressions;
+
+namespace Wu.CommTool.Modules.ModbusTcp.Models;
 
 /// <summary>
 /// ModbusTcp设备
 /// </summary>
-public partial class MtcpDevice : ObservableObject
+public partial class MtcpDevice : ObservableObject,IDisposable
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(MtcpDevice));
+    private readonly EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
+    string currentRequest = string.Empty;
 
     /// <summary>
     /// 设备名
     /// </summary>
     [ObservableProperty]
-    string name = string.Empty;
+    string name = "未命名";
 
     /// <summary>
     /// 从站地址
@@ -54,6 +60,12 @@ public partial class MtcpDevice : ObservableObject
     [ObservableProperty]
     ObservableCollection<MessageData> messages = [];
 
+    /// <summary>
+    /// 所有者
+    /// </summary>
+    [ObservableProperty]
+    MtcpDeviceManager owner;
+
     [ObservableProperty]
     bool isOnline;
 
@@ -90,14 +102,9 @@ public partial class MtcpDevice : ObservableObject
                 IsOnline = false;
                 ShowMessage("断开连接...");
             };
-            ModbusTcpClient.MessageSending += (s) =>
-            {
-                ShowSendMessage(new MtcpFrame(s));
-            };
-            ModbusTcpClient.MessageReceived += (s) =>
-            {
-                ShowReceiveMessage(new MtcpFrame(s));
-            };
+
+            ModbusTcpClient.MessageSending += ModbusTcpClient_MessageSending;
+            ModbusTcpClient.MessageReceived += ModbusTcpClient_MessageReceived;
             ModbusTcpClient.ErrorOccurred += (s) =>
             {
                 ShowErrorMessage(s);
@@ -112,11 +119,30 @@ public partial class MtcpDevice : ObservableObject
     }
 
     /// <summary>
+    /// 发送消息事件
+    /// </summary>
+    /// <param name="obj"></param>
+    private void ModbusTcpClient_MessageSending(string obj)
+    {
+        ShowSendMessage(new MtcpFrame(obj));
+    }
+
+    /// <summary>
+    /// 接收消息事件
+    /// </summary>
+    /// <param name="obj"></param>
+    private void ModbusTcpClient_MessageReceived(string obj)
+    {
+        ShowReceiveMessage(new MtcpFrame(obj));
+    }
+
+    /// <summary>
     /// 断开Tcp连接
     /// </summary>
     /// <returns></returns>
     [RelayCommand]
-    private void DisConnect()
+    [property: JsonIgnore]
+    public void DisConnect()
     {
         try
         {
@@ -125,6 +151,84 @@ public partial class MtcpDevice : ObservableObject
         catch (Exception ex)
         {
             ShowErrorMessage(ex.Message);
+        }
+    }
+
+    //运行数据监控任务
+    public void RunMonitorTask()
+    {
+        Task.Run(MonitorTask);
+    }
+
+    /// <summary>
+    /// 数据监控任务
+    /// </summary>
+    private async void MonitorTask()
+    {
+        AnalyzeDataAddress();  //分析数据帧
+        await Connect();//打开tcp连接
+        WaitNextOne.Set();
+        while (Owner.State)
+        {
+            foreach (var frame in RequestFrames)
+            {
+                ExecutePublishMessage(frame);
+                await Task.Delay(50);//该处可以设定延时
+                WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
+            }
+        }
+        this.Dispose();
+    }
+
+    /// <summary>
+    /// 执行发送帧
+    /// </summary>
+    private bool ExecutePublishMessage(string message)
+    {
+        try
+        {
+            //发送数据不能为空
+            if (message is null || message.Length.Equals(0))
+            {
+                return false;
+            }
+
+            //验证数据字符必须符合16进制
+            Regex regex = new(@"^[0-9 a-f A-F -]*$");
+            if (!regex.IsMatch(message))
+            {
+                return false;
+            }
+
+            byte[] data;
+            try
+            {
+                data = message.Replace("-", string.Empty).GetBytes();
+            }
+            catch
+            {
+                return false;
+            }
+
+            if (ModbusTcpClient.Connected)
+            {
+                try
+                {
+                    currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
+                    ModbusTcpClient.SendMessage(message);//发送数据
+                    //Debug.Write($"发送:{message}");
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    HcGrowlExtensions.Warning(ex.Message);
+                }
+            }
+            return false;
+        }
+        catch
+        {
+            return false;
         }
     }
 
@@ -297,10 +401,17 @@ public partial class MtcpDevice : ObservableObject
     [property: JsonIgnore]
     private void DeleteMtcpData(MtcpData MtcpData)
     {
-        //if (MtcpDatas.Contains(MtcpData))
-        //{
-        //    MtcpDatas.Remove(MtcpData);
-        //}
+        try
+        {
+            if (MtcpDatas.Contains(MtcpData))
+            {
+                MtcpDatas.Remove(MtcpData);
+            }
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
     public override string ToString()
@@ -432,5 +543,10 @@ public partial class MtcpDevice : ObservableObject
         //    ShowMessage("恢复更新接收的数据");
         //}
     }
+
     #endregion
+    public void Dispose()
+    {
+
+    }
 }

@@ -18,7 +18,7 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        //Task.Run(() => GetDefaultConfig());
+        Task.Run(() => GetDefaultConfig());
     }
 
     /// <summary>
@@ -135,8 +135,8 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
             }
             else
             {
-                //文件不存在则生成默认配置 
-                InitialDefaultData();
+                InitialDefaultData();//文件不存在则生成默认配置 
+                Wu.Utils.IoUtil.Exists(mtcpDeviceManagerConfigFolder);
                 var content = JsonConvert.SerializeObject(MtcpDeviceManager);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
