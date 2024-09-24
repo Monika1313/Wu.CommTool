@@ -66,11 +66,39 @@ public enum ModbusRtuFrameType
     [Description("0x10错误帧 0x10写多个寄存器的响应错误帧")]
     _0x90错误帧,
 
+    [Description("0x14请求帧 读文件记录")]
+    _0x14请求帧,
+    [Description("0x14应答帧 读文件记录")]
+    _0x14响应帧,
+    [Description("0x14请求帧 0x14读文件记录错误帧")]
+    _0x94错误帧,
+
+    [Description("0x15请求帧 写文件记录")]
+    _0x15请求帧,
+    [Description("0x15应答帧 写文件记录")]
+    _0x15响应帧,
+    [Description("0x15请求帧 0x15写文件记录错误帧")]
+    _0x95错误帧,
+
+    [Description("0x16请求帧 屏蔽写寄存器")]
+    _0x16请求帧,
+    [Description("0x16应答帧 屏蔽写寄存器")]
+    _0x16响应帧,
+    [Description("0x16请求帧 0x16屏蔽写寄存器的响应错误帧")]
+    _0x96错误帧,
+
     [Description("0x17请求帧 读/写多个保持寄存器")]
     _0x17请求帧,
-    [Description("0x17请求帧 读/写多个保持寄存器")]
+    [Description("0x17应答帧 读/写多个保持寄存器")]
     _0x17响应帧,
     [Description("0x17请求帧 0x17读/写多个保持寄存器的响应错误帧")]
     _0x97错误帧,
+
+    [Description("0x2B请求帧 读设备识别码")]
+    _0x2B请求帧,
+    [Description("0x2B应答帧 读设备识别码")]
+    _0x2B响应帧,
+    [Description("0x2B请求帧 读设备识别码的响应错误帧")]
+    _0xAB错误帧,
 
 }

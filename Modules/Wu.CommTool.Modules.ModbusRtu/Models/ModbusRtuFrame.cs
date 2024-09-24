@@ -132,7 +132,7 @@ public class ModbusRtuFrame : BindableBase
     #region 解析帧内容用于UI显示
     public List<MessageSubContent> GetMessage()
     {
-        List<MessageSubContent> messages = new List<MessageSubContent>();
+        List<MessageSubContent> messages = [];
         try
         {
             switch (Type)
@@ -193,21 +193,6 @@ public class ModbusRtuFrame : BindableBase
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
 
-                case ModbusRtuFrameType._0x81错误帧:
-                case ModbusRtuFrameType._0x82错误帧:
-                case ModbusRtuFrameType._0x83错误帧:
-                case ModbusRtuFrameType._0x84错误帧:
-                case ModbusRtuFrameType._0x85错误帧:
-                case ModbusRtuFrameType._0x86错误帧:
-                case ModbusRtuFrameType._0x8F错误帧:
-                case ModbusRtuFrameType._0x90错误帧:
-                case ModbusRtuFrameType._0x97错误帧:
-                    messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
-                    messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
-                    messages.Add(new MessageSubContent($"{ErrCode:X2}", ModbusRtuMessageType.ErrCode));
-                    messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
-                    break;
-
                 case ModbusRtuFrameType._0x06请求帧:
                 case ModbusRtuFrameType._0x06响应帧:
                     messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
@@ -216,6 +201,50 @@ public class ModbusRtuFrame : BindableBase
                     messages.Add(new MessageSubContent($"{DatasFormat(RegisterValues)}", ModbusRtuMessageType.RegisterValues));
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
+
+                //错误帧格式相同
+                case ModbusRtuFrameType._0x81错误帧:
+                case ModbusRtuFrameType._0x82错误帧:
+                case ModbusRtuFrameType._0x83错误帧:
+                case ModbusRtuFrameType._0x84错误帧:
+                case ModbusRtuFrameType._0x85错误帧:
+                case ModbusRtuFrameType._0x86错误帧:
+                case ModbusRtuFrameType._0x8F错误帧:
+                case ModbusRtuFrameType._0x90错误帧:
+                case ModbusRtuFrameType._0x94错误帧:
+                case ModbusRtuFrameType._0x95错误帧:
+                case ModbusRtuFrameType._0x96错误帧:
+                case ModbusRtuFrameType._0x97错误帧:
+                case ModbusRtuFrameType._0xAB错误帧:
+                    messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
+                    messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
+                    messages.Add(new MessageSubContent($"{ErrCode:X2}", ModbusRtuMessageType.ErrCode));
+                    messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
+                    break;
+
+                
+                //TODO 未处理的帧
+                //case ModbusRtuFrameType._0x14请求帧:
+                //    break;
+                //case ModbusRtuFrameType._0x14响应帧:
+                //    break;
+                //case ModbusRtuFrameType._0x15请求帧:
+                //    break;
+                //case ModbusRtuFrameType._0x15响应帧:
+                //    break;
+                //case ModbusRtuFrameType._0x16请求帧:
+                //    break;
+                //case ModbusRtuFrameType._0x16响应帧:
+                //    break;
+                //case ModbusRtuFrameType._0x17请求帧:
+                //    break;
+                //case ModbusRtuFrameType._0x17响应帧:
+                //    break;
+                //case ModbusRtuFrameType._0x2B请求帧:
+                //    break;
+                //case ModbusRtuFrameType._0x2B响应帧:
+                //    break;
+
 
                 default:
                     messages.Add(new MessageSubContent(BitConverter.ToString(Frame).Replace("-", "").InsertFormat(4, " "), ModbusRtuMessageType.ErrMsg));
@@ -687,14 +716,58 @@ public class ModbusRtuFrame : BindableBase
                     Type = ModbusRtuFrameType._0x90错误帧;
                 }
                 break;
+
+            //TODO 读文件记录功能码需要解析
             case ModbusRtuFunctionCode._0x14:
+                if (Frame.Length>8)
+                {
+                    CrcCode = Frame.Skip(6).Take(2).ToArray();
+                    Type = ModbusRtuFrameType._0x14请求帧;
+                }
                 break;
             case ModbusRtuFunctionCode._0x94:
+                if (Frame.Length.Equals(5))
+                {
+                    ErrCode = Frame[2];
+                    CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                    switch (ErrCode)
+                    {
+                        case 1:
+                            ErrMessage = $"该设备不支持{(Function - 0x80).ToString().TrimStart('_')}功能码";
+                            break;
+                        case 2:
+                            ErrMessage = "参考类型错误/文件号错误/起始地址错误/起始地址+寄存器数量错误";
+                            break;
+                        case 3:
+                            ErrMessage = "读的字节数应∈[0x07,0xF5]";
+                            break;
+                        case 4:
+                            ErrMessage = "读通用参考失败";
+                            break;
+                        case 8:
+                            ErrMessage = "08异常码";
+                            break;
+                    }
+                    Type = ModbusRtuFrameType._0x94错误帧;
+                }
                 break;
+
             case ModbusRtuFunctionCode._0x15:
+                if (Frame.Length > 8)
+                {
+                    CrcCode = Frame.Skip(6).Take(2).ToArray();
+                    Type = ModbusRtuFrameType._0x15请求帧;
+                }
                 break;
             case ModbusRtuFunctionCode._0x95:
+                if (Frame.Length > 8)
+                {
+                    CrcCode = Frame.Skip(6).Take(2).ToArray();
+                    Type = ModbusRtuFrameType._0x95错误帧;
+                }
                 break;
+
+
             case ModbusRtuFunctionCode._0x16:
                 break;
             case ModbusRtuFunctionCode._0x96:
@@ -726,10 +799,10 @@ public class ModbusRtuFrame : BindableBase
                 }
                 break;
 
-            case ModbusRtuFunctionCode._0x2B:
-                break;
-            case ModbusRtuFunctionCode._0xAB:
-                break;
+            //case ModbusRtuFunctionCode._0x2B:
+            //    break;
+            //case ModbusRtuFunctionCode._0xAB:
+            //    break;
             default:
                 break;
         }
