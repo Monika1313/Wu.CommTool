@@ -368,4 +368,9 @@ public partial class MtcpFrame : ObservableObject
     byte errorCode;
     #endregion
 
+
+    public override string ToString()
+    {
+        return BitConverter.ToString(ByteFrame).Replace("-", "");
+    }
 }

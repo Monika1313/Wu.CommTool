@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
 
@@ -168,10 +169,16 @@ public partial class MtcpDevice : ObservableObject,IDisposable
         AnalyzeDataAddress();  //分析数据帧
         await Connect();//打开tcp连接
         WaitNextOne.Set();
+        ushort flag = 0;
         while (Owner.State)
         {
-            foreach (var frame in RequestFrames)
+            for (int i = 0; i < RequestFrames.Count; i++)
             {
+                flag++;
+                string frame = RequestFrames[i];
+                frame = $"{flag:X4}" + $"{frame.Substring(4, frame.Length - 4)}";
+                RequestFrames[i] = frame;
+
                 ExecutePublishMessage(frame);
                 await Task.Delay(50);//该处可以设定延时
                 WaitNextOne.WaitOne(1000);//等待接收上一条指令的应答,最大等待1000ms
@@ -289,7 +296,8 @@ public partial class MtcpDevice : ObservableObject,IDisposable
         {
             if (p.Y - p.X < 99)
             {
-                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{(int)p.X:X4}{(int)(p.Y - p.X + 1):X4}"));
+                //初始事务标识设置0000
+                frames.Add($"0000 0000 0006 {SlaveAddr:X2}03{(int)p.X:X4}{(int)(p.Y - p.X + 1):X4}");
             }
             //若有超过100字节的则再次拆分(设备厂商不同,有些设备支持最大读取数量不同)
             else
@@ -302,12 +310,12 @@ public partial class MtcpDevice : ObservableObject,IDisposable
                 {
                     if (p.Y - startAddr < 99)
                     {
-                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{(int)(p.Y - startAddr + 1):X4}"));
+                        frames.Add($"0000 0000 0006 {SlaveAddr:X2}03{startAddr:X4}{(int)(p.Y - startAddr + 1):X4}");
                         break;//退出循环
                     }
                     else
                     {
-                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+                        frames.Add($"0000 0000 0006 {SlaveAddr:X2}03{startAddr:X4}{62:X4}");
                     }
                     startAddr += 58;
                 }
@@ -344,25 +352,25 @@ public partial class MtcpDevice : ObservableObject,IDisposable
         {
             if (p.Y - p.X < 99)
             {
-                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{(int)p.X:X4}{(int)(p.Y - p.X + 1):X4}"));
+                frames.Add($"0000 0000 0006 {SlaveAddr:X2}04{(int)p.X:X4}{(int)(p.Y - p.X + 1):X4}");
             }
             //若有超过100字节的则再次拆分(设备厂商不同,有些设备支持最大读取数量不同)
             else
             {
                 var startAddr = (int)p.X;
                 //拆分成一帧读62字
-                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{startAddr:X4}{62:X4}"));
+                frames.Add($"0000 0000 0006 {SlaveAddr:X2}04{startAddr:X4}{62:X4}");
                 startAddr += 58;//两帧之间读取的地址重叠4字,可以保证在临界的数据至少在其中一帧是完整的
                 while (true)
                 {
                     if (p.Y - startAddr < 99)
                     {
-                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{startAddr:X4}{(int)(p.Y - startAddr + 1):X4}"));
+                        frames.Add($"0000 0000 0006 {SlaveAddr:X2}04{startAddr:X4}{(int)(p.Y - startAddr + 1):X4}");
                         break;//退出循环
                     }
                     else
                     {
-                        frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}04{startAddr:X4}{62:X4}"));
+                        frames.Add($"0000 0000 0006 {SlaveAddr:X2}04{startAddr:X4}{62:X4}");
                     }
                     startAddr += 58;
                 }
@@ -483,6 +491,98 @@ public partial class MtcpDevice : ObservableObject,IDisposable
                 var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame);
                 Messages.Add(msg);
                 log.Info($"接收:{frame}");
+                Debug.WriteLine($"接收:{frame}");
+
+                //TODO 解析接收的数据
+                #region 解析接收的数据值
+                ////遍历对象的测点, 在该帧范围内的进行赋值
+
+                ////不满足任意一项的帧丢弃
+                ////从站地址不相同
+                ////功能码不相同
+                ////读取数量与应答数量不能对应 读取数量单位word 应答单位是byte 数量关系是2倍
+                //if (requestFrame.SlaveId != responseFrame.SlaveId
+                //    || requestFrame.Function != responseFrame.Function
+                //    || requestFrame.RegisterNum != responseFrame.BytesNum / 2)
+                //{
+                //    continue;
+                //}
+
+                //Debug.WriteLine($"解析:[{requestFrame.StartAddr},{requestFrame.StartAddr + requestFrame.RegisterNum - 1}]");
+
+                ////根据请求帧 确定本次读取的地址范围
+                //Point point = new(requestFrame.StartAddr, requestFrame.StartAddr + requestFrame.RegisterNum - 1);
+
+                //List<MrtuData> data = [];
+
+                ////写入不同的存储区
+                //switch (func)
+                //{
+                //    //保持寄存器
+                //    case 3:
+                //        {
+                //            //查询该设备符合该应答帧的测点数据
+                //            var holdings = device.MrtuDatas
+                //                .Where(x => x.RegisterType == RegisterType.Holding
+                //                                   && point.X <= x.RegisterAddr
+                //                                   && x.RegisterLastWordAddr <= point.Y)
+                //                .ToList();
+                //            data = holdings;
+                //            break;
+                //        }
+                //    //输入寄存器
+                //    case 4:
+                //        {
+                //            //查询该设备符合该应答帧的测点数据
+                //            var inputs = device.MrtuDatas
+                //                .Where(x => x.RegisterType == RegisterType.Input
+                //                                   && point.X <= x.RegisterAddr
+                //                                   && x.RegisterLastWordAddr <= point.Y)
+                //                .ToList();
+                //            data = inputs;
+                //            break;
+                //        }
+                //}
+
+                //foreach (var x in data)
+                //{
+                //    x.UpdateTime = DateTime.Now;
+                //    var bytenum = (x.RegisterAddr - requestFrame.StartAddr) * 2;//该数据的字节数
+                //    switch (x.MrtuDataType)
+                //    {
+                //        case MrtuDataType.uShort:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.Short:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.uInt:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt32(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.Int:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.uLong:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.Long:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.Float:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetFloat(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.Double:
+                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetDouble(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+                //            break;
+                //        case MrtuDataType.Hex:
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
+                #endregion
+
+
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);
@@ -505,7 +605,8 @@ public partial class MtcpDevice : ObservableObject,IDisposable
             {
                 var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
                 Messages.Add(msg);
-                log.Info(message: $"发送:{frame}");
+                log.Info(message: $"发送:{frame}"); 
+                Debug.WriteLine($"发送:{frame}");
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);

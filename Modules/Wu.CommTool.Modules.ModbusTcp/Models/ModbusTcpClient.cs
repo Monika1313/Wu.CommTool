@@ -4,12 +4,12 @@
 /// Tcp客户端
 /// </summary>
 public partial class ModbusTcpClient : TcpClient
-{
+{ 
     public ModbusTcpClient()
     {
 
     }
-
+    
     #region 事件
     /// <summary>
     /// 连接成功事件
