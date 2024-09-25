@@ -98,6 +98,71 @@ public class ModbusRtuFrame : BindableBase
     /// 子消息集合
     /// </summary>
     public ObservableCollection<MessageSubContent> MessageSubContents => new ObservableCollection<MessageSubContent>(GetMessage());
+
+    #region 0x20功能码 请求帧属性
+    /// <summary>
+    /// 参考类型1
+    /// </summary>
+    private byte ReferenceType1 { get; set; }
+
+    /// <summary>
+    /// 文件号1
+    /// </summary>
+    private ushort FileNumber1 { get; set; }
+
+    /// <summary>
+    /// 记录号1
+    /// </summary>
+    private ushort RecordNumber1 { get; set; }
+
+    /// <summary>
+    /// 记录长度1
+    /// </summary>
+    private ushort RecordLength1 { get; set; }
+
+
+    ///// <summary>
+    ///// 参考类型2
+    ///// </summary>
+    //private byte ReferenceType2 { get; set; }
+
+    ///// <summary>
+    ///// 文件号2
+    ///// </summary>
+    //private ushort FileNumber2 { get; set; }
+
+    ///// <summary>
+    ///// 记录号2
+    ///// </summary>
+    //private ushort RecordNumber2 { get; set; }
+
+    ///// <summary>
+    ///// 记录长度2
+    ///// </summary>
+    //private ushort RecordLength2 { get; set; }
+    #endregion
+
+    #region 0x20功能码 应答帧属性
+    /// <summary>
+    /// 文件响应长度1
+    /// </summary>
+    private byte FileResponseLength1 { get; set; }
+
+    /// <summary>
+    /// 记录数据1
+    /// </summary>
+    public byte[] RecordDatas1 { get; set; }
+
+    ///// <summary>
+    ///// 文件响应长度2
+    ///// </summary>
+    //private byte FileResponseLength2 { get; set; }
+
+    ///// <summary>
+    ///// 记录数据2
+    ///// </summary>
+    //public byte[] RecordDatas2 { get; set; }
+    #endregion
     #endregion
 
 
@@ -222,12 +287,27 @@ public class ModbusRtuFrame : BindableBase
                     messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
                     break;
 
-                
+                //TODO 0x14的数据类型有部分未做
+                case ModbusRtuFrameType._0x14请求帧:
+                    messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
+                    messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
+                    messages.Add(new MessageSubContent($"{BytesNum:X2}", ModbusRtuMessageType.BytesNum));
+                    messages.Add(new MessageSubContent($"{ReferenceType1:X2}", ModbusRtuMessageType.ReferenceType));
+                    messages.Add(new MessageSubContent($"{FileNumber1:X4}", ModbusRtuMessageType.FileNumber));
+                    messages.Add(new MessageSubContent($"{RecordNumber1:X4}", ModbusRtuMessageType.RecordNumber));
+                    messages.Add(new MessageSubContent($"{RecordLength1:X4}", ModbusRtuMessageType.RecordLength));
+                    messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
+                    break;
+                case ModbusRtuFrameType._0x14响应帧:
+                    messages.Add(new MessageSubContent($"{SlaveId:X2}", ModbusRtuMessageType.SlaveId));
+                    messages.Add(new MessageSubContent($"{(byte)Function:X2}", ModbusRtuMessageType.Function));
+                    messages.Add(new MessageSubContent($"{FileResponseLength1:X2}", ModbusRtuMessageType.FileResponseLength));
+                    messages.Add(new MessageSubContent($"{ReferenceType1:X2}", ModbusRtuMessageType.ReferenceType));
+                    messages.Add(new MessageSubContent($"{DatasFormat(RecordDatas1)}", ModbusRtuMessageType.RecordDatas));
+                    messages.Add(new MessageSubContent($"{DatasFormat(CrcCode)}", ModbusRtuMessageType.CrcCode));
+                    break;
+
                 //TODO 未处理的帧
-                //case ModbusRtuFrameType._0x14请求帧:
-                //    break;
-                //case ModbusRtuFrameType._0x14响应帧:
-                //    break;
                 //case ModbusRtuFrameType._0x15请求帧:
                 //    break;
                 //case ModbusRtuFrameType._0x15响应帧:
@@ -693,6 +773,7 @@ public class ModbusRtuFrame : BindableBase
                     Type = ModbusRtuFrameType._0x10请求帧;
                 }
                 break;
+
             case ModbusRtuFunctionCode._0x90:
                 if (Frame.Length.Equals(5))
                 {
@@ -719,12 +800,29 @@ public class ModbusRtuFrame : BindableBase
 
             //TODO 读文件记录功能码需要解析
             case ModbusRtuFunctionCode._0x14:
-                if (Frame.Length>8)
+                if (Frame.Length==12)
                 {
-                    CrcCode = Frame.Skip(6).Take(2).ToArray();
+                    BytesNum = Frame[2];
+                    ReferenceType1 = Frame[3];
+                    FileNumber1 = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 4);
+                    RecordNumber1 = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 6);
+                    RecordLength1 = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(Frame, 8);
+                    CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x14请求帧;
                 }
+                // 0x14响应帧
+                else
+                {
+                    
+                    BytesNum = Frame[2];//响应数据长度
+                    FileResponseLength1 = Frame[3];//文件响应长度 
+                    ReferenceType1 = Frame[4];//参考类型
+                    RecordDatas1 = Frame.Skip(5).Take(Frame.Length - 7).ToArray();//记录数据
+                    CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
+                    Type = ModbusRtuFrameType._0x14响应帧;
+                }
                 break;
+
             case ModbusRtuFunctionCode._0x94:
                 if (Frame.Length.Equals(5))
                 {

@@ -23,5 +23,20 @@ public enum ModbusRtuMessageType
     [Description("错误码")]
     ErrCode = 7,
     [Description("错误消息")]
-    ErrMsg = 10
+    ErrMsg = 10,
+
+    [Description("参考类型")]
+    ReferenceType = 20,
+    [Description("文件号")]
+    FileNumber = 21,
+    [Description("记录号")]
+    RecordNumber = 22,
+    [Description("记录长度")]
+    RecordLength = 23,
+
+    [Description("文件响应长度")]
+    FileResponseLength = 30,
+    [Description("记录数据")]
+    RecordDatas = 31,
+
 }

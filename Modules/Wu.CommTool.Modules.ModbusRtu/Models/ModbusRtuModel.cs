@@ -247,7 +247,7 @@ public partial class ModbusRtuModel : ObservableObject
                 int startIndex = deviceName.IndexOf("(");
                 string port = portList[0];
                 string name = deviceName[..(startIndex - 1)];
-                coms.Add(new ComPort(port,name));
+                coms.Add(new ComPort(port, name));
             }
         }
         ComPorts = new ObservableCollection<ComPort>(coms.OrderBy(x => x.Port));//串口列表
@@ -823,6 +823,8 @@ public partial class ModbusRtuModel : ObservableObject
                         #region TODO 这部分未完成
                         //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
                         //若8字节校验未通过,则可能不是上述描述的请求帧,应根据对应帧的具体内容具体解析
+
+                        byte functionCode = frame[1];//从帧中获取到当前的功能码
                         if (!crcOk)
                         {
                             //0x10请求帧 帧长度需要根据帧的实际情况计算  长度=9+N  从站ID(1) 功能码(1) 起始地址(2) 寄存器数量(2) 字节数(1)  寄存器值(n) 校验码(2)
@@ -853,6 +855,29 @@ public partial class ModbusRtuModel : ObservableObject
                             {
                                 //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
                             }
+
+                            
+                            switch (functionCode)
+                            {
+                                //功能码20 (0x14)
+                                case 0x14:
+                                    {
+                                        //0x14请求帧 帧长度需要根据帧的实际情况计算 长度=5+7N且(N>=1)   从站ID(1) 功能码(1) 字节数(1) [参考类型(1) 文件号(2) 记录号(2) 记录长度(2)]*N   校验码(2)
+                                        //TODO 暂时支持读一条文件记录
+                                        if (frameCache.Count >=12)
+                                        {
+                                            var tempF = frameCache.Take(12).ToList();//截取一段进行校验
+                                            if (IsModbusCrcOk(tempF))
+                                            {
+                                                frame = tempF;
+                                            }
+                                        }
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+
 
                             //解析出可能的帧并校验成功
                             if (frame.Count > 0 && IsModbusCrcOk(frame))
@@ -1317,7 +1342,7 @@ public partial class ModbusRtuModel : ObservableObject
                 {
                     //搜索
                     ShowMessage($"搜索: {ComConfig.ComPort.Port}:{ComConfig.ComPort.DeviceName} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
-                    
+
                     byte min = Math.Min(SearchStartSlaveId, SearchEndSlaveId);
                     byte max = Math.Max(SearchStartSlaveId, SearchEndSlaveId);
                     for (byte i = min; i <= max; i++)
