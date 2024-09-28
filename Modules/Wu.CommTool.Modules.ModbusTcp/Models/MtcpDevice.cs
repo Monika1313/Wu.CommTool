@@ -141,8 +141,8 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     /// <param name="obj"></param>
     private void ModbusTcpClient_MessageReceived(string obj)
     {
-        var receiveFrame = new MtcpFrame(obj);
-        ShowReceiveMessage(receiveFrame);
+        var responseFrame = new MtcpFrame(obj);
+        ShowReceiveMessage(responseFrame);
 
         //TODO 解析接收的数据
         #region 解析接收的数据值
@@ -153,9 +153,9 @@ public partial class MtcpDevice : ObservableObject, IDisposable
         {
             MtcpFrame xx = SendedMtcpFrames
                 .OrderBy(x => x.Time)
-                .FirstOrDefault(x => x.TransactionId.Equals(receiveFrame.TransactionId)
-                                          && x.FunctionCode == receiveFrame.FunctionCode
-                                          && x.UnitId == receiveFrame.UnitId);
+                .FirstOrDefault(x => x.TransactionId.Equals(responseFrame.TransactionId)
+                                          && x.FunctionCode == responseFrame.FunctionCode
+                                          && x.UnitId == responseFrame.UnitId);
             if (xx == null) { return; }
             //TODO还需要判断 数量匹配
             requestFrame = xx;
@@ -196,46 +196,43 @@ public partial class MtcpDevice : ObservableObject, IDisposable
                 }
         }
 
-        //TODO 
-        //foreach (var x in data)
-        //{
-        //    x.UpdateTime = DateTime.Now;
-        //    var bytenum = (x.RegisterAddr - requestFrame.StartAddr) * 2;//该数据的字节数
-        //    switch (x.MrtuDataType)
-        //    {
-        //        case MrtuDataType.uShort:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.Short:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.uInt:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt32(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.Int:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.uLong:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.Long:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.Float:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetFloat(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.Double:
-        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetDouble(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-        //            break;
-        //        case MrtuDataType.Hex:
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //}
+        foreach (var x in data)
+        {
+            x.UpdateTime = DateTime.Now;
+            var bytenum = (x.RegisterAddr - requestFrame.StartAddr) * 2;//该数据的字节数
+            switch (x.ModbusDataType)
+            {
+                case ModbusDataType.uShort:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt16(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.Short:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt16(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.uInt:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt32(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.Int:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.uLong:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt64(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.Long:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt64(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.Float:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetFloat(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.Double:
+                    x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetDouble(responseFrame.RegisterValues, bytenum, ModbusByteOrder));
+                    break;
+                case ModbusDataType.Hex:
+                    break;
+                default:
+                    break;
+            }
+        }
         #endregion
-
-
     }
 
     /// <summary>

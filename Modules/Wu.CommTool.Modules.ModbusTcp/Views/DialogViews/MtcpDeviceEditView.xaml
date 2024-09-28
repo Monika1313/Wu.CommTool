@@ -1,0 +1,56 @@
+﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusTcp.Views.DialogViews.MtcpDeviceEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:core="Wu.CommTool.Core"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Views.DialogViews"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:wu="https://github.com/Monika1313/Wu"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+    <UserControl.InputBindings>
+        <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
+    </UserControl.InputBindings>
+    <DockPanel>
+        <StackPanel Margin="4"
+                    DockPanel.Dock="Top"
+                    Orientation="Vertical">
+            <TextBox hc:TitleElement.Title="设备名称"
+                     DockPanel.Dock="Top"
+                     Style="{StaticResource FormTextBox}"
+                     Text="{Binding MrtuDevice.Name}" />
+            <TextBox hc:TitleElement.Title="从站地址"
+                     DockPanel.Dock="Top"
+                     Style="{StaticResource FormTextBox}"
+                     Text="{Binding MrtuDevice.SlaveAddr}" />
+
+            <ComboBox MinWidth="135"
+                      hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
+                      hc:TitleElement.Title="字节序"
+                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
+                      SelectedItem="{Binding MrtuDevice.ModbusByteOrder}"
+                      Style="{StaticResource FormComboBox}" />
+
+
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Center"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+            <StackPanel Grid.Row="2"
+                        Margin="10"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                <!--<Button Margin="0,0,10,0"
+                    Command="{Binding CancelCommand}"
+                    Content="取消"
+                    Style="{StaticResource MaterialDesignOutlinedButton}" />-->
+                <Button Command="{Binding SaveCommand}" Content="{md:PackIcon Kind=CheckboxBlankCircleOutline, Size=18}" />
+            </StackPanel>
+        </StackPanel>
+    </DockPanel>
+</UserControl>

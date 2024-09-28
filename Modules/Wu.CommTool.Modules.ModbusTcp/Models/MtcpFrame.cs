@@ -360,7 +360,8 @@ public partial class MtcpFrame : ObservableObject
     [ObservableProperty]
     byte bytesNum;
 
-    byte[] RegisterValues;
+    [ObservableProperty]
+    byte[] registerValues;
 
     [ObservableProperty]
     byte errorCode;
