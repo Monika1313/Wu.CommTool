@@ -9,13 +9,11 @@ public partial class MtcpFrame : ObservableObject
     public MtcpFrame(byte[] frame)
     {
         ByteFrame = frame;
+        Time = DateTime.Now;
         AnalyzeFrame();
     }
 
-    public MtcpFrame(string frame) : this(frame.GetBytes())
-    {
-
-    }
+    public MtcpFrame(string frame) : this(frame.GetBytes()) { }
     #endregion
 
     /// <summary>
@@ -367,6 +365,11 @@ public partial class MtcpFrame : ObservableObject
     [ObservableProperty]
     byte errorCode;
     #endregion
+
+    /// <summary>
+    /// 发送或接收的时间
+    /// </summary>
+    public DateTime Time { get; set; }
 
 
     public override string ToString()

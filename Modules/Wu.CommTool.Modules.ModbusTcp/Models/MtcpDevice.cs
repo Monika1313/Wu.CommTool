@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Text.RegularExpressions;
@@ -8,7 +9,7 @@ namespace Wu.CommTool.Modules.ModbusTcp.Models;
 /// <summary>
 /// ModbusTcp设备
 /// </summary>
-public partial class MtcpDevice : ObservableObject,IDisposable
+public partial class MtcpDevice : ObservableObject, IDisposable
 {
     private static readonly ILog log = LogManager.GetLogger(typeof(MtcpDevice));
     private readonly EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
@@ -27,7 +28,7 @@ public partial class MtcpDevice : ObservableObject,IDisposable
     byte slaveAddr = 1;
 
     [ObservableProperty]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     ModbusTcpClient modbusTcpClient = new();
 
     /// <summary>
@@ -75,6 +76,12 @@ public partial class MtcpDevice : ObservableObject,IDisposable
 
     [ObservableProperty]
     int serverPort = 502;
+
+    /// <summary>
+    /// 已发送的帧列表
+    /// </summary>
+    List<MtcpFrame> SendedMtcpFrames = [];
+    private readonly object lockObject = new object();
 
     /// <summary>
     /// 建立Tcp/Ip连接
@@ -134,7 +141,101 @@ public partial class MtcpDevice : ObservableObject,IDisposable
     /// <param name="obj"></param>
     private void ModbusTcpClient_MessageReceived(string obj)
     {
-        ShowReceiveMessage(new MtcpFrame(obj));
+        var receiveFrame = new MtcpFrame(obj);
+        ShowReceiveMessage(receiveFrame);
+
+        //TODO 解析接收的数据
+        #region 解析接收的数据值
+
+        MtcpFrame requestFrame;
+        //查询匹配的帧 事务处理标识+从站ID+功能码
+        lock (lockObject)
+        {
+            MtcpFrame xx = SendedMtcpFrames
+                .OrderBy(x => x.Time)
+                .FirstOrDefault(x => x.TransactionId.Equals(receiveFrame.TransactionId)
+                                          && x.FunctionCode == receiveFrame.FunctionCode
+                                          && x.UnitId == receiveFrame.UnitId);
+            if (xx == null) { return; }
+            //TODO还需要判断 数量匹配
+            requestFrame = xx;
+        }
+
+        Debug.WriteLine($"解析:[{requestFrame.StartAddr},{requestFrame.StartAddr + requestFrame.RegisterNum - 1}]");
+        //根据请求帧 确定本次读取的地址范围
+        Point point = new(requestFrame.StartAddr, requestFrame.StartAddr + requestFrame.RegisterNum - 1);
+
+        List<MtcpData> data = [];
+
+        //写入不同的存储区
+        switch (requestFrame.FunctionCode)
+        {
+            //保持寄存器
+            case MtcpFunctionCode._0x03:
+                {
+                    //查询该设备符合该应答帧的测点数据
+                    var holdings = MtcpDatas
+                        .Where(x => x.RegisterType == RegisterType.Holding
+                                           && point.X <= x.RegisterAddr
+                                           && x.RegisterLastWordAddr <= point.Y)
+                        .ToList();
+                    data = holdings;
+                    break;
+                }
+            //输入寄存器
+            case MtcpFunctionCode._0x04:
+                {
+                    //查询该设备符合该应答帧的测点数据
+                    var inputs = MtcpDatas
+                        .Where(x => x.RegisterType == RegisterType.Input
+                                           && point.X <= x.RegisterAddr
+                                           && x.RegisterLastWordAddr <= point.Y)
+                        .ToList();
+                    data = inputs;
+                    break;
+                }
+        }
+
+        //TODO 
+        //foreach (var x in data)
+        //{
+        //    x.UpdateTime = DateTime.Now;
+        //    var bytenum = (x.RegisterAddr - requestFrame.StartAddr) * 2;//该数据的字节数
+        //    switch (x.MrtuDataType)
+        //    {
+        //        case MrtuDataType.uShort:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.Short:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.uInt:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt32(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.Int:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.uLong:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.Long:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.Float:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetFloat(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.Double:
+        //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetDouble(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
+        //            break;
+        //        case MrtuDataType.Hex:
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //}
+        #endregion
+
+
     }
 
     /// <summary>
@@ -222,6 +323,7 @@ public partial class MtcpDevice : ObservableObject,IDisposable
                 try
                 {
                     currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
+                    SendedMtcpFrames.Add(new MtcpFrame(message));//加入已发送的列表中
                     ModbusTcpClient.SendMessage(message);//发送数据
                     //Debug.Write($"发送:{message}");
                     return true;
@@ -493,96 +595,6 @@ public partial class MtcpDevice : ObservableObject,IDisposable
                 log.Info($"接收:{frame}");
                 Debug.WriteLine($"接收:{frame}");
 
-                //TODO 解析接收的数据
-                #region 解析接收的数据值
-                ////遍历对象的测点, 在该帧范围内的进行赋值
-
-                ////不满足任意一项的帧丢弃
-                ////从站地址不相同
-                ////功能码不相同
-                ////读取数量与应答数量不能对应 读取数量单位word 应答单位是byte 数量关系是2倍
-                //if (requestFrame.SlaveId != responseFrame.SlaveId
-                //    || requestFrame.Function != responseFrame.Function
-                //    || requestFrame.RegisterNum != responseFrame.BytesNum / 2)
-                //{
-                //    continue;
-                //}
-
-                //Debug.WriteLine($"解析:[{requestFrame.StartAddr},{requestFrame.StartAddr + requestFrame.RegisterNum - 1}]");
-
-                ////根据请求帧 确定本次读取的地址范围
-                //Point point = new(requestFrame.StartAddr, requestFrame.StartAddr + requestFrame.RegisterNum - 1);
-
-                //List<MrtuData> data = [];
-
-                ////写入不同的存储区
-                //switch (func)
-                //{
-                //    //保持寄存器
-                //    case 3:
-                //        {
-                //            //查询该设备符合该应答帧的测点数据
-                //            var holdings = device.MrtuDatas
-                //                .Where(x => x.RegisterType == RegisterType.Holding
-                //                                   && point.X <= x.RegisterAddr
-                //                                   && x.RegisterLastWordAddr <= point.Y)
-                //                .ToList();
-                //            data = holdings;
-                //            break;
-                //        }
-                //    //输入寄存器
-                //    case 4:
-                //        {
-                //            //查询该设备符合该应答帧的测点数据
-                //            var inputs = device.MrtuDatas
-                //                .Where(x => x.RegisterType == RegisterType.Input
-                //                                   && point.X <= x.RegisterAddr
-                //                                   && x.RegisterLastWordAddr <= point.Y)
-                //                .ToList();
-                //            data = inputs;
-                //            break;
-                //        }
-                //}
-
-                //foreach (var x in data)
-                //{
-                //    x.UpdateTime = DateTime.Now;
-                //    var bytenum = (x.RegisterAddr - requestFrame.StartAddr) * 2;//该数据的字节数
-                //    switch (x.MrtuDataType)
-                //    {
-                //        case MrtuDataType.uShort:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.Short:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt16(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.uInt:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt32(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.Int:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.uLong:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetUInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.Long:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetInt64(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.Float:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetFloat(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.Double:
-                //            x.Value = MathExtension.Round2(x.Rate * ModbusUtils.GetDouble(responseFrame.RegisterValues, bytenum, device.ModbusByteOrder));
-                //            break;
-                //        case MrtuDataType.Hex:
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
-                #endregion
-
-
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);
@@ -605,7 +617,7 @@ public partial class MtcpDevice : ObservableObject,IDisposable
             {
                 var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
                 Messages.Add(msg);
-                log.Info(message: $"发送:{frame}"); 
+                log.Info(message: $"发送:{frame}");
                 Debug.WriteLine($"发送:{frame}");
                 while (Messages.Count > 200)
                 {
