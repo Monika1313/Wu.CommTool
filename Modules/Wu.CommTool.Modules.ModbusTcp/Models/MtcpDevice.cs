@@ -80,8 +80,11 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     /// <summary>
     /// 已发送的帧列表
     /// </summary>
+    [JsonIgnore]
     List<MtcpFrame> SendedMtcpFrames = [];
-    private readonly object lockObject = new object();
+
+    [JsonIgnore]
+    private readonly object lockObject = new();
 
     /// <summary>
     /// 建立Tcp/Ip连接
