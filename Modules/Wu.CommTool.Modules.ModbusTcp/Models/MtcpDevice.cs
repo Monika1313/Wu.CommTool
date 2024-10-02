@@ -66,6 +66,7 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     /// 所有者
     /// </summary>
     [ObservableProperty]
+    [property: JsonIgnore]
     MtcpDeviceManager owner;
 
     [ObservableProperty]
@@ -84,7 +85,15 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     List<MtcpFrame> SendedMtcpFrames = [];
 
     [JsonIgnore]
+    ConcurrentDictionary<Guid, MtcpFrame> PublishedMtcpFrames = [];
+
+    [JsonIgnore]
     private readonly object lockObject = new();
+
+    [ObservableProperty]
+    bool isPause;
+
+
 
     /// <summary>
     /// 建立Tcp/Ip连接

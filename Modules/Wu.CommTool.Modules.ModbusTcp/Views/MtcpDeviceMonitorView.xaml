@@ -9,6 +9,7 @@
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Models"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:MtcpDeviceMonitorDesignViewModel.Instance}"
@@ -52,20 +53,169 @@
 
     <md:DialogHost Identifier="{x:Static local:MtcpDeviceMonitorView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
         <md:DrawerHost IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
+            <md:DrawerHost.RightDrawerContent>
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                        <!--  暂停显示按钮  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                HorizontalAlignment="Left"
+                                Command="{Binding MtcpDeviceManager.SelectedMtcpDevice.PauseCommand}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Left">
+                            <md:PackIcon Width="24" Height="24">
+                                <md:PackIcon.Style>
+                                    <Style TargetType="md:PackIcon">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="true">
+                                                <Setter Property="Kind" Value="PlayPause" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="false">
+                                                <Setter Property="Kind" Value="Pause" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </md:PackIcon.Style>
+                            </md:PackIcon>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="true">
+                                            <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                            <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="false">
+                                            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                            <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <!--  清空消息按钮  -->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                hc:Poptip.Content="清空消息"
+                                Command="{Binding MtcpDeviceManager.SelectedMtcpDevice.MessageClearCommand}"
+                                Content="{md:PackIcon Kind=Delete}"
+                                DockPanel.Dock="Left"
+                                Style="{StaticResource Red_CircleButton}" />
+                    </DockPanel>
+
+                    <ContentControl Margin="4,0"
+                                    DockPanel.Dock="Top"
+                                    Style="{StaticResource Effect2Control}">
+                        <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                            <ItemsControl Background="Transparent" ItemsSource="{Binding MtcpDeviceManager.SelectedMtcpDevice.Messages, Mode=OneTime, IsAsync=True}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel VirtualizingPanel.CacheLength="2"
+                                                                VirtualizingPanel.CacheLengthUnit="Page"
+                                                                VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                                                                VirtualizingPanel.VirtualizationMode="Recycling" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+
+                                <ItemsControl.Resources>
+                                    <DataTemplate DataType="{x:Type core:MessageData}">
+                                        <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                            <WrapPanel Orientation="Horizontal">
+                                                <TextBlock Margin="3"
+                                                           VerticalAlignment="Center"
+                                                           Style="{StaticResource MessageTextBlock}"
+                                                           Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                <TextBlock Margin="5,0"
+                                                           VerticalAlignment="Center"
+                                                           Style="{StaticResource MessageTextBlock}"
+                                                           Text="{Binding Type}" />
+                                                <TextBox VerticalAlignment="Center"
+                                                         FontSize="12"
+                                                         FontWeight="Bold"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource MessageTextBox}"
+                                                         Text="{Binding Content}"
+                                                         TextWrapping="Wrap" />
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+
+                                    <DataTemplate DataType="{x:Type models:MtcpMessageData}">
+                                        <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                            <!--<i:Interaction.Triggers>
+                                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                    <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                                </i:EventTrigger>
+                                            </i:Interaction.Triggers>-->
+                                            <!--<Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.MtcpMaster.CopyFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="复制Modbus数据帧"
+                                                              Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="解析数据帧"
+                                                              Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
+                                                </ContextMenu>
+                                            </Border.ContextMenu>-->
+                                            <WrapPanel Orientation="Horizontal">
+                                                <TextBlock Margin="3"
+                                                           VerticalAlignment="Center"
+                                                           Style="{StaticResource MessageTextBlock}"
+                                                           Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
+                                                <TextBlock Margin="5,0"
+                                                           VerticalAlignment="Center"
+                                                           Style="{StaticResource MessageTextBlock}"
+                                                           Text="{Binding Type}" />
+
+                                                <TextBox VerticalAlignment="Center"
+                                                         FontSize="12"
+                                                         FontWeight="Bold"
+                                                         IsReadOnly="True"
+                                                         Style="{StaticResource MessageTextBox}"
+                                                         Text="{Binding Content}"
+                                                         TextWrapping="Wrap" />
+
+                                                <ItemsControl Background="Transparent"
+                                                              ItemsSource="{Binding MtcpSubMessageData}"
+                                                              Visibility="{Binding MtcpSubMessageData.Count, Converter={wu:Zero2Collapsed}}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Margin="3,0,3,0"
+                                                                       VerticalAlignment="Center"
+                                                                       FontWeight="Bold"
+                                                                       Style="{StaticResource MtcpMessageTextBlock}"
+                                                                       Text="{Binding Content}"
+                                                                       TextWrapping="Wrap" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.Resources>
+                            </ItemsControl>
+                        </hc:ScrollViewer>
+                    </ContentControl>
+                </DockPanel>
+            </md:DrawerHost.RightDrawerContent>
             <DockPanel>
                 <Grid DockPanel.Dock="Top">
                     <TextBlock HorizontalAlignment="Center"
                                Style="{StaticResource TitleTextBlock}"
                                Text="Modbus TCP 设备监控" />
-                    <DockPanel Margin="0">
-                        <!--<Button Width="30"
-                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                Margin="5"
-                                Command="{Binding OpenMtcpDeviceManagerLogViewCommand}"
-                                Content="{md:PackIcon Kind=Eye}"
-                                Cursor="Hand"
-                                DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />-->
+                    <DockPanel Margin="0" LastChildFill="False">
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
 
                             <Button Width="30"
@@ -111,6 +261,16 @@
                                     Style="{StaticResource Blue_CircleButton}" />
                         </StackPanel>
 
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                hc:Poptip.Content="查看消息"
+                                Command="{Binding ExecuteCommand}"
+                                CommandParameter="OpenRightDrawer"
+                                Content="{md:PackIcon Kind=Eye}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
                     </DockPanel>
                 </Grid>
                 <Grid DockPanel.Dock="Left">
@@ -348,9 +508,6 @@
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
-
-
-
 
                             <DataGridTemplateColumn Header="寄存器类型">
                                 <DataGridTemplateColumn.CellTemplate>

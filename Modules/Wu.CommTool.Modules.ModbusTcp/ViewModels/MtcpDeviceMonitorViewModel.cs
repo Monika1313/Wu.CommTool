@@ -62,6 +62,7 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
         {
             case "Search": Search(); break;
             case "OpenDialogView": OpenDialogView(); break;
+            case "OpenRightDrawer": OpenDrawers.RightDrawer = true; break;
             default: break;
         }
     }
