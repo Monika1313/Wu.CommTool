@@ -229,11 +229,11 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     {
         try
         {
-            DialogParameters param = new()
-            {
-                { "Value", MtcpDevice }
-            };
-            //var dialogResult = await dialogHost.ShowDialog(nameof(ConfigMtcpDeviceView), param, nameof(ModbusRtuView));
+            //DialogParameters param = new()
+            //{
+            //    { "Value", MtcpDevice }
+            //};
+            //var dialogResult = await dialogHost.ShowDialog(nameof(MtcpDeviceEditView), param, nameof(ModbusTcpView));
 
             //if (dialogResult.Result == ButtonResult.OK)
             //{
@@ -251,22 +251,22 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
     [property: JsonIgnore]
     private async Task EditMtcpDevice(MtcpDevice obj)
     {
-        //try
-        //{
-        //    if (obj == null)
-        //    {
-        //        return;
-        //    }
-        //    DialogParameters param = new()
-        //    {
-        //        { "Value", obj }
-        //    };
-        //    var dialogResult = await dialogHost.ShowDialog(nameof(MtcpDeviceEditView), param, nameof(MtcpDeviceMonitorView));
-        //}
-        //catch (Exception ex)
-        //{
-        //    HcGrowlExtensions.Warning(ex.Message);
-        //}
+        try
+        {
+            if (obj == null)
+            {
+                return;
+            }
+            DialogParameters param = new()
+            {
+                { "Value", obj }
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(MtcpDeviceEditView), param, nameof(MtcpDeviceMonitorView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 
 

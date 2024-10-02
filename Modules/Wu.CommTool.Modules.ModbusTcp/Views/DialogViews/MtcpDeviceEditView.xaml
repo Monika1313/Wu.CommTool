@@ -3,14 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:core="Wu.CommTool.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusTcp.ViewModels.DialogViewModels.DialogDesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Views.DialogViews"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
+             d:DataContext="{x:Static dvm:MtcpDeviceEditDesignViewModel.Instance}"
              d:DesignHeight="450"
              d:DesignWidth="800"
+             prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <UserControl.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
@@ -22,17 +26,17 @@
             <TextBox hc:TitleElement.Title="设备名称"
                      DockPanel.Dock="Top"
                      Style="{StaticResource FormTextBox}"
-                     Text="{Binding MrtuDevice.Name}" />
+                     Text="{Binding MtcpDevice.Name}" />
             <TextBox hc:TitleElement.Title="从站地址"
                      DockPanel.Dock="Top"
                      Style="{StaticResource FormTextBox}"
-                     Text="{Binding MrtuDevice.SlaveAddr}" />
+                     Text="{Binding MtcpDevice.SlaveAddr}" />
 
             <ComboBox MinWidth="135"
                       hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
                       hc:TitleElement.Title="字节序"
                       ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
-                      SelectedItem="{Binding MrtuDevice.ModbusByteOrder}"
+                      SelectedItem="{Binding MtcpDevice.ModbusByteOrder}"
                       Style="{StaticResource FormComboBox}" />
 
 
