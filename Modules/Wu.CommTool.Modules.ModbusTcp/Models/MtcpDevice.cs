@@ -84,8 +84,8 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     [JsonIgnore]
     List<MtcpFrame> SendedMtcpFrames = [];
 
-    [JsonIgnore]
-    ConcurrentDictionary<Guid, MtcpFrame> PublishedMtcpFrames = [];
+    //[JsonIgnore]
+    //ConcurrentDictionary<Guid, MtcpFrame> PublishedMtcpFrames = [];
 
     [JsonIgnore]
     private readonly object lockObject = new();
@@ -332,7 +332,10 @@ public partial class MtcpDevice : ObservableObject, IDisposable
                 try
                 {
                     currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
-                    SendedMtcpFrames.Add(new MtcpFrame(message));//加入已发送的列表中
+                    lock (lockObject)
+                    {
+                        SendedMtcpFrames.Add(new MtcpFrame(message));//加入已发送的列表中
+                    }
                     ModbusTcpClient.SendMessage(message);//发送数据
                     //Debug.Write($"发送:{message}");
                     return true;
