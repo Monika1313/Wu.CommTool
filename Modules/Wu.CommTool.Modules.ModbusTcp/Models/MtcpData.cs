@@ -83,4 +83,9 @@ public partial class MtcpData : ObservableObject
     [ObservableProperty]
     private string writeValue;
 
+    public override string ToString()
+    {
+        return $"值:{Value} {UpdateTime:HH:mm:ss}";
+    }
+
 }

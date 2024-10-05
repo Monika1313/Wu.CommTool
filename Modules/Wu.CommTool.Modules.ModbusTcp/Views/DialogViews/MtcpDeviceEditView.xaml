@@ -27,7 +27,18 @@
                      DockPanel.Dock="Top"
                      Style="{StaticResource FormTextBox}"
                      Text="{Binding MtcpDevice.Name}" />
-            <TextBox hc:TitleElement.Title="从站地址"
+            <TextBox hc:InfoElement.Necessary="True"
+                     hc:TitleElement.Title="服务器IP"
+                     DockPanel.Dock="Top"
+                     Style="{StaticResource FormTextBox}"
+                     Text="{Binding MtcpDevice.ServerIp}" />
+            <TextBox hc:InfoElement.Necessary="True"
+                     hc:TitleElement.Title="服务器端口"
+                     DockPanel.Dock="Top"
+                     Style="{StaticResource FormTextBox}"
+                     Text="{Binding MtcpDevice.ServerPort}" />
+            <TextBox hc:InfoElement.Necessary="True"
+                     hc:TitleElement.Title="从站地址"
                      DockPanel.Dock="Top"
                      Style="{StaticResource FormTextBox}"
                      Text="{Binding MtcpDevice.SlaveAddr}" />
@@ -38,6 +49,7 @@
                       ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
                       SelectedItem="{Binding MtcpDevice.ModbusByteOrder}"
                       Style="{StaticResource FormComboBox}" />
+
 
 
         </StackPanel>
