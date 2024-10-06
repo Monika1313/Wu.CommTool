@@ -271,6 +271,16 @@
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
+
+                        <!--<Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                hc:Poptip.Content="查看日志"
+                                Command="{Binding OpenCurrentMtcpDeviceLogViewCommand}"
+                                Content="{md:PackIcon Kind=Eye}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />-->
                     </DockPanel>
                 </Grid>
                 <Grid DockPanel.Dock="Left">

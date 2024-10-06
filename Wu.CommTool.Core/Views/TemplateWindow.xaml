@@ -8,7 +8,6 @@
         d:Height="200"
         d:Width="300"
         ShowInTaskbar="True"
-        Style="{StaticResource MainWindowStyle}"
         mc:Ignorable="d">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="30"

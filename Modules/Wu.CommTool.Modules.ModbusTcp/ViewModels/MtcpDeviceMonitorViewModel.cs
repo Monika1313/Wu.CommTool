@@ -1,4 +1,6 @@
 ﻿using Microsoft.Win32;
+using Prism.Ioc;
+using Wu.CommTool.Core.Views;
 
 namespace Wu.CommTool.Modules.ModbusTcp.ViewModels;
 
@@ -295,19 +297,32 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
 
     [RelayCommand]
     [property: JsonIgnore]
-    private async Task OpenMtcpDeviceManagerLogView()
+    private void OpenCurrentMtcpDeviceLogView()
     {
-        //try
-        //{
-        //    DialogParameters param = new()
-        //    {
-        //        { "Value", MtcpDeviceManager }
-        //    };
-        //    var dialogResult = await dialogHost.ShowDialog(nameof(MtcpDeviceManagerLogView), param, nameof(MtcpDeviceMonitorView));
-        //}
-        //catch (Exception ex)
-        //{
-        //    HcGrowlExtensions.Warning(ex.Message);
-        //}
+        try
+        {
+            //DialogParameters param = new()
+            //{
+            //    { "Value", MtcpDeviceManager }
+            //};
+            //var dialogResult = await dialogHost.ShowDialog(nameof(MtcpDeviceManagerLogView), param, nameof(MtcpDeviceMonitorView));
+
+            #region 以非模态窗口显示
+            var view = provider.Resolve<MtcpLogView>();
+            var window = new TemplateWindow()
+            {
+                Content = view,
+                Name = nameof(MtcpLogView),
+                Width = 700,
+                Height = 500,
+            };
+            window.Show();// 显示窗口
+            #endregion
+
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
 }
