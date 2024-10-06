@@ -36,7 +36,7 @@ public partial class MrtuDeviceManager : ObservableObject
         {
             if (!string.IsNullOrWhiteSpace(device.ComConfig.ComPort.Port))
             {
-                device.AnalyzeDataAddress();//更新请求帧列表
+                //device.AnalyzeDataAddress();//更新请求帧列表
 
                 //判断是否已存在,已存在则不创建
                 if (MrtuSerialPorts.FindFirst(x => x.ComConfig.ComPort.Port == device.ComConfig.ComPort.Port) != null)

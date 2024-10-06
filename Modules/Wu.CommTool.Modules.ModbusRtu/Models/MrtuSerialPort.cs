@@ -69,6 +69,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 //遍历设备列表 对于需要使用该串口通讯的执行读
                 foreach (var device in devices)
                 {
+                    device.AnalyzeDataAddress();//更新请求帧列表
                     currentDevice = device;//设置当前设备
                     foreach (var frame in device.RequestFrames)
                     {
