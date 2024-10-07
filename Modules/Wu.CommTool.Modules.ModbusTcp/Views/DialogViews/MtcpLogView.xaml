@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:core="Wu.CommTool.Core"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:ddvm="clr-namespace:Wu.CommTool.Modules.ModbusTcp.ViewModels.DialogViewModels.DialogDesignViewModels"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Views.DialogViews"
@@ -11,67 +12,74 @@
              xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusTcp.Models"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
+             d:DataContext="{x:Static ddvm:MtcpLogDesignViewModel.Instance}"
+             d:Height="300"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
-    <DockPanel>
-        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-            <!--  暂停显示按钮  -->
-            <Button Width="30"
-                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                    Margin="5"
-                    HorizontalAlignment="Left"
-                    Command="{Binding MtcpDeviceManager.SelectedMtcpDevice.PauseCommand}"
-                    Cursor="Hand"
-                    DockPanel.Dock="Left">
-                <md:PackIcon Width="24" Height="24">
-                    <md:PackIcon.Style>
-                        <Style TargetType="md:PackIcon">
+    <DockPanel Background="White">
+        <Grid DockPanel.Dock="Top">
+            <TextBlock HorizontalAlignment="Center"
+                       Style="{StaticResource TitleTextBlock}"
+                       Text="{Binding CurrentDevice.Name}" />
+            <DockPanel LastChildFill="False">
+                <!--  暂停显示按钮  -->
+                <Button Width="30"
+                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                        Margin="5"
+                        HorizontalAlignment="Left"
+                        Command="{Binding CurrentDevice.PauseCommand}"
+                        Cursor="Hand"
+                        DockPanel.Dock="Left">
+                    <md:PackIcon Width="24" Height="24">
+                        <md:PackIcon.Style>
+                            <Style TargetType="md:PackIcon">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding CurrentDevice.IsPause}" Value="true">
+                                        <Setter Property="Kind" Value="PlayPause" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding CurrentDevice.IsPause}" Value="false">
+                                        <Setter Property="Kind" Value="Pause" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </md:PackIcon.Style>
+                    </md:PackIcon>
+                    <Button.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
                             <Style.Triggers>
-                                <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="true">
-                                    <Setter Property="Kind" Value="PlayPause" />
+                                <DataTrigger Binding="{Binding CurrentDevice.IsPause}" Value="true">
+                                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                    <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                    <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
                                 </DataTrigger>
-                                <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="false">
-                                    <Setter Property="Kind" Value="Pause" />
+                                <DataTrigger Binding="{Binding CurrentDevice.IsPause}" Value="false">
+                                    <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                    <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
-                    </md:PackIcon.Style>
-                </md:PackIcon>
-                <Button.Style>
-                    <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="true">
-                                <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
-                            </DataTrigger>
-                            <DataTrigger Binding="{Binding MtcpDeviceManager.SelectedMtcpDevice.IsPause}" Value="false">
-                                <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                                <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                                <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                                <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-            <!--  清空消息按钮  -->
-            <Button Width="30"
-                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                    Margin="5"
-                    hc:Poptip.Content="清空消息"
-                    Command="{Binding MtcpDeviceManager.SelectedMtcpDevice.MessageClearCommand}"
-                    Content="{md:PackIcon Kind=Delete}"
-                    DockPanel.Dock="Left"
-                    Style="{StaticResource Red_CircleButton}" />
-        </DockPanel>
+                    </Button.Style>
+                </Button>
+                <!--  清空消息按钮  -->
+                <Button Width="30"
+                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                        Margin="5"
+                        hc:Poptip.Content="清空消息"
+                        Command="{Binding CurrentDevice.MessageClearCommand}"
+                        Content="{md:PackIcon Kind=Delete}"
+                        DockPanel.Dock="Left"
+                        Style="{StaticResource Red_CircleButton}" />
+            </DockPanel>
+        </Grid>
 
         <ContentControl Margin="4,0"
                         DockPanel.Dock="Top"
                         Style="{StaticResource Effect2Control}">
             <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                <ItemsControl Background="Transparent" ItemsSource="{Binding MtcpDeviceManager.SelectedMtcpDevice.Messages, Mode=OneTime, IsAsync=True}">
+                <ItemsControl Background="Transparent" ItemsSource="{Binding CurrentDevice.Messages, Mode=OneWay, IsAsync=True}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel VirtualizingPanel.CacheLength="2"

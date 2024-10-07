@@ -30,7 +30,10 @@ public partial class MtcpLogViewModel : NavigationViewModel, IDialogHostAware
     /// </summary>
     public void OnDialogOpened(IDialogParameters parameters)
     {
-
+        if (parameters != null && parameters.ContainsKey("Value"))
+        {
+            CurrentDevice = parameters.GetValue<MtcpDevice>("Value");
+        }
     }
     #endregion
 
@@ -39,7 +42,7 @@ public partial class MtcpLogViewModel : NavigationViewModel, IDialogHostAware
     public string DialogHostName { get; set; }
 
     [ObservableProperty]
-    object currentDto = new();
+    MtcpDevice currentDevice = new();
     #endregion **************************************** 属性 ****************************************
 
 
@@ -62,7 +65,7 @@ public partial class MtcpLogViewModel : NavigationViewModel, IDialogHostAware
             return;
         //添加返回的参数
         DialogParameters param = new DialogParameters();
-        param.Add("Value", CurrentDto);
+        //param.Add("Value", CurrentDto);
         //关闭窗口,并返回参数
         DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
     }
@@ -84,7 +87,7 @@ public partial class MtcpLogViewModel : NavigationViewModel, IDialogHostAware
         {
             DialogParameters param = new()
             {
-                { "Value", CurrentDto }
+                //{ "Value", CurrentDto }
             };
             //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
         }

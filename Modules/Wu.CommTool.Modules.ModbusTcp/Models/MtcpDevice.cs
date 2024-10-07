@@ -669,15 +669,15 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     [RelayCommand]
     public void Pause()
     {
-        //IsPause = !IsPause;
-        //if (IsPause)
-        //{
-        //    ShowMessage("暂停更新接收的数据");
-        //}
-        //else
-        //{
-        //    ShowMessage("恢复更新接收的数据");
-        //}
+        IsPause = !IsPause;
+        if (IsPause)
+        {
+            ShowMessage("暂停更新接收的数据");
+        }
+        else
+        {
+            ShowMessage("恢复更新接收的数据");
+        }
     }
 
     #endregion
