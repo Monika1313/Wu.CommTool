@@ -24,8 +24,8 @@ public enum BaudRate : int
     _19200 = 19200,
     [Description("38400")]
     _38400 = 38400,
-    [Description("56000")]
-    _56000 = 56000,
+    [Description("57600")]
+    _57600 = 57600,
     [Description("115200")]
     _115200 = 115200
 }

@@ -1,9 +1,5 @@
-﻿using HandyControl.Controls;
-using HandyControl.Data;
-using Newtonsoft.Json.Linq;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
 namespace Wu.CommTool.ViewModels;
@@ -90,8 +86,8 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             new() { Icon = "LanConnect", Title = "ModbusRtu设备监控", NameSpace = nameof(MrtuDeviceMonitorView) },
 
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
-#if DEBUG
             new() { Icon = "LanConnect", Title = "ModbusTcp设备监控", NameSpace = nameof(MtcpDeviceMonitorView) },
+#if DEBUG
 #endif
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
@@ -225,7 +221,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             else
             {
                 //var result = await dialogHost.Question("更新检测", $"当前已是最新版本啦! V{AppInfo.Version}", "Root");
-                HcGrowlExtensions.Success($"当前已是最新版本啦! V{AppInfo.Version}","",5);
+                HcGrowlExtensions.Success($"当前已是最新版本啦! V{AppInfo.Version}", "", 5);
             }
         }
         else
