@@ -28,6 +28,9 @@
 
                 <!--  ModbusRtu相关的样式资源  -->
                 <ResourceDictionary Source="pack://application:,,,/Wu.CommTool.Modules.ModbusRtu;component/Resources/ModbusRtuResources.xaml" />
+
+                <!--  主题  -->
+                <ResourceDictionary Source="/Wu.CommTool.DynamicTheme.Resources;component/LightTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
 

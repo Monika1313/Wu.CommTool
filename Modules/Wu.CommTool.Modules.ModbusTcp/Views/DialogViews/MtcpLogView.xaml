@@ -14,6 +14,7 @@
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static ddvm:MtcpLogDesignViewModel.Instance}"
              d:Height="300"
+             d:Width="500"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <DockPanel Background="White">

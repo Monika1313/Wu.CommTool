@@ -1,5 +1,11 @@
-﻿using System.Drawing;
+﻿using Prism.Commands;
+using Prism.Ioc;
+using Prism.Mvvm;
+using Prism.Regions;
+using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 namespace Wu.CommTool.ViewModels;
@@ -236,5 +242,39 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
                 HcGrowlExtensions.Warning(args.Error.Message);
             }
         }
+    }
+
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void DarkTheme()
+    {
+        ResourceDictionary dark = new()
+        {
+            Source = new Uri("/Wu.CommTool.DynamicTheme.Resources;component/DarkTheme.xaml", UriKind.Relative)
+        };
+        Application.Current.Resources.MergedDictionaries.Add(dark);
+
+        #region 添加单个资源
+        //方法1 使用Add Remove
+        //if (Application.Current.Resources.Contains("FontBrush"))
+        //    Application.Current.Resources.Remove("FontBrush");
+        //SolidColorBrush color1 = new(Colors.Pink);
+        //Application.Current.Resources.Add("FontBrush", color1); 
+
+        //方法2 用索引
+        //Application.Current.Resources["FontBrush"] = color1; 
+        #endregion
+    }
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void LightTheme()
+    {
+        ResourceDictionary light = new()
+        {
+            Source = new Uri("/Wu.CommTool.DynamicTheme.Resources;component/LightTheme.xaml", UriKind.Relative)
+        };
+        Application.Current.Resources.MergedDictionaries.Add(light);
     }
 }
