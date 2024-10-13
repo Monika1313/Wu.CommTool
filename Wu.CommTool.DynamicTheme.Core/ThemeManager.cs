@@ -5,6 +5,7 @@ namespace Wu.CommTool.DynamicTheme.Core;
 /// <summary>
 /// 动态主题管理
 /// 参考视频 https://www.bilibili.com/video/BV1FN41eHE7e
+/// 参考源码 https://github.com/JamesnetGroup/dynamic-theme
 /// </summary>
 public class ThemeManager
 {
