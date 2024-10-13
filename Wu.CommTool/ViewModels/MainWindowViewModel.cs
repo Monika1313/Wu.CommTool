@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using MaterialDesignThemes.Wpf;
+using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
 using Prism.Regions;
@@ -7,6 +8,7 @@ using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Wu.CommTool.DynamicTheme.Core;
 
 namespace Wu.CommTool.ViewModels;
 
@@ -16,18 +18,22 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
     private readonly IRegionManager regionManager;
     private readonly IDialogHostService dialogHost;
     private IRegionNavigationJournal journal;
-    public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
+    private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
+    private readonly ThemeManager themeManager;
     #endregion *****************************************  字段  *****************************************
 
 
     #region    *****************************************  构造函数  *****************************************
     public MainWindowViewModel() { }
-    public MainWindowViewModel(IRegionManager regionManager, IDialogHostService dialogHost)
+    public MainWindowViewModel(IRegionManager regionManager, IDialogHostService dialogHost,ThemeManager themeManager)
     {
         this.regionManager = regionManager;
         this.dialogHost = dialogHost;
         CreateMenuBar();
         AutoUpdater.CheckForUpdateEvent += AutoUpdaterOnCheckForUpdateEvent;//AutoUpdater使用自定义的窗口
+        this.themeManager = themeManager;
+        themeManager.RegisterTheme("Dark", "Wu.CommTool.DynamicTheme.Resources", "DarkTheme.xaml");
+        themeManager.RegisterTheme("Light", "Wu.CommTool.DynamicTheme.Resources", "LightTheme.xaml");
     }
     #endregion *****************************************  构造函数  *****************************************
 

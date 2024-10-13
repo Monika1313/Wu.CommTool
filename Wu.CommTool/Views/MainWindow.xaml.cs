@@ -1,4 +1,5 @@
 ﻿using Prism.Events;
+using Wu.CommTool.DynamicTheme.Core;
 
 namespace Wu.CommTool.Views;
 
@@ -6,8 +7,9 @@ public partial class MainWindow : Window
 {
     public static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod()?.DeclaringType);
     private readonly IEventAggregator aggregator;
+    private readonly ThemeManager themeManager;
 
-    public MainWindow(IEventAggregator aggregator)
+    public MainWindow(IEventAggregator aggregator, ThemeManager themeManager)
     {
         InitializeComponent();
 
@@ -44,6 +46,19 @@ public partial class MainWindow : Window
             drawerHost.IsLeftDrawerOpen = false;
         };
         this.aggregator = aggregator;
+        this.themeManager = themeManager;
+        Switch.Checked += Switch_Checked;
+        Switch.Unchecked += Switch_Unchecked;
+    }
+
+    private void Switch_Unchecked(object sender, RoutedEventArgs e)
+    {
+        themeManager.ApplyTheme("Light");
+    }
+
+    private void Switch_Checked(object sender, RoutedEventArgs e)
+    {
+        themeManager.ApplyTheme("Dark");
     }
 
     protected override void OnClosed(EventArgs e)

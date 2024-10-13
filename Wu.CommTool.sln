@@ -32,7 +32,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.ModbusR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.Modules.NetworkTool", "Modules\Wu.CommTool.Modules.NetworkTool\Wu.CommTool.Modules.NetworkTool.csproj", "{E678465E-75A2-45EA-9BFD-4F69F2F11691}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.DynamicTheme.Resources", "Wu.CommTool.DynamicTheme.Resources\Wu.CommTool.DynamicTheme.Resources.csproj", "{73FEB01A-BA35-4F42-9FE8-281244C1A3D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.DynamicTheme.Resources", "Wu.CommTool.DynamicTheme.Resources\Wu.CommTool.DynamicTheme.Resources.csproj", "{73FEB01A-BA35-4F42-9FE8-281244C1A3D3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.DynamicTheme.Core", "Wu.CommTool.DynamicTheme.Core\Wu.CommTool.DynamicTheme.Core.csproj", "{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -88,6 +90,10 @@ Global
 		{73FEB01A-BA35-4F42-9FE8-281244C1A3D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73FEB01A-BA35-4F42-9FE8-281244C1A3D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73FEB01A-BA35-4F42-9FE8-281244C1A3D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

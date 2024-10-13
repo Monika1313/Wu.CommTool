@@ -9,6 +9,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:prism="http://prismlibrary.com/"
+        xmlns:theme="clr-namespace:Wu.CommTool.DynamicTheme.Core;assembly=Wu.CommTool.DynamicTheme.Core"
+        xmlns:wu="https://github.com/Monika1313/Wu"
         Title="Wu.CommTool"
         Width="1250"
         Height="700"
@@ -40,12 +42,11 @@
                       UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
 
-    <Grid Style="{StaticResource MainWindowGrid}">
+    <Grid theme:ThemeProps.Background="{DynamicResource BackgroundBrush}" Style="{StaticResource MainWindowGrid}">
         <md:DialogHost x:Name="DialogHost"
                        DialogTheme="Inherit"
                        Identifier="Root">
             <md:DrawerHost x:Name="drawerHost" IsLeftDrawerOpen="{Binding ElementName=MenuToggleButton, Path=IsChecked}">
-                <!--  左侧抽屉  -->
                 <md:DrawerHost.LeftDrawerContent>
                     <DockPanel MinWidth="170">
                         <StackPanel DockPanel.Dock="Top">
@@ -106,6 +107,13 @@
                                               Style="{StaticResource MaterialDesignHamburgerToggleButton}"
                                               WindowChrome.IsHitTestVisibleInChrome="True" />
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+
+                                    <ToggleButton x:Name="Switch"
+                                                  Margin="10,0"
+                                                  Content="切换主题"
+                                                  Visibility="{Binding Source={x:Static core:AppInfo.Debug}, Converter={wu:False2Collapsed}}"
+                                                  WindowChrome.IsHitTestVisibleInChrome="True" />
+
                                     <md:PopupBox IsTabStop="False"
                                                  StaysOpen="False"
                                                  WindowChrome.IsHitTestVisibleInChrome="True">

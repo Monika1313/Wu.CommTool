@@ -39,6 +39,7 @@
 	  <Folder Include="Interfaces\" />
 	</ItemGroup>
 	<ItemGroup>
+	  <ProjectReference Include="..\Wu.CommTool.DynamicTheme.Core\Wu.CommTool.DynamicTheme.Core.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.DynamicTheme.Resources\Wu.CommTool.DynamicTheme.Resources.csproj" />
 	</ItemGroup>
 </Project>

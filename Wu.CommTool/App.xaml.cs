@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool;
+﻿using Wu.CommTool.DynamicTheme.Core;
+
+namespace Wu.CommTool;
 
 public partial class App
 {
@@ -53,6 +55,9 @@ public partial class App
         //containerRegistry.RegisterForNavigation<ProgressView>();
         //containerRegistry.RegisterInstance<ILog>(LogManager.GetLogger(typeof(App)));
         //RegisterSingleton
+
+        //注册主题管理
+        containerRegistry.RegisterSingleton<ThemeManager>();
     }
 
     /// <summary>

@@ -270,14 +270,15 @@
                                 Content="{md:PackIcon Kind=Eye}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
-                                Style="{StaticResource Blue_CircleButton}" />
+                                Style="{StaticResource Blue_CircleButton}"
+                                Visibility="{Binding Source={x:Static core:AppInfo.Debug}, Converter={wu:False2Collapsed}}" />
 
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
                                 hc:Poptip.Content="查看日志"
                                 Command="{Binding OpenCurrentMtcpDeviceLogViewCommand}"
-                                Content="{md:PackIcon Kind=Eye}"
+                                Content="{md:PackIcon Kind=NoteTextOutline}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
