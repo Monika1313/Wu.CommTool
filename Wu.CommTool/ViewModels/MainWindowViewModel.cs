@@ -169,6 +169,12 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         AutoUpdater.HttpUserAgent = "AutoUpdater";
         AutoUpdater.ReportErrors = true;
 
+        //设置为要下载更新文件的文件夹路径。如果没有提供，则默认为临时文件夹。
+        AutoUpdater.DownloadPath = Path.Combine(Environment.CurrentDirectory,"AutoUpdater");
+
+        //设置zip解压路径
+        AutoUpdater.InstallationPath = Environment.CurrentDirectory;
+
         //AutoUpdater.ShowSkipButton = false;//禁用跳过
         //AutoUpdater.ShowRemindLaterButton = false;//禁用稍后提醒
 
