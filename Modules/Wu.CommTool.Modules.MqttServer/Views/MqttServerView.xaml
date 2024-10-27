@@ -434,6 +434,8 @@
                                      VerticalContentAlignment="Top"
                                      hc:InfoElement.Placeholder="请输入要发送的内容..."
                                      AcceptsReturn="True"
+                                     Background="{DynamicResource BackgroundBrush}"
+                                     Foreground="{DynamicResource FontBrush}"
                                      Style="{StaticResource TextBoxExtend}"
                                      Text="{Binding PublishMessage, UpdateSourceTrigger=PropertyChanged}"
                                      TextWrapping="Wrap">
@@ -449,7 +451,7 @@
                     <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                             <!--  页面消息  -->
-                            <ItemsControl Background="Transparent" ItemsSource="{Binding Messages}">
+                            <ItemsControl Background="{DynamicResource BackgroundBrush}" ItemsSource="{Binding Messages}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel />
