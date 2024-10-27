@@ -21,16 +21,21 @@
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d">
     <Window.Resources>
-        <!--  最大化时增加边距, 避免由于WindowChrome导致的页面显示不全  -->
-        <Style x:Key="MainWindowGrid" TargetType="{x:Type Grid}">
-            <Setter Property="Margin" Value="0" />
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
-                    <!--<Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />-->
-                    <Setter Property="Margin" Value="7" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/ResourceDictonarys/ToggleButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <!--  最大化时增加边距, 避免由于WindowChrome导致的页面显示不全  -->
+            <Style x:Key="MainWindowGrid" TargetType="{x:Type Grid}">
+                <Setter Property="Margin" Value="0" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=WindowState}" Value="Maximized">
+                        <!--<Setter Property="Margin" Value="{x:Static SystemParameters.WindowResizeBorderThickness}" />-->
+                        <Setter Property="Margin" Value="7" />
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
@@ -109,8 +114,9 @@
                                 <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
 
                                     <ToggleButton x:Name="Switch"
-                                                  Margin="10,0"
-                                                  Content="切换主题"
+                                                  Margin="0"
+                                                  Content=""
+                                                  Style="{StaticResource ToggleButtonGorgeousThemeSwitchStyle}"
                                                   Visibility="{Binding Source={x:Static core:AppInfo.Debug}, Converter={wu:False2Collapsed}}"
                                                   WindowChrome.IsHitTestVisibleInChrome="True" />
 
