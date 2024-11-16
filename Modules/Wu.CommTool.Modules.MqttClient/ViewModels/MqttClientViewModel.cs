@@ -446,13 +446,16 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             optionsBuilder.WithClientId(MqttClientConfig.ClientId);                               //客户端ID
             //optionsBuilder.WithTimeout(new TimeSpan(0,0,3));//超时没有生效
 
+            //optionsBuilder.WithCleanSession(true);
+
             //当账号或密码不为空时使用账号登录
             if (!string.IsNullOrWhiteSpace(MqttClientConfig.UserName) || !string.IsNullOrWhiteSpace(MqttClientConfig.Password))
             {
                 optionsBuilder.WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password);//登录账号
             }
 
-            //optionsBuilder.WithProtocolVersion(MqttProtocolVersion.V500);                                        //指定Mqtt版本
+            //TODO 版本做成可选
+            optionsBuilder.WithProtocolVersion(MqttProtocolVersion.V500);//指定Mqtt版本
 
             //加密
             if (MqttClientConfig.Encrypt)

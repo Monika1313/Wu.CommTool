@@ -24,7 +24,7 @@
 	  <DebugType>none</DebugType>
 	</PropertyGroup>
 	<ItemGroup>
-		<PackageReference Include="MQTTnet" Version="4.3.6.1152" />
+		<PackageReference Include="MQTTnet" Version="4.3.7.1207" />
 		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 	</ItemGroup>
 	<ItemGroup>

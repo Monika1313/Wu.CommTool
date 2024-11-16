@@ -136,6 +136,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             MqttServerOptionsBuilder optionsBuilder = new();// 创建MQTT服务配置的构建器
 
             optionsBuilder.WithDefaultEndpoint()
+                //.WithPersistentSessions(false)//默认是持久化的
                 .WithDefaultEndpointBoundIPAddress(IPAddress.Parse(MqttServerConfig.ServerIp))//设置MQTT服务器的IP
                 .WithDefaultEndpointPort(MqttServerConfig.ServerPort);//设置服务器的端口
 
@@ -152,7 +153,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 
                 //设置pfx证书和证书密码
                 X509Certificate2 certificate = new(MqttServerConfig.PfxFilePath, MqttServerConfig.PfxPassword, X509KeyStorageFlags.Exportable);
-                
+
                 optionsBuilder.WithoutDefaultEndpoint();// 关闭默认端口
                 optionsBuilder.WithEncryptedEndpoint();// 启用加密端口
                 optionsBuilder.WithEncryptedEndpointPort(MqttServerConfig.ServerPort);// 设置加密端口号
@@ -206,7 +207,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         // 创建证书
         var cert = new X509Certificate2(certBytes);
         return cert.CopyWithPrivateKey(rsa);
-    } 
+    }
 #endif
 
 
@@ -485,7 +486,25 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 {
                     MqttUsers.Remove(user);
                 });
-                ShowMessage($"用户名：“{user.UserName}”  客户端ID：“{arg.ClientId}” 已断开连接!");
+
+                string reason = string.Empty;
+                
+                switch (arg.DisconnectType)
+                {
+                    case MqttClientDisconnectType.Clean:
+                        reason = $"  原因码={arg.ReasonCode?.ToString() ?? "null"} {arg.ReasonString}";
+                        break;
+                    case MqttClientDisconnectType.NotClean:
+                        reason = $"  原因码=null";
+                        break;
+                    case MqttClientDisconnectType.Takeover:
+                        reason = $"  被接管!(可能是客户端ID重复导致的顶号)";
+                        break;
+                    default:
+                        break;
+                }
+
+                ShowMessage($"用户名：“{user.UserName}”  客户端ID：“{arg.ClientId}” 已断开连接!{reason}");
             }
         }
         catch (Exception ex)
