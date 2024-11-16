@@ -4,7 +4,7 @@ namespace Wu.CommTool.Core;
 
 public static class AppInfo
 {
-    public const string Version = "1.4.0.22";
+    public const string Version = "1.4.0.23";
 
 #if DEBUG
     public const bool Debug = true;
