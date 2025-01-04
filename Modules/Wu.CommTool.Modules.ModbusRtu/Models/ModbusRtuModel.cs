@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using HandyControl.Controls;
+using System.Collections.Concurrent;
 using System.IO.Ports;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
@@ -219,73 +220,80 @@ public partial class ModbusRtuModel : ObservableObject
     [RelayCommand]
     public void GetComPorts()
     {
-        if (ComConfig.IsOpened)
+        try
         {
-            return;
-        }
-
-        //缓存最后一次选择的串口
-        var lastComPort = ComConfig.ComPort;
-
-        List<ComPort> coms = [];//缓存查找到的串口
-        //查找Com口
-        using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
-        var hardInfos = searcher.Get();
-        //获取串口设备列表
-        foreach (var hardInfo in hardInfos)
-        {
-            if (hardInfo.Properties["Name"].Value != null)
+            if (ComConfig.IsOpened)
             {
-                string deviceName = hardInfo.Properties["Name"].Value.ToString()!;         //获取名称
-                List<string> portList = [];
-                //从名称中截取串口编号
-                foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
+                return;
+            }
+
+            //缓存最后一次选择的串口
+            var lastComPort = ComConfig.ComPort;
+
+            List<ComPort> coms = [];//缓存查找到的串口
+                                    //查找Com口
+            using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
+            var hardInfos = searcher.Get();
+            //获取串口设备列表
+            foreach (var hardInfo in hardInfos)
+            {
+                if (hardInfo.Properties["Name"].Value != null)
                 {
-                    string x = mch.Value.Trim();
-                    portList.Add(x);
+                    string deviceName = hardInfo.Properties["Name"].Value.ToString()!;         //获取名称
+                    List<string> portList = [];
+                    //从名称中截取串口编号
+                    foreach (Match mch in Regex.Matches(deviceName, @"COM\d{1,3}").Cast<Match>())
+                    {
+                        string x = mch.Value.Trim();
+                        portList.Add(x);
+                    }
+                    int startIndex = deviceName.IndexOf("(");
+                    string port = portList[0];
+                    string name = deviceName[..(startIndex - 1)];
+                    coms.Add(new ComPort(port, name));
                 }
-                int startIndex = deviceName.IndexOf("(");
-                string port = portList[0];
-                string name = deviceName[..(startIndex - 1)];
-                coms.Add(new ComPort(port, name));
             }
-        }
-        ComPorts = new ObservableCollection<ComPort>(coms.OrderBy(x => x.Port));//串口列表
-        if (ComPorts.Count != 0)
-        {
-            //查找第一个USB设备
-            var usbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb"));
+            ComPorts = new ObservableCollection<ComPort>(coms.OrderBy(x => x.Port));//串口列表
+            if (ComPorts.Count != 0)
+            {
+                //查找第一个USB设备
+                var usbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb"));
 
-            //若最后一次选择的是usb设备 则保持当前选择
-            var lastUsbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb") && x.Port.Equals(lastComPort.Port) && x.DeviceName.Equals(lastComPort.DeviceName));
-            if (lastUsbDevice != null)
-            {
-                usbDevice = lastUsbDevice;
-            }
+                //若最后一次选择的是usb设备 则保持当前选择
+                var lastUsbDevice = ComPorts.FindFirst(x => x.DeviceName.ToLower().Contains("usb") && x.Port.Equals(lastComPort.Port) && x.DeviceName.Equals(lastComPort.DeviceName));
+                if (lastUsbDevice != null)
+                {
+                    usbDevice = lastUsbDevice;
+                }
 
-            //有USB设备则选择第一个USB
-            if (usbDevice != null)
-            {
-                //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
-                ComConfig.ComPort = usbDevice;
+                //有USB设备则选择第一个USB
+                if (usbDevice != null)
+                {
+                    //默认选中项 若含USB设备则指定第一个USB, 若不含USB则指定第一个
+                    ComConfig.ComPort = usbDevice;
+                }
+                //其次保持不变
+                else if (lastComPort != null && ComPorts.Any(x => x.Port == lastComPort.Port && x.DeviceName == lastComPort.DeviceName))//保留原选项
+                {
+                    ComConfig.ComPort = ComPorts.FirstOrDefault(x => x.Port == lastComPort.Port && x.DeviceName == lastComPort.DeviceName);
+                }
+                //都没有则选中第一个
+                else
+                {
+                    ComConfig.ComPort = ComPorts[0];
+                }
             }
-            //其次保持不变
-            else if (lastComPort != null && ComPorts.Any(x => x.Port == lastComPort.Port && x.DeviceName == lastComPort.DeviceName))//保留原选项
+            string str = $"获取串口成功, 共{ComPorts.Count}个。";
+            foreach (var item in ComPorts)
             {
-                ComConfig.ComPort = ComPorts.FirstOrDefault(x => x.Port == lastComPort.Port && x.DeviceName == lastComPort.DeviceName);
+                str += $"   {item.Port}: {item.DeviceName};";
             }
-            //都没有则选中第一个
-            else
-            {
-                ComConfig.ComPort = ComPorts[0];
-            }
+            ShowMessage(str);
         }
-        string str = $"获取串口成功, 共{ComPorts.Count}个。";
-        foreach (var item in ComPorts)
+        catch (Exception ex)
         {
-            str += $"   {item.Port}: {item.DeviceName};";
+            Growl.Error(ex.Message);
         }
-        ShowMessage(str);
     }
 
     /// <summary>

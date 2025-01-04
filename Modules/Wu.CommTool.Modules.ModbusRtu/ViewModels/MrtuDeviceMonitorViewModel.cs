@@ -269,8 +269,69 @@ public partial class MrtuDeviceMonitorViewModel : NavigationViewModel, IDialogHo
         }
     }
 
+    //[RelayCommand]
+    //private void OpenCurrentMrtuDeviceLogView()
+    //{
+    //    try
+    //    {
+    //        //DialogParameters param = new()
+    //        //{
+    //        //    { "Value", MtcpDeviceManager }
+    //        //};
+    //        //var dialogResult = await dialogHost.ShowDialog(nameof(MtcpDeviceManagerLogView), param, nameof(MtcpDeviceMonitorView));
+
+    //        #region 以非模态窗口显示
+    //        var content = provider.Resolve<MtcpLogView>();//从容器中取出实例
+
+    //        //验证实例的有效性
+    //        #region 验证实例的有效性
+    //        if (!(content is FrameworkElement dialogContent))
+    //            throw new NullReferenceException("A dialog's content must be a FrameworkElement...");
+
+    //        if (dialogContent is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
+    //            ViewModelLocator.SetAutoWireViewModel(view, true);
+
+    //        if (!(dialogContent.DataContext is IDialogHostAware viewModel))
+    //            throw new NullReferenceException("A dialog's ViewModel must implement the IDialogHostService interface");
+    //        #endregion
+
+
+    //        DialogParameters parameters = new()
+    //        {
+    //            { "Value", MtcpDeviceManager.SelectedMtcpDevice }
+    //        };
+
+    //        var window = new Window()
+    //        {
+    //            Content = dialogContent,
+    //            Name = nameof(MtcpLogView),
+    //            Width = 700,
+    //            Height = 500,
+    //            WindowStartupLocation = WindowStartupLocation.CenterScreen
+    //        };
+
+    //        //var window = new TemplateWindow()
+    //        //{
+    //        //    Content = dialogContent,
+    //        //    Name = nameof(MtcpLogView),
+    //        //    Width = 700,
+    //        //    Height = 500,
+    //        //};
+    //        window.Show();// 显示窗口
+    //        if (viewModel is IDialogHostAware aware)
+    //        {
+    //            aware.OnDialogOpened(parameters);
+    //        }
+    //        #endregion
+
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        HcGrowlExtensions.Warning(ex.Message);
+    //    }
+    //}
+
     [RelayCommand]
-    [property: JsonIgnore]
     private async Task OpenMrtuDeviceManagerLogView()
     {
         try
