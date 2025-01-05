@@ -1,8 +1,6 @@
-﻿using HandyControl.Controls;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
 
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
-
-public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialogHostAware
+public partial class MrtuDeviceLogViewModel : NavigationViewModel, IDialogHostAware
 {
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -11,8 +9,8 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
 
 
     #region **************************************** 构造函数 ****************************************
-    public MrtuDeviceManagerLogViewModel() { }
-    public MrtuDeviceManagerLogViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+    public MrtuDeviceLogViewModel() { }
+    public MrtuDeviceLogViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
@@ -32,17 +30,9 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
     /// </summary>
     public void OnDialogOpened(IDialogParameters parameters)
     {
-        try
+        if (parameters != null && parameters.ContainsKey("Value"))
         {
-            if (parameters != null && parameters.ContainsKey("Value"))
-            {
-                MrtuDeviceManager = parameters.GetValue<MrtuDeviceManager>("Value");
-            }
-            SelectedMrtuSerialPort = MrtuDeviceManager.MrtuSerialPorts.FirstOrDefault();
-        }
-        catch (Exception ex)
-        {
-            Growl.Error(ex.Message);
+            CurrentDevice = parameters.GetValue<MrtuDevice>("Value");
         }
     }
     #endregion
@@ -51,17 +41,8 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
     #region **************************************** 属性 ****************************************
     public string DialogHostName { get; set; }
 
-    /// <summary>
-    /// ModbusRtu设备管理
-    /// </summary>
     [ObservableProperty]
-    MrtuDeviceManager mrtuDeviceManager = new();
-
-    [ObservableProperty]
-    MrtuSerialPort selectedMrtuSerialPort ;
-
-    [ObservableProperty]
-    object currentDto = new();
+    MrtuDevice currentDevice = new();
     #endregion **************************************** 属性 ****************************************
 
 
@@ -71,6 +52,7 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
     {
         switch (obj)
         {
+            case "OpenDialogView": OpenDialogView(); break;
             default: break;
         }
     }
@@ -80,13 +62,11 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
     {
         if (!DialogHost.IsDialogOpen(DialogHostName))
             return;
-        //添加返回的参数
         DialogParameters param = new()
         {
-            { "Value", CurrentDto }
+            //{ "Value", CurrentDto }
         };
-        //关闭窗口,并返回参数
-        DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
+        DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));//关闭窗口,并返回参数
     }
 
     [RelayCommand]
@@ -95,6 +75,25 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
         //若窗口处于打开状态则关闭
         if (DialogHost.IsDialogOpen(DialogHostName))
             DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+    }
+
+    /// <summary>
+    /// 弹窗
+    /// </summary>
+    private void OpenDialogView()
+    {
+        try
+        {
+            DialogParameters param = new()
+            {
+                //{ "Value", CurrentDto }
+            };
+            //var dialogResult = await dialogHost.ShowDialog(nameof(DialogView), param, nameof(CurrentView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
     }
     #endregion
 }

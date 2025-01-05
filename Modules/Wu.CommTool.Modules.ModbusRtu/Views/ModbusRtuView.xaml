@@ -16,7 +16,9 @@
              d:DesignWidth="800"
              mc:Ignorable="d">
     <Grid>
-        <md:DialogHost CloseOnClickAway="True" Identifier="{x:Static local:ModbusRtuView.ViewName}" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+        <md:DialogHost CloseOnClickAway="True"
+                       Identifier="{x:Static local:ModbusRtuView.ViewName}"
+                       Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
             <DockPanel>
                 <DockPanel DockPanel.Dock="Left">
                     <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">

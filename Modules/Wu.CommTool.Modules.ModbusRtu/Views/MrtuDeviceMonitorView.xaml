@@ -220,14 +220,24 @@
                                Style="{StaticResource TitleTextBlock}"
                                Text="ModbusRTU 设备监控" />
                     <DockPanel Margin="0">
-                        <Button Width="30"
+                        <!--<Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
-                                Command="{Binding OpenMrtuDeviceManagerLogViewCommand}"
+                                Command="{Binding OpenCurrentMrtuDeviceLogViewCommand}"
                                 Content="{md:PackIcon Kind=Eye}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />-->
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="5"
+                                hc:Poptip.Content="查看日志"
+                                Command="{Binding OpenMrtuDeviceManagerLogViewCommand}"
+                                Content="{md:PackIcon Kind=NoteTextOutline}"
+                                Cursor="Hand"
+                                DockPanel.Dock="Right"
                                 Style="{StaticResource Blue_CircleButton}" />
+
                         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal">
 
                             <Button Width="30"

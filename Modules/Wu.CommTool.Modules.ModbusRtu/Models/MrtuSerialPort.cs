@@ -14,7 +14,9 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     private readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
     private readonly EventWaitHandle WaitNextOne = new AutoResetEvent(true);  //等待接收完成后再发送下一条
     private readonly ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
-    public ComConfig ComConfig;
+
+    [ObservableProperty]
+    ComConfig comConfig;
     string currentRequest = string.Empty;
     MrtuDevice currentDevice;
     List<MrtuDevice> devices = [];//使用该串口的设备
@@ -103,11 +105,13 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
             try
             {
                 serialPort.Open();               //打开串口
-                Debug.WriteLine($"打开串口 {serialPort.PortName} : {ComConfig.ComPort.DeviceName}  波特率: {serialPort.BaudRate} 校验: {serialPort.Parity}");
+                ShowMessage($"打开串口 {serialPort.PortName} : {ComConfig.ComPort.DeviceName}  波特率: {serialPort.BaudRate} 校验: {serialPort.Parity}");
+                //Debug.WriteLine($"打开串口 {serialPort.PortName} : {ComConfig.ComPort.DeviceName}  波特率: {serialPort.BaudRate} 校验: {serialPort.Parity}");
             }
             catch (Exception ex)
             {
-                Debug.WriteLine($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}");
+                ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
+                //Debug.WriteLine($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}");
                 return;
             }
         }
@@ -621,9 +625,12 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
             {
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type));
                 log.Info(message);
-                while (Messages.Count > 260)
+                if (Messages.Count > 300)
                 {
-                    Messages.RemoveAt(0);
+                    for (int i = 0; i < 100; i++)
+                    {
+                        Messages.RemoveAt(0);
+                    }
                 }
             }
             Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);

@@ -12,10 +12,22 @@ public partial class MrtuDeviceManager : ObservableObject
     ObservableCollection<MrtuDevice> mrtuDevices = [];
 
     /// <summary>
+    /// Mrtu串口列表
+    /// </summary>
+    [ObservableProperty]
+    [property: JsonIgnore]
+    ObservableCollection<MrtuSerialPort> mrtuSerialPorts = [];
+
+    /// <summary>
     /// 选中的Mrtu设备
     /// </summary>
     [ObservableProperty]
     MrtuDevice selectedMrtuDevice;
+
+    /// <summary>
+    /// 串口列表
+    /// </summary>
+    public List<ComPort> ComPorts { get; set; } = [];
 
     /// <summary>
     /// 状态
@@ -97,19 +109,6 @@ public partial class MrtuDeviceManager : ObservableObject
             }
         }
     }
-
-
-    /// <summary>
-    /// 串口列表
-    /// </summary>
-    public List<ComPort> ComPorts { get; set; } = [];
-
-    /// <summary>
-    /// Mrtu串口列表
-    /// </summary>
-    [ObservableProperty]
-    [property: JsonIgnore]
-    ObservableCollection<MrtuSerialPort> mrtuSerialPorts = [];
 
     /// <summary>
     /// 获取串口完整名字（包括驱动名字）
