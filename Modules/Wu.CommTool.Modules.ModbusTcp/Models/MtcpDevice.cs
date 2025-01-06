@@ -583,16 +583,19 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     {
         try
         {
-            void action()
+            if (!IsPause)
             {
-                Messages.Add(new MessageData($"{message}", DateTime.Now, type));
-                log.Info(message);
-                while (Messages.Count > 260)
+                void action()
                 {
-                    Messages.RemoveAt(0);
+                    Messages.Add(new MessageData($"{message}", DateTime.Now, type));
+                    log.Info(message);
+                    while (Messages.Count > 260)
+                    {
+                        Messages.RemoveAt(0);
+                    }
                 }
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
-            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
         }
         catch (Exception) { }
     }
@@ -611,19 +614,22 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     {
         try
         {
-            void action()
+            if (!IsPause)
             {
-                var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame);
-                Messages.Add(msg);
-                log.Info($"接收:{frame}");
-                Debug.WriteLine($"接收:{frame}");
-
-                while (Messages.Count > 200)
+                void action()
                 {
-                    Messages.RemoveAt(0);
+                    var msg = new MtcpMessageData("", DateTime.Now, MessageType.Receive, frame);
+                    Messages.Add(msg);
+                    log.Info($"接收:{frame}");
+                    Debug.WriteLine($"接收:{frame}");
+
+                    while (Messages.Count > 200)
+                    {
+                        Messages.RemoveAt(0);
+                    }
                 }
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
-            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
         }
         catch (Exception) { }
     }
@@ -636,18 +642,21 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     {
         try
         {
-            void action()
+            if (!IsPause)
             {
-                var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
-                Messages.Add(msg);
-                log.Info(message: $"发送:{frame}");
-                Debug.WriteLine($"发送:{frame}");
-                while (Messages.Count > 200)
+                void action()
                 {
-                    Messages.RemoveAt(0);
+                    var msg = new MtcpMessageData("", DateTime.Now, MessageType.Send, frame);
+                    Messages.Add(msg);
+                    log.Info(message: $"发送:{frame}");
+                    Debug.WriteLine($"发送:{frame}");
+                    while (Messages.Count > 200)
+                    {
+                        Messages.RemoveAt(0);
+                    }
                 }
+                Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
             }
-            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
         }
         catch (System.Exception) { }
     }
@@ -669,8 +678,7 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     [RelayCommand]
     public void Pause()
     {
-        IsPause = !IsPause;
-        if (IsPause)
+        if (!IsPause)
         {
             ShowMessage("暂停更新接收的数据");
         }
@@ -678,6 +686,7 @@ public partial class MtcpDevice : ObservableObject, IDisposable
         {
             ShowMessage("恢复更新接收的数据");
         }
+        IsPause = !IsPause;
     }
 
     #endregion
