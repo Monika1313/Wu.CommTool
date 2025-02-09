@@ -200,6 +200,7 @@ public static class ModbusUtils
                 ports.Add(new ComPort(port, name));
             }
         }
+        ports = ports.OrderBy(x => x.ComId).ToList();
         return ports;
     }
 

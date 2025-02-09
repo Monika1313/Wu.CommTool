@@ -253,7 +253,7 @@ public partial class ModbusRtuModel : ObservableObject
                     coms.Add(new ComPort(port, name));
                 }
             }
-            ComPorts = new ObservableCollection<ComPort>(coms.OrderBy(x => x.Port));//串口列表
+            ComPorts = new ObservableCollection<ComPort>(coms.OrderBy(x => x.ComId));//串口列表
             if (ComPorts.Count != 0)
             {
                 //查找第一个USB设备
@@ -864,7 +864,7 @@ public partial class ModbusRtuModel : ObservableObject
                                 //数据量不够则继续接收 不能用continue,否则无法执行程序最后的延时1ms
                             }
 
-                            
+
                             switch (functionCode)
                             {
                                 //功能码20 (0x14)
@@ -872,7 +872,7 @@ public partial class ModbusRtuModel : ObservableObject
                                     {
                                         //0x14请求帧 帧长度需要根据帧的实际情况计算 长度=5+7N且(N>=1)   从站ID(1) 功能码(1) 字节数(1) [参考类型(1) 文件号(2) 记录号(2) 记录长度(2)]*N   校验码(2)
                                         //TODO 暂时支持读一条文件记录
-                                        if (frameCache.Count >=12)
+                                        if (frameCache.Count >= 12)
                                         {
                                             var tempF = frameCache.Take(12).ToList();//截取一段进行校验
                                             if (IsModbusCrcOk(tempF))
