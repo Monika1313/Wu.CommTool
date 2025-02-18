@@ -4,26 +4,54 @@ public partial class NetworkToolViewModel : NavigationViewModel
 {
     public NetworkToolViewModel() { }
 
-    public NetworkToolViewModel(IContainerProvider provider,IDialogHostService dialogHost) : base(provider)
+    public NetworkToolViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
     {
         获取物理网卡信息();
         this.dialogHost = dialogHost;
 
+        Task.Run(GetDefaultConfig);
+    }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+
         //从默认配置文件中读取配置
         try
         {
-            var re = Core.Common.Utils.ReadJsonFile(Path.Combine(networkCardConfigFolder, @"Default.jsonNCC"));
-            var x = JsonConvert.DeserializeObject<ObservableCollection<NetworkCardConfig>>(re);
-            if (x != null)
+            var filePath = Path.Combine(networkCardConfigFolder, @"Default.jsonNCC");
+
+            if (File.Exists(filePath))
             {
-                NetworkCardConfigs = x;
+                var re = Core.Common.Utils.ReadJsonFile(Path.Combine(networkCardConfigFolder, @"Default.jsonNCC"));
+                var x = JsonConvert.DeserializeObject<ObservableCollection<NetworkCardConfig>>(re);
+                if (x != null)
+                {
+                    NetworkCardConfigs = x;
+                    SelectedConfig = NetworkCardConfigs.FirstOrDefault();
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                NetworkCardConfigs =
+                    [
+                        new NetworkCardConfig() { ConfigName = "配置1", Ipv4s = [new Ipv4("192.168.1.233", "255.255.255.0", "192.168.1.1"), new Ipv4("192.168.2.233"), new Ipv4("192.168.3.3")]},
+                        new NetworkCardConfig() { ConfigName = "配置2", Ipv4s = [new Ipv4("192.168.3.3","255.255.255.0", "192.168.3.1")]}
+                    ];
+                //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(networkCardConfigFolder);
+                var content = JsonConvert.SerializeObject(NetworkCardConfigs);
+                Core.Common.Utils.WriteJsonFile(filePath, content);//保存文件
             }
         }
         catch (Exception ex)
         {
             HcGrowlExtensions.Warning($"{ex.Message}");
         }
-        SelectedConfig = NetworkCardConfigs.First();
+
     }
 
     #region 字段

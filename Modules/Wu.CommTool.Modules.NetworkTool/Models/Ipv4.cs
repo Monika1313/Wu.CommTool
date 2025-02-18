@@ -7,10 +7,17 @@ public partial class Ipv4 : ObservableObject
 
     }
 
-    public Ipv4(string address, string subnetMask)
+    public Ipv4(string address, string subnetMask = "255.255.255.0")
     {
         Address = address;
         SubnetMask = subnetMask;
+    }
+
+    public Ipv4(string address, string subnetMask, string defaultGateway)
+    {
+        Address = address;
+        SubnetMask = subnetMask;
+        DefaultGateway = defaultGateway;
     }
 
     /// <summary>
