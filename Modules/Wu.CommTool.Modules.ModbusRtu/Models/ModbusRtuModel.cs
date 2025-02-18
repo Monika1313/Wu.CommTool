@@ -1144,7 +1144,7 @@ public partial class ModbusRtuModel : ObservableObject
                 if (IsAutoResponse)
                 {
                     //验证匹配哪一条规则
-                    var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
+                    var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.IsEnable && x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
                     if (xx != null)
                     {
                         ShowMessage($"自动应答匹配: {xx.Name}");

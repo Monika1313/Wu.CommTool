@@ -31,4 +31,11 @@ public partial class ModbusRtuAutoResponseData : ObservableObject
     /// </summary>
     [ObservableProperty]
     bool isRegular = false;
+
+    /// <summary>
+    /// 是否启用
+    /// </summary>
+    [ObservableProperty]
+    bool isEnable = true;
+
 }

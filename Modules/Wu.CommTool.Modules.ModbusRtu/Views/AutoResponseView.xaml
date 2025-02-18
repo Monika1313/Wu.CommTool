@@ -327,6 +327,17 @@
                     </i:Interaction.Triggers>
 
                     <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="启用">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox Margin="0"
+                                              HorizontalAlignment="Center"
+                                              IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
                         <DataGridTemplateColumn Header="名称">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -357,13 +368,7 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <!--<DataGridTemplateColumn Header="使用正则">
-                                            <DataGridTemplateColumn.CellTemplate>
-                                                <DataTemplate>
-                                                    <CheckBox Margin="0" IsChecked="{Binding IsRegular, Mode=TwoWay}" />
-                                                </DataTemplate>
-                                            </DataGridTemplateColumn.CellTemplate>
-                                        </DataGridTemplateColumn>-->
+
                     </DataGrid.Columns>
                 </DataGrid>
             </ContentControl>
