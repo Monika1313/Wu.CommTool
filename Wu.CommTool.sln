@@ -36,6 +36,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Wu.CommTool.DynamicTheme.Re
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.DynamicTheme.Core", "Wu.CommTool.DynamicTheme.Core\Wu.CommTool.DynamicTheme.Core.csproj", "{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.ModbusAscii", "Modules\Wu.CommTool.Modules.ModbusAscii\Wu.CommTool.Modules.ModbusAscii.csproj", "{B60D1A1A-1F49-47D3-B572-57C4C2B8B712}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05BAD40D-CB41-45FB-BA1A-808FA64AEF67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B60D1A1A-1F49-47D3-B572-57C4C2B8B712}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B60D1A1A-1F49-47D3-B572-57C4C2B8B712}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B60D1A1A-1F49-47D3-B572-57C4C2B8B712}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B60D1A1A-1F49-47D3-B572-57C4C2B8B712}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +114,7 @@ Global
 		{37A93862-E7A0-4D7B-AF79-E66D3BAF7F98} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{9B266E31-CFAA-48FE-81ED-CD2F85778E32} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{E678465E-75A2-45EA-9BFD-4F69F2F11691} = {3BC16164-D552-45D4-A500-4262CF548710}
+		{B60D1A1A-1F49-47D3-B572-57C4C2B8B712} = {3BC16164-D552-45D4-A500-4262CF548710}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0AE7DA9F-D788-49F4-9DCA-61FBD58DBFE9}

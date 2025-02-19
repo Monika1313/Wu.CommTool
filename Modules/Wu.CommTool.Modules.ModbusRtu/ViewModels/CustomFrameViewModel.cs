@@ -85,7 +85,8 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
                 OpenEditFrameView();
                 break;
             case "新增行":
-                ModbusRtuModel.CustomFrames.Add(new CustomFrame());
+                ModbusRtuModel.AddNewCustomFrame();
+                //ModbusRtuModel.CustomFrames.Add(new CustomFrame());
                 break;
             default: break;
         }
@@ -135,7 +136,7 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
     /// </summary>
     private void OpenDialogView()
     {
-        
+
     }
 
     /// <summary>

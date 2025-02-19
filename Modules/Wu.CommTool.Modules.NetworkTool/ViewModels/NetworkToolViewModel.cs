@@ -17,7 +17,6 @@ public partial class NetworkToolViewModel : NavigationViewModel
     /// </summary>
     private void GetDefaultConfig()
     {
-
         //从默认配置文件中读取配置
         try
         {
@@ -51,7 +50,6 @@ public partial class NetworkToolViewModel : NavigationViewModel
         {
             HcGrowlExtensions.Warning($"{ex.Message}");
         }
-
     }
 
     #region 字段

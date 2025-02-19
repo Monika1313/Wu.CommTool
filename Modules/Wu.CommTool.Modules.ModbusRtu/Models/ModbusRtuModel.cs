@@ -24,6 +24,11 @@ public partial class ModbusRtuModel : ObservableObject
         //初始化一个10个数据的列表
         DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
         RefreshModbusRtuDataDataView();
+
+
+        CustomFrames = [new (this,"01 03 0000 0001 "),
+                                                  new (this,"01 04 0000 0001 "),
+                                                  new (this,""),];
     }
 
     private readonly SerialPort SerialPort = new();              //串口
@@ -99,12 +104,7 @@ public partial class ModbusRtuModel : ObservableObject
     /// 自定义帧的输入框
     /// </summary>
     [ObservableProperty]
-    private ObservableCollection<CustomFrame> customFrames =
-    [
-        new ("01 03 0000 0001 "),
-        new ("01 04 0000 0001 "),
-        new (""),
-    ];
+    private ObservableCollection<CustomFrame> customFrames = [];
     #endregion
 
     #region 搜索设备模块 属性
@@ -1275,6 +1275,15 @@ public partial class ModbusRtuModel : ObservableObject
         {
             ShowErrorMessage(ex.Message);
         }
+    }
+
+    /// <summary>
+    /// 自定义帧 新增行
+    /// </summary>
+    [RelayCommand]
+    public void AddNewCustomFrame()
+    {
+        CustomFrames.Add(new CustomFrame(this, ""));
     }
     #endregion
 
