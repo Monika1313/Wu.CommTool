@@ -279,12 +279,37 @@
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
                                     <DockPanel Margin="4">
-                                        <Button Margin="10,0,0,0"
+                                        <Button Margin="0"
                                                 Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Content="发送"
                                                 Cursor="Hand"
                                                 DockPanel.Dock="Right" />
+
+                                        <ToggleButton Margin="5,0"
+                                                      md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=TimerOutline}"
+                                                      Content="{md:PackIcon Kind=TimerOffOutline}"
+                                                      DockPanel.Dock="Right"
+                                                      IsChecked="{Binding Enable}">
+                                            <ToggleButton.Style>
+                                                <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}" TargetType="ToggleButton">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Enable}" Value="true">
+                                                            <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                        </DataTrigger>
+
+                                                        <DataTrigger Binding="{Binding Enable}" Value="false">
+                                                            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                                            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                                            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ToggleButton.Style>
+                                        </ToggleButton>
+
                                         <hc:TextBox VerticalContentAlignment="Top"
                                                     hc:InfoElement.Placeholder="右键菜单可以生成帧、新增行、删除行"
                                                     hc:InfoElement.ShowClearButton="False"
