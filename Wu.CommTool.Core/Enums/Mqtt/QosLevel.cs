@@ -7,9 +7,9 @@
 public enum QosLevel
 {
     [Description("Qos0")]
-    AtLeastOnce = 0,
+    AtMostOnce = 0,
     [Description("Qos1")]
-    AtMostOnce = 1,
+    AtLeastOnce = 1,
     [Description("Qos2")]
     ExactlyOnce = 2
 }
