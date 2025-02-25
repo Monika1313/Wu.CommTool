@@ -21,8 +21,35 @@
                        Style="{StaticResource TitleTextBlock}"
                        Text="{Binding SelectedMrtuSerialPort.ComConfig.ComPort}" />
             <DockPanel LastChildFill="False">
+
+                <ToggleButton Margin="5"
+                              md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=PlayPause,
+                                                                            Size=22}"
+                              Content="{md:PackIcon Kind=Pause,
+                                                    Size=22}"
+                              DockPanel.Dock="Left"
+                              IsChecked="{Binding SelectedMrtuSerialPort.IsPause}">
+                    <ToggleButton.Style>
+                        <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}" TargetType="ToggleButton">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding SelectedMrtuSerialPort.IsPause}" Value="true">
+                                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                    <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                </DataTrigger>
+
+                                <DataTrigger Binding="{Binding SelectedMrtuSerialPort.IsPause}" Value="false">
+                                    <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+
                 <!--  暂停显示按钮  -->
-                <Button Width="30"
+                <!--<Button Width="30"
                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                         Margin="5"
                         HorizontalAlignment="Left"
@@ -61,7 +88,8 @@
                             </Style.Triggers>
                         </Style>
                     </Button.Style>
-                </Button>
+                </Button>-->
+
                 <!--  清空消息按钮  -->
                 <Button Width="30"
                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"

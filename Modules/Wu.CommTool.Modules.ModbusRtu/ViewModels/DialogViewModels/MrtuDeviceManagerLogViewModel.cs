@@ -38,7 +38,7 @@ public partial class MrtuDeviceManagerLogViewModel : NavigationViewModel, IDialo
             {
                 MrtuDeviceManager = parameters.GetValue<MrtuDeviceManager>("Value");
             }
-            SelectedMrtuSerialPort = MrtuDeviceManager.MrtuSerialPorts.FirstOrDefault();
+            SelectedMrtuSerialPort = MrtuDeviceManager.MrtuSerialPorts.FirstOrDefault(x=>x.ComConfig.ComPort == MrtuDeviceManager.SelectedMrtuDevice.ComConfig.ComPort);
         }
         catch (Exception ex)
         {
