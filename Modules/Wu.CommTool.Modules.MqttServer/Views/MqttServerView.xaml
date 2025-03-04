@@ -378,75 +378,89 @@
                         </DockPanel>
                     </Grid>
 
-                    <DockPanel Height="30"
-                               DockPanel.Dock="Bottom"
-                               LastChildFill="False">
-                        <wu:BreatheLight IsBreathing="{Binding MqttServerConfig.IsOpened}" />
-                        <TextBlock VerticalAlignment="Center" Text="IP：" />
-                        <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerIp}" />
-                        <TextBlock VerticalAlignment="Center" Text="   Port：" />
-                        <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerPort}" />
-                    </DockPanel>
-                    <DockPanel DockPanel.Dock="Bottom">
-                        <DockPanel DockPanel.Dock="Top">
-                            <Button Margin="4"
-                                    Command="{Binding PublishMessageFromBrokerCommand}"
-                                    CommandParameter="Publish"
-                                    Content="发布"
-                                    Cursor="Hand"
-                                    DockPanel.Dock="Right" />
+                    <Expander Margin="4"
+                              Background="White"
+                              DockPanel.Dock="Bottom"
+                              ExpandDirection="Up"
+                              IsExpanded="True">
+                        <Expander.Header>
+                            <DockPanel Grid.Row="1"
+                                       Height="30"
+                                       DockPanel.Dock="Bottom"
+                                       LastChildFill="False">
+                                <wu:BreatheLight IsBreathing="{Binding MqttServerConfig.IsOpened}" />
+                                <TextBlock VerticalAlignment="Center" Text="IP：" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerIp}" />
+                                <TextBlock VerticalAlignment="Center" Text="   Port：" />
+                                <TextBlock VerticalAlignment="Center" Text="{Binding MqttServerConfig.ServerPort}" />
+                            </DockPanel>
+                        </Expander.Header>
+                        <Border Background="{DynamicResource RegionBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1,1,1,0"
+                                CornerRadius="4,4,0,0">
+                            <DockPanel DockPanel.Dock="Bottom">
+                                <DockPanel DockPanel.Dock="Top">
+                                    <Button Margin="4"
+                                            Command="{Binding PublishMessageFromBrokerCommand}"
+                                            CommandParameter="Publish"
+                                            Content="发布"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right" />
 
-                            <CheckBox hc:InfoElement.Placeholder="消息质量"
-                                      Content="保留消息"
-                                      Cursor="Hand"
-                                      DockPanel.Dock="Right"
-                                      IsChecked="{Binding MqttServerConfig.IsRetain}"
-                                      Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}" />
+                                    <CheckBox hc:InfoElement.Placeholder="消息质量"
+                                              Content="保留消息"
+                                              Cursor="Hand"
+                                              DockPanel.Dock="Right"
+                                              IsChecked="{Binding MqttServerConfig.IsRetain}"
+                                              Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}" />
 
-                            <ComboBox MinWidth="120"
-                                      Margin="5"
-                                      hc:InfoElement.Placeholder="消息质量"
-                                      hc:TitleElement.Title="消息质量："
-                                      hc:TitleElement.TitleWidth="70"
-                                      DockPanel.Dock="Right"
-                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:QosLevel}}}"
-                                      SelectedItem="{Binding MqttServerConfig.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Style="{StaticResource FormComboBox}" />
+                                    <ComboBox MinWidth="120"
+                                              Margin="5"
+                                              hc:InfoElement.Placeholder="消息质量"
+                                              hc:TitleElement.Title="消息质量："
+                                              hc:TitleElement.TitleWidth="70"
+                                              DockPanel.Dock="Right"
+                                              ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:QosLevel}}}"
+                                              SelectedItem="{Binding MqttServerConfig.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource FormComboBox}" />
 
-                            <ComboBox hc:InfoElement.Title="发送消息格式"
-                                      hc:InfoElement.TitleWidth="80"
-                                      DockPanel.Dock="Right"
-                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MqttPayloadType}}}"
-                                      SelectedItem="{Binding MqttServerConfig.SendPaylodType}"
-                                      Style="{StaticResource FormComboBox}" />
+                                    <ComboBox hc:InfoElement.Title="发送消息格式"
+                                              hc:InfoElement.TitleWidth="80"
+                                              DockPanel.Dock="Right"
+                                              ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MqttPayloadType}}}"
+                                              SelectedItem="{Binding MqttServerConfig.SendPaylodType}"
+                                              Style="{StaticResource FormComboBox}" />
 
-                            <TextBox hc:InfoElement.Placeholder="请输入发送的消息主题..."
-                                     hc:TitleElement.Title="发布主题"
-                                     hc:TitleElement.TitleWidth="60"
-                                     DockPanel.Dock="Left"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding MqttServerConfig.PublishTopic}" />
-                        </DockPanel>
-                        <ContentControl Margin="4,0"
-                                        Padding="0"
-                                        Style="{StaticResource Effect2Control}">
-                            <TextBox Height="130"
-                                     VerticalContentAlignment="Top"
-                                     hc:InfoElement.Placeholder="请输入要发送的内容..."
-                                     AcceptsReturn="True"
-                                     Background="{DynamicResource BackgroundBrush}"
-                                     Foreground="{DynamicResource FontBrush}"
-                                     Style="{StaticResource TextBoxExtend}"
-                                     Text="{Binding PublishMessage, UpdateSourceTrigger=PropertyChanged}"
-                                     TextWrapping="Wrap">
-                                <TextBox.InputBindings>
-                                    <KeyBinding Key="Enter"
-                                                Command="{Binding ExecuteCommand}"
-                                                CommandParameter="Publish" />
-                                </TextBox.InputBindings>
-                            </TextBox>
-                        </ContentControl>
-                    </DockPanel>
+                                    <TextBox hc:InfoElement.Placeholder="请输入发送的消息主题..."
+                                             hc:TitleElement.Title="发布主题"
+                                             hc:TitleElement.TitleWidth="60"
+                                             DockPanel.Dock="Left"
+                                             Style="{StaticResource FormTextBox}"
+                                             Text="{Binding MqttServerConfig.PublishTopic}" />
+                                </DockPanel>
+                                <ContentControl Margin="4,0"
+                                                Padding="0"
+                                                Style="{StaticResource Effect2Control}">
+                                    <TextBox Height="130"
+                                             VerticalContentAlignment="Top"
+                                             hc:InfoElement.Placeholder="请输入要发送的内容..."
+                                             AcceptsReturn="True"
+                                             Background="{DynamicResource BackgroundBrush}"
+                                             Foreground="{DynamicResource FontBrush}"
+                                             Style="{StaticResource TextBoxExtend}"
+                                             Text="{Binding PublishMessage, UpdateSourceTrigger=PropertyChanged}"
+                                             TextWrapping="Wrap">
+                                        <TextBox.InputBindings>
+                                            <KeyBinding Key="Enter"
+                                                        Command="{Binding ExecuteCommand}"
+                                                        CommandParameter="Publish" />
+                                        </TextBox.InputBindings>
+                                    </TextBox>
+                                </ContentControl>
+                            </DockPanel>
+                        </Border>
+                    </Expander>
 
                     <ContentControl Margin="4,0" Style="{StaticResource Effect2Control}">
                         <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
