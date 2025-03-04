@@ -444,6 +444,10 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             MqttClientOptionsBuilder optionsBuilder = new();//Mqtt客户端配置构造器
             optionsBuilder.WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort);  //服务器IP和端口
             optionsBuilder.WithClientId(MqttClientConfig.ClientId);                               //客户端ID
+
+            //optionsBuilder.WithKeepAlivePeriod(new TimeSpan(0, 0, 60));  //心跳时间
+            //optionsBuilder.WithNoKeepAlive();                            //不使用心跳
+
             //optionsBuilder.WithTimeout(new TimeSpan(0,0,3));//超时没有生效
 
             //optionsBuilder.WithCleanSession(true);
