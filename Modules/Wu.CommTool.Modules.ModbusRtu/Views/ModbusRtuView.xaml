@@ -48,7 +48,7 @@
                 </DockPanel>
 
                 <!--  底部区域  -->
-                <StackPanel Height="30"
+                <!--<StackPanel Height="30"
                             DockPanel.Dock="Bottom"
                             Orientation="Horizontal">
                     <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
@@ -80,7 +80,7 @@
                     <TextBlock VerticalAlignment="Center" Text="发送: " />
                     <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
                     <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-                </StackPanel>
+                </StackPanel>-->
 
                 <ContentControl prism:RegionManager.RegionName="ModbusRtuViewRegion" />
             </DockPanel>

@@ -39,7 +39,8 @@
     </Window.Resources>
 
     <WindowChrome.WindowChrome>
-        <WindowChrome CaptionHeight="57"
+        <WindowChrome x:Name="WindowChrome"
+                      CaptionHeight="50"
                       CornerRadius="0"
                       GlassFrameThickness="1"
                       NonClientFrameEdges="None"
@@ -96,7 +97,8 @@
                         <RowDefinition />
                     </Grid.RowDefinitions>
                     <md:ColorZone x:Name="ColorZone"
-                                  Padding="10"
+                                  Height="{Binding ElementName=WindowChrome, Path=CaptionHeight}"
+                                  Padding="10,0"
                                   md:ElevationAssist.Elevation="Dp2"
                                   DockPanel.Dock="Top"
                                   Mode="PrimaryMid">

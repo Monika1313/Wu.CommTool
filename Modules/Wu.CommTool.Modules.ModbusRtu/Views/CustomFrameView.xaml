@@ -13,6 +13,7 @@
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
              xmlns:wu="https://github.com/Monika1313/Wu"
+             xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
              d:DataContext="{x:Static dvm:CustomFrameDesignViewModel.Instance}"
              d:DesignHeight="500"
              d:DesignWidth="800"
@@ -243,117 +244,162 @@
             </Grid>
 
             <!--  发送区域  -->
-            <Expander Margin="4"
-                      Background="White"
-                      DockPanel.Dock="Bottom"
-                      ExpandDirection="Up"
-                      IsExpanded="True">
-                <Border Background="{DynamicResource RegionBrush}"
-                        BorderBrush="{DynamicResource BorderBrush}"
-                        BorderThickness="1,1,1,0"
-                        CornerRadius="4,4,0,0">
-                    <DockPanel DockPanel.Dock="Bottom">
-                        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
-                            <StackPanel Cursor=""
-                                        DockPanel.Dock="Left"
-                                        Orientation="Horizontal">
-                                <ComboBox MinWidth="190"
-                                          hc:InfoElement.Placeholder="请选择校验模式..."
-                                          hc:InfoElement.Title="自动校验模式: "
-                                          hc:InfoElement.TitleWidth="90"
-                                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CrcMode}}}"
-                                          SelectedItem="{Binding ModbusRtuModel.CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                          Style="{StaticResource FormComboBox}" />
-                            </StackPanel>
+            <Grid DockPanel.Dock="Bottom">
+                <Expander Margin="4"
+                          Background="White"
+                          DockPanel.Dock="Bottom"
+                          ExpandDirection="Up">
+                    <Expander.Header>
+                        <StackPanel Height="30"
+                                    DockPanel.Dock="Bottom"
+                                    Orientation="Horizontal">
+                            <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
 
-                            <!--<Button Margin="10,0"
+                            <TextBlock Margin="0"
+                                       VerticalAlignment="Center"
+                                       FontWeight="Bold"
+                                       Text="{Binding ModbusRtuModel.ComConfig.ComPort.Port}" />
+                            <TextBlock VerticalAlignment="Center" Text=" : " />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.ComPort.DeviceName}" />
+                            <TextBlock VerticalAlignment="Center" Text="  " />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
+                            <TextBlock VerticalAlignment="Center" Text="  " />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
+                            <TextBlock Margin="5,0"
+                                       VerticalAlignment="Center"
+                                       Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
+
+                            <wuctrl:BreatheLight Margin="30,5,5,5"
+                                                 IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
+                                                 Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
+                            <TextBlock VerticalAlignment="Center" Text="接收: " />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
+                            <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+
+                            <wuctrl:BreatheLight Margin="30,5,5,5"
+                                                 IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
+                                                 Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
+                            <TextBlock VerticalAlignment="Center" Text="发送: " />
+                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
+                            <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                        </StackPanel>
+                    </Expander.Header>
+                    <!--<Expander.Style>
+                        <Style BasedOn="{StaticResource ExpanderBaseStyle}" TargetType="Expander">
+                            <Setter Property="IsExpanded" Value="True" />
+                            <Style.Triggers>
+                                <DataTrigger />
+                            </Style.Triggers>
+                        </Style>
+                    </Expander.Style>-->
+                    <Border Background="{DynamicResource RegionBrush}"
+                            BorderBrush="{DynamicResource BorderBrush}"
+                            BorderThickness="1,1,1,0"
+                            CornerRadius="4,4,0,0">
+                        <DockPanel DockPanel.Dock="Bottom">
+                            <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                                <StackPanel Cursor=""
+                                            DockPanel.Dock="Left"
+                                            Orientation="Horizontal">
+                                    <ComboBox MinWidth="190"
+                                              hc:InfoElement.Placeholder="请选择校验模式..."
+                                              hc:InfoElement.Title="自动校验模式: "
+                                              hc:InfoElement.TitleWidth="90"
+                                              ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CrcMode}}}"
+                                              SelectedItem="{Binding ModbusRtuModel.CrcMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource FormComboBox}" />
+                                </StackPanel>
+
+                                <!--<Button Margin="10,0"
                             Command="{Binding ExecuteCommand}"
                             CommandParameter="帧生成器"
                             Content="帧生成器"
                             DockPanel.Dock="Right" />-->
+                            </DockPanel>
+
+
+                            <ContentControl MaxHeight="400"
+                                            Margin="4,0"
+                                            Padding="0"
+                                            Style="{StaticResource Effect2Control}">
+                                <hc:ScrollViewer IsInertiaEnabled="True">
+                                    <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.CustomFrames}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <DockPanel Margin="4">
+                                                    <Button Margin="0"
+                                                            Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                            CommandParameter="{Binding}"
+                                                            Content="发送"
+                                                            Cursor="Hand"
+                                                            DockPanel.Dock="Right" />
+
+                                                    <ToggleButton Margin="5,0"
+                                                                  md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=TimerOutline}"
+                                                                  Content="{md:PackIcon Kind=TimerOffOutline}"
+                                                                  DockPanel.Dock="Right"
+                                                                  IsChecked="{Binding Enable}">
+                                                        <ToggleButton.Style>
+                                                            <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}" TargetType="ToggleButton">
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Enable}" Value="true">
+                                                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                                                    </DataTrigger>
+
+                                                                    <DataTrigger Binding="{Binding Enable}" Value="false">
+                                                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </ToggleButton.Style>
+                                                    </ToggleButton>
+
+                                                    <hc:TextBox VerticalContentAlignment="Top"
+                                                                hc:InfoElement.Placeholder="右键菜单可以生成帧、新增行、删除行"
+                                                                hc:InfoElement.ShowClearButton="False"
+                                                                Style="{StaticResource TextBoxPlusBaseStyle}"
+                                                                Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
+                                                                Text="{Binding Frame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                                TextWrapping="Wrap">
+                                                        <TextBox.InputBindings>
+                                                            <KeyBinding Key="Enter"
+                                                                        Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                                        CommandParameter="{Binding}" />
+                                                        </TextBox.InputBindings>
+                                                        <TextBoxBase.ContextMenu>
+                                                            <ContextMenu>
+                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.CreateFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                          CommandParameter="{Binding}"
+                                                                          Header="帧生成器" />
+                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                          CommandParameter="新增行"
+                                                                          Header="新增行" />
+                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                          CommandParameter="{Binding}"
+                                                                          Header="删除行" />
+                                                            </ContextMenu>
+                                                        </TextBoxBase.ContextMenu>
+                                                    </hc:TextBox>
+                                                </DockPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </hc:ScrollViewer>
+                            </ContentControl>
                         </DockPanel>
+                    </Border>
+                </Expander>
 
-
-                        <ContentControl MaxHeight="400"
-                                        Margin="4,0"
-                                        Padding="0"
-                                        Style="{StaticResource Effect2Control}">
-                            <hc:ScrollViewer IsInertiaEnabled="True">
-                                <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.CustomFrames}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Vertical" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <DockPanel Margin="4">
-                                                <Button Margin="0"
-                                                        Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                                                        CommandParameter="{Binding}"
-                                                        Content="发送"
-                                                        Cursor="Hand"
-                                                        DockPanel.Dock="Right" />
-
-                                                <ToggleButton Margin="5,0"
-                                                              md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=TimerOutline}"
-                                                              Content="{md:PackIcon Kind=TimerOffOutline}"
-                                                              DockPanel.Dock="Right"
-                                                              IsChecked="{Binding Enable}">
-                                                    <ToggleButton.Style>
-                                                        <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}" TargetType="ToggleButton">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Enable}" Value="true">
-                                                                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                                                    <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                                                    <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                                                </DataTrigger>
-
-                                                                <DataTrigger Binding="{Binding Enable}" Value="false">
-                                                                    <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                                                                    <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                                                                    <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </ToggleButton.Style>
-                                                </ToggleButton>
-
-                                                <hc:TextBox VerticalContentAlignment="Top"
-                                                            hc:InfoElement.Placeholder="右键菜单可以生成帧、新增行、删除行"
-                                                            hc:InfoElement.ShowClearButton="False"
-                                                            Style="{StaticResource TextBoxPlusBaseStyle}"
-                                                            Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                            Text="{Binding Frame, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                            TextWrapping="Wrap">
-                                                    <TextBox.InputBindings>
-                                                        <KeyBinding Key="Enter"
-                                                                    Command="{Binding DataContext.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
-                                                                    CommandParameter="{Binding}" />
-                                                    </TextBox.InputBindings>
-                                                    <TextBoxBase.ContextMenu>
-                                                        <ContextMenu>
-                                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.CreateFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                                      CommandParameter="{Binding}"
-                                                                      Header="帧生成器" />
-                                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.ExecuteCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                                      CommandParameter="新增行"
-                                                                      Header="新增行" />
-                                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.DeleteLineCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                                      CommandParameter="{Binding}"
-                                                                      Header="删除行" />
-                                                        </ContextMenu>
-                                                    </TextBoxBase.ContextMenu>
-                                                </hc:TextBox>
-                                            </DockPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </hc:ScrollViewer>
-                        </ContentControl>
-                    </DockPanel>
-                </Border>
-            </Expander>
+            </Grid>
 
             <!--  页面消息  -->
             <ContentControl Margin="4,0"
