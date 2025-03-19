@@ -435,11 +435,6 @@
                         <DataGrid.ContextMenu>
                             <ContextMenu StaysOpen="true">
                                 <MenuItem Margin="2"
-                                          Command="{Binding OpenMrtuDataEditViewCommand}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                          Header="编辑"
-                                          Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}, Mode=FindAncestor}, Path=PlacementTarget.SelectedItem, Converter={core:Null2Collapsed}}" />
-                                <MenuItem Margin="2"
                                           Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AddNewMrtuDataCommand}"
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                           Header="新建行" />
@@ -448,6 +443,19 @@
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
                                           Foreground="Red"
                                           Header="删除行" />
+                                <MenuItem Margin="2"
+                                          Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AllMrtuDataRegisterAddrAdd1Command}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                          Header="所有测点寄存器地址 ＋1" />
+                                <MenuItem Margin="2"
+                                          Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AllMrtuDataRegisterAddrSub1Command}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                          Header="所有测点寄存器地址 －1" />
+                                <!--<MenuItem Margin="2"
+                                          Command="{Binding OpenMrtuDataEditViewCommand}"
+                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                          Header="编辑"
+                                          Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}, Mode=FindAncestor}, Path=PlacementTarget.SelectedItem, Converter={core:Null2Collapsed}}" />-->
                             </ContextMenu>
                         </DataGrid.ContextMenu>
 

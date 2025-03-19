@@ -191,6 +191,10 @@ public partial class MrtuDevice : ObservableObject
     [ObservableProperty]
     ObservableCollection<MrtuData> mrtuDatas = [];
 
+    /// <summary>
+    /// 添加测点数据
+    /// </summary>
+    /// <param name="mrtuData"></param>
     [RelayCommand]
     [property: JsonIgnore]
     private void AddNewMrtuData(MrtuData mrtuData)
@@ -213,6 +217,10 @@ public partial class MrtuDevice : ObservableObject
         }
     }
 
+    /// <summary>
+    /// 删除测点数据
+    /// </summary>
+    /// <param name="mrtuData"></param>
     [RelayCommand]
     [property: JsonIgnore]
     private void DeleteMrtuData(MrtuData mrtuData)
@@ -222,6 +230,33 @@ public partial class MrtuDevice : ObservableObject
             MrtuDatas.Remove(mrtuData);
         }
     }
+
+    /// <summary>
+    /// 所有测点数据地址+1
+    /// </summary>
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void AllMrtuDataRegisterAddrAdd1()
+    {
+        foreach (var item in MrtuDatas)
+        {
+            item.RegisterAddr++;
+        }
+    }
+
+    /// <summary>
+    /// 所有测点数据地址-1
+    /// </summary>
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void AllMrtuDataRegisterAddrSub1()
+    {
+        foreach (var item in MrtuDatas)
+        {
+            item.RegisterAddr--;
+        }
+    }
+
 
     public override string ToString()
     {

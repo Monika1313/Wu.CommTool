@@ -120,6 +120,10 @@ public partial class MrtuDeviceManager : ObservableObject
         Task.Run(() => ComPorts = ModbusUtils.GetComPorts());
     }
 
+    /// <summary>
+    /// 添加新的Mrtu设备
+    /// </summary>
+    /// <param name="mrtuDevice"></param>
     [RelayCommand]
     [property: JsonIgnore]
     private void AddNewMrtuDevice(MrtuDevice mrtuDevice)
@@ -135,6 +139,10 @@ public partial class MrtuDeviceManager : ObservableObject
         }
     }
 
+    /// <summary>
+    /// 删除Mrtu设备
+    /// </summary>
+    /// <param name="mrtuDevice"></param>
     [RelayCommand]
     [property: JsonIgnore]
     private void DeleteMrtuDevice(MrtuDevice mrtuDevice)
