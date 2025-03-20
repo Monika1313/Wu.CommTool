@@ -324,6 +324,11 @@ public partial class MtcpDeviceMonitorViewModel : NavigationViewModel, IDialogHo
                 throw new NullReferenceException("A dialog's ViewModel must implement the IDialogHostService interface");
             #endregion
 
+            //没有选中项则选中第一个
+            if (MtcpDeviceManager.SelectedMtcpDevice == null)
+            {
+                MtcpDeviceManager.SelectedMtcpDevice = MtcpDeviceManager.MtcpDevices.FirstOrDefault();
+            }
 
             DialogParameters parameters = new()
             {

@@ -602,7 +602,8 @@ public partial class ModbusRtuModel : ObservableObject
             }
             else
             {
-                ShowErrorMessage("串口未打开");
+                ShowErrorMessage("串口未打开,发送失败!");
+                CloseCom();
             }
             return false;
         }
@@ -885,7 +886,6 @@ public partial class ModbusRtuModel : ObservableObject
                                 default:
                                     break;
                             }
-
 
                             //解析出可能的帧并校验成功
                             if (frame.Count > 0 && IsModbusCrcOk(frame))
