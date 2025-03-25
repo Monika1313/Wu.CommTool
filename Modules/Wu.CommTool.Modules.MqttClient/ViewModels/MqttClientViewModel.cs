@@ -40,6 +40,32 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     }
 
     /// <summary>
+    /// 导航至该页面触发
+    /// </summary>
+    /// <param name="navigationContext"></param>
+    public override void OnNavigatedTo(NavigationContext navigationContext)
+    {
+        //try
+        //{
+        //    while (Messages.Count > 200)
+        //    {
+        //        for (int i = 0; i < 50; i++)
+        //        {
+        //            if (Messages.Count <150)
+        //            {
+        //                break;
+        //            }
+        //            Messages.RemoveAt(0);
+        //        }
+        //    }
+        //}
+        //catch (Exception ex)
+        //{
+
+        //}
+    }
+
+    /// <summary>
     /// 读取默认配置文件 若无则生成
     /// </summary>
     private void GetDefaultConfig()
@@ -732,15 +758,27 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             {
                 Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
                 log.Info($"接收:{message}");
-                while (Messages.Count > 100)
-                {
-                    Messages.RemoveAt(0);
-                }
+                限制消息数量();
             }
             Wu.Wpf.Utils.ExecuteFun(action);
         }
         catch (Exception)
         {
+        }
+    }
+
+    private void 限制消息数量()
+    {
+        if (Messages.Count > 200)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (Messages.Count < 150)
+                {
+                    break;
+                }
+                Messages.RemoveAt(0);
+            }
         }
     }
 
@@ -752,10 +790,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             {
                 Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Send, title));
                 log.Info($"发送:{message}");
-                while (Messages.Count > 100)
-                {
-                    Messages.RemoveAt(0);
-                }
+                限制消息数量();
             }
             Wu.Wpf.Utils.ExecuteFun(action);
         }
@@ -777,25 +812,13 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             {
                 Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
                 log.Info(message);
-                while (Messages.Count > 100)
-                {
-                    Messages.RemoveAt(0);
-                }
+                限制消息数量();
             }
             Wu.Wpf.Utils.ExecuteFun(action);
         }
         catch (Exception) { }
     }
 
-
-    /// <summary>
-    /// 导航至该页面触发
-    /// </summary>
-    /// <param name="navigationContext"></param>
-    public override void OnNavigatedTo(NavigationContext navigationContext)
-    {
-
-    }
 
     /// <summary>
     /// 打开该弹窗时执行

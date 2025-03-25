@@ -465,6 +465,15 @@ public partial class ModbusRtuModel : ObservableObject
                 var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
                 Messages.Add(msg);
                 log.Info($"接收:{frame}");
+
+                //if (Messages.Count > 9999)
+                //{
+                //    for (int i = 0; i < 100; i++)
+                //    {
+                //        Messages.RemoveAt(0);
+                //    }
+                //}
+
                 while (Messages.Count > 200)
                 {
                     Messages.RemoveAt(0);
