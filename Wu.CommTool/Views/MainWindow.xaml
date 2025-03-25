@@ -67,7 +67,7 @@
                                 </Image.Clip>
                             </Image>
                             <TextBlock Margin="0,10"
-                                       HorizontalAlignment="Center"
+                                       Style="{DynamicResource DefaultTextBlock}"
                                        Text="Wu" />
                         </StackPanel>
                         <ListBox x:Name="menuBar"
@@ -81,9 +81,12 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Background="Transparent" Orientation="Horizontal">
-                                        <md:PackIcon Margin="20,0" Kind="{Binding Icon}" />
+                                        <md:PackIcon Margin="20,0"
+                                                     Foreground="{DynamicResource FontBrush}"
+                                                     Kind="{Binding Icon}" />
                                         <TextBlock Margin="0,0,20,0"
                                                    VerticalAlignment="Center"
+                                                   Foreground="{DynamicResource FontBrush}"
                                                    Text="{Binding Title}" />
                                     </StackPanel>
                                 </DataTemplate>

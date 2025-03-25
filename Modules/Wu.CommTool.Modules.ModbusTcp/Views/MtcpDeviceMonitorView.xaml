@@ -287,8 +287,8 @@
                 <Grid DockPanel.Dock="Left">
                     <ContentControl Width="150" Style="{StaticResource Effect2Control}">
                         <StackPanel>
-                            <TextBlock HorizontalAlignment="Center"
-                                       FontSize="14"
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}"
+                                       FontSize="14" 
                                        Text="设备列表" />
 
                             <ListBox Padding="0"

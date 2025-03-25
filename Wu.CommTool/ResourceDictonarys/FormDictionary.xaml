@@ -32,6 +32,7 @@
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
         <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}" />
     </Style>
 
     <!--  hc:CheckComboBox  -->
@@ -48,6 +49,7 @@
         <Setter Property="hc:InfoElement.TitleWidth" Value="80" />
         <Setter Property="hc:InfoElement.TitlePlacement" Value="Left" />
         <Setter Property="Margin" Value="5" />
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}" />
         <Setter Property="Background" Value="Transparent" />
     </Style>
 

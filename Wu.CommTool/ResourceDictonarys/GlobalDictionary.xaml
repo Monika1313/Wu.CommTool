@@ -250,6 +250,13 @@
         <Setter Property="hc:InfoElement.Placeholder" Value="请输入要查找的内容..." />
     </Style>
 
+    <!--  默认的TextBlock  -->
+    <Style x:Key="DefaultTextBlock" TargetType="TextBlock">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Foreground" Value="{DynamicResource FontBrush}" />
+        <Setter Property="theme:ThemeProps.Foreground" Value="{DynamicResource FontBrush}" />
+    </Style>
 
     <!--  TextBlock  -->
     <Style x:Key="TitleTextBlock" TargetType="TextBlock">
@@ -259,6 +266,13 @@
         <Setter Property="Foreground" Value="{DynamicResource FontBrush}" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="theme:ThemeProps.Foreground" Value="{DynamicResource FontBrush}" />
+    </Style>
+
+    <Style x:Key="SecontTitle"
+           BasedOn="{StaticResource TitleTextBlock}"
+           TargetType="TextBlock">
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="FontSize" Value="18" />
     </Style>
 
     <!--  PackIcon  -->

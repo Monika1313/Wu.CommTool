@@ -289,7 +289,7 @@
                     <ContentControl Width="150" Style="{StaticResource Effect2Control}">
                         <StackPanel>
                             <TextBlock HorizontalAlignment="Center"
-                                       FontSize="14"
+                                       FontSize="14" Style="{DynamicResource DefaultTextBlock}"
                                        Text="设备列表" />
 
                             <!--<ItemsControl Margin="0"

@@ -35,9 +35,12 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Background="Transparent" Orientation="Horizontal">
-                                            <md:PackIcon Margin="5,0" Kind="{Binding Icon}" />
+                                            <md:PackIcon Margin="5,0"
+                                                         Foreground="{DynamicResource FontBrush}"
+                                                         Kind="{Binding Icon}" />
                                             <TextBlock Margin="0,0,15,0"
                                                        VerticalAlignment="Center"
+                                                       Style="{DynamicResource DefaultTextBlock}"
                                                        Text="{Binding Title}" />
                                         </StackPanel>
                                     </DataTemplate>

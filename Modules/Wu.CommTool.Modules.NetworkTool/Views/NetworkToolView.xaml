@@ -372,7 +372,7 @@
                                                    Foreground="{StaticResource Blue_Foreground}"
                                                    Text="{Binding NetConnectionId}" />
                                         <TextBlock Margin="5"
-                                                   VerticalAlignment="Center"
+                                                   Style="{DynamicResource DefaultTextBlock}"
                                                    Text="{Binding Name}" />
                                     </StackPanel>
 

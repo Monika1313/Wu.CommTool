@@ -24,8 +24,7 @@
                         <StackPanel Width="240" Orientation="Vertical">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Margin="10"
-                                           HorizontalAlignment="Center"
-                                           FontSize="18"
+                                           Style="{DynamicResource SecontTitle}"
                                            Text="服务器配置" />
 
                                 <!--  导出配置文件  -->
@@ -111,7 +110,7 @@
                                                 HorizontalAlignment="Center"
                                                 VerticalAlignment="Center"
                                                 Orientation="Horizontal">
-                                        <TextBlock Margin="5" Text="SSL/TLS" />
+                                        <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="SSL/TLS" />
                                         <ToggleButton Margin="30,0"
                                                       IsChecked="{Binding MqttServerConfig.Encrypt}"
                                                       Style="{StaticResource ToggleButtonSwitch}" />

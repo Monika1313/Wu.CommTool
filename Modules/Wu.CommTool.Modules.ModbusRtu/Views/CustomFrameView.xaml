@@ -255,33 +255,32 @@
                                     Orientation="Horizontal">
                             <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
 
-                            <TextBlock Margin="0"
-                                       VerticalAlignment="Center"
-                                       FontWeight="Bold"
+                            <TextBlock FontWeight="Bold"
+                                       Style="{DynamicResource DefaultTextBlock}"
                                        Text="{Binding ModbusRtuModel.ComConfig.ComPort.Port}" />
-                            <TextBlock VerticalAlignment="Center" Text=" : " />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.ComPort.DeviceName}" />
-                            <TextBlock VerticalAlignment="Center" Text="  " />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
-                            <TextBlock VerticalAlignment="Center" Text="  " />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text=" : " />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="{Binding ModbusRtuModel.ComConfig.ComPort.DeviceName}" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="  " />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="  " />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
                             <TextBlock Margin="5,0"
-                                       VerticalAlignment="Center"
+                                       Style="{DynamicResource DefaultTextBlock}"
                                        Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
 
                             <wuctrl:BreatheLight Margin="30,5,5,5"
                                                  IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
                                                  Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
-                            <TextBlock VerticalAlignment="Center" Text="接收: " />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
-                            <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="接收: " />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text=" Bytes" />
 
                             <wuctrl:BreatheLight Margin="30,5,5,5"
                                                  IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
                                                  Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
-                            <TextBlock VerticalAlignment="Center" Text="发送: " />
-                            <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
-                            <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="发送: " />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="{Binding ModbusRtuModel.SendBytesCount}" />
+                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text=" Bytes" />
                         </StackPanel>
                     </Expander.Header>
                     <!--<Expander.Style>
