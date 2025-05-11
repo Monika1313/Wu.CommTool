@@ -36,8 +36,8 @@ public partial class ModbusRtuModel : ObservableObject
     private readonly ConcurrentQueue<string> ReceiveFrameQueue = new();    //数据帧处理队列
     readonly Task publishHandleTask; //发布消息处理线程
     readonly Task receiveHandleTask; //接收消息处理线程
-    readonly EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(true); //等待发布消息入队
-    readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(true); //接收到串口数据完成标志
+    readonly EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(false); //等待发布消息入队
+    readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(false); //接收到串口数据完成标志
     protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
     private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
     public readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
@@ -1051,7 +1051,6 @@ public partial class ModbusRtuModel : ObservableObject
     /// </summary>
     private async void PublishFrame()
     {
-        WaitPublishFrameEnqueue.Reset();
         while (true)
         {
             //System.Diagnostics.Stopwatch oTime = new System.Diagnostics.Stopwatch();   //定义一个计时对象  
@@ -1091,7 +1090,6 @@ public partial class ModbusRtuModel : ObservableObject
     /// </summary>
     private void ReceiveFrame()
     {
-        WaitUartReceived.Reset();
         while (true)
         {
             try
