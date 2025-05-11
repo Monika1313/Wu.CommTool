@@ -231,6 +231,31 @@
                         </Button.Style>
                     </Button>
 
+                    <!--<ToggleButton Margin="5,0"
+                                  md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=PlayPause}"
+                                  BorderBrush="Blue"
+                                  BorderThickness="1"
+                                  Content="{md:PackIcon Kind=Pause}"
+                                  IsChecked="{Binding ModbusRtuModel.IsPause}">
+                        <ToggleButton.Style>
+                            <Style BasedOn="{StaticResource MaterialDesignActionToggleButton}" TargetType="ToggleButton">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
+                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                    </DataTrigger>
+
+                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
+                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Style>
+                    </ToggleButton>-->
+
                     <!--  清空消息按钮  -->
                     <Button Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
@@ -248,7 +273,8 @@
                 <Expander Margin="4"
                           Background="White"
                           DockPanel.Dock="Bottom"
-                          ExpandDirection="Up">
+                          ExpandDirection="Up"
+                          IsExpanded="True">
                     <Expander.Header>
                         <StackPanel Height="30"
                                     DockPanel.Dock="Bottom"
