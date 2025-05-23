@@ -21,7 +21,7 @@
                 <!--  左侧抽屉  -->
                 <md:DrawerHost.LeftDrawerContent>
                     <ContentControl Style="{StaticResource Effect2Control}">
-                        <StackPanel Width="240" Orientation="Vertical">
+                        <StackPanel Width="300" Orientation="Vertical">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Margin="10"
                                            Style="{DynamicResource SecontTitle}"
@@ -104,7 +104,7 @@
                                        Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
                                        TextWrapping="Wrap" />
 
-                            <ContentControl Margin="0,20" Style="{StaticResource Effect2Control}">
+                            <ContentControl Margin="0,4" Style="{StaticResource Effect2Control}">
                                 <StackPanel Orientation="Vertical">
                                     <StackPanel Margin="0,5"
                                                 HorizontalAlignment="Center"
@@ -142,6 +142,91 @@
                                             </i:Interaction.Behaviors>
                                         </PasswordBox>
                                     </StackPanel>
+                                </StackPanel>
+                            </ContentControl>
+
+                            <ContentControl Margin="0,4" Style="{StaticResource Effect2Control}">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Margin="0,5"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Orientation="Horizontal">
+                                        <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="用户身份验证" />
+                                        <ToggleButton Margin="30,0"
+                                                      IsChecked="{Binding MqttServerConfig.EnableAuthenticate}"
+                                                      Style="{StaticResource ToggleButtonSwitch}" />
+                                    </StackPanel>
+
+                                    <DataGrid Width="Auto"
+                                              AutoGenerateColumns="False"
+                                              Background="Transparent"
+                                              CanUserSortColumns="False"
+                                              HeadersVisibility="Column"
+                                              ItemsSource="{Binding MqttServerConfig.AuthorizedUsers}"
+                                              Visibility="{Binding MqttServerConfig.EnableAuthenticate, Converter={wu:False2Collapsed}}">
+                                        <DataGrid.RowStyle>
+                                            <Style TargetType="DataGridRow">
+                                                <Setter Property="Background" Value="Transparent" />
+                                            </Style>
+                                        </DataGrid.RowStyle>
+
+                                        <DataGrid.RowHeaderTemplate>
+                                            <DataTemplate>
+                                                <Grid Width="110">
+                                                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                                                </Grid>
+                                            </DataTemplate>
+                                        </DataGrid.RowHeaderTemplate>
+
+                                        <DataGrid.CellStyle>
+                                            <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                                <Setter Property="IsTabStop" Value="False" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsKeyboardFocused" Value="False">
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataGrid.CellStyle>
+
+                                        <DataGrid.ContextMenu>
+                                            <ContextMenu StaysOpen="true">
+                                                <MenuItem Margin="2"
+                                                          Command="{Binding AddAuthorizedUserCommand}"
+                                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                          Header="新增" />
+                                                <MenuItem Margin="2"
+                                                          Command="{Binding DeleteAuthorizedUserCommand}"
+                                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                          Foreground="Red"
+                                                          Header="删除" />
+                                            </ContextMenu>
+                                        </DataGrid.ContextMenu>
+
+                                        <DataGrid.Columns>
+                                            <DataGridTemplateColumn Header="用户名">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Width="110"
+                                                                 HorizontalContentAlignment="Center"
+                                                                 ContextMenu="{x:Null}"
+                                                                 Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+
+                                            <DataGridTemplateColumn Header="密码">
+                                                <DataGridTemplateColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBox Width="110"
+                                                                 HorizontalContentAlignment="Center"
+                                                                 ContextMenu="{x:Null}"
+                                                                 Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                    </DataTemplate>
+                                                </DataGridTemplateColumn.CellTemplate>
+                                            </DataGridTemplateColumn>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
                                 </StackPanel>
                             </ContentControl>
                         </StackPanel>

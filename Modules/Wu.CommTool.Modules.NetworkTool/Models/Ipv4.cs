@@ -23,19 +23,26 @@ public partial class Ipv4 : ObservableObject
     /// <summary>
     /// IPv4地址
     /// </summary>
-    [ObservableProperty]
-    string address;
+    [ObservableProperty] string address;
 
     /// <summary>
     /// 子网掩码
     /// </summary>
-    [ObservableProperty]
-    string subnetMask;
+    [ObservableProperty] string subnetMask;
 
     /// <summary>
     /// 网关
     /// </summary>
-    [ObservableProperty]
-    string defaultGateway;
+    [ObservableProperty] string defaultGateway;
+
+    /// <summary>
+    /// 首选DNS
+    /// </summary>
+    [ObservableProperty] string firstDns;
+
+    /// <summary>
+    /// 备选DNS
+    /// </summary>
+    [ObservableProperty] string secondDns;
 
 }

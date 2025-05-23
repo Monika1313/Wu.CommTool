@@ -8,36 +8,30 @@ public partial class MqttUser : ObservableObject
     /// <summary>
     /// 客户端ID
     /// </summary>
-    [ObservableProperty]
-    string clientId = string.Empty;
+    [ObservableProperty] string clientId = string.Empty;
 
     /// <summary>
     /// 用户名
     /// </summary>
-    [ObservableProperty] 
-    string userName = string.Empty;
+    [ObservableProperty] string userName = string.Empty;
 
     /// <summary>
     /// 密码
     /// </summary>
-    [ObservableProperty]
-    string passWord = string.Empty;
+    [ObservableProperty] string passWord = string.Empty;
 
     /// <summary>
     /// 登录时间
     /// </summary>
-    [ObservableProperty]
-    DateTime loginTime;
+    [ObservableProperty] DateTime loginTime;
 
     /// <summary>
     /// 最后一次消息时间
     /// </summary>
-    [ObservableProperty] 
-    DateTime lastDataTime;
+    [ObservableProperty] DateTime lastDataTime;
 
     /// <summary>
     /// 订阅的主题
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MqttSubedTopic> mqttSubedTopics = [];
+    [ObservableProperty] ObservableCollection<MqttSubedTopic> mqttSubedTopics = [];
 }

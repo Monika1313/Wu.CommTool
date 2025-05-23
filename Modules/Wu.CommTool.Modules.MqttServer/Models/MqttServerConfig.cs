@@ -3,19 +3,17 @@
 public partial class MqttServerConfig : ObservableObject
 {
     /// <summary>
-    /// IP
+    /// MQTT服务器IP
     /// </summary>
-    [ObservableProperty]
-    string serverIp = "127.0.0.1";
+    [ObservableProperty] string serverIp = "127.0.0.1";
 
     /// <summary>
-    /// 端口
+    /// MQTT服务器端口
     /// </summary>
-    [ObservableProperty]
-    int serverPort = 1883;
+    [ObservableProperty] int serverPort = 1883;
 
     /// <summary>
-    /// 是否开启
+    /// 服务器状态 是否开启
     /// </summary>
     [ObservableProperty]
     [property:JsonIgnore]
@@ -24,8 +22,19 @@ public partial class MqttServerConfig : ObservableObject
     /// <summary>
     /// 接收消息的格式
     /// </summary>
-    [ObservableProperty]
-    MqttPayloadType receivePaylodType = MqttPayloadType.Plaintext;
+    [ObservableProperty] MqttPayloadType receivePaylodType = MqttPayloadType.Plaintext;
+
+    #region 鉴权
+    /// <summary>
+    /// 启用身份验证 未授权的用户不能连接
+    /// </summary>
+    [ObservableProperty] bool enableAuthenticate;
+
+    /// <summary>
+    /// 授权的用户列表
+    /// </summary>
+    [ObservableProperty] ObservableCollection<AuthorizedUser> authorizedUsers = []; 
+    #endregion
 
     #region 发布消息设置
     /// <summary>
@@ -49,28 +58,24 @@ public partial class MqttServerConfig : ObservableObject
     /// <summary>
     /// 是否为保留消息
     /// </summary>
-    [ObservableProperty]
-    bool isRetain;
+    [ObservableProperty] bool isRetain;
     #endregion
 
     #region 加密设置
     /// <summary>
     /// SSL/TLS加密
     /// </summary>
-    [ObservableProperty]
-    bool encrypt;
+    [ObservableProperty] bool encrypt;
 
     /// <summary>
     /// PFX证书
     /// </summary>
-    [ObservableProperty]
-    string pfxFilePath;
+    [ObservableProperty] string pfxFilePath;
 
     /// <summary>
     /// PFX证书密码
     /// </summary>
-    [ObservableProperty]
-    string pfxPassword;
+    [ObservableProperty] string pfxPassword;
 
 
 

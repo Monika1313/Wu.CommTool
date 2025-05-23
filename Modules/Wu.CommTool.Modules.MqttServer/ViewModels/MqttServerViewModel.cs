@@ -64,46 +64,38 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// CurrentDto
     /// </summary>
-    [ObservableProperty]
-    object currentDto = new();
+    [ObservableProperty] object currentDto = new();
 
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MessageData> messages = [];
+    [ObservableProperty] ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 打开抽屉
     /// </summary>
-    [ObservableProperty]
-    OpenDrawers isDrawersOpen = new();
+    [ObservableProperty] OpenDrawers isDrawersOpen = new();
 
     /// <summary>
     /// IsPause
     /// </summary>
-    [ObservableProperty]
-    bool isPause;
+    [ObservableProperty] bool isPause;
 
     /// <summary>
     /// Mqtt服务器配置
     /// </summary>
-    [ObservableProperty]
-    MqttServerConfig mqttServerConfig = new();
+    [ObservableProperty] MqttServerConfig mqttServerConfig = new();
 
     /// <summary>
     /// MqttUsers
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MqttUser> mqttUsers = [];
+    [ObservableProperty] ObservableCollection<MqttUser> mqttUsers = [];
 
     /// <summary>
-    /// definity
+    /// 发布消息内容
     /// </summary>
-    [ObservableProperty]
-    string publishMessage = string.Empty;
+    [ObservableProperty] string publishMessage = string.Empty;
     #endregion
-
 
     #region **************************************** 方法 ****************************************
     [RelayCommand]
@@ -186,7 +178,6 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             ShowMessage(ex.Message, MessageType.Error);
         }
     }
-
 
 
 #if NET
@@ -445,12 +436,32 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             //验证客户端ID有效性
             if (string.IsNullOrWhiteSpace(arg.ClientId))
             {
-                arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+                arg.ReasonCode = MqttConnectReasonCode.ClientIdentifierNotValid;
                 ShowErrorMessage($"用户名：“{arg.UserName}” 客户端ID：“{arg.ClientId}” 客户端ID无效!");
                 return Task.CompletedTask;
             }
 
-            #region 验证账号密码
+            #region 身份验证 仅列表中的授权用户可以连接
+            if (MqttServerConfig.EnableAuthenticate)
+            {
+                if (string.IsNullOrWhiteSpace(arg.UserName))
+                {
+                    ShowErrorMessage($"用户名：“{arg.UserName}” 客户端ID：“{arg.ClientId}” 用户名或密码为空,拒绝连接!");
+                    arg.ReasonCode = MqttConnectReasonCode.BadUserNameOrPassword;
+                    return Task.CompletedTask;
+                }
+
+                //验证请求的用户名和密码是否正确
+                var x = MqttServerConfig.AuthorizedUsers.FirstOrDefault(x => x.UserName == arg.UserName && x.Password == arg.Password);
+
+                //不在授权列表中则拒绝连接
+                if (x is null)
+                {
+                    arg.ReasonCode = MqttConnectReasonCode.NotAuthorized;
+                    ShowErrorMessage($"用户名：“{arg.UserName}”  客户端ID：“{arg.ClientId}” 未授权用户拒绝连接!");
+                    return Task.CompletedTask;
+                }
+            }
             ////验证账号密码
             //bool acceptflag = !(string.IsNullOrWhiteSpace(arg.UserName) || string.IsNullOrWhiteSpace(arg.Password));
             ////验证失败
@@ -488,7 +499,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 });
 
                 string reason = string.Empty;
-                
+
                 switch (arg.DisconnectType)
                 {
                     case MqttClientDisconnectType.Clean:
@@ -948,4 +959,38 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             ShowErrorMessage(ex.Message);
         }
     }
+
+
+    #region 授权用户列表
+    [RelayCommand]
+    [property: JsonIgnore]
+    public void DeleteAuthorizedUser(AuthorizedUser obj)
+    {
+        if (obj == null)
+            return;
+        if (MqttServerConfig.AuthorizedUsers.Contains(obj))
+        {
+            MqttServerConfig.AuthorizedUsers.Remove(obj);
+            if (MqttServerConfig.AuthorizedUsers.Count == 0)
+            {
+                MqttServerConfig.AuthorizedUsers.Add(new());
+            }
+        }
+    }
+
+    [RelayCommand]
+    [property: JsonIgnore]
+    public void AddAuthorizedUser(AuthorizedUser obj)
+    {
+        if (obj == null || !MqttServerConfig.AuthorizedUsers.Contains(obj))
+        {
+            MqttServerConfig.AuthorizedUsers.Add(new());
+            return;
+        }
+        else
+        {
+            MqttServerConfig.AuthorizedUsers.Insert(MqttServerConfig.AuthorizedUsers.IndexOf(obj) + 1, new());
+        }
+    }
+    #endregion
 }
