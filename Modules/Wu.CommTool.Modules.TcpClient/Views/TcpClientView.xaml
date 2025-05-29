@@ -161,11 +161,15 @@
                                     Content="{md:PackIcon Kind=Delete}"
                                     Style="{StaticResource Red_CircleButton}" />
 
-                            <!--<ComboBox hc:InfoElement.Title="接收消息格式"
-                                      hc:InfoElement.TitleWidth="80"
-                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MqttPayloadType}}}"
-                                      SelectedItem="{Binding MqttServerConfig.ReceivePaylodType}"
-                                      Style="{StaticResource FormComboBox}" />-->
+                            <StackPanel Margin="4,0"
+                                        DockPanel.Dock="Left"
+                                        Orientation="Horizontal">
+                                <TextBlock VerticalAlignment="Center" Text="接收格式:" />
+                                <ComboBox VerticalAlignment="Center"
+                                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
+                                          SelectedItem="{Binding TcpClientModel.ReceiveTcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource ComboBoxCapsule}" />
+                            </StackPanel>
                         </DockPanel>
                     </Grid>
 
@@ -191,13 +195,21 @@
                                 BorderThickness="1,1,1,0"
                                 CornerRadius="4,4,0,0">
                             <DockPanel DockPanel.Dock="Bottom">
-                                <DockPanel DockPanel.Dock="Top">
+                                <DockPanel DockPanel.Dock="Top" LastChildFill="False">
                                     <Button Width="100"
                                             Margin="4"
                                             Command="{Binding TcpClientModel.SendCommand}"
                                             Content="发送"
-                                            Cursor="Hand"
                                             DockPanel.Dock="Right" />
+                                    <StackPanel Margin="4,0"
+                                                DockPanel.Dock="Right"
+                                                Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="发送格式:" />
+                                        <ComboBox VerticalAlignment="Center"
+                                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
+                                                  SelectedItem="{Binding TcpClientModel.SendTcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource ComboBoxCapsule}" />
+                                    </StackPanel>
                                 </DockPanel>
                                 <ContentControl Margin="4,0"
                                                 Padding="0"

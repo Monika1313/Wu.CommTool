@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.TcpServer.ViewModels;
+﻿using Wu.CommTool.Modules.TcpServer.Models;
+
+namespace Wu.CommTool.Modules.TcpServer.ViewModels;
 
 public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -38,8 +40,11 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
     #region **************************************** 属性 ****************************************
     public string DialogHostName { get; set; }
 
-    [ObservableProperty]
-    object currentDto = new();
+    [ObservableProperty] object currentDto = new();
+
+    [ObservableProperty] TcpServerModel tcpServerModel = new();
+
+    [ObservableProperty] OpenDrawers openDrawers = new();
     #endregion **************************************** 属性 ****************************************
 
 
@@ -50,6 +55,7 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
         switch (obj)
         {
             case "OpenDialogView": OpenDialogView(); break;
+            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
             default: break;
         }
     }

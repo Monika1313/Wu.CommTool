@@ -1,5 +1,8 @@
-﻿using System.Net.Http;
+﻿using DryIoc;
+using HandyControl.Expression.Shapes;
+using System.Net.Http;
 using System.Net.Sockets;
+using Wu.CommTool.Core.Enums.Tcp;
 
 namespace Wu.CommTool.Modules.TcpClient.Models;
 
@@ -29,6 +32,21 @@ public partial class TcpClientModel : ObservableObject
     /// 发送输入框内容
     /// </summary>
     [ObservableProperty] string sendInput = string.Empty;
+
+    /// <summary>
+    /// 自动重连
+    /// </summary>
+    [ObservableProperty] bool autoReConnect;
+
+    /// <summary>
+    /// 发送消息类型
+    /// </summary>
+    [ObservableProperty] TcpDataType sendTcpDataType = TcpDataType.Ascii;
+
+    /// <summary>
+    /// 接收消息类型
+    /// </summary>
+    [ObservableProperty] TcpDataType receiveTcpDataType = TcpDataType.Ascii;
     #endregion
 
 
@@ -50,6 +68,7 @@ public partial class TcpClientModel : ObservableObject
             networkStream = tcpClient.GetStream();
             ShowMessage($"连接服务器{ServerIp}:{ServerPort}");
             IsConnected = true;
+            Task.Run(() => StartReceiving()); // 启动接收数据
         }
         catch (Exception ex)
         {
@@ -77,7 +96,7 @@ public partial class TcpClientModel : ObservableObject
     }
 
     /// <summary>
-    /// 发送
+    /// 发送数据
     /// </summary>
     [RelayCommand]
     private void Send()
@@ -91,10 +110,34 @@ public partial class TcpClientModel : ObservableObject
         try
         {
             string message = SendInput;
-            byte[] data = Encoding.UTF8.GetBytes(message);
 
-            networkStream.Write(data, 0, data.Length);
-            ShowSendMessage($"{message}");
+            if (string.IsNullOrEmpty(message))
+            {
+                ShowErrorMessage("发送消息不能为空");
+                return;
+            }
+
+            switch (SendTcpDataType)
+            {
+                case TcpDataType.Ascii:
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    networkStream.Write(data, 0, data.Length);
+                    ShowSendMessage($"{message}");
+                    break;
+                case TcpDataType.Hex:
+                    string hexString = SendInput.Replace(" ", "");
+                    byte[] data2 = new byte[hexString.Length / 2];
+
+                    for (int i = 0; i < data2.Length; i++)
+                    {
+                        data2[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                    }
+                    networkStream.Write(data2, 0, data2.Length);
+                    ShowSendMessage($"{BitConverter.ToString(data2).Replace("-", " ")}");
+                    break;
+                default:
+                    break;
+            }
         }
         catch (Exception ex)
         {
@@ -102,6 +145,60 @@ public partial class TcpClientModel : ObservableObject
         }
     }
 
+    /// <summary>
+    /// 接收数据
+    /// </summary>
+    private async void StartReceiving()
+    {
+        byte[] buffer = new byte[1024];
+
+        try
+        {
+            while (tcpClient != null && tcpClient.Connected)
+            {
+                int bytesRead = await networkStream.ReadAsync(buffer, 0, buffer.Length);
+                if (bytesRead == 0) break;
+
+                switch (ReceiveTcpDataType)
+                {
+                    case TcpDataType.Ascii:
+                        string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        ShowReceiveMessage($"{receivedData}");
+                        break;
+                    case TcpDataType.Hex:
+                        byte[] bytes = buffer.Take(bytesRead).ToArray();
+                        ShowReceiveMessage($"{BitConverter.ToString(bytes).Replace("-", "").InsertFormat(4, " ")}");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage($"Receive error: {ex.Message}");
+        }
+    }
+
+
+    //private async Task AutoReconnect()
+    //{
+    //    while (AutoReConnect)
+    //    {
+    //        if (tcpClient == null || !tcpClient.Connected)
+    //        {
+    //            try
+    //            {
+    //                if (tcpClient.Connected)
+    //                {
+    //                    StartReceiving();
+    //                }
+    //            }
+    //            catch { }
+    //        }
+    //        await Task.Delay(5000); // 5秒重试一次
+    //    }
+    //}
 
     #region 页面消息
     /// <summary>
