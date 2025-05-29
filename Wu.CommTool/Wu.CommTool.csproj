@@ -115,6 +115,7 @@
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttClient\Wu.CommTool.Modules.MqttClient.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.MqttServer\Wu.CommTool.Modules.MqttServer.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.NetworkTool\Wu.CommTool.Modules.NetworkTool.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.TcpClient\Wu.CommTool.Modules.TcpClient.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
 	</ItemGroup>
 	<ProjectExtensions>
