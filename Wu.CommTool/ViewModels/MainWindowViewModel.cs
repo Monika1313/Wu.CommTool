@@ -9,6 +9,9 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Wu.CommTool.DynamicTheme.Core;
+using Wu.CommTool.Modules.TcpClient.Views;
+using Wu.CommTool.Modules.TcpServer;
+using Wu.CommTool.Modules.TcpServer.Views;
 
 namespace Wu.CommTool.ViewModels;
 
@@ -103,6 +106,8 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
 #endif
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
+            new() { Icon = "ServerNetwork", Title = "Tcp Server", NameSpace = nameof(TcpServerView) },
+            new() { Icon = "NetworkOutline", Title = "Tcp Client", NameSpace = nameof(TcpClientView) },
             new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
             new() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
             new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
