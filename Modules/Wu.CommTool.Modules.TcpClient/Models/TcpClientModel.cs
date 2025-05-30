@@ -40,12 +40,12 @@ public partial class TcpClientModel : ObservableObject
     /// <summary>
     /// 发送消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType sendTcpDataType = TcpDataType.Ascii;
+    [ObservableProperty] TcpDataType sendTcpDataType = TcpDataType.Uft8;
 
     /// <summary>
     /// 接收消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType receiveTcpDataType = TcpDataType.Ascii;
+    [ObservableProperty] TcpDataType receiveTcpDataType = TcpDataType.Uft8;
     #endregion
 
 
@@ -126,12 +126,29 @@ public partial class TcpClientModel : ObservableObject
             switch (SendTcpDataType)
             {
                 case TcpDataType.Ascii:
-                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    byte[] data = Encoding.ASCII.GetBytes(message);
                     networkStream.Write(data, 0, data.Length);
                     ShowSendMessage($"{message}");
                     break;
                 case TcpDataType.Hex:
                     string hexString = SendInput.Replace(" ", "");
+
+                    // 检查长度是否为偶数
+                    if (hexString.Length % 2 != 0)
+                    {
+                        ShowSendMessage("错误：十六进制字符串长度必须是偶数");
+                        return;
+                    }
+
+                    // 检查是否只包含有效的十六进制字符
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(hexString, @"^[0-9A-Fa-f]+$"))
+                    {
+                        ShowSendMessage("错误：字符串包含无效的十六进制字符");
+                        return;
+                    }
+
+
+
                     byte[] data2 = new byte[hexString.Length / 2];
 
                     for (int i = 0; i < data2.Length; i++)
@@ -140,6 +157,16 @@ public partial class TcpClientModel : ObservableObject
                     }
                     networkStream.Write(data2, 0, data2.Length);
                     ShowSendMessage($"{BitConverter.ToString(data2).Replace("-", " ")}");
+                    break;
+                case TcpDataType.Uft8:
+                    byte[] utf8Data = Encoding.UTF8.GetBytes(message);
+                    networkStream.Write(utf8Data, 0, utf8Data.Length);
+                    ShowSendMessage($"{message}");
+                    break;
+                case TcpDataType.Unicode:
+                    byte[] unicodeData = Encoding.Unicode.GetBytes(message);
+                    networkStream.Write(unicodeData, 0, unicodeData.Length);
+                    ShowSendMessage($"{message}");
                     break;
                 default:
                     break;
