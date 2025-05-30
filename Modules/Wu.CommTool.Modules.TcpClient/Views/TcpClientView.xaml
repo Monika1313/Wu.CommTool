@@ -10,10 +10,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
+             xmlns:theme="clr-namespace:Wu.CommTool.DynamicTheme.Core;assembly=Wu.CommTool.DynamicTheme.Core"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:TcpClientDesignViewModel.Instance}"
-             d:Height="450"
-             d:Width="600"
+             d:Height="550"
+             d:Width="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <Grid>
@@ -30,33 +31,26 @@
                                            Style="{DynamicResource SecontTitle}"
                                            Text="服务器配置" />
 
-                                <!--  导出配置文件  -->
-                                <!--
                                 <Button Width="30"
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="4"
                                         hc:Poptip.Content="导出配置文件"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ExportConfig"
+                                        Command="{Binding ExportConfigCommand}"
                                         Content="{md:PackIcon Kind=Upload}"
                                         Cursor="Hand"
                                         DockPanel.Dock="Right"
                                         Style="{StaticResource Blue_CircleButton}" />
 
-                                -->
-                                <!--  导入配置文件  -->
-                                <!--
                                 <Button Width="30"
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="4"
                                         hc:Poptip.Content="导入配置文件"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ImportConfig"
+                                        Command="{Binding ImportConfigCommand}"
                                         Content="{md:PackIcon Kind=Download}"
                                         Cursor="Hand"
                                         DockPanel.Dock="Right"
-                                        IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                        Style="{StaticResource Blue_CircleButton}" />-->
+                                        IsEnabled="{Binding TcpClientModel.IsConnected, Converter={wu:ReverseBool}}"
+                                        Style="{StaticResource Blue_CircleButton}" />
                             </StackPanel>
                             <!--<ctl:WuIpBox
                              Margin="5"
@@ -164,7 +158,9 @@
                             <StackPanel Margin="4,0"
                                         DockPanel.Dock="Left"
                                         Orientation="Horizontal">
-                                <TextBlock VerticalAlignment="Center" Text="接收格式:" />
+                                <TextBlock VerticalAlignment="Center"
+                                           Foreground="{DynamicResource FontBrush}"
+                                           Text="接收格式:" />
                                 <ComboBox VerticalAlignment="Center"
                                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
                                           SelectedItem="{Binding TcpClientModel.ReceiveTcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

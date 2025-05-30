@@ -1,7 +1,6 @@
-﻿using DryIoc;
-using HandyControl.Expression.Shapes;
-using System.Net.Http;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
+using System.Threading.Tasks;
+using System.Windows.Controls;
 using Wu.CommTool.Core.Enums.Tcp;
 
 namespace Wu.CommTool.Modules.TcpClient.Models;
@@ -26,7 +25,7 @@ public partial class TcpClientModel : ObservableObject
     /// <summary>
     /// 是否已连接
     /// </summary>
-    [ObservableProperty] bool isConnected = false;
+    [ObservableProperty][property: JsonIgnore] bool isConnected = false;
 
     /// <summary>
     /// 发送输入框内容
@@ -54,7 +53,8 @@ public partial class TcpClientModel : ObservableObject
     /// 连接服务器
     /// </summary>
     [RelayCommand]
-    private void Connect()
+    [property: JsonIgnore]
+    private async Task Connect()
     {
         try
         {
@@ -62,13 +62,13 @@ public partial class TcpClientModel : ObservableObject
             {
                 return; // 已连接，无需重复连接
             }
-
             tcpClient = new System.Net.Sockets.TcpClient();
-            tcpClient.Connect(ServerIp, ServerPort);
+            ShowMessage("连接中...");
+            await tcpClient.ConnectAsync(ServerIp, ServerPort);
             networkStream = tcpClient.GetStream();
             ShowMessage($"连接服务器{ServerIp}:{ServerPort}");
             IsConnected = true;
-            Task.Run(() => StartReceiving()); // 启动接收数据
+            StartReceiving();// 启动接收数据
         }
         catch (Exception ex)
         {
@@ -80,6 +80,7 @@ public partial class TcpClientModel : ObservableObject
     /// 断开连接
     /// </summary>
     [RelayCommand]
+    [property: JsonIgnore]
     private void Disconnect()
     {
         try
@@ -99,12 +100,17 @@ public partial class TcpClientModel : ObservableObject
     /// 发送数据
     /// </summary>
     [RelayCommand]
-    private void Send()
+    [property: JsonIgnore]
+    private async Task Send()
     {
         if (tcpClient == null || !tcpClient.Connected)
         {
-            ShowErrorMessage($"Not connected to server");
-            return;
+            await Connect();
+            if (!IsConnected)
+            {
+                ShowErrorMessage($"Not connected to server");
+                return;
+            }
         }
 
         try
@@ -142,6 +148,7 @@ public partial class TcpClientModel : ObservableObject
         catch (Exception ex)
         {
             ShowErrorMessage($"Send error: {ex.Message}");
+            Disconnect();
         }
     }
 
@@ -162,12 +169,24 @@ public partial class TcpClientModel : ObservableObject
                 switch (ReceiveTcpDataType)
                 {
                     case TcpDataType.Ascii:
-                        string receivedData = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        string receivedData = Encoding.ASCII.GetString(buffer, 0, bytesRead);
                         ShowReceiveMessage($"{receivedData}");
                         break;
                     case TcpDataType.Hex:
                         byte[] bytes = buffer.Take(bytesRead).ToArray();
                         ShowReceiveMessage($"{BitConverter.ToString(bytes).Replace("-", "").InsertFormat(4, " ")}");
+                        break;
+                    case TcpDataType.Uft8:
+                        string utf8Data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        ShowReceiveMessage($"{utf8Data}");
+                        break;
+                    //case TcpDataType.GB2312:
+                    //    string gb2312Data = Encoding.GetEncoding("GB2312").GetString(buffer, 0, bytesRead);
+                    //    ShowReceiveMessage($"{gb2312Data}");
+                    //    break;
+                    case TcpDataType.Unicode:
+                        string unicodeData = Encoding.Unicode.GetString(buffer, 0, bytesRead);
+                        ShowReceiveMessage($"{unicodeData}");
                         break;
                     default:
                         break;
@@ -204,7 +223,7 @@ public partial class TcpClientModel : ObservableObject
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty] ObservableCollection<MessageData> messages = [];
+    [ObservableProperty][property: JsonIgnore] ObservableCollection<MessageData> messages = [];
 
     protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
@@ -275,6 +294,7 @@ public partial class TcpClientModel : ObservableObject
     /// 清空页面消息
     /// </summary>
     [RelayCommand]
+    [property: JsonIgnore]
     private void Clear()
     {
         try
@@ -287,5 +307,4 @@ public partial class TcpClientModel : ObservableObject
         }
     }
     #endregion
-
 }

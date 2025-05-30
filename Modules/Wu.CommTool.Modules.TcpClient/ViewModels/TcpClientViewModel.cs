@@ -1,4 +1,6 @@
-﻿using Wu.CommTool.Modules.TcpClient.Models;
+﻿using HandyControl.Controls;
+using System.Windows.Controls;
+using Wu.CommTool.Modules.TcpClient.Models;
 
 namespace Wu.CommTool.Modules.TcpClient.ViewModels;
 
@@ -100,5 +102,102 @@ public partial class TcpClientViewModel : NavigationViewModel, IDialogHostAware
             HcGrowlExtensions.Warning(ex.Message);
         }
     }
+    #endregion
+
+    #region 配置文件
+    /// <summary>
+    /// 导出配置文件
+    /// </summary>
+    [RelayCommand]
+    private void ExportConfig()
+    {
+        try
+        {
+            //配置文件目录
+            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpClientConfig");
+            Wu.Utils.IoUtil.Exists(dict);
+            SaveFileDialog sfd = new()
+            {
+                Title = "请选择导出配置文件...",                                              //对话框标题
+                Filter = "json files(*.jtc)|*.jtc",    //文件格式过滤器
+                FilterIndex = 1,                                                         //默认选中的过滤器
+                FileName = "Default",                                           //默认文件名
+                DefaultExt = "jtc",                                     //默认扩展名
+                InitialDirectory = dict,                //指定初始的目录
+                OverwritePrompt = true,                                                  //文件已存在警告
+                AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+            };
+            if (sfd.ShowDialog() != true)
+                return;
+            //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(TcpClientModel);
+            //保存文件
+            Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
+            HcGrowlExtensions.Success("配置导出完成");
+            //RefreshQuickImportList();
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning("配置导出失败");
+        }
+    }
+
+    /// <summary>
+    /// 导入配置文件
+    /// </summary>
+    [RelayCommand]
+    private void ImportConfig()
+    {
+        try
+        {
+            //配置文件目录
+            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpClientConfig");
+            Wu.Utils.IoUtil.Exists(dict);
+            //选中配置文件
+            OpenFileDialog dlg = new()
+            {
+                Title = "请选择导入配置文件...",                      //对话框标题
+                Filter = "json files(*.jtc)|*.jtc",          //文件格式过滤器
+                FilterIndex = 1,                                     //默认选中的过滤器
+                InitialDirectory = dict
+            };
+
+            if (dlg.ShowDialog() != true)
+                return;
+            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
+            var x = JsonConvert.DeserializeObject<TcpClientModel>(xx);
+            TcpClientModel = x;
+            HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入成功");
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Success(ex.Message);
+        }
+    }
+
+    ///// <summary>
+    ///// 导入配置文件
+    ///// </summary>
+    ///// <param name="filePath"></param>
+    //[RelayCommand]
+    //private void ImportConfig(string filePath)
+    //{
+    //    try
+    //    {
+    //        var xx = Core.Common.Utils.ReadJsonFile(filePath);//读取文件
+    //        var x = JsonConvert.DeserializeObject<TcpClientModel>(xx)!;//反序列化
+    //        if (x == null)
+    //        {
+    //            Growl.Error("读取配置文件失败");
+    //            return;
+    //        }
+    //        TcpClientModel = x;
+    //        HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(filePath)}\"导入成功");
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        HcGrowlExtensions.Warning($"配置文件导入失败{ex.Message}");
+    //    }
+    //}
     #endregion
 }
