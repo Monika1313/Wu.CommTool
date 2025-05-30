@@ -33,6 +33,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
 
         MqttClientConfig.SubscribeTopics.Add(new MqttTopic("+/#"));//默认订阅所有主题
+
         GetDefaultConfig();
 
         //读取配置文件夹
@@ -556,6 +557,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             foreach (var x in MqttClientConfig.SubscribeTopics)
             {
                 await SubscribeTopic(x.Topic);
+                //await SubscribeTopic(x.Topic);
             }
         }
         catch (Exception ex)
@@ -709,6 +711,8 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             }
 
             var result = await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());       //订阅服务端消息
+            //TODO .WithNoLocal() 表示不接收自己发布的消息  MQTT5.0支持 
+            //var result = await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).WithNoLocal().Build());       //订阅服务端消息
             //根据结果判断
             ShowMessage($"已订阅主题: {topic}");
             //订阅成功 添加进订阅成功的列表

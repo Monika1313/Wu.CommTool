@@ -15,82 +15,62 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     /// <summary>
     /// 设备名
     /// </summary>
-    [ObservableProperty]
-    string name = "未命名";
+    [ObservableProperty] string name = "未命名";
 
     /// <summary>
     /// 从站地址
     /// </summary>
-    [ObservableProperty]
-    byte slaveAddr = 1;
+    [ObservableProperty] byte slaveAddr = 1;
 
-    [ObservableProperty]
-    [property: JsonIgnore]
-    ModbusTcpClient modbusTcpClient = new();
+    [ObservableProperty][property: JsonIgnore] ModbusTcpClient modbusTcpClient = new();
 
     /// <summary>
     /// 备注
     /// </summary>
-    [ObservableProperty]
-    string remark;
+    [ObservableProperty] string remark;
 
     /// <summary>
     /// 设备状态
     /// </summary>
-    [ObservableProperty]
-    [property: JsonIgnore]
-    DeviceState deviceState;
+    [ObservableProperty][property: JsonIgnore] DeviceState deviceState;
 
     /// <summary>
     /// 字节序
     /// </summary>
-    [ObservableProperty]
-    ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA;
+    [ObservableProperty] ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA;
 
     /// <summary>
     /// 测点数据列表
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MtcpData> mtcpDatas = [];
+    [ObservableProperty] ObservableCollection<MtcpData> mtcpDatas = [];
 
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MessageData> messages = [];
+    [ObservableProperty] ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 所有者
     /// </summary>
-    [ObservableProperty]
-    [property: JsonIgnore]
-    MtcpDeviceManager owner;
+    [ObservableProperty][property: JsonIgnore] MtcpDeviceManager owner;
 
-    [ObservableProperty]
-    bool isOnline;
+    [ObservableProperty] bool isOnline;
 
-    [ObservableProperty]
-    string serverIp = "127.0.0.1";
+    [ObservableProperty] string serverIp = "127.0.0.1";
 
-    [ObservableProperty]
-    int serverPort = 502;
+    [ObservableProperty] int serverPort = 502;
 
     /// <summary>
     /// 已发送的帧列表
     /// </summary>
-    [JsonIgnore]
-    List<MtcpFrame> SendedMtcpFrames = [];
+    [JsonIgnore] List<MtcpFrame> SendedMtcpFrames = [];
 
     //[JsonIgnore]
     //ConcurrentDictionary<Guid, MtcpFrame> PublishedMtcpFrames = [];
 
-    [JsonIgnore]
-    private readonly object lockObject = new();
+    [JsonIgnore] private readonly object lockObject = new();
 
-    [ObservableProperty]
-    bool isPause;
-
-
+    [ObservableProperty] bool isPause;
 
     /// <summary>
     /// 建立Tcp/Ip连接
