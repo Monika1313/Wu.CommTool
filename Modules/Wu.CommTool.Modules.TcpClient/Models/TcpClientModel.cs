@@ -66,7 +66,7 @@ public partial class TcpClientModel : ObservableObject
             ShowMessage("连接中...");
             await tcpClient.ConnectAsync(ServerIp, ServerPort);
             networkStream = tcpClient.GetStream();
-            ShowMessage($"连接服务器{ServerIp}:{ServerPort}");
+            ShowMessage($"连接服务器成功 服务器:{ServerIp}:{ServerPort}  客户端:{tcpClient.Client.LocalEndPoint}");
             IsConnected = true;
             StartReceiving();// 启动接收数据
         }
@@ -191,28 +191,34 @@ public partial class TcpClientModel : ObservableObject
             while (tcpClient != null && tcpClient.Connected)
             {
                 int bytesRead = await networkStream.ReadAsync(buffer, 0, buffer.Length);
-                if (bytesRead == 0) break;
+
+                if (bytesRead == 0)
+                {
+                    // 服务器已关闭连接
+                    ShowErrorMessage("服务器已关闭连接");
+                    networkStream?.Close();
+                    tcpClient?.Close();
+                    IsConnected = false;
+                    break;
+                }
+
+                var receivedBuffer = buffer.Take(bytesRead).ToArray();// 只处理实际读取的字节数
 
                 switch (ReceiveTcpDataType)
                 {
                     case TcpDataType.Ascii:
-                        string receivedData = Encoding.ASCII.GetString(buffer, 0, bytesRead);
+                        string receivedData = Encoding.ASCII.GetString(receivedBuffer);
                         ShowReceiveMessage($"{receivedData}");
                         break;
                     case TcpDataType.Hex:
-                        byte[] bytes = buffer.Take(bytesRead).ToArray();
-                        ShowReceiveMessage($"{BitConverter.ToString(bytes).Replace("-", "").InsertFormat(4, " ")}");
+                        ShowReceiveMessage($"{BitConverter.ToString(receivedBuffer).Replace("-", "").InsertFormat(4, " ")}");
                         break;
                     case TcpDataType.Uft8:
-                        string utf8Data = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                        string utf8Data = Encoding.UTF8.GetString(receivedBuffer);
                         ShowReceiveMessage($"{utf8Data}");
                         break;
-                    //case TcpDataType.GB2312:
-                    //    string gb2312Data = Encoding.GetEncoding("GB2312").GetString(buffer, 0, bytesRead);
-                    //    ShowReceiveMessage($"{gb2312Data}");
-                    //    break;
                     case TcpDataType.Unicode:
-                        string unicodeData = Encoding.Unicode.GetString(buffer, 0, bytesRead);
+                        string unicodeData = Encoding.Unicode.GetString(receivedBuffer);
                         ShowReceiveMessage($"{unicodeData}");
                         break;
                     default:
@@ -222,7 +228,10 @@ public partial class TcpClientModel : ObservableObject
         }
         catch (Exception ex)
         {
-            ShowErrorMessage($"Receive error: {ex.Message}");
+            if (tcpClient.Connected)
+            {
+                ShowErrorMessage($"Receive error: {ex.Message}");
+            }
         }
     }
 
