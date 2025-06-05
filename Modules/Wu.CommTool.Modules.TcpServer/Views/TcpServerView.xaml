@@ -200,6 +200,16 @@
                                             Cursor="Hand"
                                             DockPanel.Dock="Right" />
 
+                                    <StackPanel Margin="4,0"
+                                                DockPanel.Dock="Right"
+                                                Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="发送格式:" />
+                                        <ComboBox VerticalAlignment="Center"
+                                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
+                                                  SelectedItem="{Binding TcpServerModel.SendTcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Style="{StaticResource ComboBoxCapsule}" />
+                                    </StackPanel>
+
                                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                                         <TextBlock VerticalAlignment="Center"
                                                    Foreground="{DynamicResource FontBrush}"
