@@ -157,7 +157,7 @@
                                     Style="{StaticResource Red_CircleButton}" />
 
                             <StackPanel Margin="4,0"
-                                        DockPanel.Dock="Left"
+                                        DockPanel.Dock="Right"
                                         Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center"
                                            Foreground="{DynamicResource FontBrush}"
