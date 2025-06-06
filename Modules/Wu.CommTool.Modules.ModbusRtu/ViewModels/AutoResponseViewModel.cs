@@ -42,6 +42,8 @@ public partial class AutoResponseViewModel : NavigationViewModel, IDialogHostAwa
                 ModbusRtuModel.MosbusRtuAutoResponseDatas = [new() { Name = "数据采集测试", Priority = 0, MateTemplate= "01030BCE0002A7D0", ResponseTemplate= "0103044005F16CBA4F"},
                                                              new() { Name = "数据写入测试", Priority = 0, MateTemplate= "031000000002043F8CCCCDA17D", ResponseTemplate= "0310 0000 0002 402A"},
                                                              new()];
+                //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(ModbusRtuModel.ModbusRtuAutoResponseConfigDict);
                 var content = JsonConvert.SerializeObject(ModbusRtuModel.MosbusRtuAutoResponseDatas);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
