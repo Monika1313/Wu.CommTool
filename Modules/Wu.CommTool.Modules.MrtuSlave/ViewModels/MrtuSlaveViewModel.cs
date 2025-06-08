@@ -1,4 +1,7 @@
-﻿namespace Wu.CommTool.Modules.MrtuSlave.ViewModels;
+﻿using Wu.CommTool.Modules.MrtuSlave.Models;
+using Wu.Wpf.Models;
+
+namespace Wu.CommTool.Modules.MrtuSlave.ViewModels;
 
 public partial class MrtuSlaveViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -6,6 +9,7 @@ public partial class MrtuSlaveViewModel : NavigationViewModel, IDialogHostAware
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
     #endregion **************************************** 字段 ****************************************
+
 
 
     #region **************************************** 构造函数 ****************************************
@@ -38,8 +42,19 @@ public partial class MrtuSlaveViewModel : NavigationViewModel, IDialogHostAware
     #region **************************************** 属性 ****************************************
     public string DialogHostName { get; set; }
 
-    [ObservableProperty]
-    object currentDto = new();
+    [ObservableProperty] object currentDto = new();
+
+    /// <summary>
+    /// 从站设备
+    /// </summary>
+    [ObservableProperty] MrtuSlaveModel mrtuSlaveModel = new();
+
+
+    /// <summary>
+    /// definity
+    /// </summary>
+    [ObservableProperty] OpenDrawers openDrawers = new();
+
     #endregion **************************************** 属性 ****************************************
 
 
@@ -50,6 +65,7 @@ public partial class MrtuSlaveViewModel : NavigationViewModel, IDialogHostAware
         switch (obj)
         {
             case "OpenDialogView": OpenDialogView(); break;
+            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
             default: break;
         }
     }
@@ -93,4 +109,16 @@ public partial class MrtuSlaveViewModel : NavigationViewModel, IDialogHostAware
         }
     }
     #endregion
+
+
+    /// <summary>
+    /// 打开日志窗口
+    /// </summary>
+    [RelayCommand]
+    private void OpenLogView()
+    {
+
+
+    }
+
 }

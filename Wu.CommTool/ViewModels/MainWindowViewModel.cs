@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Wu.CommTool.DynamicTheme.Core;
+using Wu.CommTool.Modules.MrtuSlave.Views;
 using Wu.CommTool.Modules.TcpClient.Views;
 using Wu.CommTool.Modules.TcpServer;
 using Wu.CommTool.Modules.TcpServer.Views;
@@ -99,6 +100,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         [
             new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
             new() { Icon = "LanConnect", Title = "ModbusRtu设备监控", NameSpace = nameof(MrtuDeviceMonitorView) },
+            new() { Icon = "LanConnect", Title = "ModbusRtu从站", NameSpace = nameof(MrtuSlaveView) },
 
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
             new() { Icon = "LanConnect", Title = "ModbusTcp设备监控", NameSpace = nameof(MtcpDeviceMonitorView) },
