@@ -1,4 +1,5 @@
 ﻿using Wu.CommTool.DynamicTheme.Core;
+using Wu.CommTool.Modules.MrtuSlave;
 using Wu.CommTool.Modules.TcpClient;
 using Wu.CommTool.Modules.TcpServer;
 
@@ -95,7 +96,8 @@ public partial class App
         moduleCatalog.AddModule<MqttClientModule>();    //Mqtt客户端模块
         moduleCatalog.AddModule<ModbusRtuModule>();     //ModbusRtu模块
         moduleCatalog.AddModule<NetworkToolModule>();   //网络工具模块
-        moduleCatalog.AddModule<TcpServerModule>();   //Tcp服务器模块
-        moduleCatalog.AddModule<TcpClientModule>();   //Tcp客户端模块
+        moduleCatalog.AddModule<TcpServerModule>();     //Tcp服务器模块
+        moduleCatalog.AddModule<TcpClientModule>();     //Tcp客户端模块
+        moduleCatalog.AddModule<MrtuSlaveModule>();     //ModubsRTU从站模块
     }
 }

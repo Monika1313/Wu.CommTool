@@ -1,0 +1,10 @@
+﻿global using CommunityToolkit.Mvvm.ComponentModel;
+global using CommunityToolkit.Mvvm.Input;
+global using MaterialDesignThemes.Wpf;
+global using Prism.Ioc;
+global using Prism.Regions;
+global using Prism.Services.Dialogs;
+global using System;
+global using Wu.CommTool.Core.Extensions;
+global using Wu.ViewModels;
+global using Wu.Wpf.Common;
