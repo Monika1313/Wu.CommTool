@@ -7,6 +7,7 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
+    private readonly string configFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpServerConfig");
     #endregion **************************************** 字段 ****************************************
 
 
@@ -16,6 +17,7 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
+        Task.Run(GetDefaultConfig);
     }
 
     /// <summary>
@@ -110,7 +112,7 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpServerConfig");
+            string dict = configFolder;
             Wu.Utils.IoUtil.Exists(dict);
             SaveFileDialog sfd = new()
             {
@@ -146,7 +148,7 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpServerConfig");
+            string dict = configFolder;
             Wu.Utils.IoUtil.Exists(dict);
             //选中配置文件
             OpenFileDialog dlg = new()
@@ -170,6 +172,39 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+        //从默认配置文件中读取配置
+        try
+        {
+            var filePath = Path.Combine(configFolder, @"Default.jts");
+            if (File.Exists(filePath))
+            {
+                var x = JsonConvert.DeserializeObject<TcpServerModel>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (x != null)
+                {
+                    TcpServerModel = x;
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                TcpServerModel = new TcpServerModel();
+                //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(configFolder);
+                var content = JsonConvert.SerializeObject(TcpServerModel);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"配置文件读取失败:{ex.Message}");
+        }
+    }
     ///// <summary>
     ///// 导入配置文件
     ///// </summary>

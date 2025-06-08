@@ -18,6 +18,7 @@ public partial class TcpClientViewModel : NavigationViewModel, IDialogHostAware
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
+        Task.Run(GetDefaultConfig);
     }
 
     /// <summary>
@@ -172,6 +173,39 @@ public partial class TcpClientViewModel : NavigationViewModel, IDialogHostAware
         catch (Exception ex)
         {
             HcGrowlExtensions.Success(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+        //从默认配置文件中读取配置
+        try
+        {
+            var filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpClientConfig\Default.jtc");
+            if (File.Exists(filePath))
+            {
+                var x = JsonConvert.DeserializeObject<TcpClientModel>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (x != null)
+                {
+                    TcpClientModel = x;
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                TcpClientModel = new TcpClientModel();
+                //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpClientConfig"));
+                var content = JsonConvert.SerializeObject(TcpClientModel);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"配置文件读取失败:{ex.Message}");
         }
     }
 

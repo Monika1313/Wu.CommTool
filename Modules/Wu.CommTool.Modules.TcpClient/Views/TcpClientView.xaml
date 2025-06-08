@@ -156,7 +156,7 @@
                                     Style="{StaticResource Red_CircleButton}" />
 
                             <StackPanel Margin="4,0"
-                                        DockPanel.Dock="Left"
+                                        DockPanel.Dock="Right"
                                         Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center"
                                            Foreground="{DynamicResource FontBrush}"
@@ -210,7 +210,8 @@
                                 <ContentControl Margin="4,0"
                                                 Padding="0"
                                                 Style="{StaticResource Effect2Control}">
-                                    <TextBox Height="130"
+                                    <TextBox MinHeight="130"
+                                             MaxHeight="450"
                                              VerticalContentAlignment="Top"
                                              hc:InfoElement.Placeholder="请输入要发送的内容..."
                                              AcceptsReturn="True"
