@@ -30,9 +30,13 @@ global using HandyControl.Controls;
 global using ImTools;
 global using log4net;
 global using System.Text.RegularExpressions;
-global using Wu.CommTool.Modules.ModbusRtu.Models;
 
 global using Wu.CommTool.Core.Enums.Modbus;
+global using Wu.CommTool.Modules.MrtuSlave.ViewModels.DialogViewModels;
+global using Wu.CommTool.Modules.MrtuSlave.Views.DialogViews;
+global using Wu.CommTool.Modules.MrtuSlave.Models;
+
+
 
 
 

@@ -1,4 +1,10 @@
-﻿namespace Wu.CommTool.Modules.MrtuSlave.Models;
+﻿using System.IO.Ports;
+using System.Threading.Tasks;
+using System.Windows;
+using Parity = Wu.CommTool.Modules.ModbusRtu.Enums.Parity;
+using StopBits = Wu.CommTool.Modules.ModbusRtu.Enums.StopBits;
+
+namespace Wu.CommTool.Modules.MrtuSlave.Models;
 
 public partial class MrtuSlaveModel : ObservableObject
 {
@@ -6,6 +12,7 @@ public partial class MrtuSlaveModel : ObservableObject
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
     private static readonly ILog log = LogManager.GetLogger(typeof(MrtuSlaveModel));
+    private readonly SerialPort SerialPort = new();              //串口
     #endregion **************************************** 字段 ****************************************
 
 
@@ -13,10 +20,21 @@ public partial class MrtuSlaveModel : ObservableObject
     #region **************************************** 构造函数 ****************************************
     public MrtuSlaveModel()
     {
-       
+        Initial();
     }
 
+    public MrtuSlaveModel(IContainerProvider provider) : this()
+    {
+        this.provider = provider;
+    }
 
+    private void Initial()
+    {
+        Task.Run(() =>
+        {
+            GetComPorts();
+        });
+    }
     #endregion **************************************** 构造函数 ****************************************
 
 
@@ -25,7 +43,8 @@ public partial class MrtuSlaveModel : ObservableObject
     /// <summary>
     /// 串口是否开启
     /// </summary>
-    [ObservableProperty] [property:JsonIgnore] bool isOpened;
+    [ObservableProperty][property: JsonIgnore] bool isOpened;
+
     [ObservableProperty] bool isPause;
 
     /// <summary>
@@ -48,7 +67,7 @@ public partial class MrtuSlaveModel : ObservableObject
     /// <summary>
     /// 校验位
     /// </summary>
-    [ObservableProperty] Parity parity= Parity.None;
+    [ObservableProperty] Parity parity = Parity.None;
 
     /// <summary>
     /// 数据位
@@ -79,25 +98,94 @@ public partial class MrtuSlaveModel : ObservableObject
     /// 字节序
     /// </summary>
     [ObservableProperty] ModbusByteOrder byteOrder = ModbusByteOrder.DCBA;
+
+    /// <summary>
+    /// 状态
+    /// </summary>
+    [ObservableProperty] bool state;
     #endregion **************************************** 属性 ****************************************
 
 
 
     [RelayCommand]
-    [property:JsonIgnore]
+    [property: JsonIgnore]
     private void Run()
     {
+        try
+        {
+            //判断串口是否已打开
+            if (IsOpened)
+            {
+                ShowMessage("当前串口已打开, 无法重复开启");
+                return;
+            }
 
+            //配置串口
+            SerialPort.PortName = ComPort.Port;                          //串口
+            SerialPort.BaudRate = (int)BaudRate;                         //波特率
+            SerialPort.Parity = (System.IO.Ports.Parity)Parity;          //校验
+            SerialPort.DataBits = DataBits;                              //数据位
+            SerialPort.StopBits = (System.IO.Ports.StopBits)StopBits;    //停止位
+            try
+            {
+                SerialPort.Open();              //打开串口
+                IsOpened = true;      //标记串口已打开
+                ShowMessage($"打开串口 {SerialPort.PortName} : {ComPort.DeviceName}  波特率: {SerialPort.BaudRate} 校验: {SerialPort.Parity}");
+            }
+            catch (Exception ex)
+            {
+                HcGrowlExtensions.Warning($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", nameof(MrtuSlaveView));
+                ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            ShowMessage(ex.Message, MessageType.Error);
+        }
     }
 
     [RelayCommand]
     [property: JsonIgnore]
     private void Stop()
     {
+        try
+        {
+            //若串口未开启则返回
+            if (!IsOpened)
+            {
+                return;
+            }
 
+            IsOpened = false;          //标记串口已关闭
+
+            //先清空队列再关闭
+            //PublishFrameQueue.Clear();      //清空发送帧队列
+
+            ////清空接收帧队列
+            //while (!ReceiveFrameQueue.IsEmpty)
+            //{
+            //    ReceiveFrameQueue.TryDequeue(out var item);
+            //}
+
+            //if (ComConfig.IsSending)
+            //{
+            //    await Task.Delay(100);
+            //}
+            ShowMessage($"关闭串口{SerialPort.PortName}");
+            SerialPort.Close();                   //关闭串口 
+        }
+        catch (Exception ex)
+        {
+            ShowMessage(ex.Message, MessageType.Error);
+        }
     }
 
 
+
+    /// <summary>
+    /// 打开串口 若串口未打开则打开串口 若串口已打开则关闭
+    /// </summary>
 
 
 
@@ -198,7 +286,7 @@ public partial class MrtuSlaveModel : ObservableObject
     {
         //ReceiveBytesCount = 0;
         //SendBytesCount = 0;
-        Messages.Clear();
+        Wu.Wpf.Utils.ExecuteFun(Messages.Clear);
     }
 
     /// <summary>
@@ -235,7 +323,7 @@ public partial class MrtuSlaveModel : ObservableObject
             var lastComPort = ComPort;
 
             List<ComPort> coms = [];//缓存查找到的串口
-                                    //查找Com口
+            //查找Com口
             using System.Management.ManagementObjectSearcher searcher = new("select * from Win32_PnPEntity where Name like '%(COM[0-999]%'");
             var hardInfos = searcher.Get();
             //获取串口设备列表
@@ -297,6 +385,55 @@ public partial class MrtuSlaveModel : ObservableObject
         catch (Exception ex)
         {
             Growl.Error(ex.Message);
+        }
+    }
+
+
+    [RelayCommand]
+    private void OpenMrtuSlaveLogView()
+    {
+        try
+        {
+            #region 以非模态窗口显示
+            var content = provider.Resolve<MrtuSlaveLogView>();//从容器中取出实例
+
+            //验证实例的有效性
+            #region 验证实例的有效性
+            if (!(content is FrameworkElement dialogContent))
+                throw new NullReferenceException("A dialog's content must be a FrameworkElement...");
+
+            if (dialogContent is FrameworkElement view && view.DataContext is null && ViewModelLocator.GetAutoWireViewModel(view) is null)
+                ViewModelLocator.SetAutoWireViewModel(view, true);
+
+            if (!(dialogContent.DataContext is IDialogHostAware viewModel))
+                throw new NullReferenceException("A dialog's ViewModel must implement the IDialogHostService interface");
+            #endregion
+
+            DialogParameters parameters = new()
+            {
+                { "Value", this }
+            };
+
+            var window = new System.Windows.Window()
+            {
+                Content = dialogContent,
+                Name = nameof(MrtuSlaveLogView),
+                Width = 700,
+                Height = 500,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen
+            };
+
+            window.Show();// 显示窗口
+            if (viewModel is IDialogHostAware aware)
+            {
+                aware.OnDialogOpened(parameters);
+            }
+            #endregion
+
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
         }
     }
 }

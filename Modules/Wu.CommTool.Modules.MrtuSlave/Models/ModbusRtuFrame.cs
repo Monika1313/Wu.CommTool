@@ -1,5 +1,4 @@
-﻿
-namespace Wu.CommTool.Modules.ModbusRtu.Models;
+﻿namespace Wu.CommTool.Modules.MrtuSlave.Models;
 
 /// <summary>
 /// ModbusRtu数据帧

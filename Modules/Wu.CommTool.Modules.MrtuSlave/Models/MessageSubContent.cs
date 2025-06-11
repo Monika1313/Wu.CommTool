@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Wu.CommTool.Modules.ModbusRtu.Enums;
 
-namespace Wu.CommTool.Modules.ModbusRtu.Models;
+namespace Wu.CommTool.Modules.MrtuSlave.Models;
 
 /// <summary>
 /// Modbus子消息 将帧拆分解析的消息

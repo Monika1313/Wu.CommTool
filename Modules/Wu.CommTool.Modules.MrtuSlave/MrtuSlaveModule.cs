@@ -10,5 +10,7 @@ public class MrtuSlaveModule : IModule
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterForNavigation<MrtuSlaveView, MrtuSlaveViewModel>("MrtuSlaveView");
+        containerRegistry.RegisterForNavigation<MrtuSlaveLogView, MrtuSlaveLogViewModel>();
+        containerRegistry.Register<MrtuSlaveModel>();
     }
 }

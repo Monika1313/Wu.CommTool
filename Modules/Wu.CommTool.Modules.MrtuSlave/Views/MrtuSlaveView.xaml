@@ -13,8 +13,8 @@
              xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:MrtuSlaveDesignViewModel.Instance}"
-             d:Height="400"
-             d:Width="600"
+             d:Height="500"
+             d:Width="700"
              prism:ViewModelLocator.AutoWireViewModel="True"
              Cursor=""
              mc:Ignorable="d">
@@ -133,18 +133,14 @@
                                         VerticalAlignment="Top"
                                         Orientation="Horizontal">
                                 <Button Margin="20"
-                                        hc:Poptip.Content="打开串口"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="OpenCom"
+                                        Command="{Binding MrtuSlaveModel.RunCommand}"
                                         Content="打开"
                                         IsEnabled="{Binding MrtuSlaveModel.IsOpened, Converter={wu:ReverseBool}}"
                                         Style="{StaticResource GreenButton}" />
 
                                 <Button Width="60"
                                         Margin="20"
-                                        hc:Poptip.Content="关闭串口"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="CloseCom"
+                                        Command="{Binding MrtuSlaveModel.StopCommand}"
                                         Content="关闭"
                                         DockPanel.Dock="Left"
                                         IsEnabled="{Binding MrtuSlaveModel.IsOpened}"
@@ -167,7 +163,7 @@
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                 Margin="5"
                                 hc:Poptip.Content="查看日志"
-                                Command="{Binding OpenLogViewCommand}"
+                                Command="{Binding MrtuSlaveModel.OpenMrtuSlaveLogViewCommand}"
                                 Content="{md:PackIcon Kind=NoteTextOutline}"
                                 Cursor="Hand"
                                 DockPanel.Dock="Right"
@@ -197,7 +193,7 @@
                                     Content="{md:PackIcon Kind=Play}"
                                     Cursor="Hand"
                                     Foreground="{StaticResource Green_Foreground}"
-                                    IsEnabled="{Binding MrtuSlaveModel.State, Converter={wu:ReverseBool}}"
+                                    IsEnabled="{Binding MrtuSlaveModel.IsOpened, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
                             <Button Width="30"
@@ -207,7 +203,7 @@
                                     Command="{Binding MrtuSlaveModel.StopCommand}"
                                     Content="{md:PackIcon Kind=Stop}"
                                     Cursor="Hand"
-                                    IsEnabled="{Binding MrtuSlaveModel.State}"
+                                    IsEnabled="{Binding MrtuSlaveModel.IsOpened}"
                                     Style="{StaticResource Red_CircleButton}" />
 
                         </StackPanel>
