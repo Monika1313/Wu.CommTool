@@ -1,4 +1,4 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.Enums;
+﻿namespace Wu.CommTool.Modules.MrtuSlave.Enums;
 
 /// <summary>
 /// ModbusRtu数据帧类型

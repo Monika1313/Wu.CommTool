@@ -22,7 +22,6 @@ global using System.Collections.Generic;
 global using Wu.Wpf.Converters;
 global using System.ComponentModel;
 global using Wu.Extensions;
-global using Wu.CommTool.Modules.ModbusRtu.Enums;
 
 global using System.Linq;
 
@@ -35,11 +34,7 @@ global using Wu.CommTool.Core.Enums.Modbus;
 global using Wu.CommTool.Modules.MrtuSlave.ViewModels.DialogViewModels;
 global using Wu.CommTool.Modules.MrtuSlave.Views.DialogViews;
 global using Wu.CommTool.Modules.MrtuSlave.Models;
-
-
-
-
-
+global using Wu.CommTool.Modules.MrtuSlave.Enums;
 
 
 

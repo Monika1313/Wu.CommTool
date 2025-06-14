@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using Wu.Wpf.Converters;
 
-namespace Wu.CommTool.Modules.ModbusRtu.Enums;
+namespace Wu.CommTool.Modules.MrtuSlave.Enums;
 
 /// <summary>
 /// ModbusRtu消息的子项类型
