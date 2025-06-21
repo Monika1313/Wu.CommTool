@@ -635,6 +635,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
                     break;
                 case MqttPayloadType.Base64:
+                case MqttPayloadType.Base64Base64:
                     //ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                     ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                     break;
