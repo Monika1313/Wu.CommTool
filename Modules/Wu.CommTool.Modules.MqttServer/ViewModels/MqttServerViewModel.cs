@@ -263,7 +263,8 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     mqttAMB.WithPayload(PublishMessage);
                     break;
                 case MqttPayloadType.Base64:
-                    mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage)));
+                    mqttAMB.WithPayload(Convert.FromBase64String(PublishMessage));
+                    //mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage)));
                     break;
                 case MqttPayloadType.Hex:
                     mqttAMB.WithPayload(StringExtention.GetBytes(PublishMessage.Replace(" ", string.Empty)));
