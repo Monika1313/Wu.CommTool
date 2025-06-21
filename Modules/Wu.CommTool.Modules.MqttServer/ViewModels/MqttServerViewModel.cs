@@ -266,6 +266,10 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     mqttAMB.WithPayload(Convert.FromBase64String(PublishMessage));
                     //mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage)));
                     break;
+                case MqttPayloadType.Base64Utf8:
+                    //将输入字符串编码成Base64字符串
+                    mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage)));
+                    break;
                 case MqttPayloadType.Hex:
                     mqttAMB.WithPayload(StringExtention.GetBytes(PublishMessage.Replace(" ", string.Empty)));
                     break;
@@ -350,6 +354,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 switch (MqttServerConfig.ReceivePaylodType)
                 {
                     case MqttPayloadType.Json:
+                    case MqttPayloadType.Base64Utf8:
                     case MqttPayloadType.Plaintext:
                         //接收的数据以UTF8解码
                         ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");

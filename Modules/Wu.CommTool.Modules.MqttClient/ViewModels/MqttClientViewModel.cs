@@ -376,7 +376,12 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     mqttAMB.WithPayload(SendMessage);
                     break;
                 case MqttPayloadType.Base64:
+                    //将输入字符串视为Base64字符串进行解码
                     mqttAMB.WithPayload(Convert.FromBase64String(SendMessage));
+                    break;
+                case MqttPayloadType.Base64Utf8:
+                    //将输入字符串编码成Base64字符串
+                    mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(SendMessage)));
                     break;
                 case MqttPayloadType.Hex:
 #if NET
@@ -614,6 +619,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             switch (MqttClientConfig.ReceivePaylodType)
             {
                 case MqttPayloadType.Json:
+                case MqttPayloadType.Base64Utf8:
                 case MqttPayloadType.Plaintext:
                     ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                     break;
@@ -624,6 +630,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题：{arg.ApplicationMessage.Topic}");
                     break;
                 case MqttPayloadType.Base64:
+                    //ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                     ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                     break;
             }
@@ -969,5 +976,5 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             ShowErrorMessage(ex.Message);
         }
     }
-#endregion
+    #endregion
 }
