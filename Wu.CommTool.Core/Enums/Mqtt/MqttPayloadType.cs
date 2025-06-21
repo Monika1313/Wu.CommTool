@@ -21,6 +21,12 @@ public enum MqttPayloadType
     /// </summary>
     [Description("Base64+UTF8")]
     Base64Utf8,
+    /// <summary>
+    /// 将输入编码成Base64字符串后再编码成UTF8字符串
+    /// </summary>
+    [Description("Base64+Base64")]
+
+    Base64Base64,
     [Description("Json")]
     Json,
 }

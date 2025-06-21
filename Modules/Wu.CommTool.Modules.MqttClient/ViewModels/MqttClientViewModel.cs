@@ -376,12 +376,17 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     mqttAMB.WithPayload(SendMessage);
                     break;
                 case MqttPayloadType.Base64:
+                    //case MqttPayloadType.Base64Base64:
                     //将输入字符串视为Base64字符串进行解码
                     mqttAMB.WithPayload(Convert.FromBase64String(SendMessage));
                     break;
                 case MqttPayloadType.Base64Utf8:
                     //将输入字符串编码成Base64字符串
                     mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(SendMessage)));
+                    break;
+                case MqttPayloadType.Base64Base64:
+                    //将输入字符串编码成Base64字符串后再编码成Base64
+                    mqttAMB.WithPayload(Convert.FromBase64String(Convert.ToBase64String(Encoding.Default.GetBytes(SendMessage))));
                     break;
                 case MqttPayloadType.Hex:
 #if NET

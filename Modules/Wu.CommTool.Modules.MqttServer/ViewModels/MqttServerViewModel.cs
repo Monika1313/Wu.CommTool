@@ -270,6 +270,10 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     //将输入字符串编码成Base64字符串
                     mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage)));
                     break;
+                case MqttPayloadType.Base64Base64:
+                    //将输入字符串编码成Base64字符串后再编码成Base64
+                    mqttAMB.WithPayload(Convert.FromBase64String(Convert.ToBase64String(Encoding.Default.GetBytes(PublishMessage))));
+                    break;
                 case MqttPayloadType.Hex:
                     mqttAMB.WithPayload(StringExtention.GetBytes(PublishMessage.Replace(" ", string.Empty)));
                     break;
@@ -367,6 +371,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                         ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
+                    case MqttPayloadType.Base64Base64:
                         ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                 }
