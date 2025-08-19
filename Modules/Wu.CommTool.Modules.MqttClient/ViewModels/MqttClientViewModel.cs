@@ -390,7 +390,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     break;
                 case MqttPayloadType.Hex:
 #if NET
-                    mqttAMB.WithPayload(Convert.FromHexString(SendMessage));
+                    mqttAMB.WithPayload(Convert.FromHexString(SendMessage.RemoveSpace()));
 #else
                     mqttAMB.WithPayload(StringExtention.GetBytes(SendMessage.Replace(" ", string.Empty)));
 #endif
