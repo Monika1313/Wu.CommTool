@@ -68,7 +68,7 @@
 
 ## 📦如何下载
 - 仅支持windows系统, 需安装.NET 6
-- 进入 [Release](https://github.com/Monika1313/Wu.CommTool/releases) 页面下载，下载WuCommTool.zip
+- 进入 [Release](../../releases) 页面下载，下载WuCommTool.zip
 
 ## ⭐联系作者
 - QQ：961501261
