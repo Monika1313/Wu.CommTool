@@ -274,7 +274,7 @@ public partial class MtcpDevice : ObservableObject, IDisposable
                 RequestFrames[i] = frame;
 
                 ExecutePublishMessage(frame);
-                await Task.Delay(50);//该处可以设定延时
+                await Task.Delay(200);//该处可以设定延时
                 WaitNextOne.WaitOne(100);//等待接收上一条指令的应答,最大等待1000ms
             }
         }
@@ -402,7 +402,11 @@ public partial class MtcpDevice : ObservableObject, IDisposable
             {
                 var startAddr = (int)p.X;
                 //拆分成一帧读62字
-                frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+
+
+                //frames.Add(ModbusUtils.StrCombineCrcCode($"{SlaveAddr:X2}03{startAddr:X4}{62:X4}"));
+                frames.Add($"0000 0000 0006 {SlaveAddr:X2}03{startAddr:X4}{62:X4}");
+
                 startAddr += 58;//两帧之间读取的地址重叠4字,可以保证在临界的数据至少在其中一帧是完整的
                 while (true)
                 {
