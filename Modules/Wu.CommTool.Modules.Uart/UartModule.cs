@@ -1,6 +1,6 @@
-﻿namespace Wu.CommTool.Modules.Udp;
+﻿namespace Wu.CommTool.Modules.Uart;
 
-public class UdpModule : IModule
+public class UartModule : IModule
 {
     public void OnInitialized(IContainerProvider containerProvider)
     {
@@ -9,6 +9,6 @@ public class UdpModule : IModule
 
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        containerRegistry.RegisterForNavigation<UdpView, UdpViewModel>();
+        containerRegistry.RegisterForNavigation<UartView, UartViewModel>();
     }
 }

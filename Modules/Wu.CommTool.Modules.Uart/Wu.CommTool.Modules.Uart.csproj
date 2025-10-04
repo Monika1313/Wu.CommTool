@@ -23,9 +23,9 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
 		<DebugType>none</DebugType>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
-	  <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+		<PackageReference Include="Prism.Wpf" Version="8.1.97" />
 	</ItemGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />

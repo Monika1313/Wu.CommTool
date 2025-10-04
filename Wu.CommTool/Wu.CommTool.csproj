@@ -118,8 +118,10 @@
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.NetworkTool\Wu.CommTool.Modules.NetworkTool.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.TcpClient\Wu.CommTool.Modules.TcpClient.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.TcpServer\Wu.CommTool.Modules.TcpServer.csproj" />
+	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.Uart\Wu.CommTool.Modules.Uart.csproj" />
 	  <ProjectReference Include="..\Modules\Wu.CommTool.Modules.Udp\Wu.CommTool.Modules.Udp.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+	  <ProjectReference Include="..\Wu.CommTool.Modules.Uart\Wu.CommTool.Modules.Uart.csproj" />
 	</ItemGroup>
 	<ProjectExtensions>
 		<VisualStudio>
