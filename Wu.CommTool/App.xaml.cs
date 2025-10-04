@@ -2,6 +2,8 @@
 using Wu.CommTool.Modules.MrtuSlave;
 using Wu.CommTool.Modules.TcpClient;
 using Wu.CommTool.Modules.TcpServer;
+using Wu.CommTool.Modules.Uart;
+using Wu.CommTool.Modules.Udp;
 
 namespace Wu.CommTool;
 
@@ -99,5 +101,7 @@ public partial class App
         moduleCatalog.AddModule<TcpServerModule>();     //Tcp服务器模块
         moduleCatalog.AddModule<TcpClientModule>();     //Tcp客户端模块
         moduleCatalog.AddModule<MrtuSlaveModule>();     //ModubsRTU从站模块
+        moduleCatalog.AddModule<UartModule>();          //串口模块
+        moduleCatalog.AddModule<UdpModule>();           //UDP模块
     }
 }

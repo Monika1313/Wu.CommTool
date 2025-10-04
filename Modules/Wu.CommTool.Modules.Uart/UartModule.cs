@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.Uart;
+﻿
+
+namespace Wu.CommTool.Modules.Uart;
 
 public class UartModule : IModule
 {
@@ -10,5 +12,6 @@ public class UartModule : IModule
     public void RegisterTypes(IContainerRegistry containerRegistry)
     {
         containerRegistry.RegisterForNavigation<UartView, UartViewModel>();
+        containerRegistry.Register<UartModel>();
     }
 }

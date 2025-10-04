@@ -4,14 +4,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hc="https://handyorg.github.io/handycontrol"
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-			 xmlns:local="clr-namespace:Wu.CommTool.Modules.Uart.Views"
-			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:Wu.CommTool.Modules.Uart.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
-             xmlns:prism="http://prismlibrary.com/"             
              prism:ViewModelLocator.AutoWireViewModel="True"
-			 mc:Ignorable="d">
+             mc:Ignorable="d">
     <Grid>
-            
+        <TextBlock Text="串口" />
     </Grid>
 </UserControl>

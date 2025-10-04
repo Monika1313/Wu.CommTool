@@ -35,3 +35,4 @@ global using HandyControl.Controls;
 
 global using Wu.CommTool.Modules.Uart.Views;
 global using Wu.CommTool.Modules.Uart.ViewModels;
+global using Wu.CommTool.Modules.Uart.Models;

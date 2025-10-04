@@ -1,4 +1,5 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using HandyControl.Controls;
+using MaterialDesignThemes.Wpf;
 using Prism.Commands;
 using Prism.Ioc;
 using Prism.Mvvm;
@@ -13,6 +14,7 @@ using Wu.CommTool.Modules.MrtuSlave.Views;
 using Wu.CommTool.Modules.TcpClient.Views;
 using Wu.CommTool.Modules.TcpServer;
 using Wu.CommTool.Modules.TcpServer.Views;
+using Wu.CommTool.Modules.Uart.Views;
 
 namespace Wu.CommTool.ViewModels;
 
@@ -29,7 +31,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
 
     #region    *****************************************  构造函数  *****************************************
     public MainWindowViewModel() { }
-    public MainWindowViewModel(IRegionManager regionManager, IDialogHostService dialogHost,ThemeManager themeManager)
+    public MainWindowViewModel(IRegionManager regionManager, IDialogHostService dialogHost, ThemeManager themeManager)
     {
         this.regionManager = regionManager;
         this.dialogHost = dialogHost;
@@ -100,11 +102,14 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         [
             new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
             new() { Icon = "LanConnect", Title = "ModbusRtu设备监控", NameSpace = nameof(MrtuDeviceMonitorView) },
+#if DEBUG
             new() { Icon = "LanConnect", Title = "ModbusRtu从站", NameSpace = nameof(MrtuSlaveView) },
+#endif
 
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
             new() { Icon = "LanConnect", Title = "ModbusTcp设备监控", NameSpace = nameof(MtcpDeviceMonitorView) },
 #if DEBUG
+            new() { Icon = "LanConnect", Title = "串口", NameSpace = nameof(UartView) },
 #endif
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
@@ -144,6 +149,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         catch (Exception ex)
         {
             log.Info($"窗口导航时出错惹:{ex.Message}");
+            Growl.Error($"窗口导航时出错惹:{ex.Message}");
         }
     }
 
@@ -177,7 +183,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         AutoUpdater.ReportErrors = true;
 
         //设置为要下载更新文件的文件夹路径。如果没有提供，则默认为临时文件夹。
-        AutoUpdater.DownloadPath = Path.Combine(Environment.CurrentDirectory,"AutoUpdater");
+        AutoUpdater.DownloadPath = Path.Combine(Environment.CurrentDirectory, "AutoUpdater");
 
         //设置zip解压路径
         AutoUpdater.InstallationPath = Environment.CurrentDirectory;

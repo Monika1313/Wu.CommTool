@@ -9,11 +9,16 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 构造函数 ****************************************
-    public UartViewModel() { }
-    public UartViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+    public UartViewModel() 
+    { 
+        UartModel = new UartModel();
+    }
+
+    public UartViewModel(IContainerProvider provider, IDialogHostService dialogHost,UartModel uartModel) : base(provider)
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
+        UartModel = uartModel;
     }
 
     /// <summary>
@@ -39,6 +44,10 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     public string DialogHostName { get; set; }
 
     [ObservableProperty] object currentDto = new();
+
+
+    [ObservableProperty] UartModel uartModel;
+
     #endregion **************************************** 属性 ****************************************
 
 
