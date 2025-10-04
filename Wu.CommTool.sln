@@ -44,6 +44,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.TcpClie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.MrtuSlave", "Modules\Wu.CommTool.Modules.MrtuSlave\Wu.CommTool.Modules.MrtuSlave.csproj", "{90FAF68E-2604-477C-8B19-5E1D72108280}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Wu.CommTool.Modules.Udp", "Modules\Wu.CommTool.Modules.Udp\Wu.CommTool.Modules.Udp.csproj", "{3EFF7515-3F65-4BF4-94FF-3009EB761100}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -118,6 +120,10 @@ Global
 		{90FAF68E-2604-477C-8B19-5E1D72108280}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90FAF68E-2604-477C-8B19-5E1D72108280}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90FAF68E-2604-477C-8B19-5E1D72108280}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EFF7515-3F65-4BF4-94FF-3009EB761100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EFF7515-3F65-4BF4-94FF-3009EB761100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EFF7515-3F65-4BF4-94FF-3009EB761100}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EFF7515-3F65-4BF4-94FF-3009EB761100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -136,6 +142,7 @@ Global
 		{44CD96F8-9086-4317-81C6-D75D6C2C52F0} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{08710F6C-BFA0-447D-AD38-C79A7CC7D96F} = {3BC16164-D552-45D4-A500-4262CF548710}
 		{90FAF68E-2604-477C-8B19-5E1D72108280} = {3BC16164-D552-45D4-A500-4262CF548710}
+		{3EFF7515-3F65-4BF4-94FF-3009EB761100} = {3BC16164-D552-45D4-A500-4262CF548710}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0AE7DA9F-D788-49F4-9DCA-61FBD58DBFE9}
