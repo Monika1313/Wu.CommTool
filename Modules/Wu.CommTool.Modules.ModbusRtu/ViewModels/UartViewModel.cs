@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.Uart.ViewModels;
+﻿using HandyControl.Controls;
+
+namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
 public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -9,16 +11,11 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 构造函数 ****************************************
-    public UartViewModel() 
-    { 
-        UartModel = new UartModel();
-    }
-
-    public UartViewModel(IContainerProvider provider, IDialogHostService dialogHost,UartModel uartModel) : base(provider)
+    public UartViewModel() { }
+    public UartViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        UartModel = uartModel;
     }
 
     /// <summary>
@@ -46,9 +43,13 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     [ObservableProperty] object currentDto = new();
 
 
-    [ObservableProperty] UartModel uartModel;
+    [ObservableProperty] UartModel uartModel = new();
+
+    [ObservableProperty] OpenDrawers openDrawers = new();
+
 
     #endregion **************************************** 属性 ****************************************
+
 
 
     #region **************************************** 方法 ****************************************
@@ -58,6 +59,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         switch (obj)
         {
             case "OpenDialogView": OpenDialogView(); break;
+            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
             default: break;
         }
     }

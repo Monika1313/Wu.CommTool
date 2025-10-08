@@ -14,7 +14,6 @@ using Wu.CommTool.Modules.MrtuSlave.Views;
 using Wu.CommTool.Modules.TcpClient.Views;
 using Wu.CommTool.Modules.TcpServer;
 using Wu.CommTool.Modules.TcpServer.Views;
-using Wu.CommTool.Modules.Uart.Views;
 
 namespace Wu.CommTool.ViewModels;
 
