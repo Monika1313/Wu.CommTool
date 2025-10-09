@@ -16,6 +16,8 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
+        //更新串口列表
+        UartModel.GetComPorts();
     }
 
     /// <summary>
@@ -60,6 +62,13 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         {
             case "OpenDialogView": OpenDialogView(); break;
             case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
+            case "OpenCom":                    //打开串口
+                UartModel.OpenCom();
+                OpenDrawers.LeftDrawer = false;//关闭左侧抽屉;
+                break;
+            case "CloseCom":
+                UartModel.CloseCom();                              //关闭串口
+                break;
             default: break;
         }
     }

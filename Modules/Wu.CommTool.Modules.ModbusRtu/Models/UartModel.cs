@@ -26,7 +26,12 @@ public partial class UartModel : ObservableObject
 
         //初始化一个10个数据的列表
         DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
-        
+
+
+        CustomFrames = [new UartCustomFrame  (this,"01 03 0000 0001 "),
+                                                    new (this,"01 04 0000 0001 "),
+                                                    new (this,""),];
+
         RefreshModbusRtuDataDataView();
     }
 
@@ -94,7 +99,7 @@ public partial class UartModel : ObservableObject
     /// <summary>
     /// 自定义帧的输入框
     /// </summary>
-    [ObservableProperty] private ObservableCollection<CustomFrame> customFrames = [];
+    [ObservableProperty] private ObservableCollection<UartCustomFrame> customFrames;
     #endregion
 
     #region 搜索设备模块 属性
@@ -289,6 +294,7 @@ public partial class UartModel : ObservableObject
     /// <summary>
     /// 打开串口
     /// </summary>
+    [RelayCommand]
     public void OpenCom()
     {
         try
@@ -1219,7 +1225,8 @@ public partial class UartModel : ObservableObject
     /// <summary>
     /// 发送自定义帧
     /// </summary>
-    public void SendCustomFrame()
+    [RelayCommand]
+    public void SendCustomFrame(UartCustomFrame customFrame)
     {
         //若串口未打开则打开串口
         if (!ComConfig.IsOpened)
@@ -1232,9 +1239,15 @@ public partial class UartModel : ObservableObject
             }
         }
 
+        if (string.IsNullOrWhiteSpace(customFrame.Frame))
+        {
+            ShowErrorMessage("发送消息不能为空...");
+            return;
+        }
+
         try
         {
-            PublishFrameEnqueue(GetCrcedStrWithSelect(InputMessage));                  //将待发送的消息添加进队列
+            PublishFrameEnqueue(GetCrcedStrWithSelect(customFrame.Frame));                  //将待发送的消息添加进队列
         }
         catch (Exception ex)
         {
