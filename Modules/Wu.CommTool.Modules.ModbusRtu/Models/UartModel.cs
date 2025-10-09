@@ -1,11 +1,8 @@
 ﻿using HandyControl.Controls;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
@@ -20,19 +17,11 @@ public partial class UartModel : ObservableObject
         publishHandleTask.Start();
         receiveHandleTask.Start();
 
-        //默认选中9600无校验
-        SelectedBaudRates.Add(BaudRate._9600);
-        SelectedParitys.Add(Parity.None);
-
-        //初始化一个10个数据的列表
-        DataMonitorConfig.ModbusRtuDatas.AddRange(Enumerable.Range(0, 10).Select(i => new ModbusRtuData()));
-
 
         CustomFrames = [new UartCustomFrame  (this,"01 03 0000 0001 "),
                                                     new (this,"01 04 0000 0001 "),
                                                     new (this,""),];
 
-        RefreshModbusRtuDataDataView();
     }
 
     private readonly SerialPort SerialPort = new();              //串口
@@ -88,13 +77,12 @@ public partial class UartModel : ObservableObject
     /// <summary>
     /// 输入消息 用于发送
     /// </summary>
-    [ObservableProperty]
-    private string inputMessage = "01 03 0000 0001";
+    [ObservableProperty] private string inputMessage = "01 03 0000 0001";
 
     /// <summary>
     /// 自动校验模式选择 Crc校验模式
     /// </summary>
-    [ObservableProperty] private CrcMode crcMode = CrcMode.Modbus;
+    [ObservableProperty] private CrcMode crcMode = CrcMode.None;
 
     /// <summary>
     /// 自定义帧的输入框
@@ -102,96 +90,7 @@ public partial class UartModel : ObservableObject
     [ObservableProperty] private ObservableCollection<UartCustomFrame> customFrames;
     #endregion
 
-    #region 搜索设备模块 属性
-    /// <summary>
-    /// 搜索设备的状态 0=未开始搜索 1=搜索中 2=搜索结束/搜索中止
-    /// </summary>
-    [ObservableProperty]
-    int searchDeviceState = 0;
 
-    /// <summary>
-    /// 当前搜索的ModbusRtu设备
-    /// </summary>
-    [ObservableProperty]
-    ModbusRtuDevice currentDevice = new();
-
-    /// <summary>
-    /// 搜索到的ModbusRtu设备
-    /// </summary>
-    [ObservableProperty]
-    ObservableCollection<ModbusRtuDevice> modbusRtuDevices = [];
-
-    /// <summary>
-    /// 选中的波特率
-    /// </summary>
-    [ObservableProperty]
-    List<BaudRate> selectedBaudRates = [];
-
-    ///// <summary>
-    ///// 选中的校验方式
-    ///// </summary>
-    [ObservableProperty]
-    List<Parity> selectedParitys = [];
-
-    /// <summary>
-    /// 搜索使用的功能码
-    /// </summary>
-    [ObservableProperty]
-    byte searchFunctionCode = 3;
-
-    /// <summary>
-    /// 搜索时读取数据的起始地址
-    /// </summary>
-    [ObservableProperty]
-    int searchStartAddr = 0000;
-
-    /// <summary>
-    /// 搜索时读取的数量
-    /// </summary>
-    [ObservableProperty]
-    int searchReadNum = 1;
-
-    /// <summary>
-    /// 搜索 起始从站ID
-    /// </summary>
-    [ObservableProperty]
-    byte searchStartSlaveId = 1;
-
-    /// <summary>
-    /// 搜索 结束从站ID
-    /// </summary>
-    [ObservableProperty]
-    byte searchEndSlaveId = 247;
-
-    /// <summary>
-    /// 搜索到的设备总数
-    /// </summary>
-    [ObservableProperty]
-    int foundCount = 0;
-    #endregion
-
-
-    #region ******************************  数据监控模块 属性  ******************************
-    /// <summary>
-    /// 数据监控配置
-    /// </summary>
-    [ObservableProperty]
-
-    private DataMonitorConfig dataMonitorConfig = new();
-
-    /// <summary>
-    /// ModbusRtuDataDataView
-    /// </summary>
-    [ObservableProperty]
-    private ListCollectionView modbusRtuDataDataView;
-
-    /// <summary>
-    /// 配置文件列表
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<ConfigFile> configFiles = [];
-
-    #endregion
 
     #region 自动应答模块 属性
     /// <summary>
@@ -343,11 +242,6 @@ public partial class UartModel : ObservableObject
             {
                 return;
             }
-            //停止自动读取
-            if (DataMonitorConfig.IsOpened)
-            {
-                CloseAutoRead();
-            }
 
             ComConfig.IsOpened = false;          //标记串口已关闭
             //先清空队列再关闭
@@ -452,55 +346,72 @@ public partial class UartModel : ObservableObject
     /// 页面展示接收数据消息
     /// </summary>
     /// <param name="frame"></param>
-    public void ShowReceiveMessage(ModbusRtuFrame frame)
+    //public void ShowReceiveMessage(ModbusRtuFrame frame)
+    //{
+    //    try
+    //    {
+    //        void action()
+    //        {
+    //            var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
+    //            Messages.Add(msg);
+    //            log.Info($"接收:{frame}");
+
+    //            //if (Messages.Count > 9999)
+    //            //{
+    //            //    for (int i = 0; i < 100; i++)
+    //            //    {
+    //            //        Messages.RemoveAt(0);
+    //            //    }
+    //            //}
+
+    //            while (Messages.Count > 200)
+    //            {
+    //                Messages.RemoveAt(0);
+    //            }
+    //        }
+    //        Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+    //    }
+    //    catch (Exception) { }
+    //}
+
+    protected void ShowReceiveMessage(string message)
     {
         try
         {
             void action()
             {
-                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
-                Messages.Add(msg);
-                log.Info($"接收:{frame}");
-
-                //if (Messages.Count > 9999)
-                //{
-                //    for (int i = 0; i < 100; i++)
-                //    {
-                //        Messages.RemoveAt(0);
-                //    }
-                //}
-
-                while (Messages.Count > 200)
+                Messages.Add(new MessageData($"{message}", DateTime.Now, MessageType.Receive));
+                log.Info($"接收:{message}");
+                while (Messages.Count > 100)
                 {
                     Messages.RemoveAt(0);
                 }
             }
-            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+            Wu.Wpf.Utils.ExecuteFun(action);
         }
-        catch (Exception) { }
+        catch (Exception)
+        {
+        }
     }
 
-    /// <summary>
-    /// 页面展示发送数据消息
-    /// </summary>
-    /// <param name="frame"></param>
-    public void ShowSendMessage(ModbusRtuFrame frame)
+    protected void ShowSendMessage(string message)
     {
         try
         {
             void action()
             {
-                var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame);
-                Messages.Add(msg);
-                log.Info($"发送:{frame}");
-                while (Messages.Count > 200)
+                Messages.Add(new MessageData($"{message}", DateTime.Now, MessageType.Send));
+                log.Info($"发送:{message}");
+                while (Messages.Count > 100)
                 {
                     Messages.RemoveAt(0);
                 }
             }
-            Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
+            Wu.Wpf.Utils.ExecuteFun(action);
         }
-        catch (System.Exception) { }
+        catch (Exception)
+        {
+        }
     }
 
     /// <summary>
@@ -594,7 +505,7 @@ public partial class UartModel : ObservableObject
                 try
                 {
                     if (!IsPause)
-                        ShowSendMessage(new ModbusRtuFrame(data));
+                        ShowSendMessage(message);
                     SerialPort.Write(data, 0, data.Length);     //发送数据
                     SendBytesCount += data.Length;                    //统计发送数据总数
 
@@ -618,101 +529,6 @@ public partial class UartModel : ObservableObject
             return false;
         }
     }
-
-    #region 旧的数据接收方法 弃用了
-    ///// <summary>
-    ///// 接收消息
-    ///// </summary>
-    ///// <param name="sender"></param>
-    ///// <param name="e"></param>
-    ///// <exception cref="NotImplementedException"></exception>
-    //private void 旧的ReceiveMessage(object sender, SerialDataReceivedEventArgs e)
-    //{
-    //    try
-    //    {
-    //        //若串口未开启则返回
-    //        if (SerialPort != null && !SerialPort.IsOpen)
-    //        {
-    //            SerialPort.DiscardInBuffer();//丢弃接收缓冲区的数据
-    //            return;
-    //        }
-
-    //        ComConfig.IsReceiving = true;
-
-    //        //System.Diagnostics.Stopwatch oTime = new();   //定义一个计时对象  
-    //        //oTime.Start();                         //开始计时 
-
-    //        #region 接收数据
-
-    //        //TODO 由于监控串口网络时,请求帧和应答帧时间间隔较短,会照成接收粘包  通过先截取一段数据分析是否为请求帧,为请求帧则将后面的解析为另一帧
-    //        //0X01请求帧8字节 0x02请求帧8字节 0x03请求帧8字节 0x04请求帧8字节 0x05请求帧8字节  0x06请求帧8字节 0x0F请求帧不量不定 0x10请求帧不量不定
-    //        //由于大部分请求帧长度为8字节 故对接收字节前8字节截取校验判断是否为一帧可以解决大部分粘包问题
-
-
-
-    //        //接收的数据缓存
-    //        List<byte> list = new();
-    //        if (ComConfig.IsOpened == false)
-    //            return;
-    //        string msg = string.Empty;//
-    //        //string tempMsg = string.Empty;//接收数据二次缓冲 串口接收数据先缓存至此
-    //        int times = 0;//计算次数 连续数ms无数据判断为一帧结束
-    //        do
-    //        {
-    //            if (ComConfig.IsOpened && SerialPort.BytesToRead > 0)
-    //            {
-    //                times = 0;
-    //                int dataCount = SerialPort.BytesToRead;          //获取数据量
-    //                byte[] tempBuffer = new byte[dataCount];         //声明数组
-    //                SerialPort.Read(tempBuffer, 0, dataCount); //从串口缓存读取数据 从第0个读取n个字节, 写入tempBuffer 
-    //                list.AddRange(tempBuffer);                       //添加进接收的数据列表
-    //                msg += BitConverter.ToString(tempBuffer);
-    //                //限制一次接收的最大数量 避免多设备连接时 导致数据收发无法判断帧结束
-    //                if (list.Count > ComConfig.MaxLength)
-    //                    break;
-    //            }
-    //            else
-    //            {
-    //                times++;
-    //                Thread.Sleep(1);
-    //            }
-    //        } while (times < ComConfig.TimeOut);
-    //        #endregion
-
-
-    //        msg = msg.Replace('-', ' ');
-    //        ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
-
-    //        //搜索时将验证通过的添加至搜索到的设备列表
-    //        if (SearchDeviceState == 1)
-    //        {
-    //            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-    //            {
-    //                CurrentDevice.ReceiveMessage = msg;
-    //                CurrentDevice.Address = int.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
-    //                ModbusRtuDevices.Add(CurrentDevice);
-    //            }));
-    //            HcGrowlExtensions.Success($"搜索到设备 {CurrentDevice.Address}...", ModbusRtuView.ViewName);
-    //        }
-
-    //        ReceiveBytesCount += list.Count;         //计算总接收数据量
-    //        //若暂停更新接收数据 则不显示
-    //        if (IsPause)
-    //            return;
-    //        WaitUartReceived.Set();//置位数据接收完成标志
-    //        //oTime.Stop();
-    //        //ShowMessage($"接收数据用时{oTime.Elapsed.TotalMilliseconds} ms");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        ShowMessage(ex.Message, MessageType.Receive);
-    //    }
-    //    finally
-    //    {
-    //        ComConfig.IsReceiving = false;
-    //    }
-    //} 
-    #endregion
 
     public bool IsModbusCrcOk(List<byte> frame)
     {
@@ -798,8 +614,7 @@ public partial class UartModel : ObservableObject
                                 msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
-                                WaitUartReceived.Set();                                                                           //置位数据接收完成标志
-                                DeviceFound(msg);
+                                WaitUartReceived.Set();
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
@@ -812,8 +627,7 @@ public partial class UartModel : ObservableObject
                                 msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
-                                WaitUartReceived.Set();                                                                           //置位数据接收完成标志
-                                DeviceFound(msg);
+                                WaitUartReceived.Set();
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
                                 ReceiveBytesCount += frame.Count;              //计算总接收数据量
                                 isNot = false;
@@ -899,7 +713,6 @@ public partial class UartModel : ObservableObject
                                 //输出接收到的数据
                                 ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
                                 WaitUartReceived.Set();
-                                DeviceFound(msg);
 
                                 //置位数据接收完成标志
                                 frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的字节
@@ -917,7 +730,6 @@ public partial class UartModel : ObservableObject
                             //输出接收到的数据
                             ReceiveFrameQueue.Enqueue(msg);//接收到的消息入队
                             WaitUartReceived.Set();                         //置位数据接收完成标志
-                            DeviceFound(msg);
                             frameCache.RemoveRange(0, frame.Count);   //从缓存中移除已处理的8字节
                             ReceiveBytesCount += frame.Count;              //计算总接收数据量
                             times = 0;                                     //重置计时器
@@ -947,7 +759,6 @@ public partial class UartModel : ObservableObject
 
             msg = BitConverter.ToString(frameCache.ToArray()).Replace('-', ' ');
 
-            DeviceFound(msg);//搜索到设备
             ReceiveFrameQueue.Enqueue(msg); //接收到的消息入队
             ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
             WaitUartReceived.Set();         //置位数据接收完成标志
@@ -959,26 +770,6 @@ public partial class UartModel : ObservableObject
         finally
         {
             ComConfig.IsReceiving = false;
-        }
-    }
-
-    /// <summary>
-    /// 搜索到设备了
-    /// </summary>
-    private void DeviceFound(string msg)
-    {
-        //搜索时将验证通过的添加至搜索到的设备列表
-        if (SearchDeviceState == 1 && msg.Length >= 2)
-        {
-            var device = CurrentDevice;//缓存当前设备。否则搜索速度快时,会有异步问题
-            System.Windows.Application.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                device.ReceiveMessage = msg;
-                device.Address = byte.Parse(msg[..2], System.Globalization.NumberStyles.HexNumber);
-                ModbusRtuDevices.Add(CurrentDevice);
-                FoundCount++;
-            }));
-            //HcGrowlExtensions.Success($"搜索到设备 {device.Address}...", ModbusRtuView.ViewName);
         }
     }
 
@@ -1118,7 +909,7 @@ public partial class UartModel : ObservableObject
                 }
                 else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
                 {
-                    ShowReceiveMessage(mFrame);
+                    ShowReceiveMessage(frame);
 
                     //todo 临时添加 自由口协议自动应答, 该协议不是modbus 校验不会通过
                     #region 自动应答
@@ -1138,7 +929,7 @@ public partial class UartModel : ObservableObject
                 //校验成功
                 else
                 {
-                    ShowReceiveMessage(mFrame);
+                    ShowReceiveMessage(frame);
                 }
                 #endregion
 
@@ -1159,29 +950,6 @@ public partial class UartModel : ObservableObject
                 List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
                 int slaveId = frameList[0];                 //从站地址
                 int func = frameList[1];                    //功能码
-
-                #region 对接收的数据分功能码展示
-
-                //03功能码或04功能码
-                if (mFrame.Type.Equals(ModbusRtuFrameType._0x03响应帧) || mFrame.Type.Equals(ModbusRtuFrameType._0x04响应帧))
-                {
-                    //若自动读取开启则解析接收的数据
-                    if (DataMonitorConfig.IsOpened)
-                    {
-                        //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
-                        if (frameList[0] == DataMonitorConfig.SlaveId && frameList[2] == DataMonitorConfig.Quantity * 2)
-                        {
-                            Analyse(frameList);
-                        }
-                    }
-                }
-
-                //0x10功能码
-                else if (mFrame.Type.Equals(ModbusRtuFrameType._0x10响应帧) && DataMonitorConfig.IsOpened)
-                {
-                    ShowMessage("数据写入成功");
-                }
-                #endregion
             }
             catch (Exception ex)
             {
@@ -1190,36 +958,8 @@ public partial class UartModel : ObservableObject
         }
     }
 
-    /// <summary>
-    /// 解析接收的数据
-    /// </summary>
-    private void Analyse(List<byte> list)
-    {
-        //TODO 解析数据
-        //目前仅支持03功能码和04功能码
-
-        //判断字节数为奇数还是偶数
-        //偶数为主站请求
-        if (list.Count % 2 == 0)
-            return;
-        //奇数为响应
-
-        //验证数据是否为请求的数据 根据 从站地址 功能码 数据字节数量
-        if (list[0] != DataMonitorConfig.SlaveId || list[1] != DataMonitorConfig.Function || list[2] != DataMonitorConfig.Quantity * 2)
-            return;//非请求的数据
-
-        var byteArr = list.ToArray();
-        //将读取的数据写入
-        for (int i = 0; i < DataMonitorConfig.Quantity; i++)
-        {
-            DataMonitorConfig.ModbusRtuDatas[i].Location = i * 2 + 3;         //在源字节数组中的起始位置 源字节数组为完整的数据帧,帧头部分3字节 每个值为1个word2字节
-            DataMonitorConfig.ModbusRtuDatas[i].OriginValue = Wu.Utils.ConvertUtil.GetUInt16FromBigEndianBytes(byteArr, 3 + 2 * i);
-            DataMonitorConfig.ModbusRtuDatas[i].OriginBytes = byteArr;        //源字节数组
-            DataMonitorConfig.ModbusRtuDatas[i].ModbusByteOrder = DataMonitorConfig.ByteOrder; //字节序
-            DataMonitorConfig.ModbusRtuDatas[i].UpdateTime = DateTime.Now;    //更新时间
-        }
-    }
     #endregion
+
 
     #region ******************************  自定义帧模块 方法  ******************************
     /// <summary>
@@ -1294,509 +1034,6 @@ public partial class UartModel : ObservableObject
     public void AddNewCustomFrame()
     {
 
-    }
-    #endregion
-
-    #region ******************************  搜索设备模块 方法  ******************************
-    /// <summary>
-    /// 波特率选框修改时
-    /// </summary>
-    /// <param name="obj"></param>
-    public void BaudRateSelectionChanged(object obj)
-    {
-        //获取选中项列表
-        System.Collections.IList items = (System.Collections.IList)obj;
-        var collection = items.Cast<BaudRate>();
-        //获取所有选中项
-        SelectedBaudRates = collection.ToList();
-    }
-
-    /// <summary>
-    /// 校验位选框修改时
-    /// </summary>
-    /// <param name="obj"></param>
-    public void ParitySelectionChanged(object obj)
-    {
-        IList items = (IList)obj;
-        var collection = items.Cast<Parity>();
-        SelectedParitys = collection.ToList();
-    }
-
-    /// <summary>
-    /// 自动搜索ModbusRtu设备
-    /// </summary>
-    public async void SearchDevices()
-    {
-        try
-        {
-            //若数据监控功能开启中则关闭
-            if (DataMonitorConfig.IsOpened)
-            {
-                HcGrowlExtensions.Warning("数据监控功能关闭...", ModbusRtuView.ViewName);
-                CloseAutoRead();
-            }
-
-            //设置串口
-            //修改串口设置
-            if (SelectedBaudRates.Count.Equals(0))
-            {
-                ShowErrorMessage("未选择要搜索的波特率");
-                return;
-            }
-            if (SelectedParitys.Count.Equals(0))
-            {
-                ShowErrorMessage("未选择要搜索的校验位");
-                return;
-            }
-
-            //打开串口
-            if (ComConfig.IsOpened == false)
-            {
-                OpenCom();
-            }
-
-            //HcGrowlExtensions.Info("开始搜索...", ModbusRtuView.ViewName);
-
-            ComConfig.TimeOut = 20;//搜索时设置帧超时时间为20
-            SearchDeviceState = 1;//标记状态为搜索设备中
-            ModbusRtuDevices.Clear();//清空搜索到的设备列表
-            FoundCount = 0;
-
-            //遍历选项
-            foreach (var baud in SelectedBaudRates)
-            {
-                foreach (var parity in SelectedParitys)
-                {
-                    //搜索
-                    ShowMessage($"搜索: {ComConfig.ComPort.Port}:{ComConfig.ComPort.DeviceName} 波特率:{(int)baud} 校验方式:{parity} 数据位:{ComConfig.DataBits} 停止位:{ComConfig.StopBits}");
-
-                    byte min = Math.Min(SearchStartSlaveId, SearchEndSlaveId);
-                    byte max = Math.Max(SearchStartSlaveId, SearchEndSlaveId);
-                    for (byte i = min; i <= max; i++)
-                    {
-                        //当前搜索的设备
-                        CurrentDevice = new()
-                        {
-                            Address = i,
-                            BaudRate = baud,
-                            Parity = parity,
-                            DataBits = ComConfig.DataBits,
-                            StopBits = ComConfig.StopBits
-                        };
-
-                        //修改设置
-                        SerialPort.BaudRate = (int)baud;
-                        SerialPort.Parity = (System.IO.Ports.Parity)parity;
-                        //string unCrcMsg = $"{i:X2}0300000001";//读取第一个字           
-                        string unCrcMsg = $"{i:X2}{SearchFunctionCode:X2}{SearchStartAddr:X4}{SearchReadNum:X4}";//根据设置读取数据
-                        //串口关闭时或不处于搜索状态
-                        if (ComConfig.IsOpened == false || SearchDeviceState != 1)
-                            break;
-                        PublishFrameEnqueue(GetModbusCrcedStr(unCrcMsg), ComConfig.SearchInterval);//发送消息入队
-                        await Task.Delay(ComConfig.SearchInterval);           //间隔数ms后再请求下一个
-                    }
-                    if (ComConfig.IsOpened == false)
-                        break;
-                }
-                if (ComConfig.IsOpened == false)
-                    break;
-            }
-            if (ComConfig.IsOpened)
-            {
-                while (PublishFrameQueue.Count != 0)
-                {
-                    await Task.Delay(100);
-                }
-                ShowMessage("搜索完成");
-                CloseCom();
-            }
-            else
-            {
-                ShowMessage("停止搜索");
-            }
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning(ex.Message);
-        }
-        finally
-        {
-            SearchDeviceState = 2;//标记状态为搜索结束
-        }
-    }
-
-    /// <summary>
-    /// 停止搜索设备
-    /// </summary>
-    public void StopSearchDevices()
-    {
-        try
-        {
-            //若串口已打开则关闭
-            if (ComConfig.IsOpened == true)
-            {
-                OperatePort();
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-    #endregion
-
-    #region ******************************  数据监控模块 方法  ******************************
-    /// <summary>
-    /// 打开数据监控
-    /// </summary>
-    public void OpenAutoRead()
-    {
-        try
-        {
-            //若搜索设备则先停止搜索
-            if (SearchDeviceState == 1)
-            {
-                SearchDeviceState = 2;
-            }
-
-            //若串口未打开 则开启串口
-            if (!ComConfig.IsOpened)
-                OpenCom();
-            //若串口开启失败则返回
-            if (!ComConfig.IsOpened)
-                return;
-
-            timer = new()
-            {
-                Interval = DataMonitorConfig.Period,   //这里设置的间隔时间单位ms
-                AutoReset = true                    //设置一直执行
-            };
-            timer.Elapsed += TimerElapsed;
-            timer.Start();
-            DataMonitorConfig.IsOpened = true;
-            ShowMessage("开启数据监控...");
-
-            //生成列表
-            if (DataMonitorConfig.ModbusRtuDatas.Count != DataMonitorConfig.Quantity)
-            {
-                //关闭过滤器
-                DataMonitorConfig.IsFilter = false;
-                RefreshModbusRtuDataDataView();
-
-                //生成列表
-                DataMonitorConfig.ModbusRtuDatas.Clear();
-                for (int i = DataMonitorConfig.StartAddr; i < DataMonitorConfig.Quantity + DataMonitorConfig.StartAddr; i++)
-                {
-                    DataMonitorConfig.ModbusRtuDatas.Add(new ModbusRtuData()
-                    {
-                        Addr = i
-                    });
-                }
-            }
-            //数量相同时 但是测点地址不同 更新地址
-            else if (DataMonitorConfig.ModbusRtuDatas.FirstOrDefault().Addr != DataMonitorConfig.StartAddr)
-            {
-                int addr = DataMonitorConfig.StartAddr;
-                foreach (var item in DataMonitorConfig.ModbusRtuDatas)
-                {
-                    item.Addr = addr;
-                    addr++;
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 关闭自动读取数据
-    /// </summary>
-    public void CloseAutoRead()
-    {
-        try
-        {
-            timer.Stop();
-            DataMonitorConfig.IsOpened = false;
-            CloseCom();
-            ShowMessage("关闭自动读取数据...");
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 数据监控 定时器事件
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
-    private void TimerElapsed(object sender, ElapsedEventArgs e)
-    {
-        try
-        {
-            timer.Stop();
-            string msg = DataMonitorConfig.DataFrame[..^4];
-            PublishMessage(GetModbusCrcedStr(msg));
-            ////PublishMessage(DataMonitorConfig.DataFrame);
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-        finally
-        {
-            timer.Start();
-        }
-    }
-
-    /// <summary>
-    /// 更新数据监控视图
-    /// </summary>
-    public void RefreshModbusRtuDataDataView()
-    {
-        ModbusRtuDataDataView = (ListCollectionView)CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
-        //数据监控过滤器
-        if (DataMonitorConfig.IsFilter)
-        {
-            ModbusRtuDataDataView.Filter = new Predicate<object>(x => !string.IsNullOrWhiteSpace(((ModbusRtuData)x).Name));
-        }
-        else
-        {
-            ModbusRtuDataDataView.Filter = new Predicate<object>(x => true);
-        }
-        //TestDataView = (DataView)CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
-        //var cview = CollectionViewSource.GetDefaultView(DataMonitorConfig.ModbusRtuDatas);
-        //cview.Filter = new Predicate<object>(x => true);
-        //TestDataView = (DataView)cview;
-    }
-
-    /// <summary>
-    /// ModbusRtu数据写入
-    /// </summary>
-    /// <param name="obj"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    public void ModburRtuDataWrite(ModbusRtuData obj)
-    {
-        try
-        {
-            if (!ComConfig.IsOpened)
-            {
-                ShowErrorMessage("未打开串口,无法写入...");
-                return;
-            }
-            //todo 使用正则验证值为数值
-            if (obj.WriteValue == null)
-            {
-                ShowErrorMessage("写入值不能为空...");
-                return;
-            }
-
-            double wValue = double.Parse(obj.WriteValue) / obj.Rate;              //对值的倍率做处理
-            string unCrcFrame = "";
-            dynamic data = "";
-            //根据设定的类型转换值
-            switch (obj.Type)
-            {
-                case DataType.uShort:
-                    data = (ushort)wValue;
-                    break;
-                case DataType.Short:
-                    data = (short)wValue;
-                    break;
-                case DataType.uInt:
-                    data = (uint)wValue;
-                    break;
-                case DataType.Int:
-                    data = (int)wValue;
-                    break;
-                case DataType.uLong:
-                    data = (ulong)wValue;
-                    break;
-                case DataType.Long:
-                    data = (long)wValue;
-                    break;
-                case DataType.Float:
-                    data = (float)wValue;
-                    break;
-                case DataType.Double:
-                    data = (double)wValue;
-                    break;
-                case DataType.Hex:
-                    data = $"{obj.WriteValue:X4}";
-                    break;
-                default:
-                    break;
-            }
-
-            //若是uShort或short则使用0x06功能码(有些设备并不支持0x10功能码) 其他使用0x10功能码
-            if (obj.Type.Equals(DataType.uShort) || obj.Type.Equals(DataType.Short) || obj.Type.Equals(DataType.Hex))
-            {
-                //0x06写入帧
-                unCrcFrame = $"{DataMonitorConfig.SlaveId:X2} 06 {obj.Addr:X4} {data:X4}";//未校验的数据帧
-            }
-            else
-            {
-                string jcqSl = (obj.DataTypeByteLength / 2).ToString("X4");     //寄存器数量
-                string quantity = (obj.DataTypeByteLength).ToString("X2");      //字节数量
-                //0x10写入帧
-                string dataStr = BitConverter.ToString(ModbusRtuData.ByteOrder(BitConverter.GetBytes(data), obj.ModbusByteOrder)).Replace("-", "");
-                unCrcFrame = $"{DataMonitorConfig.SlaveId:X2} 10 {obj.Addr:X4} {jcqSl} {quantity} {dataStr}";//未校验的数据帧
-            }
-
-            ShowMessage("数据写入...");
-            PublishFrameEnqueue(GetModbusCrcedStr(unCrcFrame), 1000);
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 开关数据过滤器
-    /// </summary>
-    public void OperateFilter()
-    {
-        try
-        {
-            //验证过滤后是否有值 没有值则提示无法过滤
-            if (!DataMonitorConfig.IsFilter)
-            {
-                var y = DataMonitorConfig.ModbusRtuDatas.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.Name));
-                if (y == null)
-                {
-                    HcGrowlExtensions.Warning("请配置数据名称再开启过滤器...", ModbusRtuView.ViewName);
-                    return;
-                }
-            }
-
-            DataMonitorConfig.IsFilter = !DataMonitorConfig.IsFilter;
-            RefreshModbusRtuDataDataView();
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 导出配置文件
-    /// </summary>
-    public void ExportConfig()
-    {
-        try
-        {
-            //配置文件目录
-            string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
-            Wu.Utils.IoUtil.Exists(dict);
-            Microsoft.Win32.SaveFileDialog sfd = new Microsoft.Win32.SaveFileDialog()
-            {
-                Title = "请选择导出配置文件...",                                              //对话框标题
-                Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
-                FilterIndex = 1,                                                         //默认选中的过滤器
-                FileName = "Default",                                           //默认文件名
-                DefaultExt = "jsonDMC",                                     //默认扩展名
-                InitialDirectory = dict,                //指定初始的目录
-                OverwritePrompt = true,                                                  //文件已存在警告
-                AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
-            };
-            if (sfd.ShowDialog() != true)
-                return;
-            //将当前的配置序列化为json字符串
-            var content = JsonConvert.SerializeObject(DataMonitorConfig);
-            //保存文件
-            Wu.CommTool.Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
-            HcGrowlExtensions.Success("导出数据监控配置完成", nameof(ModbusRtuView));
-            RefreshQuickImportList();//更新列表
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning("导出数据监控配置失败", nameof(ModbusRtuView));
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 导入配置文件
-    /// </summary>
-    public void ImportConfig()
-    {
-        try
-        {
-            //配置文件目录
-            string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");
-            Wu.Utils.IoUtil.Exists(dict);
-            //选中配置文件
-            OpenFileDialog dlg = new()
-            {
-                Title = "请选择导入配置文件...",                                              //对话框标题
-                Filter = "json files(*.jsonDMC)|*.jsonDMC",    //文件格式过滤器
-                FilterIndex = 1,                                                         //默认选中的过滤器
-                InitialDirectory = dict
-            };
-
-            if (dlg.ShowDialog() != true)
-                return;
-            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
-            DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
-            RefreshModbusRtuDataDataView();//更新数据视图
-            HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入完成", nameof(ModbusRtuView));
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning("自动应答配置导入失败", nameof(ModbusRtuView));
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 快速导入配置文件
-    /// </summary>
-    /// <param name="obj"></param>
-    public void QuickImportConfig(ConfigFile obj)
-    {
-        try
-        {
-            var xx = Core.Common.Utils.ReadJsonFile(obj.FullName);
-            DataMonitorConfig = JsonConvert.DeserializeObject<DataMonitorConfig>(xx)!;
-            if (DataMonitorConfig == null)
-            {
-                ShowErrorMessage("读取配置文件失败");
-                return;
-            }
-            RefreshModbusRtuDataDataView();//更新数据视图
-            HcGrowlExtensions.Success($"配置\"{Path.GetFileNameWithoutExtension(obj.FullName)}\"导入完成", nameof(ModbusRtuView));
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning("自动应答配置导入失败", nameof(ModbusRtuView));
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 更新快速导入配置列表
-    /// </summary>
-    public void RefreshQuickImportList()
-    {
-        try
-        {
-            DirectoryInfo Folder = new DirectoryInfo(ModbusRtuConfigDict);
-            //var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals(".jsondmc"));
-            var a = Folder.GetFiles().Select(item => new ConfigFile(item));
-            ConfigFiles.Clear();
-            foreach (var item in a)
-            {
-                ConfigFiles.Add(item);
-            }
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage("读取配置文件夹异常: " + ex.Message);
-        }
     }
     #endregion
 
@@ -1932,7 +1169,6 @@ public partial class UartModel : ObservableObject
             //保存文件
             Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
             HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(sfd.FileName)}\"导出成功", ModbusRtuView.ViewName);
-            RefreshQuickImportList();//更新列表
         }
         catch (Exception ex)
         {
@@ -1964,7 +1200,6 @@ public partial class UartModel : ObservableObject
                 return;
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
-            RefreshModbusRtuDataDataView();//更新数据视图
             HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", ModbusRtuView.ViewName);
         }
         catch (Exception ex)

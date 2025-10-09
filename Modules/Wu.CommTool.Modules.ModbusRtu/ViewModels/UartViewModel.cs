@@ -16,8 +16,8 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        //更新串口列表
-        UartModel.GetComPorts();
+        
+        UartModel.GetComPorts();//更新串口列表
     }
 
     /// <summary>
@@ -44,11 +44,9 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
     [ObservableProperty] object currentDto = new();
 
-
     [ObservableProperty] UartModel uartModel = new();
 
     [ObservableProperty] OpenDrawers openDrawers = new();
-
 
     #endregion **************************************** 属性 ****************************************
 
