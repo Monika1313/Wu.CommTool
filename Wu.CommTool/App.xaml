@@ -1,20 +1,22 @@
-﻿<prism:PrismApplication x:Class="Wu.CommTool.App"
-                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                        xmlns:local="clr-namespace:Wu.CommTool"
-                        xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-                        xmlns:mtcp="Wu.CommTool.Modules.ModbusTcp"
-                        xmlns:prism="http://prismlibrary.com/"
-                        ShutdownMode="OnMainWindowClose">
+﻿<prism:PrismApplication
+    x:Class="Wu.CommTool.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:Wu.CommTool"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mtcp="Wu.CommTool.Modules.ModbusTcp"
+    xmlns:prism="http://prismlibrary.com/"
+    ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <!--  MaterialDesign  -->
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
-                <md:BundledTheme BaseTheme="Light"
-                                 ColorAdjustment="{md:ColorAdjustment}"
-                                 PrimaryColor="Indigo"
-                                 SecondaryColor="Lime" />
+                <md:BundledTheme
+                    BaseTheme="Light"
+                    ColorAdjustment="{md:ColorAdjustment}"
+                    PrimaryColor="Indigo"
+                    SecondaryColor="Lime" />
                 <!--  HandyControl  -->
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/Theme.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/HandyControl;component/Themes/SkinDefault.xaml" />
@@ -67,6 +69,7 @@
                     <DataTrigger Binding="{Binding Type}" Value="1">
                         <Setter Property="Background" Value="{StaticResource Green_Background}" />
                         <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                        <!--<Setter Property="TextElement.Foreground" Value="{StaticResource Green_Foreground}" />-->
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="2">
                         <Setter Property="Background" Value="{StaticResource Orange_Background}" />
@@ -269,10 +272,12 @@
                     <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.TransactionId}">
                         <Setter Property="Background" Value="{StaticResource Purple_Background}" />
                         <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
+                        <Setter Property="TextElement.Foreground" Value="{StaticResource Purple_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.ProtocolId}">
                         <Setter Property="Background" Value="{StaticResource Pink_Background}" />
                         <Setter Property="BorderBrush" Value="{StaticResource Pink_BorderBrush}" />
+                        <Setter Property="TextElement.Foreground" Value="{StaticResource Pink_Foreground}" />
                     </DataTrigger>
                     <DataTrigger Binding="{Binding Type}" Value="{x:Static mtcp:MtcpMessageType.PduLength}">
                         <Setter Property="Background" Value="{StaticResource Cyan_Background}" />

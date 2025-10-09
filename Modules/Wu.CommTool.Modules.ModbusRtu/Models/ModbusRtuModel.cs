@@ -47,132 +47,111 @@ public partial class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MessageData> messages = [];
+    [ObservableProperty] ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 暂停
     /// </summary>
-    [ObservableProperty]
-    bool isPause;
+    [ObservableProperty] bool isPause;
 
     /// <summary>
     /// 串口列表
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<ComPort> comPorts = [];
+    [ObservableProperty] ObservableCollection<ComPort> comPorts = [];
 
     /// <summary>
     /// Com口配置
     /// </summary>
-    [ObservableProperty]
-    ComConfig comConfig = new();
+    [ObservableProperty] ComConfig comConfig = new();
 
     /// <summary>
     /// 接收的数据总数
     /// </summary>
-    [ObservableProperty]
-    int receiveBytesCount = 0;
+    [ObservableProperty] int receiveBytesCount = 0;
 
     /// <summary>
     /// 发送的数据总数
     /// </summary>
-    [ObservableProperty]
-    int sendBytesCount = 0;
+    [ObservableProperty] int sendBytesCount = 0;
 
     /// <summary>
     /// 字节序
     /// </summary>
-    [ObservableProperty]
-    ModbusByteOrder byteOrder = ModbusByteOrder.DCBA;
+    [ObservableProperty] ModbusByteOrder byteOrder = ModbusByteOrder.DCBA;
     #endregion
 
     #region ******************************  自定义帧模块 属性  ******************************
     /// <summary>
     /// 输入消息 用于发送
     /// </summary>
-    [ObservableProperty]
-    private string inputMessage = "01 03 0000 0001";
+    [ObservableProperty] private string inputMessage = "01 03 0000 0001";
 
     /// <summary>
     /// 自动校验模式选择 Crc校验模式
     /// </summary>
-    [ObservableProperty]
-    private CrcMode crcMode = CrcMode.Modbus;
+    [ObservableProperty] private CrcMode crcMode = CrcMode.Modbus;
 
     /// <summary>
     /// 自定义帧的输入框
     /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<CustomFrame> customFrames = [];
+    [ObservableProperty] private ObservableCollection<CustomFrame> customFrames = [];
     #endregion
 
     #region 搜索设备模块 属性
     /// <summary>
     /// 搜索设备的状态 0=未开始搜索 1=搜索中 2=搜索结束/搜索中止
     /// </summary>
-    [ObservableProperty]
-    int searchDeviceState = 0;
+    [ObservableProperty] int searchDeviceState = 0;
 
     /// <summary>
     /// 当前搜索的ModbusRtu设备
     /// </summary>
-    [ObservableProperty]
-    ModbusRtuDevice currentDevice = new();
+    [ObservableProperty] ModbusRtuDevice currentDevice = new();
 
     /// <summary>
     /// 搜索到的ModbusRtu设备
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<ModbusRtuDevice> modbusRtuDevices = [];
+    [ObservableProperty] ObservableCollection<ModbusRtuDevice> modbusRtuDevices = [];
 
     /// <summary>
     /// 选中的波特率
     /// </summary>
-    [ObservableProperty]
-    List<BaudRate> selectedBaudRates = [];
+    [ObservableProperty] List<BaudRate> selectedBaudRates = [];
 
     ///// <summary>
     ///// 选中的校验方式
     ///// </summary>
-    [ObservableProperty]
-    List<Parity> selectedParitys = [];
+    [ObservableProperty] List<Parity> selectedParitys = [];
 
     /// <summary>
     /// 搜索使用的功能码
     /// </summary>
-    [ObservableProperty]
-    byte searchFunctionCode = 3;
+    [ObservableProperty] byte searchFunctionCode = 3;
 
     /// <summary>
     /// 搜索时读取数据的起始地址
     /// </summary>
-    [ObservableProperty]
-    int searchStartAddr = 0000;
+    [ObservableProperty] int searchStartAddr = 0000;
 
     /// <summary>
     /// 搜索时读取的数量
     /// </summary>
-    [ObservableProperty]
-    int searchReadNum = 1;
+    [ObservableProperty] int searchReadNum = 1;
 
     /// <summary>
     /// 搜索 起始从站ID
     /// </summary>
-    [ObservableProperty]
-    byte searchStartSlaveId = 1;
+    [ObservableProperty] byte searchStartSlaveId = 1;
 
     /// <summary>
     /// 搜索 结束从站ID
     /// </summary>
-    [ObservableProperty]
-    byte searchEndSlaveId = 247;
+    [ObservableProperty] byte searchEndSlaveId = 247;
 
     /// <summary>
     /// 搜索到的设备总数
     /// </summary>
-    [ObservableProperty]
-    int foundCount = 0;
+    [ObservableProperty] int foundCount = 0;
     #endregion
 
 
@@ -202,14 +181,12 @@ public partial class ModbusRtuModel : ObservableObject
     /// <summary>
     /// 是否开启自动应答
     /// </summary>
-    [ObservableProperty]
-    private bool isAutoResponse = false;
+    [ObservableProperty] private bool isAutoResponse = false;
 
     /// <summary>
     /// ModbusRtu自动应答
     /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<ModbusRtuAutoResponseData> mosbusRtuAutoResponseDatas = [];
+    [ObservableProperty] private ObservableCollection<ModbusRtuAutoResponseData> mosbusRtuAutoResponseDatas = [];
     #endregion
 
 

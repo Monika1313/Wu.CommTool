@@ -13,25 +13,17 @@ public partial class MrtuData : ObservableObject
     /// <summary>
     /// 名称
     /// </summary>
-    [ObservableProperty]
-    private string name = string.Empty;
+    [ObservableProperty] private string name = string.Empty;
 
     /// <summary>
     /// 寄存器类型
     /// </summary>
-    [ObservableProperty]
-    RegisterType registerType = RegisterType.Holding;
+    [ObservableProperty] RegisterType registerType = RegisterType.Holding;
 
     /// <summary>
     /// 寄存器地址 起始地址 单位:word
     /// </summary>
-    [ObservableProperty]
-    private ushort registerAddr;
-
-    ///// 寄存器地址16进制
-    ///// </summary>
-    //[ObservableProperty]
-    //private ushort registerAddrHex;
+    [ObservableProperty] private ushort registerAddr;
 
     /// <summary>
     /// 寄存器地址 最后一个地址 单位:word
@@ -46,8 +38,7 @@ public partial class MrtuData : ObservableObject
     /// <summary>
     /// 转换后的显示值
     /// </summary>
-    [ObservableProperty]
-    double value;
+    [ObservableProperty] double value;
 
     /// <summary>
     /// 数据类型
@@ -68,19 +59,21 @@ public partial class MrtuData : ObservableObject
     /// <summary>
     /// 倍率
     /// </summary>
-    [ObservableProperty]
-    private double rate = 1;
+    [ObservableProperty] private double rate = 1;
 
     /// <summary>
     /// 单位
     /// </summary>
-    [ObservableProperty]
-    private string unit = string.Empty;
+    [ObservableProperty] private string unit = string.Empty;
 
     /// <summary>
     /// 待写入的值
     /// </summary>
-    [ObservableProperty]
-    private string writeValue;
+    [ObservableProperty] private string writeValue;
+
+    ///// 寄存器地址16进制
+    ///// </summary>
+    //[ObservableProperty]
+    //private ushort registerAddrHex;
 
 }

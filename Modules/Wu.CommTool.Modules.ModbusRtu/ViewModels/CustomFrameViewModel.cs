@@ -28,17 +28,14 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
 
 
     #region **************************************** 属性 ****************************************
-    [ObservableProperty]
-    object currentDto = new();
+    [ObservableProperty] object currentDto = new();
 
-    [ObservableProperty]
-    ModbusRtuModel modbusRtuModel;
+    [ObservableProperty] ModbusRtuModel modbusRtuModel;
 
     /// <summary>
     /// 抽屉
     /// </summary>
-    [ObservableProperty]
-    OpenDrawers _OpenDrawers = new();
+    [ObservableProperty] OpenDrawers _OpenDrawers = new();
     #endregion
 
 
