@@ -71,7 +71,19 @@ public partial class UartModel : ObservableObject
     /// 字节序
     /// </summary>
     [ObservableProperty] ModbusByteOrder byteOrder = ModbusByteOrder.DCBA;
+
+    /// <summary>
+    /// 串口接收数据格式
+    /// </summary>
+    [ObservableProperty] UartDataFormat receiveDataFormat = UartDataFormat.Hex;
+
+    /// <summary>
+    /// 串口发送数据格式
+    /// </summary>
+    [ObservableProperty] UartDataFormat sendDataFormat = UartDataFormat.Hex;
     #endregion
+
+
 
     #region ******************************  自定义帧模块 属性  ******************************
     /// <summary>
@@ -481,6 +493,37 @@ public partial class UartModel : ObservableObject
                 return false;
             }
 
+           
+            if (SendDataFormat == UartDataFormat.Ascii)
+            {
+                if (SerialPort.IsOpen)
+                {
+                    try
+                    {
+                        if (!IsPause)
+                            ShowSendMessage(message);
+
+                        byte[] sendBytes = Encoding.ASCII.GetBytes(message.RemoveSpace()); //将字符串转换为字节数组
+                        SerialPort.Write(sendBytes, 0, sendBytes.Length);     //发送数据
+                        SendBytesCount += sendBytes.Length;                    //统计发送数据总数
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessage(ex.Message);
+                    }
+                }
+                else
+                {
+                    ShowErrorMessage("串口未打开,发送失败!");
+                    CloseCom();
+                }
+                return false;
+            }
+
+            //若是Hex则执行以下内容
+
             //验证数据字符必须符合16进制
             Regex regex = new(@"^[0-9 a-f A-F -]*$");
             if (!regex.IsMatch(message))
@@ -505,7 +548,8 @@ public partial class UartModel : ObservableObject
                 try
                 {
                     if (!IsPause)
-                        ShowSendMessage(message);
+                        ShowSendMessage(message.InsertFormat(4, " "));
+
                     SerialPort.Write(data, 0, data.Length);     //发送数据
                     SendBytesCount += data.Length;                    //统计发送数据总数
 
@@ -757,9 +801,8 @@ public partial class UartModel : ObservableObject
                 return;
             }
 
-            msg = BitConverter.ToString(frameCache.ToArray()).Replace('-', ' ');
-
-            ReceiveFrameQueue.Enqueue(msg); //接收到的消息入队
+            msg = BitConverter.ToString(frameCache.ToArray()).Replace("-", string.Empty);
+            ReceiveFrameQueue.Enqueue(msg.InsertFormat(4," ")); //接收到的消息入队
             ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
             WaitUartReceived.Set();         //置位数据接收完成标志
         }
@@ -796,6 +839,10 @@ public partial class UartModel : ObservableObject
     /// <returns></returns>
     public string GetCrcedStrWithSelect(string msg)
     {
+        if (CrcMode == CrcMode.None)
+        {
+            return msg;
+        }
         string reMsg = msg.Replace("-", string.Empty).Replace(" ", string.Empty);
         if (reMsg.Length % 2 == 1)
         {
@@ -826,7 +873,7 @@ public partial class UartModel : ObservableObject
                 break;
         }
         //合并数组
-        List<byte> list = new List<byte>();
+        List<byte> list = new();
         list.AddRange(msg2);
         list.AddRange(crc);
         var data = BitConverter.ToString(list.ToArray()).Replace("-", "");
@@ -840,8 +887,6 @@ public partial class UartModel : ObservableObject
     {
         while (true)
         {
-            //System.Diagnostics.Stopwatch oTime = new System.Diagnostics.Stopwatch();   //定义一个计时对象  
-            //oTime.Start();                         //开始计时 
             try
             {
                 //判断队列是否不空 若为空则等待
@@ -867,8 +912,6 @@ public partial class UartModel : ObservableObject
             {
                 ComConfig.IsSending = false;
             }
-            //oTime.Stop();                          //结束计时
-            //ShowMessage($"{oTime.ElapsedMilliseconds} ms");
         }
     }
 
@@ -896,60 +939,31 @@ public partial class UartModel : ObservableObject
                 {
                     continue;
                 }
-                //实例化ModbusRtu帧
-                var mFrame = new ModbusRtuFrame(frame.GetBytes());
 
-                //对接收的消息直接进行crc校验
-                var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
+                var receiveStr = frame.RemoveSpace().GetBytes();
 
                 #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
                 if (IsPause)
                 {
                     //若暂停更新显示则不输出
                 }
-                else if (mFrame.Type.Equals(ModbusRtuFrameType.校验失败))
-                {
-                    ShowReceiveMessage(frame);
-
-                    //todo 临时添加 自由口协议自动应答, 该协议不是modbus 校验不会通过
-                    #region 自动应答
-                    if (IsAutoResponse)
-                    {
-                        //验证匹配哪一条规则
-                        var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
-                        if (xx != null)
-                        {
-                            ShowMessage($"自动应答匹配: {xx.Name}");
-                            PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
-                        }
-                    }
-                    #endregion
-                    continue;
-                }
-                //校验成功
+                //根据编码显示不同的内容
                 else
                 {
-                    ShowReceiveMessage(frame);
-                }
-                #endregion
-
-
-                #region 自动应答
-                if (IsAutoResponse)
-                {
-                    //验证匹配哪一条规则
-                    var xx = MosbusRtuAutoResponseDatas.FindFirst(x => x.IsEnable && x.MateTemplate.ToLower().Replace(" ", "").Equals(frame.ToLower().Replace(" ", "")));
-                    if (xx != null)
+                    switch (ReceiveDataFormat)
                     {
-                        ShowMessage($"自动应答匹配: {xx.Name}");
-                        PublishFrameEnqueue(xx.ResponseTemplate);      //自动应答
+                        case UartDataFormat.Ascii:
+                            ShowReceiveMessage(System.Text.Encoding.ASCII.GetString(receiveStr));
+                            break;
+                        case UartDataFormat.Hex:
+                        default:
+                            ShowReceiveMessage(frame.InsertFormat(4, " "));
+                            //ShowReceiveMessage(frame);
+                            break;
                     }
+                    
                 }
                 #endregion
-
-                List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
-                int slaveId = frameList[0];                 //从站地址
-                int func = frameList[1];                    //功能码
             }
             catch (Exception ex)
             {
