@@ -889,12 +889,13 @@ public partial class UartModel : ObservableObject
                 {
                     continue;
                 }
+                frame = frame.RemoveSpace();
                 if (string.IsNullOrWhiteSpace(frame))
                 {
                     continue;
                 }
-
-                var receiveStr = frame.RemoveSpace().GetBytes();
+                
+                var receiveStr = frame.GetBytes();
 
                 #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
                 if (!IsPause)
