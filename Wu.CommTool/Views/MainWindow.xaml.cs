@@ -27,6 +27,7 @@ public partial class MainWindow : Window
         {
             WindowState = WindowState.Minimized;
         };
+
         //最大化
         btnMax.Click += (s, e) =>
         {

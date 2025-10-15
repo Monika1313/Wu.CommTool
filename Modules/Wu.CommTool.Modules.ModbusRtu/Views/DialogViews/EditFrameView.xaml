@@ -1,41 +1,45 @@
-﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusRtu.Views.DialogViews.EditFrameView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:ddvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels"
-             xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views.DialogViews"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:wu="https://github.com/Monika1313/Wu"
-             d:DataContext="{x:Static ddvm:EditFrameDesignViewModel.Instance}"
-             d:DesignHeight="300"
-             d:DesignWidth="400"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="Wu.CommTool.Modules.ModbusRtu.Views.DialogViews.EditFrameView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:ddvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels.DialogDesignViewModels"
+    xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views.DialogViews"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:wu="https://github.com/Monika1313/Wu"
+    d:DataContext="{x:Static ddvm:EditFrameDesignViewModel.Instance}"
+    d:DesignHeight="300"
+    d:DesignWidth="400"
+    mc:Ignorable="d">
     <UserControl.InputBindings>
         <KeyBinding Key="Esc" Command="{Binding CancelCommand}" />
     </UserControl.InputBindings>
     <UserControl.Resources>
-        <Style x:Key="column0"
-               BasedOn="{StaticResource TextBlockBaseStyle}"
-               TargetType="TextBlock">
+        <Style
+            x:Key="column0"
+            BasedOn="{StaticResource TextBlockBaseStyle}"
+            TargetType="TextBlock">
             <Setter Property="Margin" Value="4" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="MinWidth" Value="50" />
             <Setter Property="Grid.Column" Value="0" />
         </Style>
-        <Style x:Key="column1"
-               BasedOn="{StaticResource TextBoxBaseStyle}"
-               TargetType="TextBox">
+        <Style
+            x:Key="column1"
+            BasedOn="{StaticResource TextBoxBaseStyle}"
+            TargetType="TextBox">
             <Setter Property="Margin" Value="4" />
             <Setter Property="MinWidth" Value="50" />
             <Setter Property="Grid.Column" Value="1" />
         </Style>
-        <Style x:Key="column2"
-               BasedOn="{StaticResource TextBoxBaseStyle}"
-               TargetType="TextBox">
+        <Style
+            x:Key="column2"
+            BasedOn="{StaticResource TextBoxBaseStyle}"
+            TargetType="TextBox">
             <Setter Property="Margin" Value="4" />
             <Setter Property="MinWidth" Value="50" />
             <Setter Property="Grid.Column" Value="2" />
@@ -44,31 +48,35 @@
     <md:DialogHost Identifier="{x:Static local:EditFrameView.ViewName}">
         <md:DrawerHost>
             <DockPanel>
-                <DockPanel VerticalAlignment="Center"
-                           DockPanel.Dock="Top"
-                           LastChildFill="False">
-                    <TextBlock Margin="10"
-                               DockPanel.Dock="Left"
-                               FontSize="16"
-                               Text="帧生成器" />
+                <DockPanel
+                    VerticalAlignment="Center"
+                    DockPanel.Dock="Top"
+                    LastChildFill="False">
+                    <TextBlock
+                        Margin="10"
+                        DockPanel.Dock="Left"
+                        FontSize="16"
+                        Text="帧生成器" />
 
-                    <Button Height="30"
-                            Margin="10,0"
-                            Padding="10,5"
-                            Command="{Binding CancelCommand}"
-                            Content="✕"
-                            Cursor="Hand"
-                            DockPanel.Dock="Right"
-                            Style="{StaticResource MaterialDesignOutlinedButton}" />
+                    <Button
+                        Height="30"
+                        Margin="10,0"
+                        Padding="10,5"
+                        Command="{Binding CancelCommand}"
+                        Content="✕"
+                        Cursor="Hand"
+                        DockPanel.Dock="Right"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
                 </DockPanel>
 
-                <ComboBox hc:InfoElement.Necessary="True"
-                          hc:InfoElement.Title="帧类型"
-                          hc:InfoElement.TitleWidth="60"
-                          DockPanel.Dock="Top"
-                          ItemsSource="{Binding ModbusRtuFrameTypes}"
-                          SelectedValue="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                          Style="{StaticResource FormComboBox}">
+                <ComboBox
+                    hc:InfoElement.Necessary="True"
+                    hc:InfoElement.Title="帧类型"
+                    hc:InfoElement.TitleWidth="60"
+                    DockPanel.Dock="Top"
+                    ItemsSource="{Binding ModbusRtuFrameTypes}"
+                    SelectedValue="{Binding ModbusRtuFrameCreator.ModbusRtuFrameType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    Style="{StaticResource FormComboBox}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="SelectionChanged">
                             <i:InvokeCommandAction Command="{Binding ExecuteCommand}" CommandParameter="修改生成帧类型" />
@@ -90,9 +98,10 @@
                     </Grid.RowDefinitions>
 
                     <TextBlock Style="{StaticResource column0}" Text="从站ID" />
-                    <TextBlock Grid.Row="1"
-                               Style="{StaticResource column0}"
-                               Text="功能码" />
+                    <TextBlock
+                        Grid.Row="1"
+                        Style="{StaticResource column0}"
+                        Text="功能码" />
                     <TextBlock Grid.Row="2">
                         <TextBlock.Style>
                             <Style BasedOn="{StaticResource column0}" TargetType="TextBlock">
@@ -136,51 +145,62 @@
                         </TextBlock.Style>
                     </TextBlock>
 
-                    <TextBox x:Name="textbox"
-                             Grid.Row="0"
-                             Style="{StaticResource column1}"
-                             Text="{Binding ModbusRtuFrameCreator.SlaveId, StringFormat={}{0:00}, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox Grid.Row="0"
-                             Style="{StaticResource column2}"
-                             Text="{Binding ModbusRtuFrameCreator.SlaveIdHex, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        x:Name="textbox"
+                        Grid.Row="0"
+                        Style="{StaticResource column1}"
+                        Text="{Binding ModbusRtuFrameCreator.SlaveId, StringFormat={}{0:00}, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="0"
+                        Style="{StaticResource column2}"
+                        Text="{Binding ModbusRtuFrameCreator.SlaveIdHex, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox Grid.Row="1"
-                             IsReadOnly="True"
-                             Style="{StaticResource column1}"
-                             Text="{Binding ModbusRtuFrameCreator.Function, StringFormat={}{0:00}}" />
-                    <TextBox Grid.Row="1"
-                             IsReadOnly="True"
-                             Style="{StaticResource column2}"
-                             Text="{Binding ModbusRtuFrameCreator.Function, StringFormat='X2'}" />
+                    <TextBox
+                        Grid.Row="1"
+                        IsReadOnly="True"
+                        Style="{StaticResource column1}"
+                        Text="{Binding ModbusRtuFrameCreator.Function, StringFormat={}{0:00}}" />
+                    <TextBox
+                        Grid.Row="1"
+                        IsReadOnly="True"
+                        Style="{StaticResource column2}"
+                        Text="{Binding ModbusRtuFrameCreator.Function, StringFormat='X2'}" />
 
-                    <TextBox Grid.Row="2"
-                             Style="{StaticResource column1}"
-                             Text="{Binding ModbusRtuFrameCreator.StartAddr, StringFormat={}{0:0000}, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox Grid.Row="2"
-                             Style="{StaticResource column2}"
-                             Text="{Binding ModbusRtuFrameCreator.StartAddrHex, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Style="{StaticResource column1}"
+                        Text="{Binding ModbusRtuFrameCreator.StartAddr, StringFormat={}{0:0000}, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="2"
+                        Style="{StaticResource column2}"
+                        Text="{Binding ModbusRtuFrameCreator.StartAddrHex, UpdateSourceTrigger=PropertyChanged}" />
 
-                    <TextBox Grid.Row="3"
-                             Style="{StaticResource column1}"
-                             Text="{Binding ModbusRtuFrameCreator.RegisterNum, StringFormat={}{0:0000}, UpdateSourceTrigger=PropertyChanged}" />
-                    <TextBox Grid.Row="3"
-                             Style="{StaticResource column2}"
-                             Text="{Binding ModbusRtuFrameCreator.RegisterNumHex, StringFormat='X4', UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="3"
+                        Style="{StaticResource column1}"
+                        Text="{Binding ModbusRtuFrameCreator.RegisterNum, StringFormat={}{0:0000}, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBox
+                        Grid.Row="3"
+                        Style="{StaticResource column2}"
+                        Text="{Binding ModbusRtuFrameCreator.RegisterNumHex, StringFormat='X4', UpdateSourceTrigger=PropertyChanged}" />
                 </Grid>
 
-                <ContentControl Margin="4"
-                                DockPanel.Dock="Top"
-                                Style="{StaticResource Effect2Control}">
+                <ContentControl
+                    Margin="4"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource Effect2Control}">
                     <TextBox IsReadOnly="True" Text="{Binding ModbusRtuFrameCreator.FrameStr, Mode=OneWay}" />
                 </ContentControl>
-                <StackPanel Margin="10"
-                            HorizontalAlignment="Center"
-                            DockPanel.Dock="Bottom"
-                            Orientation="Horizontal">
-                    <Button Margin="0,0,10,0"
-                            Command="{Binding CancelCommand}"
-                            Content="取消"
-                            Style="{StaticResource MaterialDesignOutlinedButton}" />
+                <StackPanel
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+                    <Button
+                        Margin="0,0,10,0"
+                        Command="{Binding CancelCommand}"
+                        Content="取消"
+                        Style="{StaticResource MaterialDesignOutlinedButton}" />
                     <Button Command="{Binding SaveCommand}" Content="确定" />
                 </StackPanel>
             </DockPanel>

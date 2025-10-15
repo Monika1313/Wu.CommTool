@@ -48,3 +48,8 @@ global using Microsoft.Win32;
 global using System.Diagnostics;
 global using Wu.CommTool.Core.Extensions;
 global using Wu.CommTool.Modules.ModbusRtu.Models;
+
+global using Window = System.Windows.Window;
+global using HandyControl.Controls;
+
+

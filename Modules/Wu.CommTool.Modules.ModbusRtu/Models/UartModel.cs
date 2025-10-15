@@ -1,8 +1,9 @@
 ﻿using HandyControl.Controls;
+using MaterialDesignThemes.Wpf;
 using System.Collections.Concurrent;
 using System.IO.Ports;
 using System.Text;
-using System.Windows.Forms;
+using Wu.CommTool.Modules.ModbusRtu.Utils;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
@@ -100,22 +101,6 @@ public partial class UartModel : ObservableObject
     /// 自定义帧的输入框
     /// </summary>
     [ObservableProperty] private ObservableCollection<UartCustomFrame> customFrames;
-    #endregion
-
-
-
-    #region 自动应答模块 属性
-    /// <summary>
-    /// 是否开启自动应答
-    /// </summary>
-    [ObservableProperty]
-    private bool isAutoResponse = false;
-
-    /// <summary>
-    /// ModbusRtu自动应答
-    /// </summary>
-    [ObservableProperty]
-    private ObservableCollection<ModbusRtuAutoResponseData> mosbusRtuAutoResponseDatas = [];
     #endregion
 
 
@@ -354,38 +339,6 @@ public partial class UartModel : ObservableObject
     #region******************************  页面消息  ******************************
     public void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
-    /// <summary>
-    /// 页面展示接收数据消息
-    /// </summary>
-    /// <param name="frame"></param>
-    //public void ShowReceiveMessage(ModbusRtuFrame frame)
-    //{
-    //    try
-    //    {
-    //        void action()
-    //        {
-    //            var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
-    //            Messages.Add(msg);
-    //            log.Info($"接收:{frame}");
-
-    //            //if (Messages.Count > 9999)
-    //            //{
-    //            //    for (int i = 0; i < 100; i++)
-    //            //    {
-    //            //        Messages.RemoveAt(0);
-    //            //    }
-    //            //}
-
-    //            while (Messages.Count > 200)
-    //            {
-    //                Messages.RemoveAt(0);
-    //            }
-    //        }
-    //        Wu.Wpf.Utils.ExecuteFunBeginInvoke(action);
-    //    }
-    //    catch (Exception) { }
-    //}
-
     protected void ShowReceiveMessage(string message)
     {
         try
@@ -493,7 +446,7 @@ public partial class UartModel : ObservableObject
                 return false;
             }
 
-           
+
             if (SendDataFormat == UartDataFormat.Ascii)
             {
                 if (SerialPort.IsOpen)
@@ -548,7 +501,7 @@ public partial class UartModel : ObservableObject
                 try
                 {
                     if (!IsPause)
-                        ShowSendMessage(message.InsertFormat(4, " "));
+                        ShowSendMessage(message.RemoveSpace().InsertFormat(2, " "));
 
                     SerialPort.Write(data, 0, data.Length);     //发送数据
                     SendBytesCount += data.Length;                    //统计发送数据总数
@@ -801,8 +754,9 @@ public partial class UartModel : ObservableObject
                 return;
             }
 
-            msg = BitConverter.ToString(frameCache.ToArray()).Replace("-", string.Empty);
-            ReceiveFrameQueue.Enqueue(msg.InsertFormat(4," ")); //接收到的消息入队
+            msg = UartUtils.Bytes2String(frameCache);
+
+            ReceiveFrameQueue.Enqueue(msg); //接收到的消息入队
             ReceiveBytesCount += frameCache.Count;         //计算总接收数据量
             WaitUartReceived.Set();         //置位数据接收完成标志
         }
@@ -943,13 +897,9 @@ public partial class UartModel : ObservableObject
                 var receiveStr = frame.RemoveSpace().GetBytes();
 
                 #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
-                if (IsPause)
+                if (!IsPause)
                 {
-                    //若暂停更新显示则不输出
-                }
-                //根据编码显示不同的内容
-                else
-                {
+                    //根据编码显示不同的内容
                     switch (ReceiveDataFormat)
                     {
                         case UartDataFormat.Ascii:
@@ -957,11 +907,10 @@ public partial class UartModel : ObservableObject
                             break;
                         case UartDataFormat.Hex:
                         default:
-                            ShowReceiveMessage(frame.InsertFormat(4, " "));
+                            ShowReceiveMessage(frame.InsertFormat(2, " "));
                             //ShowReceiveMessage(frame);
                             break;
                     }
-                    
                 }
                 #endregion
             }
@@ -1047,148 +996,62 @@ public partial class UartModel : ObservableObject
     [RelayCommand]
     public void AddNewCustomFrame()
     {
+        CustomFrames.Add(new UartCustomFrame(this, ""));
+    }
 
+    /// <summary>
+    /// 自定义帧 删除行
+    /// </summary>
+    /// <param name="frame"></param>
+    [RelayCommand]
+    private void DeleteCustomFrame(UartCustomFrame frame)
+    {
+        if (CustomFrames.Count > 1)
+        {
+            CustomFrames.Remove(frame);
+        }
+        else
+        {
+            ShowErrorMessage("不能删除最后一行...");
+        }
     }
     #endregion
 
     #region ******************************  自动应答 方法  ******************************
     /// <summary>
-    /// 打开自动响应编辑界面
-    /// </summary>
-    /// <param name="obj"></param>
-    public void OpenMosbusRtuAutoResponseDataEditView(ModbusRtuAutoResponseData obj)
-    {
-        //try
-        //{
-        //    if (obj == null)
-        //        return;
-        //    //添加参数
-        //    DialogParameters param = new();
-        //    if (obj != null)
-        //        param.Add("Value", obj);
-        //    var dialogResult = await dialogHost.ShowDialog(nameof(ModbusRtuAutoResponseDataEditView), param, nameof(ModbusRtuView));
-
-        //    //TODO 将修改后的内容写入
-        //    if (dialogResult.Result == ButtonResult.OK)
-        //    {
-        //        try
-        //        {
-        //            //UpdateLoading(true);
-        //            //从结果中获取数据
-        //            var resultDto = dialogResult.Parameters.GetValue<ModbusRtuAutoResponseData>("Value");
-        //            if (resultDto == null)
-        //            {
-        //                return;
-        //            }
-        //            obj.Name = resultDto.Name;
-        //            obj.MateTemplate = resultDto.MateTemplate;
-        //            obj.ResponseTemplate = resultDto.ResponseTemplate;
-
-        //            //aggregator.SendMessage($"{updateResult.Result.InformationNum}已修改完成");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            aggregator.SendMessage($"{ex.Message}");
-        //        }
-        //        finally
-        //        {
-        //            //UpdateLoading(false);
-        //        }
-        //    }
-        //    else if (dialogResult.Result == ButtonResult.Abort)
-        //    {
-        //        //Delete(model);
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
-        //    aggregator.SendMessage(ex.Message);
-        //}
-    }
-
-    /// <summary>
-    /// 启用自动应答
-    /// </summary>
-    public void AutoResponseOn()
-    {
-        try
-        {
-            IsAutoResponse = true;
-            ShowMessage("启用自动应答...");
-            HcGrowlExtensions.Success("启用自动应答...", nameof(ModbusRtuView));
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 关闭自动应答
-    /// </summary>
-    public void AutoResponseOff()
-    {
-        try
-        {
-            IsAutoResponse = false;
-            ShowMessage("关闭自动应答...");
-            HcGrowlExtensions.Warning("关闭自动应答...", nameof(ModbusRtuView));
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
-    /// 添加新的响应
-    /// </summary>
-    public void AddMosbusRtuAutoResponseData()
-    {
-        try
-        {
-            MosbusRtuAutoResponseDatas.Add(new());
-        }
-        catch (Exception ex)
-        {
-            ShowErrorMessage(ex.Message);
-        }
-    }
-
-    /// <summary>
     /// 导出自动应答配置文件
     /// </summary>
     public void ExportAutoResponseConfig()
     {
-        try
-        {
-            //配置文件目录
-            string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
-            Wu.Utils.IoUtil.Exists(dict);
-            Microsoft.Win32.SaveFileDialog sfd = new()
-            {
-                Title = "请选择导出配置文件...",                                              //对话框标题
-                Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
-                FilterIndex = 1,                                                         //默认选中的过滤器
-                FileName = "Default",                                           //默认文件名
-                DefaultExt = "jsonARC",                                     //默认扩展名
-                InitialDirectory = dict,                //指定初始的目录
-                OverwritePrompt = true,                                                  //文件已存在警告
-                AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
-            };
-            if (sfd.ShowDialog() != true)
-                return;
-            //将当前的配置序列化为json字符串
-            var content = JsonConvert.SerializeObject(MosbusRtuAutoResponseDatas);
-            //保存文件
-            Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
-            HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(sfd.FileName)}\"导出成功", ModbusRtuView.ViewName);
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning($"自动应答配置导出失败", ModbusRtuView.ViewName);
-            ShowErrorMessage(ex.Message);
-        }
+        //try
+        //{
+        //    //配置文件目录
+        //    string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+        //    Wu.Utils.IoUtil.Exists(dict);
+        //    Microsoft.Win32.SaveFileDialog sfd = new()
+        //    {
+        //        Title = "请选择导出配置文件...",                                              //对话框标题
+        //        Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
+        //        FilterIndex = 1,                                                         //默认选中的过滤器
+        //        FileName = "Default",                                           //默认文件名
+        //        DefaultExt = "jsonARC",                                     //默认扩展名
+        //        InitialDirectory = dict,                //指定初始的目录
+        //        OverwritePrompt = true,                                                  //文件已存在警告
+        //        AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+        //    };
+        //    if (sfd.ShowDialog() != true)
+        //        return;
+        //    //将当前的配置序列化为json字符串
+        //    var content = JsonConvert.SerializeObject(MosbusRtuAutoResponseDatas);
+        //    //保存文件
+        //    Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
+        //    HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(sfd.FileName)}\"导出成功", ModbusRtuView.ViewName);
+        //}
+        //catch (Exception ex)
+        //{
+        //    HcGrowlExtensions.Warning($"自动应答配置导出失败", ModbusRtuView.ViewName);
+        //    ShowErrorMessage(ex.Message);
+        //}
     }
 
     /// <summary>
@@ -1196,31 +1059,31 @@ public partial class UartModel : ObservableObject
     /// </summary>
     public void ImportAutoResponseConfig()
     {
-        try
-        {
-            //配置文件目录
-            string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
-            Wu.Utils.IoUtil.Exists(dict);
-            //选中配置文件
-            OpenFileDialog dlg = new()
-            {
-                Title = "请选择导入自动应答配置文件...",                                              //对话框标题
-                Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
-                FilterIndex = 1,                                                         //默认选中的过滤器
-                InitialDirectory = dict
-            };
+        //try
+        //{
+        //    //配置文件目录
+        //    string dict = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");
+        //    Wu.Utils.IoUtil.Exists(dict);
+        //    //选中配置文件
+        //    OpenFileDialog dlg = new()
+        //    {
+        //        Title = "请选择导入自动应答配置文件...",                                              //对话框标题
+        //        Filter = "json files(*.jsonARC)|*.jsonARC",    //文件格式过滤器
+        //        FilterIndex = 1,                                                         //默认选中的过滤器
+        //        InitialDirectory = dict
+        //    };
 
-            if (dlg.ShowDialog() != true)
-                return;
-            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
-            MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
-            HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", ModbusRtuView.ViewName);
-        }
-        catch (Exception ex)
-        {
-            HcGrowlExtensions.Warning($"自动应答配置导入成功", ModbusRtuView.ViewName);
-            ShowErrorMessage(ex.Message);
-        }
+        //    if (dlg.ShowDialog() != true)
+        //        return;
+        //    var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
+        //    MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
+        //    HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", ModbusRtuView.ViewName);
+        //}
+        //catch (Exception ex)
+        //{
+        //    HcGrowlExtensions.Warning($"自动应答配置导入成功", ModbusRtuView.ViewName);
+        //    ShowErrorMessage(ex.Message);
+        //}
     }
     #endregion
 }

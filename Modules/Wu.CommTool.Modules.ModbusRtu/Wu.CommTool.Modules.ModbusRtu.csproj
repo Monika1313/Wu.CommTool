@@ -46,7 +46,4 @@
 	  <Resource Include="Images\Kun.png" />
 	  <Resource Include="Images\Ww.png" />
 	</ItemGroup>
-	<ItemGroup>
-	  <Folder Include="Utils\" />
-	</ItemGroup>
 </Project>

@@ -24,12 +24,10 @@ public partial class ModbusRtuMessageData : MessageData
     /// <summary>
     /// Modbus帧
     /// </summary>
-    [ObservableProperty]
-    ModbusRtuFrame _ModbusRtuFrame;
+    [ObservableProperty] ModbusRtuFrame _ModbusRtuFrame;
 
     /// <summary>
     /// 子消息
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MessageSubContent> messageSubContents = [];
+    [ObservableProperty] ObservableCollection<MessageSubContent> messageSubContents = [];
 }

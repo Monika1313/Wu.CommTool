@@ -1,9 +1,6 @@
-﻿using HandyControl.Controls;
-using Wu.Wpf.Extensions;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
-
-public partial class UartViewModel : NavigationViewModel, IDialogHostAware
+public partial class EditUartCustomnFrameViewModel : NavigationViewModel, IDialogHostAware
 {
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -12,13 +9,11 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 构造函数 ****************************************
-    public UartViewModel() { }
-    public UartViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+    public EditUartCustomnFrameViewModel() { }
+    public EditUartCustomnFrameViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
     {
         this.provider = provider;
         this.dialogHost = dialogHost;
-        
-        UartModel.GetComPorts();//更新串口列表
     }
 
     /// <summary>
@@ -35,7 +30,14 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     /// </summary>
     public void OnDialogOpened(IDialogParameters parameters)
     {
-
+        if (parameters.ContainsKey("Value"))
+        {
+            CurrentDto = parameters.GetValue<UartCustomFrame>("Value");
+        }
+        else
+        {
+            CurrentDto = new();
+        }
     }
     #endregion
 
@@ -43,14 +45,8 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     #region **************************************** 属性 ****************************************
     public string DialogHostName { get; set; }
 
-    [ObservableProperty] object currentDto = new();
-
-    [ObservableProperty] UartModel uartModel = new();
-
-    [ObservableProperty] OpenDrawers openDrawers = new();
-
+    [ObservableProperty] UartCustomFrame currentDto = new();
     #endregion **************************************** 属性 ****************************************
-
 
 
     #region **************************************** 方法 ****************************************
@@ -60,14 +56,6 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         switch (obj)
         {
             case "OpenDialogView": OpenDialogView(); break;
-            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
-            case "OpenCom":                    //打开串口
-                UartModel.OpenCom();
-                OpenDrawers.LeftDrawer = false;//关闭左侧抽屉;
-                break;
-            case "CloseCom":
-                UartModel.CloseCom();                              //关闭串口
-                break;
             default: break;
         }
     }
@@ -111,37 +99,4 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         }
     }
     #endregion
-
-    /// <summary>
-    /// 自定义帧 编辑
-    /// </summary>
-    [RelayCommand]
-    public async void EditCustomFrame(UartCustomFrame model)
-    {
-        try
-        {
-            //添加参数
-            DialogParameters param = new();
-            if (model != null)
-                param.Add("Value", model);
-
-            var dialogResult = await dialogHost.ShowDialog(nameof(EditUartCustomnFrameView), param, EditUartCustomnFrameView.ViewName);
-
-            if (dialogResult.Result == ButtonResult.OK)
-            {
-                try
-                {
-                    //从结果中获取数据
-                    var resultDto = dialogResult.Parameters.GetValue<UartCustomFrame>("Value");
-                }
-                catch (Exception ex)
-                {
-                    Growl.Error(ex.Message);
-                }
-            }
-        }
-        catch (Exception ex)
-        {
-        }
-    }
 }
