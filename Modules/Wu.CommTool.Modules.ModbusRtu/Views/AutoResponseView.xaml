@@ -1,42 +1,48 @@
-﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusRtu.Views.AutoResponseView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:core="Wu.CommTool.Core"
-             xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
-             xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
-             xmlns:wu="https://github.com/Monika1313/Wu"
-             xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
-             d:DataContext="{x:Static dvm:AutoResponseDesignViewModel.Instance}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             mc:Ignorable="d">
-    <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
-        <!--  左侧抽屉  -->
-        <md:DrawerHost.LeftDrawerContent>
-            <DockPanel Background="AliceBlue">
-                <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Margin="5"
-                                   HorizontalAlignment="Center"
-                                   FontSize="24"
-                                   Text="串口设置" />
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox Width="230"
-                                      hc:InfoElement.Placeholder="请选择串口..."
-                                      hc:InfoElement.Title="串口"
-                                      IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                      ItemsSource="{Binding ModbusRtuModel.ComPorts}"
-                                      SelectedValue="{Binding ModbusRtuModel.ComConfig.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                      Style="{StaticResource FormComboBox}" />
-                            <Button Width="30"
+﻿<UserControl
+    x:Class="Wu.CommTool.Modules.ModbusRtu.Views.AutoResponseView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:core="Wu.CommTool.Core"
+    xmlns:coreCvt="clr-namespace:Wu.CommTool.Core.Converters;assembly=Wu.CommTool.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
+    xmlns:enums="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Enums"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:models="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Models"
+    xmlns:wu="https://github.com/Monika1313/Wu"
+    xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
+    d:DataContext="{x:Static dvm:AutoResponseDesignViewModel.Instance}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+    <md:DialogHost Identifier="{x:Static local:AutoResponseView.ViewName}">
+
+        <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
+            <!--  左侧抽屉  -->
+            <md:DrawerHost.LeftDrawerContent>
+                <DockPanel Background="AliceBlue">
+                    <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock
+                                Margin="5"
+                                HorizontalAlignment="Center"
+                                FontSize="24"
+                                Text="串口设置" />
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox
+                                    Width="230"
+                                    hc:InfoElement.Placeholder="请选择串口..."
+                                    hc:InfoElement.Title="串口"
+                                    IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                    ItemsSource="{Binding ModbusRtuModel.ComPorts}"
+                                    SelectedValue="{Binding ModbusRtuModel.ComConfig.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                    Style="{StaticResource FormComboBox}" />
+                                <Button
+                                    Width="30"
                                     Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                     Margin="5"
                                     HorizontalAlignment="Left"
@@ -46,53 +52,62 @@
                                     DockPanel.Dock="Left"
                                     IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource Blue_CircleButton}" />
-                        </StackPanel>
-                        <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
-                                  hc:InfoElement.Title="波特率"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:BaudRate}}}"
-                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
+                            </StackPanel>
+                            <ComboBox
+                                hc:InfoElement.Placeholder="请选择波特率..."
+                                hc:InfoElement.Title="波特率"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:BaudRate}}}"
+                                SelectedItem="{Binding ModbusRtuModel.ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource FormComboBox}" />
 
-                        <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
-                                  hc:InfoElement.Title="校验位"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:Parity}}}"
-                                  SelectedValue="{Binding ModbusRtuModel.ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
+                            <ComboBox
+                                hc:InfoElement.Placeholder="请选择校验位..."
+                                hc:InfoElement.Title="校验位"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:Parity}}}"
+                                SelectedValue="{Binding ModbusRtuModel.ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource FormComboBox}" />
 
-                        <ComboBox hc:InfoElement.Placeholder="请选择数据位..."
-                                  hc:InfoElement.Title="数据位"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{StaticResource DataBits}"
-                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
-                        <ComboBox hc:InfoElement.Placeholder="请选择停止位..."
-                                  hc:InfoElement.Title="停止位"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:StopBits}}}"
-                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
-                        <TextBox hc:TitleElement.Title="分包超时(ms):"
-                                 hc:TitleElement.TitleWidth="100"
-                                 IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                 Style="{StaticResource FormTextBox}"
-                                 Text="{Binding ModbusRtuModel.ComConfig.TimeOut}" />
-                        <TextBox hc:TitleElement.Title="分包最大字节:"
-                                 hc:TitleElement.TitleWidth="100"
-                                 IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                 Style="{StaticResource FormTextBox}"
-                                 Text="{Binding ModbusRtuModel.ComConfig.MaxLength}" />
-                        <ComboBox MinWidth="135"
-                                  hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
-                                  hc:TitleElement.Title="字节序"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
-                                  SelectedItem="{Binding ModbusRtuModel.ByteOrder}"
-                                  Style="{StaticResource FormComboBox}" />
-                        <StackPanel HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    Orientation="Horizontal">
-                            <Button Margin="20"
+                            <ComboBox
+                                hc:InfoElement.Placeholder="请选择数据位..."
+                                hc:InfoElement.Title="数据位"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                ItemsSource="{StaticResource DataBits}"
+                                SelectedItem="{Binding ModbusRtuModel.ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource FormComboBox}" />
+                            <ComboBox
+                                hc:InfoElement.Placeholder="请选择停止位..."
+                                hc:InfoElement.Title="停止位"
+                                IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:StopBits}}}"
+                                SelectedItem="{Binding ModbusRtuModel.ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Style="{StaticResource FormComboBox}" />
+                            <TextBox
+                                hc:TitleElement.Title="分包超时(ms):"
+                                hc:TitleElement.TitleWidth="100"
+                                IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                Style="{StaticResource FormTextBox}"
+                                Text="{Binding ModbusRtuModel.ComConfig.TimeOut}" />
+                            <TextBox
+                                hc:TitleElement.Title="分包最大字节:"
+                                hc:TitleElement.TitleWidth="100"
+                                IsEnabled="{Binding ModbusRtuModel.DataMonitorConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                Style="{StaticResource FormTextBox}"
+                                Text="{Binding ModbusRtuModel.ComConfig.MaxLength}" />
+                            <ComboBox
+                                MinWidth="135"
+                                hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
+                                hc:TitleElement.Title="字节序"
+                                ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
+                                SelectedItem="{Binding ModbusRtuModel.ByteOrder}"
+                                Style="{StaticResource FormComboBox}" />
+                            <StackPanel
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                Orientation="Horizontal">
+                                <Button
+                                    Margin="20"
                                     hc:Poptip.Content="打开串口"
                                     Command="{Binding ExecuteCommand}"
                                     CommandParameter="OpenComAndAutoResponse"
@@ -100,7 +115,8 @@
                                     IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource GreenButton}" />
 
-                            <Button Width="60"
+                                <Button
+                                    Width="60"
                                     Margin="20"
                                     hc:Poptip.Content="关闭串口"
                                     Command="{Binding ExecuteCommand}"
@@ -109,20 +125,21 @@
                                     DockPanel.Dock="Left"
                                     IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
                                     Style="{StaticResource RedButton}" />
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
-                </Border>
-            </DockPanel>
-        </md:DrawerHost.LeftDrawerContent>
-        <DockPanel>
-            <!--  主体内容  -->
-            <!--  头部区域  -->
-            <Grid DockPanel.Dock="Top">
-                <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 自动应答" />
-                <DockPanel LastChildFill="False">
+                    </Border>
+                </DockPanel>
+            </md:DrawerHost.LeftDrawerContent>
+            <DockPanel>
+                <!--  主体内容  -->
+                <!--  头部区域  -->
+                <Grid DockPanel.Dock="Top">
+                    <TextBlock Style="{StaticResource TitleTextBlock}" Text="Modbus-Rtu 自动应答" />
+                    <DockPanel LastChildFill="False">
 
-                    <!--  配置Com按钮  -->
-                    <Button Width="30"
+                        <!--  配置Com按钮  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -133,8 +150,9 @@
                             Cursor="Hand"
                             Style="{StaticResource Blue_CircleButton}" />
 
-                    <!--  打开串口和自动应答  -->
-                    <Button Width="30"
+                        <!--  打开串口和自动应答  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -149,8 +167,9 @@
                             IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                             Style="{StaticResource MaterialDesignFloatingActionMiniButton}" />
 
-                    <!--  关闭串口和自动应答  -->
-                    <Button Width="30"
+                        <!--  关闭串口和自动应答  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -163,8 +182,9 @@
                             Style="{StaticResource Red_CircleButton}" />
 
 
-                    <!--  清空消息按钮  -->
-                    <Button Width="30"
+                        <!--  清空消息按钮  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -174,56 +194,58 @@
                             DockPanel.Dock="Right"
                             Style="{StaticResource Red_CircleButton}" />
 
-                    <!--  暂停界面更新  -->
-                    <Button Width="30"
+                        <!--  暂停界面更新  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
                             Command="{Binding ModbusRtuModel.PauseCommand}"
                             Cursor="Hand"
                             DockPanel.Dock="Right">
-                        <md:PackIcon Width="24" Height="24">
-                            <md:PackIcon.Style>
-                                <Style TargetType="md:PackIcon">
+                            <md:PackIcon Width="24" Height="24">
+                                <md:PackIcon.Style>
+                                    <Style TargetType="md:PackIcon">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
+                                                <Setter Property="Kind" Value="PlayPause" />
+
+                                            </DataTrigger>
+
+                                            <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
+                                                <Setter Property="Kind" Value="Pause" />
+
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </md:PackIcon.Style>
+                            </md:PackIcon>
+                            <Button.Style>
+                                <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
-                                            <Setter Property="Kind" Value="PlayPause" />
-
+                                            <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Green_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
+                                            <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
                                         </DataTrigger>
 
                                         <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
-                                            <Setter Property="Kind" Value="Pause" />
-
+                                            <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
+                                            <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
+                                            <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
+                                            <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
-                            </md:PackIcon.Style>
-                        </md:PackIcon>
-                        <Button.Style>
-                            <Style BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}" TargetType="Button">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="true">
-                                        <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                        <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                        <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                        <Setter Property="hc:Poptip.Content" Value="启用界面更新" />
-                                    </DataTrigger>
-
-                                    <DataTrigger Binding="{Binding ModbusRtuModel.IsPause}" Value="false">
-                                        <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
-                                        <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
-                                        <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
-                                        <Setter Property="hc:Poptip.Content" Value="暂停界面更新" />
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                    </Button>
+                            </Button.Style>
+                        </Button>
 
 
 
-                    <!--  打开自动应答  -->
-                    <Button Width="30"
+                        <!--  打开自动应答  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -235,8 +257,9 @@
                             IsEnabled="{Binding ModbusRtuModel.IsAutoResponse, Converter={wu:ReverseBool}}"
                             Style="{StaticResource Green_CircleButton}" />
 
-                    <!--  关闭自动应答  -->
-                    <Button Width="30"
+                        <!--  关闭自动应答  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -248,10 +271,11 @@
                             IsEnabled="{Binding ModbusRtuModel.IsAutoResponse}"
                             Style="{StaticResource Red_CircleButton}" />
 
-                    <Border Margin="20" DockPanel.Dock="Left" />
+                        <Border Margin="20" DockPanel.Dock="Left" />
 
-                    <!--  导出配置文件  -->
-                    <Button Width="30"
+                        <!--  导出配置文件  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="4"
                             hc:Poptip.Content="导出配置文件"
@@ -261,8 +285,9 @@
                             Cursor="Hand"
                             DockPanel.Dock="Left"
                             Style="{StaticResource Blue_CircleButton}" />
-                    <!--  导入配置文件  -->
-                    <Button Width="30"
+                        <!--  导入配置文件  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="4"
                             hc:Poptip.Content="导入配置文件"
@@ -274,8 +299,9 @@
                             Style="{StaticResource Blue_CircleButton}" />
 
 
-                    <!--  添加行  -->
-                    <Button Width="30"
+                        <!--  添加行  -->
+                        <Button
+                            Width="30"
                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                             Margin="5"
                             HorizontalAlignment="Left"
@@ -284,195 +310,214 @@
                             CommandParameter="AddMosbusRtuAutoResponseData"
                             Content="{md:PackIcon Kind=Add}"
                             Style="{StaticResource Green_CircleButton}" />
-                </DockPanel>
-            </Grid>
+                    </DockPanel>
+                </Grid>
 
-            <!--  底部区域  -->
-            <StackPanel Height="30"
-                        DockPanel.Dock="Bottom"
-                        Orientation="Horizontal">
-                <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
+                <!--  底部区域  -->
+                <StackPanel
+                    Height="30"
+                    DockPanel.Dock="Bottom"
+                    Orientation="Horizontal">
+                    <wuctrl:BreatheLight IsBreathing="{Binding ModbusRtuModel.ComConfig.IsOpened}" />
 
-                <TextBlock Margin="0"
-                           VerticalAlignment="Center"
-                           FontWeight="Bold"
-                           Text="{Binding ModbusRtuModel.ComConfig.ComPort.Port}" />
-                <TextBlock VerticalAlignment="Center" Text=" : " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.ComPort.DeviceName}" />
-                <TextBlock VerticalAlignment="Center" Text="  " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
-                <TextBlock VerticalAlignment="Center" Text="  " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
-                <TextBlock Margin="5,0"
-                           VerticalAlignment="Center"
-                           Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
+                    <TextBlock
+                        Margin="0"
+                        VerticalAlignment="Center"
+                        FontWeight="Bold"
+                        Text="{Binding ModbusRtuModel.ComConfig.ComPort.Port}" />
+                    <TextBlock VerticalAlignment="Center" Text=" : " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.ComPort.DeviceName}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.Parity}" />
+                    <TextBlock VerticalAlignment="Center" Text="  " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ComConfig.DataBits}" />
+                    <TextBlock
+                        Margin="5,0"
+                        VerticalAlignment="Center"
+                        Text="{Binding ModbusRtuModel.ComConfig.StopBits}" />
 
-                <wuctrl:BreatheLight Margin="30,5,5,5"
-                                     IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
-                                     Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
-                <TextBlock VerticalAlignment="Center" Text="接收: " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
-                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                    <wuctrl:BreatheLight
+                        Margin="30,5,5,5"
+                        IsBreathing="{Binding ModbusRtuModel.ComConfig.IsReceiving}"
+                        Visibility="{Binding ModbusRtuModel.ComConfig.IsReceiving, Converter={wu:False2Hidden}}" />
+                    <TextBlock VerticalAlignment="Center" Text="接收: " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.ReceiveBytesCount}" />
+                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
 
-                <wuctrl:BreatheLight Margin="30,5,5,5"
-                                     IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
-                                     Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
-                <TextBlock VerticalAlignment="Center" Text="发送: " />
-                <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
-                <TextBlock VerticalAlignment="Center" Text=" Bytes" />
-            </StackPanel>
+                    <wuctrl:BreatheLight
+                        Margin="30,5,5,5"
+                        IsBreathing="{Binding ModbusRtuModel.ComConfig.IsSending}"
+                        Visibility="{Binding ModbusRtuModel.ComConfig.IsSending, Converter={wu:False2Hidden}}" />
+                    <TextBlock VerticalAlignment="Center" Text="发送: " />
+                    <TextBlock VerticalAlignment="Center" Text="{Binding ModbusRtuModel.SendBytesCount}" />
+                    <TextBlock VerticalAlignment="Center" Text=" Bytes" />
+                </StackPanel>
 
-            <!--  匹配设置列表  -->
-            <ContentControl Margin="4,0"
-                            Padding="0"
-                            DockPanel.Dock="Left"
-                            Style="{StaticResource Effect2Control}">
-                <DataGrid MinWidth="410"
-                          hc:DataGridAttach.ShowRowNumber="True"
-                          AutoGenerateColumns="False"
-                          Background="Transparent"
-                          BorderThickness="0"
-                          CanUserSortColumns="False"
-                          EnableRowVirtualization="True"
-                          FrozenColumnCount="2"
-                          ItemsSource="{Binding ModbusRtuModel.MosbusRtuAutoResponseDatas, IsAsync=True}"
-                          RowHeaderWidth="60"
-                          Style="{StaticResource NumDataGrid}">
+                <!--  匹配设置列表  -->
+                <ContentControl
+                    Margin="4,0"
+                    Padding="0"
+                    DockPanel.Dock="Left"
+                    Style="{StaticResource Effect2Control}">
+                    <DataGrid
+                        MinWidth="410"
+                        hc:DataGridAttach.ShowRowNumber="True"
+                        AutoGenerateColumns="False"
+                        Background="White"
+                        BorderThickness="0"
+                        CanUserSortColumns="False"
+                        EnableRowVirtualization="True"
+                        FrozenColumnCount="2"
+                        ItemsSource="{Binding ModbusRtuModel.MosbusRtuAutoResponseDatas, IsAsync=True}"
+                        RowHeaderWidth="60"
+                        Style="{StaticResource NumDataGrid}">
 
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <!--<Setter Property="Background" Value="Transparent" />-->
-                        </Style>
-                    </DataGrid.RowStyle>
+                        <DataGrid.RowStyle>
+                            <Style TargetType="DataGridRow">
+                                <!--<Setter Property="Background" Value="Transparent" />-->
+                            </Style>
+                        </DataGrid.RowStyle>
 
-                    <DataGrid.CellStyle>
-                        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
-                            <Style.Triggers>
-                                <Trigger Property="IsKeyboardFocused" Value="False">
-                                    <Setter Property="Background" Value="Transparent" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.CellStyle>
+                        <DataGrid.CellStyle>
+                            <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <Trigger Property="IsKeyboardFocused" Value="False">
+                                        <Setter Property="Background" Value="Transparent" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
 
-                    <!--  添加触发器,支持点击事件  -->
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding DataContext.OpenMosbusRtuAutoResponseDataEditViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
+                        <!--  添加触发器,支持点击事件  -->
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="MouseDoubleClick">
+                                <i:InvokeCommandAction Command="{Binding DataContext.OpenMosbusRtuAutoResponseDataEditViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
 
-                    <DataGrid.Columns>
+                        <DataGrid.Columns>
 
-                        <DataGridTemplateColumn Header="启用">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <CheckBox Margin="0"
-                                              HorizontalAlignment="Center"
-                                              IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <DataGridTemplateColumn Header="启用">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <CheckBox
+                                            Margin="0"
+                                            HorizontalAlignment="Center"
+                                            IsChecked="{Binding IsEnable, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="名称">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Width="120"
+                                            HorizontalContentAlignment="Center"
+                                            Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="匹配模板">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Width="240"
+                                            HorizontalContentAlignment="Center"
+                                            Text="{Binding MateTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+                            <DataGridTemplateColumn Header="应答模板">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox
+                                            Width="240"
+                                            HorizontalContentAlignment="Center"
+                                            Text="{Binding ResponseTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </ContentControl>
+
+                <!--  页面消息  -->
+                <ContentControl
+                    Margin="4,0"
+                    DockPanel.Dock="Top"
+                    Style="{StaticResource Effect2Control}">
+                    <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
+                        <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages, Mode=OneTime, IsAsync=True}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.Resources>
+                                <DataTemplate DataType="{x:Type core:MessageData}">
+                                    <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="3"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Type}" />
+                                            <TextBox
+                                                VerticalAlignment="Center"
+                                                FontSize="12"
+                                                FontWeight="Bold"
+                                                IsReadOnly="True"
+                                                Style="{StaticResource MessageTextBox}"
+                                                Text="{Binding Content}"
+                                                TextWrapping="Wrap" />
+                                        </WrapPanel>
+                                    </Border>
                                 </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="名称">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Width="120"
-                                             HorizontalContentAlignment="Center"
-                                             Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Header="匹配模板">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Width="240"
-                                             HorizontalContentAlignment="Center"
-                                             Text="{Binding MateTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Header="应答模板">
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBox Width="240"
-                                             HorizontalContentAlignment="Center"
-                                             Text="{Binding ResponseTemplate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-
-                    </DataGrid.Columns>
-                </DataGrid>
-            </ContentControl>
-
-            <!--  页面消息  -->
-            <ContentControl Margin="4,0"
-                            DockPanel.Dock="Top"
-                            Style="{StaticResource Effect2Control}">
-                <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                    <ItemsControl Background="Transparent" ItemsSource="{Binding ModbusRtuModel.Messages, Mode=OneTime, IsAsync=True}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <VirtualizingStackPanel />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.Resources>
-                            <DataTemplate DataType="{x:Type core:MessageData}">
-                                <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                    <WrapPanel Orientation="Horizontal">
-                                        <TextBlock Margin="3"
-                                                   VerticalAlignment="Center"
-                                                   Style="{StaticResource MessageTextBlock}"
-                                                   Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
-                                        <TextBlock Margin="5,0"
-                                                   VerticalAlignment="Center"
-                                                   Style="{StaticResource MessageTextBlock}"
-                                                   Text="{Binding Type}" />
-                                        <TextBox VerticalAlignment="Center"
-                                                 FontSize="12"
-                                                 FontWeight="Bold"
-                                                 IsReadOnly="True"
-                                                 Style="{StaticResource MessageTextBox}"
-                                                 Text="{Binding Content}"
-                                                 TextWrapping="Wrap" />
-                                    </WrapPanel>
-                                </Border>
-                            </DataTemplate>
-
-                            <DataTemplate DataType="{x:Type models:ModbusRtuMessageData}">
-                                <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="MouseLeftButtonUp">
-                                            <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                    <Border.ContextMenu>
-                                        <ContextMenu>
-                                            <!--  MenuItem绑定命令  -->
-                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                      CommandParameter="{Binding}"
-                                                      Header="复制Modbus数据帧"
-                                                      Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
-                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                      CommandParameter="{Binding}"
-                                                      Header="解析数据帧"
-                                                      Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
-                                        </ContextMenu>
-                                    </Border.ContextMenu>
-                                    <WrapPanel Orientation="Horizontal">
-                                        <TextBlock Margin="3"
-                                                   VerticalAlignment="Center"
-                                                   Style="{StaticResource MessageTextBlock}"
-                                                   Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
-                                        <TextBlock Margin="5,0"
-                                                   VerticalAlignment="Center"
-                                                   Style="{StaticResource MessageTextBlock}"
-                                                   Text="{Binding Type}" />
-                                        <!--<TextBox VerticalAlignment="Center"
+                                <DataTemplate DataType="{x:Type models:ModbusRtuMessageData}">
+                                    <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
+                                        <i:Interaction.Triggers>
+                                            <i:EventTrigger EventName="MouseLeftButtonUp">
+                                                <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
+                                            </i:EventTrigger>
+                                        </i:Interaction.Triggers>
+                                        <Border.ContextMenu>
+                                            <ContextMenu>
+                                                <!--  MenuItem绑定命令  -->
+                                                <MenuItem
+                                                    Command="{Binding Path=PlacementTarget.Tag.CopyModbusRtuFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="复制Modbus数据帧"
+                                                    Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
+                                                <MenuItem
+                                                    Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                    CommandParameter="{Binding}"
+                                                    Header="解析数据帧"
+                                                    Visibility="{Binding ModbusRtuFrame, Converter={coreCvt:Null2Collapsed}}" />
+                                            </ContextMenu>
+                                        </Border.ContextMenu>
+                                        <WrapPanel Orientation="Horizontal">
+                                            <TextBlock
+                                                Margin="3"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
+                                            <TextBlock
+                                                Margin="5,0"
+                                                VerticalAlignment="Center"
+                                                Style="{StaticResource MessageTextBlock}"
+                                                Text="{Binding Type}" />
+                                            <!--<TextBox VerticalAlignment="Center"
                                                  FontSize="12"
                                                  FontWeight="Bold"
                                                  IsReadOnly="True"
@@ -480,32 +525,35 @@
                                                  Text="{Binding Content}"
                                                  TextWrapping="Wrap" />-->
 
-                                        <ItemsControl Background="Transparent"
-                                                      ItemsSource="{Binding MessageSubContents}"
-                                                      Visibility="{Binding MessageSubContents.Count, Converter={wu:Zero2Collapsed}}">
-                                            <ItemsControl.ItemsPanel>
-                                                <ItemsPanelTemplate>
-                                                    <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
-                                                </ItemsPanelTemplate>
-                                            </ItemsControl.ItemsPanel>
-                                            <ItemsControl.ItemTemplate>
-                                                <DataTemplate>
-                                                    <TextBlock Margin="3,0,3,0"
-                                                               VerticalAlignment="Center"
-                                                               FontWeight="Bold"
-                                                               Style="{StaticResource ModbusRtuMessageTextBlock}"
-                                                               Text="{Binding Content}"
-                                                               TextWrapping="Wrap" />
-                                                </DataTemplate>
-                                            </ItemsControl.ItemTemplate>
-                                        </ItemsControl>
-                                    </WrapPanel>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.Resources>
-                    </ItemsControl>
-                </hc:ScrollViewer>
-            </ContentControl>
-        </DockPanel>
-    </md:DrawerHost>
+                                            <ItemsControl
+                                                Background="Transparent"
+                                                ItemsSource="{Binding MessageSubContents}"
+                                                Visibility="{Binding MessageSubContents.Count, Converter={wu:Zero2Collapsed}}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock
+                                                            Margin="3,0,3,0"
+                                                            VerticalAlignment="Center"
+                                                            FontWeight="Bold"
+                                                            Style="{StaticResource ModbusRtuMessageTextBlock}"
+                                                            Text="{Binding Content}"
+                                                            TextWrapping="Wrap" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </WrapPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.Resources>
+                        </ItemsControl>
+                    </hc:ScrollViewer>
+                </ContentControl>
+            </DockPanel>
+        </md:DrawerHost>
+    </md:DialogHost>
 </UserControl>

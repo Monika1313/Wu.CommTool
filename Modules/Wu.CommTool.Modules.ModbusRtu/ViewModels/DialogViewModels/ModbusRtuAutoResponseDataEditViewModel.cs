@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
+﻿using Wu.CommTool.Modules.ModbusRtu.Utils;
+
+namespace Wu.CommTool.Modules.ModbusRtu.ViewModels.DialogViewModels;
 
 public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -97,4 +99,21 @@ public partial class ModbusRtuAutoResponseDataEditViewModel : NavigationViewMode
         //}
     }
     #endregion
+
+
+    [RelayCommand]
+    private void AddCrcCode()
+    {
+        try
+        {
+            //匹配模板添加CRC校验码
+            CurrentDto.MateTemplate = UartUtils.GetCrcedStr(CurrentDto.MateTemplate);
+            //应答模板添加CRC校验码
+            CurrentDto.ResponseTemplate = UartUtils.GetCrcedStr(CurrentDto.ResponseTemplate);
+        }
+        catch (Exception ex)
+        {
+            Growl.Warning(ex.Message);
+        }
+    }
 }

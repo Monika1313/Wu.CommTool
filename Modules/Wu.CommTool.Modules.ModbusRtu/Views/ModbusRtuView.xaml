@@ -1,32 +1,35 @@
-﻿<UserControl x:Class="Wu.CommTool.Modules.ModbusRtu.Views.ModbusRtuView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
-             xmlns:hc="https://handyorg.github.io/handycontrol"
-             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
-             xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:prism="http://prismlibrary.com/"
-             xmlns:wu="https://github.com/Monika1313/Wu"
-             xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
-             d:DataContext="{x:Static dvm:ModbusRtuDesignViewModel.Instance}"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
-             mc:Ignorable="d">
+﻿<UserControl
+    x:Class="Wu.CommTool.Modules.ModbusRtu.Views.ModbusRtuView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dvm="clr-namespace:Wu.CommTool.Modules.ModbusRtu.ViewModels.DesignViewModels"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:local="clr-namespace:Wu.CommTool.Modules.ModbusRtu.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:wu="https://github.com/Monika1313/Wu"
+    xmlns:wuctrl="clr-namespace:Wu.Wpf.ControlLibrary;assembly=Wu.Wpf.ControlLibrary"
+    d:DataContext="{x:Static dvm:ModbusRtuDesignViewModel.Instance}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid>
-        <md:DialogHost CloseOnClickAway="True"
-                       Identifier="{x:Static local:ModbusRtuView.ViewName}"
-                       Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+        <md:DialogHost
+            CloseOnClickAway="False"
+            Identifier="{x:Static local:ModbusRtuView.ViewName}"
+            Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
             <DockPanel>
                 <DockPanel DockPanel.Dock="Left">
                     <ContentControl DockPanel.Dock="Top" Style="{StaticResource Effect2Control}">
                         <DockPanel>
-                            <ListBox Background="Transparent"
-                                     BorderThickness="0"
-                                     ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
-                                     ItemsSource="{Binding MenuBars}">
+                            <ListBox
+                                Background="Transparent"
+                                BorderThickness="0"
+                                ItemContainerStyle="{StaticResource MenuBarsListBoxItem}"
+                                ItemsSource="{Binding MenuBars}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding SelectedIndexChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ListBox}}" />
@@ -35,13 +38,15 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Background="Transparent" Orientation="Horizontal">
-                                            <md:PackIcon Margin="5,0"
-                                                         Foreground="{DynamicResource FontBrush}"
-                                                         Kind="{Binding Icon}" />
-                                            <TextBlock Margin="0,0,15,0"
-                                                       VerticalAlignment="Center"
-                                                       Style="{DynamicResource DefaultTextBlock}"
-                                                       Text="{Binding Title}" />
+                                            <md:PackIcon
+                                                Margin="5,0"
+                                                Foreground="{DynamicResource FontBrush}"
+                                                Kind="{Binding Icon}" />
+                                            <TextBlock
+                                                Margin="0,0,15,0"
+                                                VerticalAlignment="Center"
+                                                Style="{DynamicResource DefaultTextBlock}"
+                                                Text="{Binding Title}" />
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
@@ -89,9 +94,10 @@
             </DockPanel>
         </md:DialogHost>
         <ScrollViewer HorizontalAlignment="Right" VerticalScrollBarVisibility="Hidden">
-            <StackPanel Margin="0,10,10,10"
-                        VerticalAlignment="Top"
-                        hc:Growl.Token="{x:Static local:ModbusRtuView.ViewName}" />
+            <StackPanel
+                Margin="0,10,10,10"
+                VerticalAlignment="Top"
+                hc:Growl.Token="{x:Static local:ModbusRtuView.ViewName}" />
         </ScrollViewer>
     </Grid>
 </UserControl>

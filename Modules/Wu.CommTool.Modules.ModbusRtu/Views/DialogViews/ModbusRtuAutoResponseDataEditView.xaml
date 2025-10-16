@@ -24,7 +24,15 @@
                 Content="取消"
                 Style="{StaticResource MaterialDesignOutlinedButton}" />
             <Button Command="{Binding SaveCommand}" Content="确定" />
+
         </StackPanel>
+
+        <Grid DockPanel.Dock="Bottom">
+            <Button
+                Margin="10,0"
+                Command="{Binding AddCrcCodeCommand}"
+                Content="添加CRC校验码" />
+        </Grid>
 
         <Grid
             Height="20"
