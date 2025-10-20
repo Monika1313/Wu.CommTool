@@ -36,10 +36,10 @@
 		<PackageReference Include="Wu.Wpf.ControlLibrary" Version="1.0.1" />
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Interfaces\" />
-	</ItemGroup>
-	<ItemGroup>
 	  <ProjectReference Include="..\Wu.CommTool.DynamicTheme.Core\Wu.CommTool.DynamicTheme.Core.csproj" />
 	  <ProjectReference Include="..\Wu.CommTool.DynamicTheme.Resources\Wu.CommTool.DynamicTheme.Resources.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Interfaces\" />
 	</ItemGroup>
 </Project>

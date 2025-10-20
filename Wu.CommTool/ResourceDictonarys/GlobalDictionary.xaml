@@ -1,9 +1,8 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:hc="https://handyorg.github.io/handycontrol"
-    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
-    xmlns:theme="clr-namespace:Wu.CommTool.DynamicTheme.Core;assembly=Wu.CommTool.DynamicTheme.Core">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:hc="https://handyorg.github.io/handycontrol"
+                    xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:theme="clr-namespace:Wu.CommTool.DynamicTheme.Core;assembly=Wu.CommTool.DynamicTheme.Core">
 
     <!--  颜色  -->
     <SolidColorBrush x:Key="Green_Foreground">#389E0D</SolidColorBrush>
@@ -56,73 +55,65 @@
 
 
     <!--  按钮  -->
-    <Style
-        x:Key="GreenButton"
-        BasedOn="{StaticResource MaterialDesignRaisedButton}"
-        TargetType="Button">
+    <Style x:Key="GreenButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Green_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="Green_CircleButton"
-        BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-        TargetType="Button">
+    <Style x:Key="Green_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Green_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="RedButton"
-        BasedOn="{StaticResource MaterialDesignRaisedButton}"
-        TargetType="Button">
+    <Style x:Key="RedButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Red_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="Red_CircleButton"
-        BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-        TargetType="Button">
+    <Style x:Key="Red_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Red_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Red_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Red_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="YellowButton"
-        BasedOn="{StaticResource MaterialDesignRaisedButton}"
-        TargetType="Button">
+    <Style x:Key="YellowButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="Yellow_CircleButton"
-        BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-        TargetType="Button">
+    <Style x:Key="Yellow_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="BlueButton"
-        BasedOn="{StaticResource MaterialDesignRaisedButton}"
-        TargetType="Button">
+    <Style x:Key="BlueButton"
+           BasedOn="{StaticResource MaterialDesignRaisedButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Yellow_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Yellow_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Yellow_BorderBrush}" />
     </Style>
 
-    <Style
-        x:Key="Blue_CircleButton"
-        BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
-        TargetType="Button">
+    <Style x:Key="Blue_CircleButton"
+           BasedOn="{StaticResource MaterialDesignFloatingActionMiniButton}"
+           TargetType="Button">
         <Setter Property="Foreground" Value="{StaticResource Blue_Foreground}" />
         <Setter Property="Background" Value="{StaticResource Blue_Background}" />
         <Setter Property="BorderBrush" Value="{StaticResource Blue_BorderBrush}" />
@@ -201,10 +192,9 @@
     </Style>
 
     <!--  DataGrid 第一列显示行号  -->
-    <Style
-        x:Key="NumDataGrid"
-        BasedOn="{StaticResource DataGridBaseStyle}"
-        TargetType="DataGrid">
+    <Style x:Key="NumDataGrid"
+           BasedOn="{StaticResource DataGridBaseStyle}"
+           TargetType="DataGrid">
         <Setter Property="RowHeaderWidth" Value="60" />
         <Setter Property="hc:DataGridAttach.ShowRowNumber" Value="True" />
     </Style>
@@ -251,10 +241,9 @@
 
 
     <!--  查询文本框  -->
-    <Style
-        x:Key="SearchTextBox"
-        BasedOn="{StaticResource TextBoxExtend}"
-        TargetType="TextBox">
+    <Style x:Key="SearchTextBox"
+           BasedOn="{StaticResource TextBoxExtend}"
+           TargetType="TextBox">
         <Setter Property="MinWidth" Value="160" />
         <Setter Property="Margin" Value="5,0" />
         <Setter Property="VerticalAlignment" Value="Center" />
@@ -279,10 +268,9 @@
         <Setter Property="theme:ThemeProps.Foreground" Value="{DynamicResource FontBrush}" />
     </Style>
 
-    <Style
-        x:Key="SecontTitle"
-        BasedOn="{StaticResource TitleTextBlock}"
-        TargetType="TextBlock">
+    <Style x:Key="SecontTitle"
+           BasedOn="{StaticResource TitleTextBlock}"
+           TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Normal" />
         <Setter Property="FontSize" Value="18" />
     </Style>
@@ -317,10 +305,9 @@
                 <ControlTemplate TargetType="{x:Type ContentControl}">
                     <Grid>
                         <Border Effect="{StaticResource EffectShadow2}" Style="{StaticResource BorderRegion}" />
-                        <ContentPresenter
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        <ContentPresenter Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>

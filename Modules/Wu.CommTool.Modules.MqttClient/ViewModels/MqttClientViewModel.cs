@@ -103,50 +103,42 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 
 
     #region **************************************** 属性 ****************************************
-    [ObservableProperty]
-    object currentDto = new();
+    [ObservableProperty] object currentDto = new();
 
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MessageData> messages = [];
+    [ObservableProperty] ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 暂停更新接收的数据
     /// </summary>
-    [ObservableProperty]
-    bool isPause = false;
+    [ObservableProperty] bool isPause = false;
 
     /// <summary>
     /// OpenDrawers
     /// </summary>
-    [ObservableProperty]
-    OpenDrawers isDrawersOpen = new();
+    [ObservableProperty] OpenDrawers isDrawersOpen = new();
 
     /// <summary>
     /// MqttClientConfig
     /// </summary>
-    [ObservableProperty]
-    MqttClientConfig mqttClientConfig = new();
+    [ObservableProperty] MqttClientConfig mqttClientConfig = new();
 
     /// <summary>
     /// 发送的消息
     /// </summary>
-    [ObservableProperty]
-    string sendMessage = string.Empty;
+    [ObservableProperty] string sendMessage = string.Empty;
 
     /// <summary>
     /// 新的订阅主题
     /// </summary>
-    [ObservableProperty]
-    MqttTopic newSubTopic = new(string.Empty);
+    [ObservableProperty] MqttTopic newSubTopic = new(string.Empty);
 
     /// <summary>
     /// 主动关闭客户端标志
     /// </summary>
-    [ObservableProperty]
-    bool manualStopFlag;
+    [ObservableProperty] bool manualStopFlag;
 
     /// <summary>
     /// 配置文件列表

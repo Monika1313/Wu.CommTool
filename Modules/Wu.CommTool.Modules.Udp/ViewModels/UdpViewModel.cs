@@ -1,4 +1,6 @@
-﻿namespace Wu.CommTool.Modules.Udp.ViewModels;
+﻿using Wu.CommTool.Modules.Udp.Models;
+
+namespace Wu.CommTool.Modules.Udp.ViewModels;
 
 public partial class UdpViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -39,6 +41,10 @@ public partial class UdpViewModel : NavigationViewModel, IDialogHostAware
     public string DialogHostName { get; set; }
 
     [ObservableProperty] object currentDto = new();
+
+
+    [ObservableProperty] UdpClientModel udpClientModel = new();
+
     #endregion **************************************** 属性 ****************************************
 
 

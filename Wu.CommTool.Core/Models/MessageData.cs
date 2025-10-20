@@ -16,25 +16,21 @@ public partial class MessageData : ObservableObject
     /// <summary>
     /// 时间
     /// </summary>
-    [ObservableProperty]
-    DateTime time;
+    [ObservableProperty] DateTime time;
 
 
     /// <summary>
     /// 消息类型
     /// </summary>
-    [ObservableProperty]
-    MessageType type;
+    [ObservableProperty] MessageType type;
 
     /// <summary>
     /// 标题
     /// </summary>
-    [ObservableProperty]
-    string title = string.Empty;
+    [ObservableProperty] string title = string.Empty;
 
     /// <summary>
     /// 消息内容
     /// </summary>
-    [ObservableProperty]
-    string content = string.Empty;
+    [ObservableProperty] string content = string.Empty;
 }

@@ -35,3 +35,6 @@ global using HandyControl.Controls;
 
 global using Wu.CommTool.Modules.Udp.Views;
 global using Wu.CommTool.Modules.Udp.ViewModels;
+global using System.Net.Sockets;
+
+
