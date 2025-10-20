@@ -42,6 +42,7 @@ public partial class UdpViewModel : NavigationViewModel, IDialogHostAware
 
     [ObservableProperty] object currentDto = new();
 
+    [ObservableProperty] OpenDrawers openDrawers = new();
 
     [ObservableProperty] UdpClientModel udpClientModel = new();
 
@@ -55,6 +56,7 @@ public partial class UdpViewModel : NavigationViewModel, IDialogHostAware
         switch (obj)
         {
             case "OpenDialogView": OpenDialogView(); break;
+            case "OpenLeftDrawer": OpenDrawers.LeftDrawer = true; break;
             default: break;
         }
     }

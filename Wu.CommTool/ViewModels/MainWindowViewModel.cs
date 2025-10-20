@@ -14,6 +14,7 @@ using Wu.CommTool.Modules.MrtuSlave.Views;
 using Wu.CommTool.Modules.TcpClient.Views;
 using Wu.CommTool.Modules.TcpServer;
 using Wu.CommTool.Modules.TcpServer.Views;
+using Wu.CommTool.Modules.Udp.Views;
 
 namespace Wu.CommTool.ViewModels;
 
@@ -108,6 +109,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
             new() { Icon = "LanConnect", Title = "ModbusTcp设备监控", NameSpace = nameof(MtcpDeviceMonitorView) },
 #if DEBUG
+            new() { Icon = "LanConnect", Title = "UDP", NameSpace = nameof(UdpView) },
 #endif
             new() { Icon = "LanConnect", Title = "串口", NameSpace = nameof(UartView) },
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
