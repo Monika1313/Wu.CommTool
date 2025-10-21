@@ -7,11 +7,11 @@
 public enum TcpDataType
 {
     [Description("UTF-8")]
-    Uft8,
+    UTF8,
     [Description("Hex")]
-    Hex,
+    HEX,
     [Description("Ascii")]
-    Ascii,
+    ASCII,
     [Description("Unicode")]
     Unicode,
 }

@@ -32,12 +32,12 @@ public partial class TcpServerModel : ObservableObject
     /// <summary>
     /// 发送消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType sendTcpDataType = TcpDataType.Uft8;
+    [ObservableProperty] TcpDataType sendTcpDataType = TcpDataType.UTF8;
 
     /// <summary>
     /// 接收消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType receiveTcpDataType = TcpDataType.Uft8;
+    [ObservableProperty] TcpDataType receiveTcpDataType = TcpDataType.UTF8;
 
 
     /// <summary>
@@ -137,14 +137,14 @@ public partial class TcpServerModel : ObservableObject
 
                 switch (ReceiveTcpDataType)
                 {
-                    case TcpDataType.Ascii:
+                    case TcpDataType.ASCII:
                         string receivedData = Encoding.ASCII.GetString(receivedBuffer);
                         ShowReceiveMessage($"{receivedData}");
                         break;
-                    case TcpDataType.Hex:
+                    case TcpDataType.HEX:
                         ShowReceiveMessage($"{BitConverter.ToString(receivedBuffer).Replace("-", "").InsertFormat(4, " ")}");
                         break;
-                    case TcpDataType.Uft8:
+                    case TcpDataType.UTF8:
                         string utf8Data = Encoding.UTF8.GetString(receivedBuffer);
                         ShowReceiveMessage($"{utf8Data}");
                         break;
@@ -213,12 +213,12 @@ public partial class TcpServerModel : ObservableObject
 
             switch (SendTcpDataType)
             {
-                case TcpDataType.Ascii:
+                case TcpDataType.ASCII:
                     byte[] data = Encoding.ASCII.GetBytes(message);
                     networkStream.Write(data, 0, data.Length);
                     ShowSendMessage($"{message}");
                     break;
-                case TcpDataType.Hex:
+                case TcpDataType.HEX:
                     string hexString = SendInput.Replace(" ", "");
 
                     // 检查长度是否为偶数
@@ -246,7 +246,7 @@ public partial class TcpServerModel : ObservableObject
                     networkStream.Write(data2, 0, data2.Length);
                     ShowSendMessage($"{BitConverter.ToString(data2).Replace("-", " ")}");
                     break;
-                case TcpDataType.Uft8:
+                case TcpDataType.UTF8:
                     byte[] utf8Data = Encoding.UTF8.GetBytes(message);
                     networkStream.Write(utf8Data, 0, utf8Data.Length);
                     ShowSendMessage($"{message}");

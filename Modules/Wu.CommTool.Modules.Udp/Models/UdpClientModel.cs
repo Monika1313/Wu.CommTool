@@ -14,16 +14,13 @@ public partial class UdpClientModel : ObservableObject
 
 
     #region 属性
-    private IPEndPoint remoteEndPoint;
+    public IPEndPoint RemoteEndPoint=> new IPEndPoint(IPAddress.Parse(RemoteIp), RemotePort);
     [ObservableProperty] string remoteIp = "127.0.0.1";
-
     [ObservableProperty] int remotePort = 13333;
 
+    public IPEndPoint LocalEndPoint=> new IPEndPoint(IPAddress.Parse(LocalIp), LocalPort);
+    [ObservableProperty] string localIp = "0.0.0.0";
     [ObservableProperty] int localPort = 9999;
-
-    [ObservableProperty] private int sendCount = 0;
-    [ObservableProperty] private int receiveCount = 0;
-
 
 
     /// <summary>
@@ -34,28 +31,18 @@ public partial class UdpClientModel : ObservableObject
     /// <summary>
     /// 发送消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType sendDataType = TcpDataType.Uft8;
+    [ObservableProperty] TcpDataType sendDataType = TcpDataType.UTF8;
 
     /// <summary>
     /// 接收消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType receiveDataType = TcpDataType.Uft8;
+    [ObservableProperty] TcpDataType receiveDataType = TcpDataType.UTF8;
 
     /// <summary>
     /// UDP客户端是否已打开
     /// </summary>
     [ObservableProperty] bool isOpened;
     #endregion
-
-
-    public UdpClientModel()
-    {
-
-    }
-
-
-
-
 
     /// <summary>
     /// 连接服务器
@@ -72,16 +59,17 @@ public partial class UdpClientModel : ObservableObject
                 return;
             }
 
-            this.remoteEndPoint = new IPEndPoint(IPAddress.Parse(RemoteIp), RemotePort);
+            //RemoteEndPoint = new IPEndPoint(IPAddress.Parse(RemoteIp), RemotePort);
+            //localEndPoint = new IPEndPoint(IPAddress.Parse(LocalIp), LocalPort);
 
             // 创建发送客户端
-            udpClient = new UdpClient(LocalPort);
+            udpClient = new UdpClient(LocalEndPoint);
             udpClient.Client.SendBufferSize = 1024 * 1024;
             StartListening();//开启监听
 
             IsOpened = true;
 
-            ShowMessage($"打开UDP客户端....目标地址: {remoteEndPoint}....监听端口: {((IPEndPoint)udpClient.Client.LocalEndPoint)}");
+            ShowMessage($"打开UDP客户端: {((IPEndPoint)udpClient.Client.LocalEndPoint)}");
             return;
         }
         catch (Exception ex)
@@ -135,12 +123,12 @@ public partial class UdpClientModel : ObservableObject
         {
             switch (SendDataType)
             {
-                case TcpDataType.Ascii:
+                case TcpDataType.ASCII:
                     byte[] data = Encoding.ASCII.GetBytes(SendInput);
-                    udpClient.Send(data, data.Length, remoteEndPoint);
-                    ShowSendMessage($"{SendInput}", remoteEndPoint.ToString());
+                    udpClient.Send(data, data.Length, RemoteEndPoint);
+                    ShowSendMessage($"{SendInput}", RemoteEndPoint.ToString());
                     break;
-                case TcpDataType.Hex:
+                case TcpDataType.HEX:
                     string hexString = SendInput.Replace(" ", "");
 
                     // 检查长度是否为偶数
@@ -165,18 +153,18 @@ public partial class UdpClientModel : ObservableObject
                     {
                         data2[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
                     }
-                    udpClient.Send(data2, data2.Length, remoteEndPoint);
-                    ShowSendMessage($"{BitConverter.ToString(data2).Replace("-", " ")}", remoteEndPoint.ToString());
+                    udpClient.Send(data2, data2.Length, RemoteEndPoint);
+                    ShowSendMessage($"{BitConverter.ToString(data2).Replace("-", " ")}", RemoteEndPoint.ToString());
                     break;
-                case TcpDataType.Uft8:
+                case TcpDataType.UTF8:
                     byte[] utf8Data = Encoding.UTF8.GetBytes(SendInput);
-                    udpClient.Send(utf8Data, utf8Data.Length, remoteEndPoint);
-                    ShowSendMessage($"{SendInput}", remoteEndPoint.ToString());
+                    udpClient.Send(utf8Data, utf8Data.Length, RemoteEndPoint);
+                    ShowSendMessage($"{SendInput}", RemoteEndPoint.ToString());
                     break;
                 case TcpDataType.Unicode:
                     byte[] unicodeData = Encoding.Unicode.GetBytes(SendInput);
-                    udpClient.Send(unicodeData, unicodeData.Length, remoteEndPoint);
-                    ShowSendMessage($"{SendInput}", remoteEndPoint.ToString());
+                    udpClient.Send(unicodeData, unicodeData.Length, RemoteEndPoint);
+                    ShowSendMessage($"{SendInput}", RemoteEndPoint.ToString());
                     break;
                 default:
                     break;
@@ -218,14 +206,14 @@ public partial class UdpClientModel : ObservableObject
 
                 switch (ReceiveDataType)
                 {
-                    case TcpDataType.Ascii:
+                    case TcpDataType.ASCII:
                         string receivedData = Encoding.ASCII.GetString(receivedBuffer);
                         ShowReceiveMessage($"{receivedData}", result.RemoteEndPoint.ToString());
                         break;
-                    case TcpDataType.Hex:
+                    case TcpDataType.HEX:
                         ShowReceiveMessage($"{BitConverter.ToString(receivedBuffer).Replace("-", "").InsertFormat(4, " ")}", result.RemoteEndPoint.ToString());
                         break;
-                    case TcpDataType.Uft8:
+                    case TcpDataType.UTF8:
                         string utf8Data = Encoding.UTF8.GetString(receivedBuffer);
                         ShowReceiveMessage($"{utf8Data}", result.RemoteEndPoint.ToString());
                         break;
@@ -289,13 +277,13 @@ public partial class UdpClientModel : ObservableObject
 
     protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
-    protected void ShowReceiveMessage(string message, string title = "")
+    protected void ShowReceiveMessage(string message, string remoteEndPoint = "")
     {
         try
         {
             void action()
             {
-                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
+                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, MessageType.Receive, remoteEndPoint,ReceiveDataType.ToString()));
                 log.Info($"接收:{message}");
                 while (Messages.Count > 150)
                 {
@@ -310,13 +298,13 @@ public partial class UdpClientModel : ObservableObject
     }
 
 
-    protected void ShowSendMessage(string message, string title = "")
+    protected void ShowSendMessage(string message, string remoteEndPoint = "")
     {
         try
         {
             void action()
             {
-                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Send, title));
+                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, MessageType.Send, remoteEndPoint,SendDataType.ToString()));
                 log.Info($"发送:{message}");
                 while (Messages.Count > 150)
                 {
@@ -341,7 +329,7 @@ public partial class UdpClientModel : ObservableObject
         {
             void action()
             {
-                Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
+                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, type, title));
                 log.Info(message);
                 while (Messages.Count > 100)
                 {
