@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Wu.CommTool.Modules.Udp.Models;
+﻿namespace Wu.CommTool.Modules.Udp.Models;
 
 public partial class UdpMessageData : MessageData
 {
@@ -12,10 +6,10 @@ public partial class UdpMessageData : MessageData
     {
     }
 
+    public UdpMessageData(string Content, DateTime dateTime, string remoteEndPoint, MessageType Type = MessageType.Info, string Title = "") : base(Content, dateTime, Type, Title)
+    {
+        RemoteEndPoint = remoteEndPoint;
+    }
 
     [ObservableProperty] string remoteEndPoint;
-
-
-
-
 }

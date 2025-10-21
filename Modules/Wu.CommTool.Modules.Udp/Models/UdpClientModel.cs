@@ -1,45 +1,31 @@
 ﻿using System.Collections.Concurrent;
 using System.Net.Sockets;
 using System.Threading;
+using System.Windows.Forms;
 using Wu.CommTool.Core.Enums.Tcp;
 
 namespace Wu.CommTool.Modules.Udp.Models;
 
 public partial class UdpClientModel : ObservableObject
 {
-    private UdpClient udpReceiveClient = new();
-    private UdpClient udpSendClient = new();
-    private IPEndPoint targetEndPoint;
+    private UdpClient udpClient = new();
     public static readonly ILog log = LogManager.GetLogger(typeof(UdpClientModel));
-
-    private int receivePort;
-    private bool isReceiving = false;
-    private Thread receiveThread;
-    private int sendCount = 0;
-    private int receiveCount = 0;
-    private System.Timers.Timer autoSendTimer;
 
     // 线程安全的接收队列
     private ConcurrentQueue<string> receivedMessages = new ConcurrentQueue<string>();
 
-    public string TargetAddress => targetEndPoint?.ToString() ?? "未设置";
-    public int ListenPort => receivePort;
-
-    public bool IsReceiving => isReceiving;
-    public int SendCount => sendCount;
-    public int ReceiveCount => receiveCount;
-
-
-
 
     #region 属性
-    [ObservableProperty] string serverIp = "127.0.0.1";
-    [ObservableProperty] int serverPort = 13333;
+    private IPEndPoint remoteEndPoint;
+    [ObservableProperty] string remoteIp = "127.0.0.1";
 
-    /// <summary>
-    /// 用于接收的监听端口
-    /// </summary>
-    [ObservableProperty] int receiveListenPort;
+    [ObservableProperty] int remotePort = 13333;
+
+    [ObservableProperty] int localPort = 9999;
+
+    [ObservableProperty] private int sendCount = 0;
+    [ObservableProperty] private int receiveCount = 0;
+
 
 
     /// <summary>
@@ -50,21 +36,23 @@ public partial class UdpClientModel : ObservableObject
     /// <summary>
     /// 发送消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType sendTcpDataType = TcpDataType.Uft8;
+    [ObservableProperty] TcpDataType sendDataType = TcpDataType.Uft8;
 
     /// <summary>
     /// 接收消息类型
     /// </summary>
-    [ObservableProperty] TcpDataType receiveTcpDataType = TcpDataType.Uft8;
+    [ObservableProperty] TcpDataType receiveDataType = TcpDataType.Uft8;
 
+    /// <summary>
+    /// UDP客户端是否已打开
+    /// </summary>
     [ObservableProperty] bool isOpened;
     #endregion
 
 
     public UdpClientModel()
     {
-        // 设置超时时间
-        udpSendClient.Client.ReceiveTimeout = 1000;
+
     }
 
 
@@ -86,24 +74,21 @@ public partial class UdpClientModel : ObservableObject
                 return;
             }
 
-            this.targetEndPoint = new IPEndPoint(IPAddress.Parse(ServerIp), ServerPort);
-            this.receivePort = ReceiveListenPort == 0 ? ServerPort : ReceiveListenPort;
+            this.remoteEndPoint = new IPEndPoint(IPAddress.Parse(RemoteIp), RemotePort);
 
             // 创建发送客户端
-            udpSendClient = new UdpClient();
-            udpSendClient.Client.SendBufferSize = 1024 * 1024;
-
-            // 创建接收客户端（绑定到指定端口）
-            udpReceiveClient = new UdpClient(receivePort);
-            udpReceiveClient.Client.ReceiveBufferSize = 1024 * 1024;
+            udpClient = new UdpClient(LocalPort);
+            udpClient.Client.SendBufferSize = 1024 * 1024;
+            StartListening();//开启监听
 
             IsOpened = true;
-            ShowMessage($"UDP连接打开成功。目标地址: {targetEndPoint}。监听端口: {receivePort}");
+
+            ShowMessage($"打开UDP客户端....目标地址: {remoteEndPoint}....监听端口: {((IPEndPoint)udpClient.Client.LocalEndPoint)}");
             return;
         }
         catch (Exception ex)
         {
-            ShowErrorMessage($"打开UDP失败: {ex.Message}");
+            ShowErrorMessage($"打开UDP客户端失败: {ex.Message}");
             Close();
         }
     }
@@ -114,28 +99,20 @@ public partial class UdpClientModel : ObservableObject
     {
         try
         {
-            udpSendClient?.Close();
-            ShowMessage($"断开连接");
-
-            //// 停止自动发送
-            //StopAutoSend();
-            //// 停止接收
-            //StopReceiving();
+            udpClient?.Close();
+            ShowMessage($"关闭UDP客户端");
 
             // 关闭UDP客户端
-            udpSendClient?.Close();
-            udpReceiveClient?.Close();
+            udpClient?.Close();
 
             IsOpened = false;
-            ShowMessage("UDP已关闭");
+            ShowMessage("UDP客户端已关闭");
         }
         catch (Exception ex)
         {
             ShowErrorMessage($"关闭UDP客户端时发生错误: {ex.Message}");
         }
     }
-
-
 
     /// <summary>
     /// 发送消息
@@ -150,13 +127,62 @@ public partial class UdpClientModel : ObservableObject
             if (!IsOpened) return;
         }
 
+        if (string.IsNullOrEmpty(SendInput))
+        {
+            ShowSendMessage("错误：消息不能为空");
+            return;
+        }
+
         try
         {
-            //TODO 根据选择的消息格式发送
-            byte[] data = Encoding.UTF8.GetBytes(SendInput);
-            udpSendClient.Send(data, data.Length, targetEndPoint);
-            ShowSendMessage($"{SendInput}");
-            sendCount++;
+            switch (SendDataType)
+            {
+                case TcpDataType.Ascii:
+                    byte[] data = Encoding.ASCII.GetBytes(SendInput);
+                    udpClient.Send(data, data.Length, remoteEndPoint);
+                    ShowSendMessage($"{SendInput}", remoteEndPoint.ToString());
+                    break;
+                case TcpDataType.Hex:
+                    string hexString = SendInput.Replace(" ", "");
+
+                    // 检查长度是否为偶数
+                    if (hexString.Length % 2 != 0)
+                    {
+                        ShowSendMessage("错误：十六进制字符串长度必须是偶数");
+                        return;
+                    }
+
+                    // 检查是否只包含有效的十六进制字符
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(hexString, @"^[0-9A-Fa-f]+$"))
+                    {
+                        ShowSendMessage("错误：字符串包含无效的十六进制字符");
+                        return;
+                    }
+
+
+
+                    byte[] data2 = new byte[hexString.Length / 2];
+
+                    for (int i = 0; i < data2.Length; i++)
+                    {
+                        data2[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+                    }
+                    udpClient.Send(data2, data2.Length, remoteEndPoint);
+                    ShowSendMessage($"{BitConverter.ToString(data2).Replace("-", " ")}", remoteEndPoint.ToString());
+                    break;
+                case TcpDataType.Uft8:
+                    byte[] utf8Data = Encoding.UTF8.GetBytes(SendInput);
+                    udpClient.Send(utf8Data, utf8Data.Length, remoteEndPoint);
+                    ShowSendMessage($"{SendInput}", remoteEndPoint.ToString());
+                    break;
+                case TcpDataType.Unicode:
+                    byte[] unicodeData = Encoding.Unicode.GetBytes(SendInput);
+                    udpClient.Send(unicodeData, unicodeData.Length, remoteEndPoint);
+                    ShowSendMessage($"{SendInput}", remoteEndPoint.ToString());
+                    break;
+                default:
+                    break;
+            }
             return;
         }
         catch (Exception ex)
@@ -166,21 +192,70 @@ public partial class UdpClientModel : ObservableObject
         }
     }
 
+    private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+
     /// <summary>
-    /// 发送字节数据
+    /// 开始异步接收消息
     /// </summary>
-    public void SendBytes(byte[] data)
+    public void StartListening()
     {
-        //try
-        //{
-        //    udpSendClient.Send(data, data.Length, serverEndPoint);
-        //    Console.WriteLine($"[发送] {DateTime.Now:HH:mm:ss.fff} -> 字节数据 {data.Length} bytes");
-        //}
-        //catch (Exception ex)
-        //{
-        //    Console.WriteLine($"[错误] 发送失败: {ex.Message}");
-        //}
+        if (IsOpened) return;
+        Task.Run(async () => await ReceiveMessagesAsync(_cancellationTokenSource.Token));
     }
+
+    /// <summary>
+    /// 异步接收消息循环
+    /// </summary>
+    private async Task ReceiveMessagesAsync(CancellationToken cancellationToken)
+    {
+        while (!cancellationToken.IsCancellationRequested && IsOpened)
+        {
+            try
+            {
+                UdpReceiveResult result = await udpClient.ReceiveAsync();
+                string message = Encoding.UTF8.GetString(result.Buffer);
+
+                var receivedBuffer = result.Buffer;
+
+                switch (ReceiveDataType)
+                {
+                    case TcpDataType.Ascii:
+                        string receivedData = Encoding.ASCII.GetString(receivedBuffer);
+                        ShowReceiveMessage($"{receivedData}", result.RemoteEndPoint.ToString());
+                        break;
+                    case TcpDataType.Hex:
+                        ShowReceiveMessage($"{BitConverter.ToString(receivedBuffer).Replace("-", "").InsertFormat(4, " ")}", result.RemoteEndPoint.ToString());
+                        break;
+                    case TcpDataType.Uft8:
+                        string utf8Data = Encoding.UTF8.GetString(receivedBuffer);
+                        ShowReceiveMessage($"{utf8Data}", result.RemoteEndPoint.ToString());
+                        break;
+                    case TcpDataType.Unicode:
+                        string unicodeData = Encoding.Unicode.GetString(receivedBuffer);
+                        ShowReceiveMessage($"{unicodeData}", result.RemoteEndPoint.ToString());
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+                // UDP客户端已被释放，正常退出
+                break;
+            }
+            catch (Exception ex)
+            {
+                //OnError?.Invoke(ex);
+                // 短暂延迟后继续接收
+                await Task.Delay(100, cancellationToken);
+            }
+        }
+    }
+
+
+
+
 
     /// <summary>
     /// 广播消息到整个子网
@@ -235,6 +310,7 @@ public partial class UdpClientModel : ObservableObject
         {
         }
     }
+
 
     protected void ShowSendMessage(string message, string title = "")
     {
