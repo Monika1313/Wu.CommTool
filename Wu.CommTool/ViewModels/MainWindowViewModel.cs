@@ -109,13 +109,13 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
             new() { Icon = "LanConnect", Title = "ModbusTcp设备监控", NameSpace = nameof(MtcpDeviceMonitorView) },
 #if DEBUG
-            new() { Icon = "LanConnect", Title = "UDP", NameSpace = nameof(UdpView) },
 #endif
             new() { Icon = "LanConnect", Title = "串口", NameSpace = nameof(UartView) },
             new() { Icon = "LadyBug", Title = "Mqtt Server", NameSpace = nameof(MqttServerView) },
             new() { Icon = "Bug", Title = "Mqtt Client", NameSpace = nameof(MqttClientView) },
             new() { Icon = "ServerNetwork", Title = "Tcp Server", NameSpace = nameof(TcpServerView) },
             new() { Icon = "NetworkOutline", Title = "Tcp Client", NameSpace = nameof(TcpClientView) },
+            new() { Icon = "LanConnect", Title = "UDP", NameSpace = nameof(UdpView) },
             new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
             new() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
             new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
