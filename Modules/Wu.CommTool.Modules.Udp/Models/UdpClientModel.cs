@@ -14,11 +14,11 @@ public partial class UdpClientModel : ObservableObject
 
 
     #region 属性
-    public IPEndPoint RemoteEndPoint=> new IPEndPoint(IPAddress.Parse(RemoteIp), RemotePort);
+    public IPEndPoint RemoteEndPoint => new(IPAddress.Parse(RemoteIp), RemotePort);
     [ObservableProperty] string remoteIp = "127.0.0.1";
     [ObservableProperty] int remotePort = 13333;
 
-    public IPEndPoint LocalEndPoint=> new IPEndPoint(IPAddress.Parse(LocalIp), LocalPort);
+    public IPEndPoint LocalEndPoint => new(IPAddress.Parse(LocalIp), LocalPort);
     [ObservableProperty] string localIp = "0.0.0.0";
     [ObservableProperty] int localPort = 9999;
 
@@ -59,23 +59,18 @@ public partial class UdpClientModel : ObservableObject
                 return;
             }
 
-            //RemoteEndPoint = new IPEndPoint(IPAddress.Parse(RemoteIp), RemotePort);
-            //localEndPoint = new IPEndPoint(IPAddress.Parse(LocalIp), LocalPort);
-
-            // 创建发送客户端
+            //创建客户端
             udpClient = new UdpClient(LocalEndPoint);
             udpClient.Client.SendBufferSize = 1024 * 1024;
-            StartListening();//开启监听
 
             IsOpened = true;
-
+            StartListening();//开启监听
             ShowMessage($"打开UDP客户端: {((IPEndPoint)udpClient.Client.LocalEndPoint)}");
             return;
         }
         catch (Exception ex)
         {
             ShowErrorMessage($"打开UDP客户端失败: {ex.Message}");
-            Close();
         }
     }
 
@@ -115,7 +110,7 @@ public partial class UdpClientModel : ObservableObject
 
         if (string.IsNullOrEmpty(SendInput))
         {
-            ShowSendMessage("错误：消息不能为空");
+            ShowErrorMessage("发送 消息不能为空");
             return;
         }
 
@@ -134,18 +129,16 @@ public partial class UdpClientModel : ObservableObject
                     // 检查长度是否为偶数
                     if (hexString.Length % 2 != 0)
                     {
-                        ShowSendMessage("错误：十六进制字符串长度必须是偶数");
+                        ShowErrorMessage("十六进制字符串长度必须是偶数");
                         return;
                     }
 
                     // 检查是否只包含有效的十六进制字符
                     if (!System.Text.RegularExpressions.Regex.IsMatch(hexString, @"^[0-9A-Fa-f]+$"))
                     {
-                        ShowSendMessage("错误：字符串包含无效的十六进制字符");
+                        ShowErrorMessage("字符串包含无效的十六进制字符");
                         return;
                     }
-
-
 
                     byte[] data2 = new byte[hexString.Length / 2];
 
@@ -180,18 +173,17 @@ public partial class UdpClientModel : ObservableObject
 
     private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-
     /// <summary>
     /// 开始异步接收消息
     /// </summary>
     public void StartListening()
     {
-        if (IsOpened) return;
+        if (!IsOpened) return;
         Task.Run(async () => await ReceiveMessagesAsync(_cancellationTokenSource.Token));
     }
 
     /// <summary>
-    /// 异步接收消息循环
+    /// 异步接收消息
     /// </summary>
     private async Task ReceiveMessagesAsync(CancellationToken cancellationToken)
     {
@@ -230,9 +222,8 @@ public partial class UdpClientModel : ObservableObject
                 // UDP客户端已被释放，正常退出
                 break;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                //OnError?.Invoke(ex);
                 // 短暂延迟后继续接收
                 await Task.Delay(100, cancellationToken);
             }
@@ -283,7 +274,7 @@ public partial class UdpClientModel : ObservableObject
         {
             void action()
             {
-                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, MessageType.Receive, remoteEndPoint,ReceiveDataType.ToString()));
+                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, MessageType.Receive, remoteEndPoint, ReceiveDataType.ToString()));
                 log.Info($"接收:{message}");
                 while (Messages.Count > 150)
                 {
@@ -304,7 +295,7 @@ public partial class UdpClientModel : ObservableObject
         {
             void action()
             {
-                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, MessageType.Send, remoteEndPoint,SendDataType.ToString()));
+                Messages.Add(new UdpMessageData($"{message}", DateTime.Now, MessageType.Send, remoteEndPoint, SendDataType.ToString()));
                 log.Info($"发送:{message}");
                 while (Messages.Count > 150)
                 {
