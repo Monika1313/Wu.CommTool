@@ -1,188 +1,461 @@
-﻿namespace Wu.CommTool.Modules.MrtuSlave.Models;
+﻿using Microsoft.Win32;
 
-public abstract class ModbusRegister
+namespace Wu.CommTool.Modules.MrtuSlave.Models;
+
+/// <summary>
+/// 寄存器
+/// </summary>
+public partial class ModbusRegister : ObservableObject
 {
-    public ushort Address { get; protected set; }
-    public string Name { get; protected set; }
-    public string Description { get; protected set; }
-    public bool IsReadOnly { get; protected set; }
+    [ObservableProperty] private ushort address;
 
-    public abstract object GetValue();
-    public abstract void SetValue(object value);
+    [ObservableProperty] private ushort value;
 
-    protected ModbusRegister(ushort address, string name, string description, bool isReadOnly)
+    [ObservableProperty] private string description;
+
+    [ObservableProperty] private bool isCoil;
+
+    public ModbusRegister(ushort address, string description, bool isCoil = false)
     {
         Address = address;
-        Name = name;
         Description = description;
-        IsReadOnly = isReadOnly;
+        IsCoil = isCoil;
+        Value = 0;
+    }
+}
+
+/// <summary>
+/// 保持寄存器
+/// </summary>
+public partial class HoldingRegisters : ObservableObject
+{
+    [ObservableProperty] private ObservableCollection<ModbusRegister> registers;
+
+    public HoldingRegisters()
+    {
+        Registers = [];
+        InitializeRegisters();
+    }
+
+    /// <summary>
+    /// 初始化寄存器
+    /// </summary>
+    private void InitializeRegisters()
+    {
+        for (ushort i = 0; i < 100; i++)
+        {
+            Registers.Add(new ModbusRegister(i, $"保持寄存器{i}", false));
+        }
+    }
+
+    /// <summary>
+    /// 读取寄存器值
+    /// </summary>
+    /// <param name="address"></param>
+    /// <returns></returns>
+    public ushort ReadRegister(ushort address)
+    {
+        var register = Registers.FirstOrDefault(r => r.Address == address);
+        return register?.Value ?? 0;
+    }
+
+    /// <summary>
+    /// 写入寄存器
+    /// </summary>
+    /// <param name="address"></param>
+    /// <param name="value"></param>
+    public void WriteRegister(ushort address, ushort value)
+    {
+        var register = Registers.FirstOrDefault(r => r.Address == address);
+        if (register != null)
+        {
+            register.Value = value;
+        }
+    }
+
+    /// <summary>
+    /// 读多个寄存器
+    /// </summary>
+    /// <param name="startAddress"></param>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    public ushort[] ReadRegisters(ushort startAddress, ushort count)
+    {
+        var values = new ushort[count];
+        for (ushort i = 0; i < count; i++)
+        {
+            values[i] = ReadRegister((ushort)(startAddress + i));
+        }
+        return values;
+    }
+
+    /// <summary>
+    /// 写入多个寄存器
+    /// </summary>
+    /// <param name="startAddress"></param>
+    /// <param name="values"></param>
+    public void WriteRegisters(ushort startAddress, ushort[] values)
+    {
+        for (ushort i = 0; i < values.Length; i++)
+        {
+            WriteRegister((ushort)(startAddress + i), values[i]);
+        }
+    }
+}
+
+/// <summary>
+/// 输入寄存器
+/// </summary>
+public partial class InputRegisters : ObservableObject
+{
+    [ObservableProperty] private ObservableCollection<ModbusRegister> registers;
+
+    public InputRegisters()
+    {
+        Registers = [];
+        InitializeRegisters();
+    }
+
+    /// <summary>
+    /// 初始化寄存器
+    /// </summary>
+    private void InitializeRegisters()
+    {
+        for (ushort i = 0; i < 100; i++)
+        {
+            Registers.Add(new ModbusRegister(i, $"保持寄存器{i}", false));
+        }
+    }
+
+    /// <summary>
+    /// 读取寄存器值
+    /// </summary>
+    /// <param name="address"></param>
+    /// <returns></returns>
+    public ushort ReadRegister(ushort address)
+    {
+        var register = Registers.FirstOrDefault(r => r.Address == address);
+        return register?.Value ?? 0;
+    }
+
+    /// <summary>
+    /// 写入寄存器
+    /// </summary>
+    /// <param name="address"></param>
+    /// <param name="value"></param>
+    public void WriteRegister(ushort address, ushort value)
+    {
+        var register = Registers.FirstOrDefault(r => r.Address == address);
+        if (register != null)
+        {
+            register.Value = value;
+        }
+    }
+
+    /// <summary>
+    /// 读多个寄存器
+    /// </summary>
+    /// <param name="startAddress"></param>
+    /// <param name="count"></param>
+    /// <returns></returns>
+    public ushort[] ReadRegisters(ushort startAddress, ushort count)
+    {
+        var values = new ushort[count];
+        for (ushort i = 0; i < count; i++)
+        {
+            values[i] = ReadRegister((ushort)(startAddress + i));
+        }
+        return values;
+    }
+
+    /// <summary>
+    /// 写入多个寄存器
+    /// </summary>
+    /// <param name="startAddress"></param>
+    /// <param name="values"></param>
+    public void WriteRegisters(ushort startAddress, ushort[] values)
+    {
+        for (ushort i = 0; i < values.Length; i++)
+        {
+            WriteRegister((ushort)(startAddress + i), values[i]);
+        }
+    }
+}
+
+/// <summary>
+/// 线圈寄存器
+/// </summary>
+public partial class CoilRegisters : ObservableObject
+{
+    [ObservableProperty]
+    private ObservableCollection<ModbusRegister> coils;
+
+    public CoilRegisters()
+    {
+        Coils = new ObservableCollection<ModbusRegister>();
+        InitializeCoils();
+    }
+
+    private void InitializeCoils()
+    {
+        for (ushort i = 0; i < 100; i++)
+        {
+            Coils.Add(new ModbusRegister(i, $"线圈{i}", true));
+        }
+    }
+
+    public bool ReadCoil(ushort address)
+    {
+        var coil = Coils.FirstOrDefault(c => c.Address == address);
+        return coil?.Value != 0;
+    }
+
+    public void WriteCoil(ushort address, bool value)
+    {
+        var coil = Coils.FirstOrDefault(c => c.Address == address);
+        if (coil != null)
+        {
+            coil.Value = value ? (ushort)1 : (ushort)0;
+        }
+    }
+
+    public bool[] ReadCoils(ushort startAddress, ushort count)
+    {
+        var values = new bool[count];
+        for (ushort i = 0; i < count; i++)
+        {
+            values[i] = ReadCoil((ushort)(startAddress + i));
+        }
+        return values;
+    }
+
+    public void WriteCoils(ushort startAddress, bool[] values)
+    {
+        for (ushort i = 0; i < values.Length; i++)
+        {
+            WriteCoil((ushort)(startAddress + i), values[i]);
+        }
     }
 }
 
 
-public class CoilRegister : ModbusRegister
+/// <summary>
+/// 协议解析
+/// </summary>
+public partial class ModbusRTUProtocol : ObservableObject
 {
-    private bool _value;
+    // Modbus功能码
+    private const byte READ_COILS = 0x01;
+    private const byte READ_DISCRETE_INPUTS = 0x02;
+    private const byte READ_HOLDING_REGISTERS = 0x03;
+    private const byte READ_INPUT_REGISTERS = 0x04;
+    private const byte WRITE_SINGLE_COIL = 0x05;
+    private const byte WRITE_SINGLE_REGISTER = 0x06;
+    private const byte WRITE_MULTIPLE_COILS = 0x0F;
+    private const byte WRITE_MULTIPLE_REGISTERS = 0x10;
 
-    public CoilRegister(ushort address, string name, string description, bool initialValue = false)
-        : base(address, name, description, false)
+    private readonly HoldingRegisters holdingRegisters;
+    private readonly CoilRegisters coilRegisters;
+
+    public ModbusRTUProtocol(HoldingRegisters holdingRegisters, CoilRegisters coilRegisters)
     {
-        _value = initialValue;
+        this.holdingRegisters = holdingRegisters;
+        this.coilRegisters = coilRegisters;
     }
 
-    public override object GetValue() => _value;
 
-    public override void SetValue(object value)
+    /// <summary>
+    /// 处理请求
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    public byte[] ProcessRequest(byte[] request)
     {
-        if (value is bool boolValue)
+        if (request.Length < 4) return CreateErrorResponse(request[0], request[1], 0x01); // 非法功能码
+
+        byte slaveAddress = request[0];
+        byte functionCode = request[1];
+        ushort startAddress = (ushort)((request[2] << 8) | request[3]);
+        ushort quantity = (ushort)((request[4] << 8) | request[5]);
+
+        try
         {
-            _value = boolValue;
+            return functionCode switch
+            {
+                READ_COILS => HandleReadCoils(slaveAddress, functionCode, startAddress, quantity),
+                READ_HOLDING_REGISTERS => HandleReadHoldingRegisters(slaveAddress, functionCode, startAddress, quantity),
+                WRITE_SINGLE_COIL => HandleWriteSingleCoil(slaveAddress, functionCode, startAddress, request),
+                WRITE_SINGLE_REGISTER => HandleWriteSingleRegister(slaveAddress, functionCode, startAddress, request),
+                WRITE_MULTIPLE_COILS => HandleWriteMultipleCoils(slaveAddress, functionCode, startAddress, request),
+                WRITE_MULTIPLE_REGISTERS => HandleWriteMultipleRegisters(slaveAddress, functionCode, startAddress, request),
+                _ => CreateErrorResponse(slaveAddress, functionCode, 0x01) // 非法功能码
+            };
         }
-        else
+        catch (Exception)
         {
-            throw new ArgumentException("Value must be of type bool");
-        }
-    }
-
-    // 便捷方法
-    public bool Value
-    {
-        get => _value;
-        set => _value = value;
-    }
-}
-
-
-public class DiscreteInputRegister : ModbusRegister
-{
-    private bool _value;
-
-    public DiscreteInputRegister(ushort address, string name, string description, bool initialValue = false)
-        : base(address, name, description, true)
-    {
-        _value = initialValue;
-    }
-
-    public override object GetValue() => _value;
-
-    public override void SetValue(object value)
-    {
-        throw new InvalidOperationException("Discrete input registers are read-only");
-    }
-
-    // 内部设置方法，供设备驱动使用
-    public void UpdateValue(bool value) => _value = value;
-
-    public bool Value => _value;
-}
-
-public class HoldingRegister : ModbusRegister
-{
-    private ushort _value;
-
-    public HoldingRegister(ushort address, string name, string description, ushort initialValue = 0)
-        : base(address, name, description, false)
-    {
-        _value = initialValue;
-    }
-
-    public override object GetValue() => _value;
-
-    public override void SetValue(object value)
-    {
-        if (value is ushort ushortValue)
-        {
-            _value = ushortValue;
-        }
-        else
-        {
-            throw new ArgumentException("Value must be of type ushort");
+            return CreateErrorResponse(slaveAddress, functionCode, 0x04); // 从站设备故障
         }
     }
 
-    // 便捷方法
-    public ushort Value
+    private byte[] HandleReadCoils(byte slaveAddress, byte functionCode, ushort startAddress, ushort quantity)
     {
-        get => _value;
-        set => _value = value;
-    }
-}
+        if (quantity < 1 || quantity > 2000)
+            return CreateErrorResponse(slaveAddress, functionCode, 0x03); // 非法数据值
 
-public class InputRegister : ModbusRegister
-{
-    private ushort _value;
+        var coilValues = coilRegisters.ReadCoils(startAddress, quantity);
+        int byteCount = (quantity + 7) / 8;
+        byte[] data = new byte[byteCount + 2]; // 从站地址 + 功能码 + 字节数 + 数据 + CRC
 
-    public InputRegister(ushort address, string name, string description, ushort initialValue = 0)
-        : base(address, name, description, true)
-    {
-        _value = initialValue;
-    }
+        data[0] = slaveAddress;
+        data[1] = functionCode;
+        data[2] = (byte)byteCount;
 
-    public override object GetValue() => _value;
-
-    public override void SetValue(object value)
-    {
-        throw new InvalidOperationException("Input registers are read-only");
-    }
-
-    // 内部设置方法，供设备驱动使用
-    public void UpdateValue(ushort value) => _value = value;
-
-    public ushort Value => _value;
-}
-
-
-public class ModbusRegisterCollection
-{
-    private readonly Dictionary<ushort, ModbusRegister> _registers = new Dictionary<ushort, ModbusRegister>();
-    private readonly Dictionary<string, ModbusRegister> _namedRegisters = new Dictionary<string, ModbusRegister>();
-
-    public void AddRegister(ModbusRegister register)
-    {
-        if (_registers.ContainsKey(register.Address))
+        for (int i = 0; i < quantity; i++)
         {
-            throw new ArgumentException($"Register address {register.Address} already exists");
+            if (coilValues[i])
+            {
+                data[3 + i / 8] |= (byte)(1 << (i % 8));
+            }
         }
 
-        _registers.Add(register.Address, register);
-        _namedRegisters.Add(register.Name, register);
+        return AddCRC(data, 0, data.Length);
     }
 
-    public ModbusRegister GetRegisterByAddress(ushort address)
+    private byte[] HandleReadHoldingRegisters(byte slaveAddress, byte functionCode, ushort startAddress, ushort quantity)
     {
-        return _registers.TryGetValue(address, out var register) ? register : null;
-    }
+        if (quantity < 1 || quantity > 125)
+            return CreateErrorResponse(slaveAddress, functionCode, 0x03); // 非法数据值
 
-    public ModbusRegister GetRegisterByName(string name)
-    {
-        return _namedRegisters.TryGetValue(name, out var register) ? register : null;
-    }
+        var registerValues = holdingRegisters.ReadRegisters(startAddress, quantity);
+        byte[] data = new byte[3 + quantity * 2]; // 从站地址 + 功能码 + 字节数 + 数据 + CRC
 
-    public IEnumerable<ModbusRegister> GetAllRegisters()
-    {
-        return _registers.Values.OrderBy(r => r.Address);
-    }
+        data[0] = slaveAddress;
+        data[1] = functionCode;
+        data[2] = (byte)(quantity * 2);
 
-    public bool TryReadCoil(ushort address, out bool value)
-    {
-        if (GetRegisterByAddress(address) is CoilRegister coil)
+        for (int i = 0; i < quantity; i++)
         {
-            value = coil.Value;
-            return true;
+            data[3 + i * 2] = (byte)(registerValues[i] >> 8);
+            data[4 + i * 2] = (byte)(registerValues[i] & 0xFF);
         }
-        value = false;
-        return false;
+
+        return AddCRC(data, 0, data.Length);
     }
 
-    public bool TryWriteCoil(ushort address, bool value)
+    private byte[] HandleWriteSingleCoil(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
     {
-        if (GetRegisterByAddress(address) is CoilRegister coil && !coil.IsReadOnly)
-        {
-            coil.Value = value;
-            return true;
-        }
-        return false;
+        ushort value = (ushort)((request[4] << 8) | request[5]);
+        bool coilValue = value == 0xFF00;
+
+        coilRegisters.WriteCoil(startAddress, coilValue);
+
+        // 返回相同的请求作为响应
+        byte[] response = new byte[8];
+        Array.Copy(request, 0, response, 0, 6);
+        return AddCRC(response, 0, 6);
     }
 
-    // 类似方法实现其他寄存器类型的读写...
+    private byte[] HandleWriteSingleRegister(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
+    {
+        ushort value = (ushort)((request[4] << 8) | request[5]);
+        holdingRegisters.WriteRegister(startAddress, value);
+
+        // 返回相同的请求作为响应
+        byte[] response = new byte[8];
+        Array.Copy(request, 0, response, 0, 6);
+        return AddCRC(response, 0, 6);
+    }
+
+    private byte[] HandleWriteMultipleCoils(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
+    {
+        ushort quantity = (ushort)((request[4] << 8) | request[5]);
+        byte byteCount = request[6];
+
+        bool[] values = new bool[quantity];
+        for (int i = 0; i < quantity; i++)
+        {
+            int byteIndex = 7 + i / 8;
+            int bitIndex = i % 8;
+            values[i] = (request[byteIndex] & (1 << bitIndex)) != 0;
+        }
+
+        coilRegisters.WriteCoils(startAddress, values);
+
+        // 返回确认响应
+        byte[] response = new byte[8];
+        response[0] = slaveAddress;
+        response[1] = functionCode;
+        response[2] = (byte)(startAddress >> 8);
+        response[3] = (byte)(startAddress & 0xFF);
+        response[4] = (byte)(quantity >> 8);
+        response[5] = (byte)(quantity & 0xFF);
+
+        return AddCRC(response, 0, 6);
+    }
+
+    private byte[] HandleWriteMultipleRegisters(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
+    {
+        ushort quantity = (ushort)((request[4] << 8) | request[5]);
+        byte byteCount = request[6];
+
+        ushort[] values = new ushort[quantity];
+        for (int i = 0; i < quantity; i++)
+        {
+            values[i] = (ushort)((request[7 + i * 2] << 8) | request[8 + i * 2]);
+        }
+
+        holdingRegisters.WriteRegisters(startAddress, values);
+
+        // 返回确认响应
+        byte[] response = new byte[8];
+        response[0] = slaveAddress;
+        response[1] = functionCode;
+        response[2] = (byte)(startAddress >> 8);
+        response[3] = (byte)(startAddress & 0xFF);
+        response[4] = (byte)(quantity >> 8);
+        response[5] = (byte)(quantity & 0xFF);
+
+        return AddCRC(response, 0, 6);
+    }
+
+    private byte[] CreateErrorResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
+    {
+        byte[] response = new byte[5];
+        response[0] = slaveAddress;
+        response[1] = (byte)(functionCode | 0x80); // 设置错误标志
+        response[2] = exceptionCode;
+        return AddCRC(response, 0, 3);
+    }
+
+    private byte[] AddCRC(byte[] data, int start, int length)
+    {
+        ushort crc = CalculateCRC(data, start, length);
+        byte[] result = new byte[length + 2];
+        Array.Copy(data, start, result, 0, length);
+        result[length] = (byte)(crc & 0xFF);
+        result[length + 1] = (byte)(crc >> 8);
+        return result;
+    }
+
+    private ushort CalculateCRC(byte[] data, int start, int length)
+    {
+        ushort crc = 0xFFFF;
+        for (int i = start; i < start + length; i++)
+        {
+            crc ^= data[i];
+            for (int j = 0; j < 8; j++)
+            {
+                if ((crc & 0x0001) != 0)
+                {
+                    crc >>= 1;
+                    crc ^= 0xA001;
+                }
+                else
+                {
+                    crc >>= 1;
+                }
+            }
+        }
+        return crc;
+    }
 }

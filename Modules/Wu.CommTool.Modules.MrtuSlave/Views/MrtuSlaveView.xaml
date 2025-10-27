@@ -231,12 +231,17 @@
                                   CanUserSortColumns="False"
                                   Cursor=""
                                   FrozenColumnCount="1"
-                                  HeadersVisibility="Column"
+                                  HeadersVisibility="All"
                                   IsReadOnly="True"
-                                  ItemsSource="{Binding MrtuSlaveModel.MrtuDatas}">
+                                  ItemsSource="{Binding MrtuSlaveModel.HoldingRegisters.Registers}"
+                                  Style="{StaticResource NumDataGrid}">
                             <!--  右键菜单  -->
                             <DataGrid.ContextMenu>
                                 <ContextMenu StaysOpen="true">
+                                    <!--<MenuItem Margin="2"
+                                              Command="{Binding MrtuSlaveModel.InitialHoldingRegisterCommand}"
+                                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                              Header="初始化保持寄存器" />-->
                                     <!--<MenuItem Margin="2"
                                           Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AddNewMrtuDataCommand}"
                                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
@@ -265,6 +270,7 @@
                             <DataGrid.RowStyle>
                                 <Style TargetType="DataGridRow">
                                     <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
                                 </Style>
                             </DataGrid.RowStyle>
 
@@ -279,81 +285,38 @@
                                 </Style>
                             </DataGrid.CellStyle>
 
-                            <!--  添加触发器,支持点击事件  -->
-                            <!--<i:Interaction.Triggers>
-                        <i:EventTrigger EventName="MouseDoubleClick">
-                            <i:InvokeCommandAction Command="{Binding DataContext.OpenMrtuDataEditViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}}" CommandParameter="{Binding ElementName=dataGrid, Path=SelectedItem}" />
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>-->
-
                             <DataGrid.Columns>
                                 <DataGridTemplateColumn Header="名称">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBox Width="120" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            <TextBox Width="120"
+                                                     HorizontalContentAlignment="Center"
+                                                     Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-
                                 <DataGridTemplateColumn Header="值">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border MinWidth="60"
-                                                    Padding="8,4"
-                                                    BorderThickness="1"
-                                                    CornerRadius="4">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
-                                                                <Setter Property="Background" Value="{StaticResource Green_Background}" />
-                                                                <Setter Property="BorderBrush" Value="{StaticResource Green_BorderBrush}" />
-                                                            </DataTrigger>
-                                                            <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
-                                                                <Setter Property="Background" Value="{StaticResource Purple_Background}" />
-                                                                <Setter Property="BorderBrush" Value="{StaticResource Purple_BorderBrush}" />
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                                <TextBlock FontSize="13" Text="{Binding Value}">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="false">
-                                                                    <Setter Property="Foreground" Value="{StaticResource Green_Foreground}" />
-                                                                </DataTrigger>
-                                                                <DataTrigger Binding="{Binding Name, Converter={wu:StringIsNullOrWhiteSpace2Visibility}}" Value="true">
-                                                                    <Setter Property="Foreground" Value="{StaticResource Purple_Foreground}" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
-                                            </Border>
+                                            <TextBox Width="120"
+                                                     HorizontalContentAlignment="Center"
+                                                     Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Header="单位">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox MinWidth="40"
-                                                     HorizontalContentAlignment="Center"
-                                                     Text="{Binding Unit, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTemplateColumn Header="寄存器地址">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox MinWidth="60"
-                                                     HorizontalContentAlignment="Center"
-                                                     Text="{Binding RegisterAddr, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                <DataGridTextColumn Binding="{Binding Address}"
+                                                    Foreground="Black"
+                                                    Header="地址"
+                                                    IsReadOnly="True">
+                                    <DataGridTextColumn.ElementStyle>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="HorizontalAlignment" Value="Center" />
+                                            <Setter Property="VerticalAlignment" Value="Center" />
+                                            <Setter Property="TextAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGridTextColumn.ElementStyle>
+                                </DataGridTextColumn>
 
                                 <!--<DataGridTemplateColumn Header="数据类型">
                                 <DataGridTemplateColumn.CellTemplate>
@@ -363,10 +326,6 @@
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>-->
 
-                                <DataGridTextColumn Binding="{Binding UpdateTime, StringFormat={}{0:HH:mm:ss}}"
-                                                    ElementStyle="{StaticResource CenterDataGridTextColumn}"
-                                                    Foreground="Black"
-                                                    Header="更新时间" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </Grid>

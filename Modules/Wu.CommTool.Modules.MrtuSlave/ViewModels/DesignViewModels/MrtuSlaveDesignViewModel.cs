@@ -6,6 +6,6 @@ public class MrtuSlaveDesignViewModel : MrtuSlaveViewModel
     public static MrtuSlaveDesignViewModel Instance => _Instance ??= new();
     public MrtuSlaveDesignViewModel()
     {
-        OpenDrawers.LeftDrawer = true;
+        OpenDrawers.LeftDrawer = false;
     }
 }

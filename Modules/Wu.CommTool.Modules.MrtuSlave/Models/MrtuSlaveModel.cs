@@ -31,11 +31,13 @@ public partial class MrtuSlaveModel : ObservableObject
     public MrtuSlaveModel()
     {
         Initial();
+
     }
 
     public MrtuSlaveModel(IContainerProvider provider) : this()
     {
         this.provider = provider;
+
     }
 
     private void Initial()
@@ -45,24 +47,41 @@ public partial class MrtuSlaveModel : ObservableObject
             GetComPorts();
         });
 
+        HoldingRegisters = new HoldingRegisters();
+        CoilRegisters = new CoilRegisters();
+        mrtuProtocol = new ModbusRTUProtocol(HoldingRegisters, CoilRegisters);
+
         SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);           //串口接收事件
         //数据帧处理子线程
         publishHandleTask = new Task(PublishFrame);
         receiveHandleTask = new Task(ReceiveFrame);
         publishHandleTask.Start();
         receiveHandleTask.Start();
+
+        //InitialHoldingRegister();//初始化保持寄存器
     }
     #endregion **************************************** 构造函数 ****************************************
 
 
+    #region 寄存器
 
+    /// <summary>
+    /// 保持寄存器
+    /// </summary>
+    [ObservableProperty] private HoldingRegisters holdingRegisters;
+
+    /// <summary>
+    /// 线圈寄存器
+    /// </summary>
+    [ObservableProperty] private CoilRegisters coilRegisters;
+
+    /// <summary>
+    /// ModbusRTU协议
+    /// </summary>
+    private ModbusRTUProtocol mrtuProtocol;
+    #endregion
 
     #region **************************************** 属性 ****************************************
-    /// <summary>
-    /// 寄存器集合
-    /// </summary>
-    [ObservableProperty] private ModbusRegisterCollection _ModbusRegisterCollection = new();
-
     /// <summary>
     /// 串口是否开启
     /// </summary>
@@ -329,8 +348,6 @@ public partial class MrtuSlaveModel : ObservableObject
     [RelayCommand]
     private void MessageClear()
     {
-        //ReceiveBytesCount = 0;
-        //SendBytesCount = 0;
         Wu.Wpf.Utils.ExecuteFun(Messages.Clear);
     }
 
@@ -862,6 +879,11 @@ public partial class MrtuSlaveModel : ObservableObject
                 //对接收的消息直接进行crc校验
                 var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
 
+                #region 处理接收的消息并应答
+                var xxx = mrtuProtocol.ProcessRequest(frame.GetBytes());
+                PublishMessage(xxx.ToHexString());
+                #endregion
+
                 #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
                 if (IsPause)
                 {
@@ -890,107 +912,28 @@ public partial class MrtuSlaveModel : ObservableObject
 
 
 
-    #region XXXX
-    private byte[] ProcessRequest(byte[] request)
-    {
-        // 解析功能码
-        byte functionCode = request[1];
+    #region 寄存器方法
 
-        try
-        {
-            switch (functionCode)
-            {
-                case 0x01: // 读线圈
-                    return ProcessReadCoils(request);
-                //case 0x02: // 读离散输入
-                //    return ProcessReadDiscreteInputs(request);
-                //case 0x03: // 读保持寄存器
-                //    return ProcessReadHoldingRegisters(request);
-                //case 0x04: // 读输入寄存器
-                //    return ProcessReadInputRegisters(request);
-                //case 0x05: // 写单个线圈
-                //    return ProcessWriteSingleCoil(request);
-                //case 0x06: // 写单个保持寄存器
-                //    return ProcessWriteSingleRegister(request);
-                //case 0x0F: // 写多个线圈
-                //    return ProcessWriteMultipleCoils(request);
-                //case 0x10: // 写多个保持寄存器
-                //    return ProcessWriteMultipleRegisters(request);
-                default:
-                    return CreateErrorResponse(functionCode, 0x01); // 非法功能
-            }
-        }
-        catch
-        {
-            return CreateErrorResponse(functionCode, 0x04); // 从站设备故障
-        }
-    }
+    //[RelayCommand]
+    //private void InitialHoldingRegister()
+    //{
+    //    try
+    //    {
+    //        if (HoldingRegister == null)
+    //        {
+    //            HoldingRegister = [];
+    //            for (int i = 0; i < 100; i++)
+    //            {
+    //                HoldingRegister.Add(new MrtuSlaveData());
+    //            }
+    //        }
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        Growl.Error(ex.Message);
+    //    }
+    //}
 
-    private byte[] ProcessReadCoils(byte[] request)
-    {
-        ushort startAddress = (ushort)((request[2] << 8) | request[3]);
-        ushort quantity = (ushort)((request[4] << 8) | request[5]);
-
-        if (quantity < 1 || quantity > 2000)
-            return CreateErrorResponse(0x01, 0x03); // 非法数据值
-
-        List<bool> values = new List<bool>();
-        for (ushort i = 0; i < quantity; i++)
-        {
-            if (ModbusRegisterCollection.TryReadCoil((ushort)(startAddress + i), out bool value))
-            {
-                values.Add(value);
-            }
-            else
-            {
-                return CreateErrorResponse(0x01, 0x02); // 非法数据地址
-            }
-        }
-
-        byte[] response = new byte[3 + (quantity + 7) / 8];
-        response[0] = SlaveId;
-        response[1] = 0x01;
-        response[2] = (byte)((quantity + 7) / 8);
-
-        for (int i = 0; i < quantity; i++)
-        {
-            if (values[i])
-            {
-                response[3 + i / 8] |= (byte)(1 << (i % 8));
-            }
-        }
-
-        return AppendCrc(response);
-    }
-
-    // 实现其他功能码的处理方法...
-
-    private byte[] CreateErrorResponse(byte functionCode, byte exceptionCode)
-    {
-        byte[] response = new byte[5];
-        response[0] = SlaveId;
-        response[1] = (byte)(functionCode | 0x80);
-        response[2] = exceptionCode;
-        return AppendCrc(response);
-    }
-
-
-
-    private byte[] AppendCrc(byte[] data)
-    {
-        ushort crc = CalculateCrc(data);
-        byte[] result = new byte[data.Length + 2];
-        Array.Copy(data, result, data.Length);
-        result[data.Length] = (byte)(crc & 0xFF);
-        result[data.Length + 1] = (byte)((crc >> 8) & 0xFF);
-        return result;
-    }
-
-    private ushort CalculateCrc(byte[] data)
-    {
-        //TODO 逻辑未实现
-        return 0; // 实现CRC计算逻辑
-    }
     #endregion
 
 }
