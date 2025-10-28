@@ -12,10 +12,8 @@ public partial class MrtuSlaveModel : ObservableObject
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
-    private readonly IDialogHostService dialogHost;
     private static readonly ILog log = LogManager.GetLogger(typeof(MrtuSlaveModel));
     private readonly SerialPort SerialPort = new();              //串口
-
 
     Task publishHandleTask; //发布消息处理线程
     Task receiveHandleTask; //接收消息处理线程
@@ -31,22 +29,16 @@ public partial class MrtuSlaveModel : ObservableObject
     public MrtuSlaveModel()
     {
         Initial();
-
     }
 
     public MrtuSlaveModel(IContainerProvider provider) : this()
     {
         this.provider = provider;
-
     }
-    
+
     private void Initial()
     {
-        Task.Run(() =>
-        {
-            GetComPorts();
-        });
-
+        Task.Run(GetComPorts);
         HoldingRegisters = new HoldingRegisters();
         CoilRegisters = new CoilRegisters();
         InputRegisters = new InputRegisters();
@@ -54,18 +46,15 @@ public partial class MrtuSlaveModel : ObservableObject
 
         SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);           //串口接收事件
         //数据帧处理子线程
-        publishHandleTask = new Task(PublishFrame);
-        receiveHandleTask = new Task(ReceiveFrame);
+        publishHandleTask = new Task(HandlePublishFrame);
+        receiveHandleTask = new Task(HandleReceiveFrame);
         publishHandleTask.Start();
         receiveHandleTask.Start();
-
-        //InitialHoldingRegister();//初始化保持寄存器
     }
     #endregion **************************************** 构造函数 ****************************************
 
 
     #region 寄存器
-
     /// <summary>
     /// 保持寄存器
     /// </summary>
@@ -168,9 +157,9 @@ public partial class MrtuSlaveModel : ObservableObject
     [ObservableProperty][property: JsonIgnore] int sendBytesCount = 0;
 
     /// <summary>
-    /// 从站ID
+    /// 从站ID 若设置为0则无ID 
     /// </summary>
-    [ObservableProperty] byte slaveId = 1;
+    [ObservableProperty] byte slaveId = 0;
     #endregion **************************************** 属性 ****************************************
 
     [RelayCommand]
@@ -192,6 +181,7 @@ public partial class MrtuSlaveModel : ObservableObject
             SerialPort.Parity = (System.IO.Ports.Parity)Parity;          //校验
             SerialPort.DataBits = DataBits;                              //数据位
             SerialPort.StopBits = (System.IO.Ports.StopBits)StopBits;    //停止位
+
             try
             {
                 SerialPort.Open();              //打开串口
@@ -250,13 +240,6 @@ public partial class MrtuSlaveModel : ObservableObject
             ShowMessage(ex.Message, MessageType.Error);
         }
     }
-
-
-
-    /// <summary>
-    /// 打开串口 若串口未打开则打开串口 若串口已打开则关闭
-    /// </summary>
-
 
 
     #region******************************  页面消息  ******************************
@@ -823,7 +806,7 @@ public partial class MrtuSlaveModel : ObservableObject
     /// <summary>
     /// 发送数据帧处理线程
     /// </summary>
-    private async void PublishFrame()
+    private async void HandlePublishFrame()
     {
         while (true)
         {
@@ -858,53 +841,29 @@ public partial class MrtuSlaveModel : ObservableObject
     /// <summary>
     /// 接收数据帧处理线程
     /// </summary>
-    private void ReceiveFrame()
+    private void HandleReceiveFrame()
     {
         while (true)
         {
             try
             {
-                //若无消息需要处理则进入等待
-                if (ReceiveFrameQueue.IsEmpty)
-                {
-                    WaitUartReceived.WaitOne(); //等待接收消息
-                }
+                if (ReceiveFrameQueue.IsEmpty) WaitUartReceived.WaitOne(); //等待接收消息
+                if (!ReceiveFrameQueue.TryDequeue(out var frame)) continue;//从接收消息队列中取出一条消息
+                if (string.IsNullOrWhiteSpace(frame)) continue;
 
-                //从接收消息队列中取出一条消息
-                if (!ReceiveFrameQueue.TryDequeue(out var frame))
-                {
-                    continue;
-                }
-                if (string.IsNullOrWhiteSpace(frame))
-                {
-                    continue;
-                }
-                //实例化ModbusRtu帧
-                var mFrame = new ModbusRtuFrame(frame.GetBytes());
-
-                //对接收的消息直接进行crc校验
-                var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
-
-                #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
-                if (IsPause)
-                {
-                    //若暂停更新显示则不输出
-                }
-                else
-                {
-                    ShowReceiveMessage(mFrame);
-                }
-                #endregion
+                var frameBytes = frame.GetBytes();//转换为字节数组
+                var mFrame = new ModbusRtuFrame(frameBytes);//实例化ModbusRtu帧
+                var crc = Wu.Utils.Crc.Crc16Modbus(frameBytes);   //校验码 校验通过的为0000
+                if (!IsPause) ShowReceiveMessage(mFrame);//输出接收的消息
 
                 #region 处理接收的消息并应答
-                var xxx = mrtuProtocol.ProcessRequest(frame.GetBytes());
-                PublishMessage(xxx.ToHexString());
+                //未设置从站ID 或 从站ID能匹配 应答请求
+                if (SlaveId == 0 || SlaveId == frameBytes[0])
+                {
+                    var xxx = mrtuProtocol.ProcessRequest(frameBytes);
+                    PublishMessage(xxx.ToHexString());
+                }
                 #endregion
-
-                //List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
-                //int slaveId = frameList[0];                 //从站地址
-                //int func = frameList[1];                    //功能码
-
             }
             catch (Exception ex)
             {
@@ -913,31 +872,4 @@ public partial class MrtuSlaveModel : ObservableObject
         }
     }
     #endregion
-
-
-
-    #region 寄存器方法
-
-    //[RelayCommand]
-    //private void InitialHoldingRegister()
-    //{
-    //    try
-    //    {
-    //        if (HoldingRegister == null)
-    //        {
-    //            HoldingRegister = [];
-    //            for (int i = 0; i < 100; i++)
-    //            {
-    //                HoldingRegister.Add(new MrtuSlaveData());
-    //            }
-    //        }
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        Growl.Error(ex.Message);
-    //    }
-    //}
-
-    #endregion
-
 }

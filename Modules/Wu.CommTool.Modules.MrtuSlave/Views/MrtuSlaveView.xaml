@@ -86,6 +86,7 @@
                                 </StackPanel>
 
                                 <TextBox hc:InfoElement.Necessary="True"
+                                         hc:Poptip.Content="设置为0则无ID，应答所有请求"
                                          hc:TitleElement.Title="从站ID:"
                                          hc:TitleElement.TitleWidth="100"
                                          IsEnabled="{Binding MrtuSlaveModel.IsOpened, Converter={wu:ReverseBool}}"
@@ -228,11 +229,9 @@
                                 Style="{StaticResource MaterialDesignFilledTabControl}">
                         <TabControl.Resources>
                             <Style BasedOn="{StaticResource MaterialDesignTabItem}" TargetType="TabItem">
-                                <Setter Property="Height" Value="40" />
+                                <Setter Property="Height" Value="32" />
                                 <Setter Property="Padding" Value="0" />
                                 <Setter Property="Margin" Value="0" />
-
-                                <!--  调整这个值  -->
                             </Style>
                         </TabControl.Resources>
 
@@ -252,9 +251,9 @@
                                     <DataGrid.ContextMenu>
                                         <ContextMenu StaysOpen="true">
                                             <!--<MenuItem Margin="2"
-                           Command="{Binding MrtuSlaveModel.InitialHoldingRegisterCommand}"
-                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                           Header="初始化保持寄存器" />-->
+                                                Command="{Binding MrtuSlaveModel.InitialHoldingRegisterCommand}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                Header="初始化保持寄存器" />-->
                                         </ContextMenu>
                                     </DataGrid.ContextMenu>
 
