@@ -1,20 +1,8 @@
 ﻿using HandyControl.Controls;
-using MaterialDesignThemes.Wpf;
-using Prism.Commands;
-using Prism.Ioc;
-using Prism.Mvvm;
-using Prism.Regions;
-using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Threading.Tasks;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Wu.CommTool.DynamicTheme.Core;
-using Wu.CommTool.Modules.MrtuSlave.Views;
-using Wu.CommTool.Modules.TcpClient.Views;
-using Wu.CommTool.Modules.TcpServer;
-using Wu.CommTool.Modules.TcpServer.Views;
-using Wu.CommTool.Modules.Udp.Views;
 
 namespace Wu.CommTool.ViewModels;
 
@@ -102,10 +90,9 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
         [
             new() { Icon = "LanConnect", Title = "Modbus Rtu", NameSpace = nameof(ModbusRtuView) },
             new() { Icon = "LanConnect", Title = "ModbusRtu设备监控", NameSpace = nameof(MrtuDeviceMonitorView) },
-#if DEBUG
             new() { Icon = "LanConnect", Title = "ModbusRtu从站", NameSpace = nameof(MrtuSlaveView) },
+#if DEBUG
 #endif
-
             new() { Icon = "LanConnect", Title = "Modbus Tcp", NameSpace = nameof(ModbusTcpView) },
             new() { Icon = "LanConnect", Title = "ModbusTcp设备监控", NameSpace = nameof(MtcpDeviceMonitorView) },
 #if DEBUG

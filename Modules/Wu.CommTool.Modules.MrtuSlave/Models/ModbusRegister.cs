@@ -7,7 +7,11 @@ namespace Wu.CommTool.Modules.MrtuSlave.Models;
 /// </summary>
 public partial class ModbusRegister : ObservableObject
 {
-    [ObservableProperty] private ushort address;
+    /// <summary>
+    /// 寄存器地址
+    /// </summary>
+    [ObservableProperty]
+    private ushort address;
 
     [ObservableProperty] private ushort value;
 
@@ -42,9 +46,9 @@ public partial class HoldingRegisters : ObservableObject
     /// </summary>
     private void InitializeRegisters()
     {
-        for (ushort i = 0; i < 100; i++)
+        for (ushort i = 0; i < 3000; i++)
         {
-            Registers.Add(new ModbusRegister(i, $"保持寄存器{i}", false));
+            Registers.Add(new ModbusRegister(i, $"", false));
         }
     }
 
