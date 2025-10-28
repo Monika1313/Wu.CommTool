@@ -879,11 +879,6 @@ public partial class MrtuSlaveModel : ObservableObject
                 //对接收的消息直接进行crc校验
                 var crc = Wu.Utils.Crc.Crc16Modbus(frame.GetBytes());   //校验码 校验通过的为0000
 
-                #region 处理接收的消息并应答
-                var xxx = mrtuProtocol.ProcessRequest(frame.GetBytes());
-                PublishMessage(xxx.ToHexString());
-                #endregion
-
                 #region 界面输出接收的消息 若校验成功则根据接收到内容输出不同的格式
                 if (IsPause)
                 {
@@ -895,11 +890,14 @@ public partial class MrtuSlaveModel : ObservableObject
                 }
                 #endregion
 
-                List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
-                int slaveId = frameList[0];                 //从站地址
-                int func = frameList[1];                    //功能码
+                #region 处理接收的消息并应答
+                var xxx = mrtuProtocol.ProcessRequest(frame.GetBytes());
+                PublishMessage(xxx.ToHexString());
+                #endregion
 
-
+                //List<byte> frameList = frame.GetBytes().ToList();//将字符串类型的数据帧转换为字节列表
+                //int slaveId = frameList[0];                 //从站地址
+                //int func = frameList[1];                    //功能码
 
             }
             catch (Exception ex)
