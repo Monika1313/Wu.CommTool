@@ -181,7 +181,6 @@
                                     DockPanel.Dock="Right"
                                     Style="{StaticResource Blue_CircleButton}" />
 
-                            <!--  配置Com按钮  -->
                             <Button Width="30"
                                     Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                     Margin="5"
@@ -223,125 +222,288 @@
                         </DockPanel>
                     </Grid>
 
-                    <Grid>
-                        <DataGrid x:Name="dataGrid"
-                                  Margin="4"
-                                  AutoGenerateColumns="False"
-                                  Background="Transparent"
-                                  CanUserSortColumns="False"
-                                  Cursor=""
-                                  FrozenColumnCount="1"
-                                  HeadersVisibility="All"
-                                  IsReadOnly="True"
-                                  ItemsSource="{Binding MrtuSlaveModel.HoldingRegisters.Registers}"
-                                  Style="{StaticResource NumDataGrid}">
-                            <!--  右键菜单  -->
-                            <DataGrid.ContextMenu>
-                                <ContextMenu StaysOpen="true">
-                                    <!--<MenuItem Margin="2"
-                                              Command="{Binding MrtuSlaveModel.InitialHoldingRegisterCommand}"
-                                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                              Header="初始化保持寄存器" />-->
-                                    <!--<MenuItem Margin="2"
-                                          Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AddNewMrtuDataCommand}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                          Header="新建行" />
-                                <MenuItem Margin="2"
-                                          Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.DeleteMrtuDataCommand}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                          Foreground="Red"
-                                          Header="删除行" />-->
-                                    <!--<MenuItem Margin="2"
-                                          Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AllMrtuDataRegisterAddrAdd1Command}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                          Header="所有测点寄存器地址 ＋1" />
-                                <MenuItem Margin="2"
-                                          Command="{Binding MrtuDeviceManager.SelectedMrtuDevice.AllMrtuDataRegisterAddrSub1Command}"
-                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                          Header="所有测点寄存器地址 －1" />-->
-                                    <!--<MenuItem Margin="2"
-                                      Command="{Binding OpenMrtuDataEditViewCommand}"
-                                      CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                      Header="编辑"
-                                      Visibility="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}, Mode=FindAncestor}, Path=PlacementTarget.SelectedItem, Converter={core:Null2Collapsed}}" />-->
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
+                    <TabControl md:ColorZoneAssist.Background="{DynamicResource MaterialDesignCardBackground}"
+                                md:ColorZoneAssist.Foreground="{DynamicResource PrimaryHueMidBrush}"
+                                md:ColorZoneAssist.Mode="Custom"
+                                Style="{StaticResource MaterialDesignFilledTabControl}">
+                        <TabControl.Resources>
+                            <Style BasedOn="{StaticResource MaterialDesignTabItem}" TargetType="TabItem">
+                                <Setter Property="Height" Value="40" />
+                                <Setter Property="Padding" Value="0" />
+                                <Setter Property="Margin" Value="0" />
 
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                </Style>
-                            </DataGrid.RowStyle>
+                                <!--  调整这个值  -->
+                            </Style>
+                        </TabControl.Resources>
 
-                            <DataGrid.CellStyle>
-                                <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
-                                    <Setter Property="IsTabStop" Value="False" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsKeyboardFocused" Value="False">
+                        <TabItem Header="保持寄存器">
+                            <Grid>
+                                <DataGrid x:Name="dataGrid"
+                                          Margin="4"
+                                          AutoGenerateColumns="False"
+                                          Background="Transparent"
+                                          CanUserSortColumns="False"
+                                          ColumnHeaderHeight="28"
+                                          FrozenColumnCount="1"
+                                          HeadersVisibility="All"
+                                          IsReadOnly="True"
+                                          ItemsSource="{Binding MrtuSlaveModel.HoldingRegisters.Registers}"
+                                          Style="{StaticResource NumDataGrid}">
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu StaysOpen="true">
+                                            <!--<MenuItem Margin="2"
+                           Command="{Binding MrtuSlaveModel.InitialHoldingRegisterCommand}"
+                           CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                           Header="初始化保持寄存器" />-->
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
                                             <Setter Property="Background" Value="Transparent" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.CellStyle>
-
-                            <DataGrid.Columns>
-                                <DataGridTemplateColumn Header="名称">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox Width="120"
-                                                     HorizontalContentAlignment="Center"
-                                                     Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="值">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBox Width="120"
-                                                     HorizontalContentAlignment="Center"
-                                                     Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-
-                                <DataGridTextColumn Binding="{Binding Address}"
-                                                    Foreground="Black"
-                                                    Header="地址"
-                                                    IsReadOnly="True">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
-                                            <Setter Property="VerticalAlignment" Value="Center" />
-                                            <Setter Property="TextAlignment" Value="Center" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
                                         </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
+                                    </DataGrid.RowStyle>
 
-                                <DataGridTextColumn Binding="{Binding Address, StringFormat=0x{0:X4}}"
-                                                    Foreground="Black"
-                                                    Header="地址Hex"
-                                                    IsReadOnly="True">
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
-                                            <Setter Property="VerticalAlignment" Value="Center" />
-                                            <Setter Property="TextAlignment" Value="Center" />
+                                    <DataGrid.CellStyle>
+                                        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                            <Setter Property="IsTabStop" Value="False" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsKeyboardFocused" Value="False">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </Trigger>
+                                            </Style.Triggers>
                                         </Style>
-                                    </DataGridTextColumn.ElementStyle>
-                                </DataGridTextColumn>
+                                    </DataGrid.CellStyle>
 
-                                <!--<DataGridTemplateColumn Header="数据类型">
-                                <DataGridTemplateColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <ComboBox ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MrtuDataType}}}" SelectedValue="{Binding MrtuDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                                    </DataTemplate>
-                                </DataGridTemplateColumn.CellTemplate>
-                            </DataGridTemplateColumn>-->
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="名称">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="120"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="值">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="120"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
 
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </Grid>
+                                        <DataGridTextColumn Binding="{Binding Address}"
+                                                            Foreground="Black"
+                                                            Header="地址"
+                                                            IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Binding="{Binding Address, StringFormat=0x{0:X4}}"
+                                                            Foreground="Black"
+                                                            Header="地址Hex"
+                                                            IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <!--<DataGridTemplateColumn Header="数据类型">
+                                       <DataGridTemplateColumn.CellTemplate>
+                                           <DataTemplate>
+                                               <ComboBox ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:MrtuDataType}}}" SelectedValue="{Binding MrtuDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                           </DataTemplate>
+                                       </DataGridTemplateColumn.CellTemplate>
+                                   </DataGridTemplateColumn>-->
+
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Header="输入寄存器">
+                            <Grid>
+                                <DataGrid Margin="4"
+                                          AutoGenerateColumns="False"
+                                          Background="Transparent"
+                                          CanUserSortColumns="False"
+                                          ColumnHeaderHeight="28"
+                                          FrozenColumnCount="1"
+                                          HeadersVisibility="All"
+                                          IsReadOnly="True"
+                                          ItemsSource="{Binding MrtuSlaveModel.InputRegisters.Registers}"
+                                          Style="{StaticResource NumDataGrid}">
+                                    <!--<DataGrid.ContextMenu>
+                                        <ContextMenu StaysOpen="true" />
+                                    </DataGrid.ContextMenu>-->
+
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGrid.RowStyle>
+
+                                    <DataGrid.CellStyle>
+                                        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                            <Setter Property="IsTabStop" Value="False" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsKeyboardFocused" Value="False">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.CellStyle>
+
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="名称">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="120"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="值">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="120"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTextColumn Binding="{Binding Address}"
+                                                            Foreground="Black"
+                                                            Header="地址"
+                                                            IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Binding="{Binding Address, StringFormat=0x{0:X4}}"
+                                                            Foreground="Black"
+                                                            Header="地址Hex"
+                                                            IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+
+                        <TabItem Header="线圈寄存器">
+                            <Grid>
+                                <DataGrid Margin="4"
+                                          AutoGenerateColumns="False"
+                                          Background="Transparent"
+                                          CanUserSortColumns="False"
+                                          ColumnHeaderHeight="28"
+                                          FrozenColumnCount="1"
+                                          HeadersVisibility="All"
+                                          IsReadOnly="True"
+                                          ItemsSource="{Binding MrtuSlaveModel.CoilRegisters.Coils}"
+                                          Style="{StaticResource NumDataGrid}">
+                                    <DataGrid.RowStyle>
+                                        <Style TargetType="DataGridRow">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
+                                        </Style>
+                                    </DataGrid.RowStyle>
+
+                                    <DataGrid.CellStyle>
+                                        <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                            <Setter Property="IsTabStop" Value="False" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsKeyboardFocused" Value="False">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.CellStyle>
+
+                                    <DataGrid.Columns>
+                                        <DataGridTemplateColumn Header="名称">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="120"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="值">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBox Width="120"
+                                                             HorizontalContentAlignment="Center"
+                                                             Text="{Binding Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+
+                                        <DataGridTextColumn Binding="{Binding Address}"
+                                                            Foreground="Black"
+                                                            Header="地址"
+                                                            IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+
+                                        <DataGridTextColumn Binding="{Binding Address, StringFormat=0x{0:X4}}"
+                                                            Foreground="Black"
+                                                            Header="地址Hex"
+                                                            IsReadOnly="True">
+                                            <DataGridTextColumn.ElementStyle>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="HorizontalAlignment" Value="Center" />
+                                                    <Setter Property="VerticalAlignment" Value="Center" />
+                                                    <Setter Property="TextAlignment" Value="Center" />
+                                                </Style>
+                                            </DataGridTextColumn.ElementStyle>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </Grid>
+                        </TabItem>
+                        <!--<TabItem Header="离散输入寄存器">
+                            <TextBlock Margin="8" Text="离散输入寄存器" />
+                        </TabItem>-->
+                    </TabControl>
+
+
                 </DockPanel>
             </md:DrawerHost>
         </md:DialogHost>

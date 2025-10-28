@@ -1,6 +1,4 @@
-﻿using Microsoft.Win32;
-
-namespace Wu.CommTool.Modules.MrtuSlave.Models;
+﻿namespace Wu.CommTool.Modules.MrtuSlave.Models;
 
 /// <summary>
 /// 寄存器
@@ -10,14 +8,43 @@ public partial class ModbusRegister : ObservableObject
     /// <summary>
     /// 寄存器地址
     /// </summary>
-    [ObservableProperty]
-    private ushort address;
+    [ObservableProperty] private ushort address;
 
+    /// <summary>
+    /// 值
+    /// </summary>
     [ObservableProperty] private ushort value;
 
+    /// <summary>
+    /// 描述 名称
+    /// </summary>
     [ObservableProperty] private string description;
 
+    #region 线圈寄存器
+    /// <summary>
+    /// 线圈 值不为0就是1
+    /// </summary>
     [ObservableProperty] private bool isCoil;
+
+
+    [RelayCommand]
+    private void SetTrue()
+    {
+        if (IsCoil)
+        {
+            Value = 1;
+        }
+    }
+
+    [RelayCommand]
+    private void SetFalse()
+    {
+        if (IsCoil)
+        {
+            Value = 0;
+        }
+    } 
+    #endregion
 
     public ModbusRegister(ushort address, string description, bool isCoil = false)
     {
@@ -27,6 +54,7 @@ public partial class ModbusRegister : ObservableObject
         Value = 0;
     }
 }
+
 
 /// <summary>
 /// 保持寄存器
@@ -110,99 +138,24 @@ public partial class HoldingRegisters : ObservableObject
 /// <summary>
 /// 输入寄存器
 /// </summary>
-public partial class InputRegisters : ObservableObject
-{
-    [ObservableProperty] private ObservableCollection<ModbusRegister> registers;
-
-    public InputRegisters()
-    {
-        Registers = [];
-        InitializeRegisters();
-    }
-
-    /// <summary>
-    /// 初始化寄存器
-    /// </summary>
-    private void InitializeRegisters()
-    {
-        for (ushort i = 0; i < 100; i++)
-        {
-            Registers.Add(new ModbusRegister(i, $"保持寄存器{i}", false));
-        }
-    }
-
-    /// <summary>
-    /// 读取寄存器值
-    /// </summary>
-    /// <param name="address"></param>
-    /// <returns></returns>
-    public ushort ReadRegister(ushort address)
-    {
-        var register = Registers.FirstOrDefault(r => r.Address == address);
-        return register?.Value ?? 0;
-    }
-
-    /// <summary>
-    /// 写入寄存器
-    /// </summary>
-    /// <param name="address"></param>
-    /// <param name="value"></param>
-    public void WriteRegister(ushort address, ushort value)
-    {
-        var register = Registers.FirstOrDefault(r => r.Address == address);
-        if (register != null)
-        {
-            register.Value = value;
-        }
-    }
-
-    /// <summary>
-    /// 读多个寄存器
-    /// </summary>
-    /// <param name="startAddress"></param>
-    /// <param name="count"></param>
-    /// <returns></returns>
-    public ushort[] ReadRegisters(ushort startAddress, ushort count)
-    {
-        var values = new ushort[count];
-        for (ushort i = 0; i < count; i++)
-        {
-            values[i] = ReadRegister((ushort)(startAddress + i));
-        }
-        return values;
-    }
-
-    /// <summary>
-    /// 写入多个寄存器
-    /// </summary>
-    /// <param name="startAddress"></param>
-    /// <param name="values"></param>
-    public void WriteRegisters(ushort startAddress, ushort[] values)
-    {
-        for (ushort i = 0; i < values.Length; i++)
-        {
-            WriteRegister((ushort)(startAddress + i), values[i]);
-        }
-    }
-}
+public partial class InputRegisters : HoldingRegisters { }
 
 /// <summary>
 /// 线圈寄存器
 /// </summary>
 public partial class CoilRegisters : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<ModbusRegister> coils;
+    [ObservableProperty] private ObservableCollection<ModbusRegister> coils;
 
     public CoilRegisters()
     {
-        Coils = new ObservableCollection<ModbusRegister>();
+        Coils = [];
         InitializeCoils();
     }
 
     private void InitializeCoils()
     {
-        for (ushort i = 0; i < 100; i++)
+        for (ushort i = 0; i < 3000; i++)
         {
             Coils.Add(new ModbusRegister(i, $"线圈{i}", true));
         }
@@ -246,24 +199,16 @@ public partial class CoilRegisters : ObservableObject
 /// <summary>
 /// 协议解析
 /// </summary>
-public partial class ModbusRTUProtocol : ObservableObject
+public partial class MrtuProtocol : ObservableObject
 {
-    // Modbus功能码
-    private const byte READ_COILS = 0x01;
-    private const byte READ_DISCRETE_INPUTS = 0x02;
-    private const byte READ_HOLDING_REGISTERS = 0x03;
-    private const byte READ_INPUT_REGISTERS = 0x04;
-    private const byte WRITE_SINGLE_COIL = 0x05;
-    private const byte WRITE_SINGLE_REGISTER = 0x06;
-    private const byte WRITE_MULTIPLE_COILS = 0x0F;
-    private const byte WRITE_MULTIPLE_REGISTERS = 0x10;
+    private readonly HoldingRegisters holdingRegisters;//保持寄存器
+    private readonly InputRegisters inputRegisters;//输入寄存器
+    private readonly CoilRegisters coilRegisters;//线圈寄存器
 
-    private readonly HoldingRegisters holdingRegisters;
-    private readonly CoilRegisters coilRegisters;
-
-    public ModbusRTUProtocol(HoldingRegisters holdingRegisters, CoilRegisters coilRegisters)
+    public MrtuProtocol(HoldingRegisters holdingRegisters, InputRegisters inputRegisters, CoilRegisters coilRegisters)
     {
         this.holdingRegisters = holdingRegisters;
+        this.inputRegisters = inputRegisters;
         this.coilRegisters = coilRegisters;
     }
 
@@ -284,14 +229,36 @@ public partial class ModbusRTUProtocol : ObservableObject
 
         try
         {
-            return functionCode switch
+            var funCode = (ModbusRtuFunctionCode)functionCode; //功能码转换enum
+
+            return funCode switch
             {
-                READ_COILS => HandleReadCoils(slaveAddress, functionCode, startAddress, quantity),
-                READ_HOLDING_REGISTERS => HandleReadHoldingRegisters(slaveAddress, functionCode, startAddress, quantity),
-                WRITE_SINGLE_COIL => HandleWriteSingleCoil(slaveAddress, functionCode, startAddress, request),
-                WRITE_SINGLE_REGISTER => HandleWriteSingleRegister(slaveAddress, functionCode, startAddress, request),
-                WRITE_MULTIPLE_COILS => HandleWriteMultipleCoils(slaveAddress, functionCode, startAddress, request),
-                WRITE_MULTIPLE_REGISTERS => HandleWriteMultipleRegisters(slaveAddress, functionCode, startAddress, request),
+                ModbusRtuFunctionCode._0x01 => HandleReadCoils(slaveAddress, functionCode, startAddress, quantity),
+                ModbusRtuFunctionCode._0x03 => HandleReadHoldingRegisters(slaveAddress, functionCode, startAddress, quantity),
+                ModbusRtuFunctionCode._0x04 => HandleReadInputRegisters(slaveAddress, functionCode, startAddress, quantity),
+                ModbusRtuFunctionCode._0x05 => HandleWriteSingleCoil(slaveAddress, functionCode, startAddress, request),
+                ModbusRtuFunctionCode._0x06 => HandleWriteSingleHoldingRegister(slaveAddress, functionCode, startAddress, request),
+                ModbusRtuFunctionCode._0x0F => HandleWriteMultipleCoils(slaveAddress, functionCode, startAddress, request),
+                ModbusRtuFunctionCode._0x10 => HandleWriteMultipleHoldingRegisters(slaveAddress, functionCode, startAddress, request),
+                //ModbusRtuFunctionCode._0x02 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x86 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x8F => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x81 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x82 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x83 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x84 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x85 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x90 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x14 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x94 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x15 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x95 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x16 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x96 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x17 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x97 => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0x2B => throw new NotImplementedException(),
+                //ModbusRtuFunctionCode._0xAB => throw new NotImplementedException(),
                 _ => CreateErrorResponse(slaveAddress, functionCode, 0x01) // 非法功能码
             };
         }
@@ -301,6 +268,15 @@ public partial class ModbusRTUProtocol : ObservableObject
         }
     }
 
+    #region 处理 线圈寄存器
+    /// <summary>
+    /// 读线圈
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="quantity"></param>
+    /// <returns></returns>
     private byte[] HandleReadCoils(byte slaveAddress, byte functionCode, ushort startAddress, ushort quantity)
     {
         if (quantity < 1 || quantity > 2000)
@@ -308,44 +284,36 @@ public partial class ModbusRTUProtocol : ObservableObject
 
         var coilValues = coilRegisters.ReadCoils(startAddress, quantity);
         int byteCount = (quantity + 7) / 8;
-        byte[] data = new byte[byteCount + 2]; // 从站地址 + 功能码 + 字节数 + 数据 + CRC
+
+        // 修正：响应格式 = 从站地址(1) + 功能码(1) + 字节数(1) + 数据(byteCount)
+        byte[] data = new byte[3 + byteCount];
 
         data[0] = slaveAddress;
         data[1] = functionCode;
         data[2] = (byte)byteCount;
 
+        // 修正：正确的字节填充逻辑
         for (int i = 0; i < quantity; i++)
         {
             if (coilValues[i])
             {
-                data[3 + i / 8] |= (byte)(1 << (i % 8));
+                int byteIndex = 3 + i / 8;  // 数据从第3字节开始
+                int bitIndex = i % 8;
+                data[byteIndex] |= (byte)(1 << bitIndex);
             }
         }
 
-        return AddCRC(data, 0, data.Length);
+        // 修正：CRC计算应该只包含数据部分（不包括CRC自身）
+        return AddCRC(data, 0, 3 + byteCount);
     }
-
-    private byte[] HandleReadHoldingRegisters(byte slaveAddress, byte functionCode, ushort startAddress, ushort quantity)
-    {
-        if (quantity < 1 || quantity > 125)
-            return CreateErrorResponse(slaveAddress, functionCode, 0x03); // 非法数据值
-
-        var registerValues = holdingRegisters.ReadRegisters(startAddress, quantity);
-        byte[] data = new byte[3 + quantity * 2]; // 从站地址 + 功能码 + 字节数 + 数据 + CRC
-
-        data[0] = slaveAddress;
-        data[1] = functionCode;
-        data[2] = (byte)(quantity * 2);
-
-        for (int i = 0; i < quantity; i++)
-        {
-            data[3 + i * 2] = (byte)(registerValues[i] >> 8);
-            data[4 + i * 2] = (byte)(registerValues[i] & 0xFF);
-        }
-
-        return AddCRC(data, 0, data.Length);
-    }
-
+    /// <summary>
+    /// 写单个线圈
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     private byte[] HandleWriteSingleCoil(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
     {
         ushort value = (ushort)((request[4] << 8) | request[5]);
@@ -359,17 +327,14 @@ public partial class ModbusRTUProtocol : ObservableObject
         return AddCRC(response, 0, 6);
     }
 
-    private byte[] HandleWriteSingleRegister(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
-    {
-        ushort value = (ushort)((request[4] << 8) | request[5]);
-        holdingRegisters.WriteRegister(startAddress, value);
-
-        // 返回相同的请求作为响应
-        byte[] response = new byte[8];
-        Array.Copy(request, 0, response, 0, 6);
-        return AddCRC(response, 0, 6);
-    }
-
+    /// <summary>
+    /// 处理写多个线圈
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
     private byte[] HandleWriteMultipleCoils(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
     {
         ushort quantity = (ushort)((request[4] << 8) | request[5]);
@@ -396,8 +361,67 @@ public partial class ModbusRTUProtocol : ObservableObject
 
         return AddCRC(response, 0, 6);
     }
+    #endregion
 
-    private byte[] HandleWriteMultipleRegisters(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
+
+    #region 处理保持寄存器
+    /// <summary>
+    /// 读保持寄存器
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="quantity"></param>
+    /// <returns></returns>
+    private byte[] HandleReadHoldingRegisters(byte slaveAddress, byte functionCode, ushort startAddress, ushort quantity)
+    {
+        if (quantity < 1 || quantity > 125)
+            return CreateErrorResponse(slaveAddress, functionCode, 0x03); // 非法数据值
+
+        var registerValues = holdingRegisters.ReadRegisters(startAddress, quantity);
+        byte[] data = new byte[3 + quantity * 2]; // 从站地址 + 功能码 + 字节数 + 数据 + CRC
+
+        data[0] = slaveAddress;
+        data[1] = functionCode;
+        data[2] = (byte)(quantity * 2);
+
+        for (int i = 0; i < quantity; i++)
+        {
+            data[3 + i * 2] = (byte)(registerValues[i] >> 8);
+            data[4 + i * 2] = (byte)(registerValues[i] & 0xFF);
+        }
+
+        return AddCRC(data, 0, data.Length);
+    }
+
+    /// <summary>
+    /// 处理写单个保持寄存器
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    private byte[] HandleWriteSingleHoldingRegister(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
+    {
+        ushort value = (ushort)((request[4] << 8) | request[5]);
+        holdingRegisters.WriteRegister(startAddress, value);
+
+        // 返回相同的请求作为响应
+        byte[] response = new byte[8];
+        Array.Copy(request, 0, response, 0, 6);
+        return AddCRC(response, 0, 6);
+    }
+
+    /// <summary>
+    /// 处理写多个保持寄存器
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="request"></param>
+    /// <returns></returns>
+    private byte[] HandleWriteMultipleHoldingRegisters(byte slaveAddress, byte functionCode, ushort startAddress, byte[] request)
     {
         ushort quantity = (ushort)((request[4] << 8) | request[5]);
         byte byteCount = request[6];
@@ -422,6 +446,47 @@ public partial class ModbusRTUProtocol : ObservableObject
         return AddCRC(response, 0, 6);
     }
 
+    #endregion
+
+    #region 处理 输入寄存器
+    /// <summary>
+    /// 读保持寄存器
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="startAddress"></param>
+    /// <param name="quantity"></param>
+    /// <returns></returns>
+    private byte[] HandleReadInputRegisters(byte slaveAddress, byte functionCode, ushort startAddress, ushort quantity)
+    {
+        if (quantity < 1 || quantity > 125)
+            return CreateErrorResponse(slaveAddress, functionCode, 0x04); // 非法数据值
+
+        var registerValues = inputRegisters.ReadRegisters(startAddress, quantity);
+        byte[] data = new byte[3 + quantity * 2]; // 从站地址 + 功能码 + 字节数 + 数据 + CRC
+
+        data[0] = slaveAddress;
+        data[1] = functionCode;
+        data[2] = (byte)(quantity * 2);
+
+        for (int i = 0; i < quantity; i++)
+        {
+            data[3 + i * 2] = (byte)(registerValues[i] >> 8);
+            data[4 + i * 2] = (byte)(registerValues[i] & 0xFF);
+        }
+
+        return AddCRC(data, 0, data.Length);
+    }
+    #endregion
+
+
+    /// <summary>
+    /// 错误应答
+    /// </summary>
+    /// <param name="slaveAddress"></param>
+    /// <param name="functionCode"></param>
+    /// <param name="exceptionCode"></param>
+    /// <returns></returns>
     private byte[] CreateErrorResponse(byte slaveAddress, byte functionCode, byte exceptionCode)
     {
         byte[] response = new byte[5];
@@ -431,6 +496,7 @@ public partial class ModbusRTUProtocol : ObservableObject
         return AddCRC(response, 0, 3);
     }
 
+    #region CRC
     private byte[] AddCRC(byte[] data, int start, int length)
     {
         ushort crc = CalculateCRC(data, start, length);
@@ -462,4 +528,5 @@ public partial class ModbusRTUProtocol : ObservableObject
         }
         return crc;
     }
+    #endregion
 }

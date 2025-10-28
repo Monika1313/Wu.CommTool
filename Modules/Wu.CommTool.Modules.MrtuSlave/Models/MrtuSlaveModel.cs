@@ -39,7 +39,7 @@ public partial class MrtuSlaveModel : ObservableObject
         this.provider = provider;
 
     }
-
+    
     private void Initial()
     {
         Task.Run(() =>
@@ -49,7 +49,8 @@ public partial class MrtuSlaveModel : ObservableObject
 
         HoldingRegisters = new HoldingRegisters();
         CoilRegisters = new CoilRegisters();
-        mrtuProtocol = new ModbusRTUProtocol(HoldingRegisters, CoilRegisters);
+        InputRegisters = new InputRegisters();
+        mrtuProtocol = new MrtuProtocol(HoldingRegisters, InputRegisters, CoilRegisters);
 
         SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);           //串口接收事件
         //数据帧处理子线程
@@ -71,6 +72,11 @@ public partial class MrtuSlaveModel : ObservableObject
     [ObservableProperty] private HoldingRegisters holdingRegisters;
 
     /// <summary>
+    /// 保持寄存器
+    /// </summary>
+    [ObservableProperty] private InputRegisters inputRegisters;
+
+    /// <summary>
     /// 线圈寄存器
     /// </summary>
     [ObservableProperty] private CoilRegisters coilRegisters;
@@ -78,7 +84,7 @@ public partial class MrtuSlaveModel : ObservableObject
     /// <summary>
     /// ModbusRTU协议
     /// </summary>
-    private ModbusRTUProtocol mrtuProtocol;
+    private MrtuProtocol mrtuProtocol;
     #endregion
 
     #region **************************************** 属性 ****************************************
