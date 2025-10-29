@@ -21,7 +21,7 @@
                     <StackPanel Orientation="Vertical">
                         <TextBlock Margin="5"
                                    HorizontalAlignment="Center"
-                                   FontSize="24"
+                                   Style="{DynamicResource SecondTitle}"
                                    Text="ModbusTcp配置" />
 
                         <TextBox hc:InfoElement.Necessary="True"

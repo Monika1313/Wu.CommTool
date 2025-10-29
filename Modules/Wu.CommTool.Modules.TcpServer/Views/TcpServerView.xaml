@@ -27,7 +27,7 @@
                                     Orientation="Vertical">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Margin="10"
-                                           Style="{DynamicResource SecontTitle}"
+                                           Style="{DynamicResource SecondTitle}"
                                            Text="服务器配置" />
 
                                 <!--  导出配置文件  -->
@@ -161,7 +161,7 @@
                                         Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center"
                                            Foreground="{DynamicResource FontBrush}"
-                                           Text="接收格式:" />
+                                           Text="接收格式: " />
                                 <ComboBox VerticalAlignment="Center"
                                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
                                           SelectedItem="{Binding TcpServerModel.ReceiveTcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -203,7 +203,7 @@
                                     <StackPanel Margin="4,0"
                                                 DockPanel.Dock="Right"
                                                 Orientation="Horizontal">
-                                        <TextBlock VerticalAlignment="Center" Text="发送格式:" />
+                                        <TextBlock VerticalAlignment="Center" Text="发送格式: " />
                                         <ComboBox VerticalAlignment="Center"
                                                   ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
                                                   SelectedItem="{Binding TcpServerModel.SendTcpDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

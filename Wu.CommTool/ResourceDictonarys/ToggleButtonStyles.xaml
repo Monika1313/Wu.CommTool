@@ -1,7 +1,6 @@
-﻿<ResourceDictionary
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
     <!--  https://github.com/SunnyDesignor/WpfGorgeousThemeSwitch  -->
     <Geometry x:Key="starGeometry">F0M100,50 C72.38589,50 50,72.38589 50,100 C50,72.38589 27.61411,50 0,50 C27.61411,50 50,27.61411 50,0 C50,27.61411 72.38589,50 100,50 z</Geometry>
     <!--  花里胡哨的的深色/浅色切换按钮样式  -->
@@ -353,11 +352,10 @@
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation
-                                Storyboard.TargetName="highlightMask"
-                                Storyboard.TargetProperty="Opacity"
-                                To="1"
-                                Duration="0:0:0.5">
+                            <DoubleAnimation Storyboard.TargetName="highlightMask"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="1"
+                                             Duration="0:0:0.5">
                                 <DoubleAnimation.EasingFunction>
                                     <PowerEase EasingMode="EaseInOut" />
                                 </DoubleAnimation.EasingFunction>
@@ -371,11 +369,10 @@
                                     </EasingDoubleKeyFrame.EasingFunction>
                                 </EasingDoubleKeyFrame>
                             </DoubleAnimationUsingKeyFrames>
-                            <DoubleAnimation
-                                Storyboard.TargetName="highlightMask"
-                                Storyboard.TargetProperty="Opacity"
-                                To="0"
-                                Duration="0:0:0.5">
+                            <DoubleAnimation Storyboard.TargetName="highlightMask"
+                                             Storyboard.TargetProperty="Opacity"
+                                             To="0"
+                                             Duration="0:0:0.5">
                                 <DoubleAnimation.EasingFunction>
                                     <PowerEase EasingMode="EaseInOut" />
                                 </DoubleAnimation.EasingFunction>
@@ -402,28 +399,25 @@
                             </Setter>
                         </Style>
                     </ControlTemplate.Resources>
-                    <Grid
-                        x:Name="templateRoot"
-                        Background="Transparent"
-                        SnapsToDevicePixels="False">
+                    <Grid x:Name="templateRoot"
+                          Background="Transparent"
+                          SnapsToDevicePixels="False">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Viewbox>
-                            <Border
-                                x:Name="frameBorder"
-                                Grid.Column="0"
-                                Width="100"
-                                Height="40"
-                                CornerRadius="20">
+                            <Border x:Name="frameBorder"
+                                    Grid.Column="0"
+                                    Width="100"
+                                    Height="40"
+                                    CornerRadius="20">
                                 <Grid x:Name="secondGrid">
-                                    <Border
-                                        x:Name="backBorder"
-                                        Width="100"
-                                        Height="40"
-                                        Background="#4685C0"
-                                        CornerRadius="20" />
+                                    <Border x:Name="backBorder"
+                                            Width="100"
+                                            Height="40"
+                                            Background="#4685C0"
+                                            CornerRadius="20" />
                                     <Canvas x:Name="stars">
                                         <Canvas.Resources>
                                             <Style TargetType="{x:Type Path}">
@@ -444,129 +438,112 @@
                                                 <TranslateTransform Y="-36" />
                                             </TransformGroup>
                                         </Canvas.RenderTransform>
-                                        <Path
-                                            Canvas.Left="11.5"
-                                            Canvas.Top="26.5"
-                                            Width="5"
-                                            Height="5"
-                                            Fill="White" />
-                                        <Path
-                                            x:Name="star3"
-                                            Canvas.Left="24.635"
-                                            Canvas.Top="26.5"
-                                            Width="5"
-                                            Height="5"
-                                            Fill="White" />
-                                        <Path
-                                            x:Name="star5"
-                                            Canvas.Left="44.5"
-                                            Canvas.Top="29.5"
-                                            Width="5"
-                                            Height="5"
-                                            Fill="White" />
-                                        <Path
-                                            x:Name="star1"
-                                            Canvas.Left="20.635"
-                                            Canvas.Top="5.5"
-                                            Width="7"
-                                            Height="7"
-                                            Fill="White" />
-                                        <Path
-                                            x:Name="star2"
-                                            Canvas.Left="48.5"
-                                            Canvas.Top="10"
-                                            Width="7"
-                                            Height="7"
-                                            Fill="White" />
-                                        <Path
-                                            Canvas.Left="32.315"
-                                            Canvas.Top="12.5"
-                                            Width="3"
-                                            Height="3"
-                                            Fill="White" />
-                                        <Path
-                                            Canvas.Left="23.635"
-                                            Canvas.Top="18"
-                                            Width="3"
-                                            Height="3"
-                                            Fill="White" />
-                                        <Path
-                                            Canvas.Left="33.999"
-                                            Canvas.Top="24"
-                                            Width="3"
-                                            Height="3"
-                                            Fill="White" />
-                                        <Path
-                                            Canvas.Left="47"
-                                            Canvas.Top="22.5"
-                                            Width="3"
-                                            Height="3"
-                                            Fill="White" />
-                                        <Path
-                                            Canvas.Left="39.481"
-                                            Canvas.Top="7.997"
-                                            Width="3"
-                                            Height="3"
-                                            Fill="White" />
-                                        <Path
-                                            x:Name="star4"
-                                            Canvas.Left="10"
-                                            Canvas.Top="11"
-                                            Width="3"
-                                            Height="3"
-                                            Fill="White" />
+                                        <Path Canvas.Left="11.5"
+                                              Canvas.Top="26.5"
+                                              Width="5"
+                                              Height="5"
+                                              Fill="White" />
+                                        <Path x:Name="star3"
+                                              Canvas.Left="24.635"
+                                              Canvas.Top="26.5"
+                                              Width="5"
+                                              Height="5"
+                                              Fill="White" />
+                                        <Path x:Name="star5"
+                                              Canvas.Left="44.5"
+                                              Canvas.Top="29.5"
+                                              Width="5"
+                                              Height="5"
+                                              Fill="White" />
+                                        <Path x:Name="star1"
+                                              Canvas.Left="20.635"
+                                              Canvas.Top="5.5"
+                                              Width="7"
+                                              Height="7"
+                                              Fill="White" />
+                                        <Path x:Name="star2"
+                                              Canvas.Left="48.5"
+                                              Canvas.Top="10"
+                                              Width="7"
+                                              Height="7"
+                                              Fill="White" />
+                                        <Path Canvas.Left="32.315"
+                                              Canvas.Top="12.5"
+                                              Width="3"
+                                              Height="3"
+                                              Fill="White" />
+                                        <Path Canvas.Left="23.635"
+                                              Canvas.Top="18"
+                                              Width="3"
+                                              Height="3"
+                                              Fill="White" />
+                                        <Path Canvas.Left="33.999"
+                                              Canvas.Top="24"
+                                              Width="3"
+                                              Height="3"
+                                              Fill="White" />
+                                        <Path Canvas.Left="47"
+                                              Canvas.Top="22.5"
+                                              Width="3"
+                                              Height="3"
+                                              Fill="White" />
+                                        <Path Canvas.Left="39.481"
+                                              Canvas.Top="7.997"
+                                              Width="3"
+                                              Height="3"
+                                              Fill="White" />
+                                        <Path x:Name="star4"
+                                              Canvas.Left="10"
+                                              Canvas.Top="11"
+                                              Width="3"
+                                              Height="3"
+                                              Fill="White" />
                                     </Canvas>
-                                    <Path
-                                        x:Name="cloud1"
-                                        Margin="2,2,-3,-9"
-                                        Data="M158.99223,453.55724 C169.78284,423.31232 203.15378,392.41965 241.59875,404.12313 261.99875,383.72313 299.3,391.57463 305.3,392.77701 330.15525,362.39707 353.16314,370.00505 368.58869,378.91567 370.80287,377.8725 376.53823,377.01298 381.06677,376.82559 387.43795,354.90123 410.63981,354.27147 420.4351,355.75324 432.85079,341.48144 440.27525,342.83843 451.87985,342.32945 457.75133,307.27233 472.82215,288.94564 509.06064,292.16184 512.31051,292.45027 525.93938,292.61638 525.93938,292.61638 525.90428,295.34879 526.73875,460.86787 526.8053,465.68179 L154.99571,465.6552 z"
-                                        Fill="#88FFFFFF"
-                                        Stretch="UniformToFill" />
-                                    <Path
-                                        x:Name="cloud2"
-                                        Width="100"
-                                        Height="40"
-                                        Margin="2,8,-2,-8"
-                                        Data="M158.99223,453.55724 C169.78284,423.31232 203.15378,392.41965 241.59875,404.12313 261.99875,383.72313 299.3,391.57463 305.3,392.77701 337.22357,353.75764 390.50003,373.43798 398.90003,384.97667 412.50003,378.21261 430.04088,381.41688 430.04088,381.41688 436.82018,362.13027 456.18064,352.96024 465.00342,351.59457 460.57167,304.02021 510.55723,292.35177 521.33687,292.25901 530.92623,292.1765 525.93938,292.61638 525.93938,292.61638 525.90428,295.34879 526.73875,460.86787 526.8053,465.68179 L154.99571,465.6552 z"
-                                        Fill="White"
-                                        Stretch="UniformToFill" />
-                                    <Rectangle
-                                        x:Name="glow1"
-                                        Width="79"
-                                        Height="79"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Fill="#11FFFFFF"
-                                        RadiusX="45"
-                                        RadiusY="45"
-                                        RenderTransformOrigin="0.5,0.5" />
-                                    <Rectangle
-                                        x:Name="glow2"
-                                        Width="67"
-                                        Height="67"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Fill="#22FFFFFF"
-                                        RadiusX="45"
-                                        RadiusY="45"
-                                        RenderTransformOrigin="0.5,0.5" />
-                                    <Rectangle
-                                        x:Name="glow3"
-                                        Width="55"
-                                        Height="55"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        Fill="#22FFFFFF"
-                                        RadiusX="45"
-                                        RadiusY="45"
-                                        RenderTransformOrigin="0.5,0.5" />
-                                    <Border
-                                        x:Name="thumb"
-                                        Width="36"
-                                        Height="38"
-                                        HorizontalAlignment="Left"
-                                        CornerRadius="20"
-                                        RenderTransformOrigin="0.5,0.5">
+                                    <Path x:Name="cloud1"
+                                          Margin="2,2,-3,-9"
+                                          Data="M158.99223,453.55724 C169.78284,423.31232 203.15378,392.41965 241.59875,404.12313 261.99875,383.72313 299.3,391.57463 305.3,392.77701 330.15525,362.39707 353.16314,370.00505 368.58869,378.91567 370.80287,377.8725 376.53823,377.01298 381.06677,376.82559 387.43795,354.90123 410.63981,354.27147 420.4351,355.75324 432.85079,341.48144 440.27525,342.83843 451.87985,342.32945 457.75133,307.27233 472.82215,288.94564 509.06064,292.16184 512.31051,292.45027 525.93938,292.61638 525.93938,292.61638 525.90428,295.34879 526.73875,460.86787 526.8053,465.68179 L154.99571,465.6552 z"
+                                          Fill="#88FFFFFF"
+                                          Stretch="UniformToFill" />
+                                    <Path x:Name="cloud2"
+                                          Width="100"
+                                          Height="40"
+                                          Margin="2,8,-2,-8"
+                                          Data="M158.99223,453.55724 C169.78284,423.31232 203.15378,392.41965 241.59875,404.12313 261.99875,383.72313 299.3,391.57463 305.3,392.77701 337.22357,353.75764 390.50003,373.43798 398.90003,384.97667 412.50003,378.21261 430.04088,381.41688 430.04088,381.41688 436.82018,362.13027 456.18064,352.96024 465.00342,351.59457 460.57167,304.02021 510.55723,292.35177 521.33687,292.25901 530.92623,292.1765 525.93938,292.61638 525.93938,292.61638 525.90428,295.34879 526.73875,460.86787 526.8053,465.68179 L154.99571,465.6552 z"
+                                          Fill="White"
+                                          Stretch="UniformToFill" />
+                                    <Rectangle x:Name="glow1"
+                                               Width="79"
+                                               Height="79"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Fill="#11FFFFFF"
+                                               RadiusX="45"
+                                               RadiusY="45"
+                                               RenderTransformOrigin="0.5,0.5" />
+                                    <Rectangle x:Name="glow2"
+                                               Width="67"
+                                               Height="67"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Fill="#22FFFFFF"
+                                               RadiusX="45"
+                                               RadiusY="45"
+                                               RenderTransformOrigin="0.5,0.5" />
+                                    <Rectangle x:Name="glow3"
+                                               Width="55"
+                                               Height="55"
+                                               HorizontalAlignment="Left"
+                                               VerticalAlignment="Center"
+                                               Fill="#22FFFFFF"
+                                               RadiusX="45"
+                                               RadiusY="45"
+                                               RenderTransformOrigin="0.5,0.5" />
+                                    <Border x:Name="thumb"
+                                            Width="36"
+                                            Height="38"
+                                            HorizontalAlignment="Left"
+                                            CornerRadius="20"
+                                            RenderTransformOrigin="0.5,0.5">
                                         <Border.RenderTransform>
                                             <TransformGroup>
                                                 <RotateTransform Angle="0" />
@@ -574,14 +551,13 @@
                                             </TransformGroup>
                                         </Border.RenderTransform>
                                         <Canvas>
-                                            <Rectangle
-                                                Canvas.Top="2.5"
-                                                Width="36"
-                                                Height="36"
-                                                HorizontalAlignment="Right"
-                                                VerticalAlignment="Bottom"
-                                                RadiusX="45"
-                                                RadiusY="45">
+                                            <Rectangle Canvas.Top="2.5"
+                                                       Width="36"
+                                                       Height="36"
+                                                       HorizontalAlignment="Right"
+                                                       VerticalAlignment="Bottom"
+                                                       RadiusX="45"
+                                                       RadiusY="45">
                                                 <Rectangle.Fill>
                                                     <RadialGradientBrush Center="0.5,0.5" GradientOrigin="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
                                                         <GradientStop Offset="1" Color="#00000000" />
@@ -589,33 +565,30 @@
                                                     </RadialGradientBrush>
                                                 </Rectangle.Fill>
                                             </Rectangle>
-                                            <Grid
-                                                x:Name="sun"
-                                                Canvas.Top="2.5"
-                                                Width="33"
-                                                Height="33"
-                                                HorizontalAlignment="Left"
-                                                Background="#F3C62B"
-                                                RenderTransformOrigin="0.5,0.5">
+                                            <Grid x:Name="sun"
+                                                  Canvas.Top="2.5"
+                                                  Width="33"
+                                                  Height="33"
+                                                  HorizontalAlignment="Left"
+                                                  Background="#F3C62B"
+                                                  RenderTransformOrigin="0.5,0.5">
                                                 <Grid.RenderTransform>
                                                     <TransformGroup>
                                                         <RotateTransform Angle="0" />
                                                     </TransformGroup>
                                                 </Grid.RenderTransform>
                                                 <Grid.Clip>
-                                                    <RectangleGeometry
-                                                        RadiusX="20"
-                                                        RadiusY="20"
-                                                        Rect="0,0,33,33" />
+                                                    <RectangleGeometry RadiusX="20"
+                                                                       RadiusY="20"
+                                                                       Rect="0,0,33,33" />
                                                 </Grid.Clip>
-                                                <Path
-                                                    Width="29"
-                                                    Margin="-1.5,-1.5,0,0"
-                                                    HorizontalAlignment="Left"
-                                                    VerticalAlignment="Top"
-                                                    Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
-                                                    Stretch="Uniform"
-                                                    Visibility="Visible">
+                                                <Path Width="29"
+                                                      Margin="-1.5,-1.5,0,0"
+                                                      HorizontalAlignment="Left"
+                                                      VerticalAlignment="Top"
+                                                      Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
+                                                      Stretch="Uniform"
+                                                      Visibility="Visible">
                                                     <Path.Fill>
                                                         <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.3,1">
                                                             <GradientStop Offset="0" Color="Transparent" />
@@ -629,14 +602,13 @@
                                                         </TransformGroup>
                                                     </Path.RenderTransform>
                                                 </Path>
-                                                <Path
-                                                    Width="28"
-                                                    Margin="0,0,-0.6,-2.2"
-                                                    HorizontalAlignment="Right"
-                                                    VerticalAlignment="Bottom"
-                                                    Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
-                                                    Stretch="Uniform"
-                                                    Visibility="Visible">
+                                                <Path Width="28"
+                                                      Margin="0,0,-0.6,-2.2"
+                                                      HorizontalAlignment="Right"
+                                                      VerticalAlignment="Bottom"
+                                                      Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
+                                                      Stretch="Uniform"
+                                                      Visibility="Visible">
                                                     <Path.Fill>
                                                         <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
                                                             <GradientStop Offset="1" Color="#00000000" />
@@ -660,11 +632,10 @@
                                                 </Ellipse>
                                                 <Border x:Name="moon">
                                                     <Border.Effect>
-                                                        <DropShadowEffect
-                                                            BlurRadius="4"
-                                                            RenderingBias="Performance"
-                                                            ShadowDepth="2"
-                                                            Color="Gray" />
+                                                        <DropShadowEffect BlurRadius="4"
+                                                                          RenderingBias="Performance"
+                                                                          ShadowDepth="2"
+                                                                          Color="Gray" />
                                                     </Border.Effect>
                                                     <Border.RenderTransform>
                                                         <TransformGroup>
@@ -673,50 +644,45 @@
                                                     </Border.RenderTransform>
                                                     <Grid>
                                                         <Grid.Clip>
-                                                            <RectangleGeometry
-                                                                RadiusX="20"
-                                                                RadiusY="20"
-                                                                Rect="0,0,33,33" />
+                                                            <RectangleGeometry RadiusX="20"
+                                                                               RadiusY="20"
+                                                                               Rect="0,0,33,33" />
                                                         </Grid.Clip>
                                                         <Rectangle Fill="#C4C9D4" />
-                                                        <Border
-                                                            Width="10"
-                                                            Height="10"
-                                                            Margin="6,14,0,0"
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Top"
-                                                            Background="#9A9FB2"
-                                                            BorderBrush="#66000000"
-                                                            BorderThickness="0.6"
-                                                            CornerRadius="45" />
-                                                        <Border
-                                                            Width="6"
-                                                            Height="6"
-                                                            Margin="13,5,0,0"
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Top"
-                                                            Background="#9A9FB2"
-                                                            BorderBrush="#66000000"
-                                                            BorderThickness="0.6"
-                                                            CornerRadius="45" />
-                                                        <Border
-                                                            Width="7"
-                                                            Height="7"
-                                                            Margin="20,18,0,0"
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Top"
-                                                            Background="#9A9FB2"
-                                                            BorderBrush="#66000000"
-                                                            BorderThickness="0.6"
-                                                            CornerRadius="45" />
-                                                        <Path
-                                                            Width="29"
-                                                            Margin="-1.5,-1.5,0,0"
-                                                            HorizontalAlignment="Left"
-                                                            VerticalAlignment="Top"
-                                                            Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
-                                                            Stretch="Uniform"
-                                                            Visibility="Visible">
+                                                        <Border Width="10"
+                                                                Height="10"
+                                                                Margin="6,14,0,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Top"
+                                                                Background="#9A9FB2"
+                                                                BorderBrush="#66000000"
+                                                                BorderThickness="0.6"
+                                                                CornerRadius="45" />
+                                                        <Border Width="6"
+                                                                Height="6"
+                                                                Margin="13,5,0,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Top"
+                                                                Background="#9A9FB2"
+                                                                BorderBrush="#66000000"
+                                                                BorderThickness="0.6"
+                                                                CornerRadius="45" />
+                                                        <Border Width="7"
+                                                                Height="7"
+                                                                Margin="20,18,0,0"
+                                                                HorizontalAlignment="Left"
+                                                                VerticalAlignment="Top"
+                                                                Background="#9A9FB2"
+                                                                BorderBrush="#66000000"
+                                                                BorderThickness="0.6"
+                                                                CornerRadius="45" />
+                                                        <Path Width="29"
+                                                              Margin="-1.5,-1.5,0,0"
+                                                              HorizontalAlignment="Left"
+                                                              VerticalAlignment="Top"
+                                                              Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
+                                                              Stretch="Uniform"
+                                                              Visibility="Visible">
                                                             <Path.Fill>
                                                                 <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
                                                                     <GradientStop Offset="0" Color="Transparent" />
@@ -730,14 +696,13 @@
                                                                 </TransformGroup>
                                                             </Path.RenderTransform>
                                                         </Path>
-                                                        <Path
-                                                            Width="28"
-                                                            Margin="0,0,-1.0,-2.0"
-                                                            HorizontalAlignment="Right"
-                                                            VerticalAlignment="Bottom"
-                                                            Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
-                                                            Stretch="Uniform"
-                                                            Visibility="Visible">
+                                                        <Path Width="28"
+                                                              Margin="0,0,-1.0,-2.0"
+                                                              HorizontalAlignment="Right"
+                                                              VerticalAlignment="Bottom"
+                                                              Data="M195.79568,256.36186 C128.27033,194.80746 208.6956,103.20326 276.96226,155.20326 220.40909,129.80395 148.71988,171.59981 195.79568,256.36186 z"
+                                                              Stretch="Uniform"
+                                                              Visibility="Visible">
                                                             <Path.Fill>
                                                                 <LinearGradientBrush StartPoint="0.2,0" EndPoint="0.5,1">
                                                                     <GradientStop Offset="0" Color="#00000000" />
@@ -764,40 +729,36 @@
                                             </EventTrigger>
                                         </Border.Triggers>
                                     </Border>
-                                    <Border
-                                        x:Name="ShadowElement"
-                                        Margin="-2,-2"
-                                        BorderBrush="#5C6170"
-                                        BorderThickness="1.8"
-                                        CornerRadius="21"
-                                        RenderTransformOrigin="0.5,0.5">
+                                    <Border x:Name="ShadowElement"
+                                            Margin="-2,-2"
+                                            BorderBrush="#5C6170"
+                                            BorderThickness="1.8"
+                                            CornerRadius="21"
+                                            RenderTransformOrigin="0.5,0.5">
                                         <Border.Effect>
-                                            <DropShadowEffect
-                                                x:Name="Shadow"
-                                                BlurRadius="7"
-                                                RenderingBias="Performance"
-                                                ShadowDepth="0" />
+                                            <DropShadowEffect x:Name="Shadow"
+                                                              BlurRadius="7"
+                                                              RenderingBias="Performance"
+                                                              ShadowDepth="0" />
                                         </Border.Effect>
                                     </Border>
                                 </Grid>
                                 <Border.Clip>
-                                    <RectangleGeometry
-                                        RadiusX="20"
-                                        RadiusY="20"
-                                        Rect="0,0,100,40" />
+                                    <RectangleGeometry RadiusX="20"
+                                                       RadiusY="20"
+                                                       Rect="0,0,100,40" />
                                 </Border.Clip>
                             </Border>
                         </Viewbox>
-                        <ContentPresenter
-                            x:Name="contentPresenter"
-                            Grid.Column="1"
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Focusable="False"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                            Visibility="Collapsed" />
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Focusable="False"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          Visibility="Collapsed" />
                         <VisualStateManager.VisualStateGroups>
                             <VisualStateGroup x:Name="CommonStates">
                                 <VisualState x:Name="MouseOver" Storyboard="{StaticResource RestoreSize}" />
@@ -896,38 +857,34 @@
                             </DoubleAnimationUsingKeyFrames>
                         </Storyboard>
                     </ControlTemplate.Resources>
-                    <Grid
-                        x:Name="templateRoot"
-                        Background="Transparent"
-                        SnapsToDevicePixels="True">
+                    <Grid x:Name="templateRoot"
+                          Background="Transparent"
+                          SnapsToDevicePixels="True">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
                         <Viewbox>
                             <Grid Width="100" Height="40">
-                                <Border
-                                    Name="innerBorder"
-                                    Background="{TemplateBinding Background}"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                    CornerRadius="20" />
-                                <Border
-                                    x:Name="lightBorder"
-                                    Background="#1975C5"
-                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                    BorderThickness="0"
-                                    CornerRadius="20"
-                                    Opacity="0" />
-                                <Border
-                                    Name="thumb"
-                                    Width="32"
-                                    Height="32"
-                                    Margin="2"
-                                    HorizontalAlignment="Left"
-                                    Background="White"
-                                    CornerRadius="19"
-                                    RenderTransformOrigin="0.5,0.5">
+                                <Border Name="innerBorder"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="20" />
+                                <Border x:Name="lightBorder"
+                                        Background="#1975C5"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="0"
+                                        CornerRadius="20"
+                                        Opacity="0" />
+                                <Border Name="thumb"
+                                        Width="32"
+                                        Height="32"
+                                        Margin="2"
+                                        HorizontalAlignment="Left"
+                                        Background="White"
+                                        CornerRadius="19"
+                                        RenderTransformOrigin="0.5,0.5">
                                     <Border.RenderTransform>
                                         <TransformGroup>
                                             <TranslateTransform X="2" />
@@ -935,27 +892,25 @@
                                         </TransformGroup>
                                     </Border.RenderTransform>
                                     <Border.Effect>
-                                        <DropShadowEffect
-                                            BlurRadius="8"
-                                            Direction="270"
-                                            Opacity=".5"
-                                            RenderingBias="Performance"
-                                            ShadowDepth="1.5"
-                                            Color="Black" />
+                                        <DropShadowEffect BlurRadius="8"
+                                                          Direction="270"
+                                                          Opacity=".5"
+                                                          RenderingBias="Performance"
+                                                          ShadowDepth="1.5"
+                                                          Color="Black" />
                                     </Border.Effect>
                                 </Border>
                             </Grid>
                         </Viewbox>
-                        <ContentPresenter
-                            x:Name="contentPresenter"
-                            Grid.Column="1"
-                            Margin="{TemplateBinding Padding}"
-                            HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
-                            VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                            Focusable="False"
-                            RecognizesAccessKey="True"
-                            SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                            Visibility="Collapsed" />
+                        <ContentPresenter x:Name="contentPresenter"
+                                          Grid.Column="1"
+                                          Margin="{TemplateBinding Padding}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Focusable="False"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          Visibility="Collapsed" />
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="HasContent" Value="true">

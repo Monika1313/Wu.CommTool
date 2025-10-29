@@ -50,6 +50,11 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 var content = JsonConvert.SerializeObject(MqttServerConfig);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
+
+            if (MqttServerConfig.AuthorizedUsers.Count==0)
+            {
+                MqttServerConfig.AuthorizedUsers.Add(new());
+            }
         }
         catch (Exception ex)
         {

@@ -28,7 +28,7 @@
                                     Orientation="Vertical">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Margin="10"
-                                           Style="{DynamicResource SecontTitle}"
+                                           Style="{DynamicResource SecondTitle}"
                                            Text="服务器配置" />
 
                                 <Button Width="30"

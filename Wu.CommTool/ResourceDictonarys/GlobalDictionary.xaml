@@ -268,7 +268,7 @@
         <Setter Property="theme:ThemeProps.Foreground" Value="{DynamicResource FontBrush}" />
     </Style>
 
-    <Style x:Key="SecontTitle"
+    <Style x:Key="SecondTitle"
            BasedOn="{StaticResource TitleTextBlock}"
            TargetType="TextBlock">
         <Setter Property="FontWeight" Value="Normal" />

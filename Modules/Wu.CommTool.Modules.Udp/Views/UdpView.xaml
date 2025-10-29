@@ -29,7 +29,7 @@
                                     Orientation="Vertical">
                             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                                 <TextBlock Margin="10"
-                                           Style="{DynamicResource SecontTitle}"
+                                           Style="{DynamicResource SecondTitle}"
                                            Text="主机配置" />
 
                                 <!--<Button Width="30"
@@ -72,7 +72,7 @@
                                      Text="{Binding UdpClientModel.RemotePort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                             <TextBlock Margin="10"
-                                       Style="{DynamicResource SecontTitle}"
+                                       Style="{DynamicResource SecondTitle}"
                                        Text="本地配置" />
 
                             <TextBox hc:TitleElement.Title="IP"
