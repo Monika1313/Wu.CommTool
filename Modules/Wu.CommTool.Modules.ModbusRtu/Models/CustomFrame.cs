@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
-public partial class CustomFrame : ObservableObject
+public partial class CustomFrame : ObservableObject, IDisposable
 {
     private Task timerTask;
 
@@ -72,12 +72,18 @@ public partial class CustomFrame : ObservableObject
         while (Enable)
         {
             //若串口已打开则发送帧, 否则等待
-            if (Owner.ComConfig.IsOpened && !string.IsNullOrWhiteSpace(Frame))
+            if (Owner != null && Owner.ComConfig.IsOpened && !string.IsNullOrWhiteSpace(Frame))
             {
                 //发送帧
                 Owner.SendCustomFrame(this);
             }
             await Task.Delay(Interval);
         }
+    }
+
+    public void Dispose()
+    {
+        Enable = false;
+        timerTask?.Dispose();
     }
 }

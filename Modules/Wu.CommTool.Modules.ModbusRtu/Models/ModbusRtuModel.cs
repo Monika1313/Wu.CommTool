@@ -1939,11 +1939,11 @@ public partial class ModbusRtuModel : ObservableObject
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             MosbusRtuAutoResponseDatas = JsonConvert.DeserializeObject<ObservableCollection<ModbusRtuAutoResponseData>>(xx)!;
             RefreshModbusRtuDataDataView();//更新数据视图
-            HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导出成功", ModbusRtuView.ViewName);
+            HcGrowlExtensions.Success($"自动应答配置\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入成功", ModbusRtuView.ViewName);
         }
         catch (Exception ex)
         {
-            HcGrowlExtensions.Warning($"自动应答配置导入成功", ModbusRtuView.ViewName);
+            HcGrowlExtensions.Warning($"自动应答配置导入失败 {ex.Message}", ModbusRtuView.ViewName);
             ShowErrorMessage(ex.Message);
         }
     }

@@ -6,6 +6,6 @@ public class UartDesignViewModel : UartViewModel
     public static UartDesignViewModel Instance => _Instance ??= new();
     public UartDesignViewModel()
     {
-
+        OpenDrawers.LeftDrawer = true;
     }
 }

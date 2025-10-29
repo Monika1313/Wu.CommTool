@@ -4,15 +4,18 @@ public partial class UartCustomFrame : ObservableObject
 {
     private Task timerTask;
 
-    public UartModel Owner { get; private set; }
-    public UartCustomFrame(string frame = "")
+    /// <summary>
+    /// 最后一次发布消息的时间,用于周期发送使用
+    /// </summary>
+    [JsonIgnore] public DateTime LastPublish { get; set; } = DateTime.MinValue;
+
+    public UartCustomFrame()
     {
-        Frame = frame;
+
     }
 
-    public UartCustomFrame(UartModel owner, string frame = "")
+    public UartCustomFrame(string frame = "")
     {
-        Owner = owner;
         Frame = frame;
     }
 
@@ -49,33 +52,6 @@ public partial class UartCustomFrame : ObservableObject
     /// <summary>
     /// 启用定时发送
     /// </summary>
-    public bool Enable
-    {
-        get => enable;
-        set
-        {
-            SetProperty(ref enable, value);
-            if (value)
-            {
-                //启动定时发送线程
-                timerTask = new Task(TimerTask);
-                timerTask.Start();
-            }
-        }
-    }
-    private bool enable;
+    [ObservableProperty] bool enable;
 
-    private async void TimerTask()
-    {
-        while (Enable)
-        {
-            //若串口已打开则发送帧, 否则等待
-            if (Owner.ComConfig.IsOpened && !string.IsNullOrWhiteSpace(Frame))
-            {
-                //发送帧
-                Owner.SendCustomFrame(this);
-            }
-            await Task.Delay(Interval);
-        }
-    }
 }

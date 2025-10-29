@@ -38,8 +38,7 @@
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="4"
                                         hc:Poptip.Content="导出配置文件"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ExportConfig"
+                                        Command="{Binding ExportConfigCommand}"
                                         Content="{md:PackIcon Kind=Upload}"
                                         Cursor="Hand"
                                         DockPanel.Dock="Right"
@@ -50,12 +49,11 @@
                                         Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                         Margin="4"
                                         hc:Poptip.Content="导入配置文件"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ImportConfig"
+                                        Command="{Binding ImportConfigCommand}"
                                         Content="{md:PackIcon Kind=Download}"
                                         Cursor="Hand"
                                         DockPanel.Dock="Right"
-                                        IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                        IsEnabled="{Binding UartModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                         Style="{StaticResource Blue_CircleButton}" />
                             </StackPanel>
 
