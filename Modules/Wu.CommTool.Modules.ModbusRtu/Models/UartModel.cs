@@ -1,7 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.IO.Ports;
 using System.Text;
-using Wu.CommTool.Modules.ModbusRtu.Utils;
 
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
@@ -16,12 +15,9 @@ public partial class UartModel : ObservableObject
         publishHandleTask.Start();
         receiveHandleTask.Start();
 
+        //周期发送线程
         periodSendTask = new Task(PeriodSendFrameTask);
         periodSendTask.Start();
-
-        CustomFrames = [new UartCustomFrame  ("01 03 0000 0001 "),
-                                                    new ("01 04 0000 0001 "),
-                                                    new (""),];
     }
 
     private readonly SerialPort SerialPort = new();              //串口
@@ -83,7 +79,6 @@ public partial class UartModel : ObservableObject
     #endregion
 
 
-
     #region ******************************  自定义帧模块 属性  ******************************
     /// <summary>
     /// 自动校验模式选择 Crc校验模式
@@ -93,7 +88,7 @@ public partial class UartModel : ObservableObject
     /// <summary>
     /// 自定义帧的输入框
     /// </summary>
-    [ObservableProperty] private ObservableCollection<UartCustomFrame> customFrames;
+    [ObservableProperty] private ObservableCollection<UartCustomFrame> customFrames = [];
     #endregion
 
 
@@ -430,7 +425,6 @@ public partial class UartModel : ObservableObject
                 return false;
             }
 
-
             if (SendDataFormat == UartDataFormat.Ascii)
             {
                 if (SerialPort.IsOpen)
@@ -508,27 +502,6 @@ public partial class UartModel : ObservableObject
             ShowErrorMessage(ex.Message);
             return false;
         }
-    }
-
-    public bool IsModbusCrcOk(List<byte> frame)
-    {
-        return IsModbusCrcOk(frame.ToArray());
-    }
-
-    /// <summary>
-    /// 返回该数组是否Modbus校验通过
-    /// </summary>
-    /// <param name="frame"></param>
-    /// <returns></returns>
-    public bool IsModbusCrcOk(byte[] frame)
-    {
-        var code = Wu.Utils.Crc.Crc16Modbus(frame);
-
-        //校验通过
-        if (code.All(x => x == 0))
-            return true;
-        else
-            return false;
     }
 
     /// <summary>
@@ -626,7 +599,7 @@ public partial class UartModel : ObservableObject
                     if (/*!isNot && */frameCache.Count >= 8)
                     {
                         frame = frameCache.Take(8).ToList();   //截取frameCache前8个字节 对其进行crc校验,验证通过则为一帧
-                        var crcOk = IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
+                        var crcOk = UartUtils.IsModbusCrcOk(frame);       //先验证前8字节是否能校验成功
 
                         #region TODO 这部分未完成
                         //TODO 0x03、0x04、0x10粘包问题已处理 其他功能码的未做
@@ -675,7 +648,7 @@ public partial class UartModel : ObservableObject
                                         if (frameCache.Count >= 12)
                                         {
                                             var tempF = frameCache.Take(12).ToList();//截取一段进行校验
-                                            if (IsModbusCrcOk(tempF))
+                                            if (UartUtils.IsModbusCrcOk(tempF))
                                             {
                                                 frame = tempF;
                                             }
@@ -687,7 +660,7 @@ public partial class UartModel : ObservableObject
                             }
 
                             //解析出可能的帧并校验成功
-                            if (frame.Count > 0 && IsModbusCrcOk(frame))
+                            if (frame.Count > 0 && UartUtils.IsModbusCrcOk(frame))
                             {
                                 msg = BitConverter.ToString(frame.ToArray()).Replace('-', ' ');
                                 //输出接收到的数据

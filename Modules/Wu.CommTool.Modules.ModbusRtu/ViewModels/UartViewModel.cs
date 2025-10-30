@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
+﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
 public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 {
@@ -26,6 +24,13 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
 
         UartModel.GetComPorts();//更新串口列表
+
+        if (UartModel.CustomFrames.Count == 0)
+        {
+            UartModel.CustomFrames = [new UartCustomFrame  ("01 03 0000 0001 "),
+                                                    new ("01 04 0000 0001 "),
+                                                    new (""),];
+        }
 
         GetDefaultConfig();
         RefreshQuickImportList();//读取配置文件夹
@@ -264,20 +269,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         UartModel.SendDataFormat = import.SendDataFormat;
         UartModel.ReceiveDataFormat = import.ReceiveDataFormat;
         UartModel.ByteOrder = import.ByteOrder;
-
-        int old = UartModel.CustomFrames.Count;
-
-        foreach (var x in import.CustomFrames)
-        {
-            UartModel.CustomFrames.Add(x);
-        }
-        //TODO 这部分需要优化 由于构造函数会初始化3条数据,所以json反序列化时会多3条
-        for (int i = 0; i < old + 3; i++)
-        {
-            var xxx = UartModel.CustomFrames.First();
-            UartModel.CustomFrames.Remove(xxx);
-        }
-
+        UartModel.CustomFrames = new(import.CustomFrames);
     }
 
     /// <summary>
@@ -336,5 +328,5 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-   
+
 }

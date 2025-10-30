@@ -52,4 +52,6 @@ global using Wu.CommTool.Modules.ModbusRtu.Models;
 global using Window = System.Windows.Window;
 global using HandyControl.Controls;
 
+global using Wu.CommTool.Modules.ModbusRtu.Utils;
+
 
