@@ -26,7 +26,8 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
 
         UartModel.GetComPorts();//更新串口列表
-                                
+
+        GetDefaultConfig();
         RefreshQuickImportList();//读取配置文件夹
     }
 
@@ -278,6 +279,38 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         }
 
     }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+        //从默认配置文件中读取配置
+        try
+        {
+            var filePath = Path.Combine(configDirectory, $"Default.{configExtension}");
+            if (File.Exists(filePath))
+            {
+                var obj = JsonConvert.DeserializeObject<UartModel>(Core.Common.Utils.ReadJsonFile(filePath));
+                UpdateUartModel(obj);
+            }
+            else
+            {
+                //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(configDirectory);
+
+                //将当前的配置序列化为json字符串
+                var content = JsonConvert.SerializeObject(UartModel);
+                //保存文件
+                Core.Common.Utils.WriteJsonFile(filePath, content);
+                RefreshQuickImportList();
+            }
+        }
+        catch (Exception)
+        {
+        }
+    }
+
     #endregion
 
     /// <summary>
