@@ -268,6 +268,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// <summary>
     /// 更新快速导入配置列表
     /// </summary>
+    [RelayCommand]
     private void RefreshQuickImportList()
     {
         try

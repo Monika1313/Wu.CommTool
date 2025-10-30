@@ -180,7 +180,7 @@
                                         Orientation="Horizontal">
                                 <TextBlock VerticalAlignment="Center"
                                            Foreground="{DynamicResource FontBrush}"
-                                           Text="接收格式:" />
+                                           Text="接收格式: " />
                                 <ComboBox VerticalAlignment="Center"
                                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
                                           SelectedItem="{Binding UdpClientModel.ReceiveDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -220,7 +220,7 @@
                                     <StackPanel Margin="4,0"
                                                 DockPanel.Dock="Right"
                                                 Orientation="Horizontal">
-                                        <TextBlock VerticalAlignment="Center" Text="发送格式:" />
+                                        <TextBlock VerticalAlignment="Center" Text="发送格式: " />
                                         <ComboBox VerticalAlignment="Center"
                                                   ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:TcpDataType}}}"
                                                   SelectedItem="{Binding UdpClientModel.SendDataType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"

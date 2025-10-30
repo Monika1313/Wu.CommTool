@@ -1,12 +1,20 @@
-﻿namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
+﻿using System.Windows.Controls;
+
+namespace Wu.CommTool.Modules.ModbusRtu.ViewModels;
 
 public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 {
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    private readonly string configFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\UartConfig");
+    private readonly string configDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\UartConfig");
     private readonly string configExtension = "uartc";
+
+    /// <summary>
+    /// 配置文件列表
+    /// </summary>
+    public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
+    private ObservableCollection<ConfigFile> _ConfigFiles = [];
     #endregion **************************************** 字段 ****************************************
 
 
@@ -18,6 +26,8 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         this.dialogHost = dialogHost;
 
         UartModel.GetComPorts();//更新串口列表
+                                
+        RefreshQuickImportList();//读取配置文件夹
     }
 
     /// <summary>
@@ -154,7 +164,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            Wu.Utils.IoUtil.Exists(configFolder);
+            Wu.Utils.IoUtil.Exists(configDirectory);
             SaveFileDialog sfd = new()
             {
                 Title = "请选择导出配置文件...",        //对话框标题
@@ -162,7 +172,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
                 FilterIndex = 1,                     //默认选中的过滤器
                 FileName = "Default",                //默认文件名
                 DefaultExt = $"{configExtension}",              //默认扩展名
-                InitialDirectory = configFolder,            //指定初始的目录
+                InitialDirectory = configDirectory,            //指定初始的目录
                 OverwritePrompt = true,                                                  //文件已存在警告
                 AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
             };
@@ -173,6 +183,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             //保存文件
             Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
             HcGrowlExtensions.Success($"配置导出成功 {Path.GetFileNameWithoutExtension(sfd.FileName)}");
+            RefreshQuickImportList();
         }
         catch (Exception ex)
         {
@@ -189,14 +200,14 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            Wu.Utils.IoUtil.Exists(configFolder);
+            Wu.Utils.IoUtil.Exists(configDirectory);
             //选中配置文件
             OpenFileDialog dlg = new()
             {
                 Title = "请选择导入自动应答配置文件...",                                //对话框标题
                 Filter = $"json files(*.{configExtension})|*.{configExtension}",    //文件格式过滤器
                 FilterIndex = 1,                                                    //默认选中的过滤器
-                InitialDirectory = configFolder
+                InitialDirectory = configDirectory
             };
 
             if (dlg.ShowDialog() != true)
@@ -213,6 +224,36 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
+    /// <summary>
+    /// 导入配置文件
+    /// </summary>
+    /// <param name="obj"></param>
+    [RelayCommand]
+    private void QuickImportConfig(ConfigFile obj)
+    {
+        try
+        {
+            var xx = Core.Common.Utils.ReadJsonFile(obj.FullName);//读取文件
+            var x = JsonConvert.DeserializeObject<UartModel>(xx)!;//反序列化
+            if (x == null)
+            {
+                Growl.Warning("读取配置文件失败");
+                return;
+            }
+            var importUartModel = JsonConvert.DeserializeObject<UartModel>(xx)!;
+            UpdateUartModel(importUartModel);//更新当前模型
+            HcGrowlExtensions.Success($"配置导入成功 {Path.GetFileNameWithoutExtension(obj.FullName)}");
+        }
+        catch (Exception ex)
+        {
+            Growl.Warning($"配置文件导入失败");
+        }
+    }
+
+    /// <summary>
+    /// 更新模型
+    /// </summary>
+    /// <param name="import"></param>
     private void UpdateUartModel(UartModel import)
     {
         UartModel.ComConfig = import.ComConfig;
@@ -229,7 +270,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         {
             UartModel.CustomFrames.Add(x);
         }
-
+        //TODO 这部分需要优化 由于构造函数会初始化3条数据,所以json反序列化时会多3条
         for (int i = 0; i < old + 3; i++)
         {
             var xxx = UartModel.CustomFrames.First();
@@ -238,4 +279,29 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
     }
     #endregion
+
+    /// <summary>
+    /// 更新快速导入配置列表
+    /// </summary>
+    [RelayCommand]
+    private void RefreshQuickImportList()
+    {
+        try
+        {
+            Wu.Utils.IoUtil.Exists(configDirectory);//验证文件夹是否存在
+            DirectoryInfo Folder = new(configDirectory);
+            var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals($".{configExtension}")).Select(item => new ConfigFile(item));
+            ConfigFiles.Clear();
+            foreach (var item in a)
+            {
+                ConfigFiles.Add(item);
+            }
+        }
+        catch (Exception ex)
+        {
+            Growl.Error("读取配置文件夹异常: " + ex.Message);
+        }
+    }
+
+   
 }
