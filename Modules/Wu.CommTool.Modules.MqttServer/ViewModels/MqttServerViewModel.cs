@@ -54,9 +54,12 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                 var x = JsonConvert.DeserializeObject<MqttServerConfig>(Core.Common.Utils.ReadJsonFile(filePath));
                 if (x != null)
                 {
-                    MqttServerConfig = x;
-                    MqttServerConfig.IsOpened = false;//解决旧版本导出配置的问题
-                    ShowMessage("读取配置成功");
+                    Wu.Wpf.Utils.ExecuteFun(() =>
+                    {
+                        MqttServerConfig = x;
+                        MqttServerConfig.IsOpened = false;//解决旧版本导出配置的问题
+                        ShowMessage("读取配置成功");
+                    });
                 }
             }
             else
@@ -71,7 +74,10 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 
             if (MqttServerConfig.AuthorizedUsers.Count == 0)
             {
-                MqttServerConfig.AuthorizedUsers.Add(new());
+                Wu.Wpf.Utils.ExecuteFun(() =>
+                {
+                    MqttServerConfig.AuthorizedUsers.Add(new());
+                });
             }
         }
         catch (Exception ex)
