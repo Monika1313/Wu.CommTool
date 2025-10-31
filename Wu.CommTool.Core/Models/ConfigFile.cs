@@ -1,6 +1,6 @@
-﻿namespace Wu.CommTool.Modules.MqttClient.Models;
+﻿namespace Wu.CommTool.Core.Models;
 
-public class ConfigFile : BindableBase
+public class ConfigFile : ObservableObject
 {
     public ConfigFile(FileInfo file)
     {

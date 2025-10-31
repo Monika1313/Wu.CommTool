@@ -20,217 +20,264 @@
             <md:DrawerHost IsLeftDrawerOpen="{Binding IsDrawersOpen.LeftDrawer}" IsRightDrawerOpen="{Binding IsDrawersOpen.RightDrawer}">
                 <!--  左侧抽屉  -->
                 <md:DrawerHost.LeftDrawerContent>
-                    <ContentControl Style="{StaticResource Effect2Control}">
-                        <StackPanel Width="300" Orientation="Vertical">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <TextBlock Margin="10"
-                                           Style="{DynamicResource SecondTitle}"
-                                           Text="服务器配置" />
+                    <DockPanel>
+                        <ContentControl DockPanel.Dock="Left" Style="{StaticResource Effect2Control}">
+                            <StackPanel Width="300" Orientation="Vertical">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock Margin="10"
+                                               Style="{DynamicResource SecondTitle}"
+                                               Text="服务器配置" />
 
-                                <!--  导出配置文件  -->
-                                <Button Width="30"
-                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                        Margin="4"
-                                        hc:Poptip.Content="导出配置文件"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ExportConfig"
-                                        Content="{md:PackIcon Kind=Upload}"
-                                        Cursor="Hand"
-                                        DockPanel.Dock="Right"
-                                        Style="{StaticResource Blue_CircleButton}" />
+                                    <!--  导出配置文件  -->
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="导出配置文件"
+                                            Command="{Binding ExportConfigCommand}"
+                                            Content="{md:PackIcon Kind=Upload}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />
 
-                                <!--  导入配置文件  -->
-                                <Button Width="30"
-                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                        Margin="4"
-                                        hc:Poptip.Content="导入配置文件"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="ImportConfig"
-                                        Content="{md:PackIcon Kind=Download}"
-                                        Cursor="Hand"
-                                        DockPanel.Dock="Right"
-                                        IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                        Style="{StaticResource Blue_CircleButton}" />
-                            </StackPanel>
-                            <!--<ctl:WuIpBox
+                                    <!--  导入配置文件  -->
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="导入配置文件"
+                                            Command="{Binding ImportConfigCommand}"
+                                            Content="{md:PackIcon Kind=Download}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                            Style="{StaticResource Blue_CircleButton}" />
+                                </StackPanel>
+                                <!--<ctl:WuIpBox
                                 Margin="5"
                                 Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 IpTitle="IP"
                                 TitleWidth="45" />-->
 
-                            <TextBox hc:TitleElement.Title="IP"
-                                     hc:TitleElement.TitleWidth="45"
-                                     IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox hc:TitleElement.Title="IP"
+                                         hc:TitleElement.TitleWidth="45"
+                                         IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBox hc:TitleElement.Title="Port"
-                                     hc:TitleElement.TitleWidth="45"
-                                     IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox hc:TitleElement.Title="Port"
+                                         hc:TitleElement.TitleWidth="45"
+                                         IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding MqttServerConfig.ServerPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <!--  服务器开关  -->
-                            <StackPanel HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        Orientation="Horizontal">
-                                <Button Margin="20"
+                                <!--  服务器开关  -->
+                                <StackPanel HorizontalAlignment="Center"
+                                            VerticalAlignment="Top"
+                                            Orientation="Horizontal">
+                                    <Button Margin="20"
+                                            Command="{Binding ExecuteCommand}"
+                                            CommandParameter="RunMqttServer"
+                                            Content="打开"
+                                            IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                            Style="{StaticResource GreenButton}" />
+
+                                    <Button Width="60"
+                                            Margin="20"
+                                            Command="{Binding ExecuteCommand}"
+                                            CommandParameter="StopMqttServer"
+                                            Content="关闭"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Left"
+                                            IsEnabled="{Binding MqttServerConfig.IsOpened}"
+                                            Style="{StaticResource RedButton}" />
+                                </StackPanel>
+
+                                <Button Margin="20,20,20,5"
                                         Command="{Binding ExecuteCommand}"
-                                        CommandParameter="RunMqttServer"
-                                        Content="打开"
-                                        IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                        Style="{StaticResource GreenButton}" />
+                                        CommandParameter="AddFwRule"
+                                        Content="为该软件开放防火墙"
+                                        Style="{StaticResource RedButton}"
+                                        ToolTip="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。" />
+                                <TextBlock Margin="20,0"
+                                           HorizontalAlignment="Center"
+                                           Foreground="Red"
+                                           Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
+                                           TextWrapping="Wrap" />
 
-                                <Button Width="60"
-                                        Margin="20"
-                                        Command="{Binding ExecuteCommand}"
-                                        CommandParameter="StopMqttServer"
-                                        Content="关闭"
-                                        Cursor="Hand"
-                                        DockPanel.Dock="Left"
-                                        IsEnabled="{Binding MqttServerConfig.IsOpened}"
-                                        Style="{StaticResource RedButton}" />
+                                <ContentControl Margin="0,4" Style="{StaticResource Effect2Control}">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Margin="0,5"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="SSL/TLS" />
+                                            <ToggleButton Margin="30,0"
+                                                          IsChecked="{Binding MqttServerConfig.Encrypt}"
+                                                          Style="{StaticResource ToggleButtonSwitch}" />
+                                        </StackPanel>
+                                        <StackPanel IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}" Visibility="{Binding MqttServerConfig.Encrypt, Converter={wu:False2Collapsed}}">
+                                            <DockPanel>
+                                                <Button Width="30"
+                                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                                        Margin="4"
+                                                        Command="{Binding SelectPfxFileCommand}"
+                                                        Content="{md:PackIcon Kind=FolderOpenOutline}"
+                                                        DockPanel.Dock="Right"
+                                                        Style="{StaticResource Blue_CircleButton}" />
+                                                <TextBox hc:InfoElement.Necessary="True"
+                                                         hc:InfoElement.Placeholder="请选择PFX证书..."
+                                                         hc:TitleElement.Title="PFX证书"
+                                                         Style="{StaticResource FormTextBox}"
+                                                         Text="{Binding MqttServerConfig.PfxFilePath}" />
+                                            </DockPanel>
+
+                                            <PasswordBox hc:InfoElement.Placeholder="请输入PFX证书密码..."
+                                                         hc:TitleElement.Title="PFX证书密码"
+                                                         wu:PasswordExtensions.Password="{Binding MqttServerConfig.PfxPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                         Cursor="IBeam"
+                                                         DockPanel.Dock="Top"
+                                                         Style="{StaticResource FormPasswordBox}">
+                                                <i:Interaction.Behaviors>
+                                                    <wu:PasswordBehavior />
+                                                </i:Interaction.Behaviors>
+                                            </PasswordBox>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </ContentControl>
+
+                                <ContentControl Margin="0,4" Style="{StaticResource Effect2Control}">
+                                    <StackPanel Orientation="Vertical">
+                                        <StackPanel Margin="0,5"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Center"
+                                                    Orientation="Horizontal">
+                                            <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="用户身份验证" />
+                                            <ToggleButton Margin="30,0"
+                                                          IsChecked="{Binding MqttServerConfig.EnableAuthenticate}"
+                                                          Style="{StaticResource ToggleButtonSwitch}" />
+                                        </StackPanel>
+
+                                        <DataGrid Width="Auto"
+                                                  AutoGenerateColumns="False"
+                                                  Background="Transparent"
+                                                  CanUserSortColumns="False"
+                                                  HeadersVisibility="Column"
+                                                  ItemsSource="{Binding MqttServerConfig.AuthorizedUsers}"
+                                                  Visibility="{Binding MqttServerConfig.EnableAuthenticate, Converter={wu:False2Collapsed}}">
+                                            <DataGrid.RowStyle>
+                                                <Style TargetType="DataGridRow">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                </Style>
+                                            </DataGrid.RowStyle>
+
+                                            <DataGrid.RowHeaderTemplate>
+                                                <DataTemplate>
+                                                    <Grid Width="110">
+                                                        <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </DataGrid.RowHeaderTemplate>
+
+                                            <DataGrid.CellStyle>
+                                                <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
+                                                    <Setter Property="IsTabStop" Value="False" />
+                                                    <Style.Triggers>
+                                                        <Trigger Property="IsKeyboardFocused" Value="False">
+                                                            <Setter Property="Background" Value="Transparent" />
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </DataGrid.CellStyle>
+
+                                            <DataGrid.ContextMenu>
+                                                <ContextMenu StaysOpen="true">
+                                                    <MenuItem Margin="2"
+                                                              Command="{Binding AddAuthorizedUserCommand}"
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                              Header="新增" />
+                                                    <MenuItem Margin="2"
+                                                              Command="{Binding DeleteAuthorizedUserCommand}"
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
+                                                              Foreground="Red"
+                                                              Header="删除" />
+                                                </ContextMenu>
+                                            </DataGrid.ContextMenu>
+
+                                            <DataGrid.Columns>
+                                                <DataGridTemplateColumn Header="用户名">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox Width="110"
+                                                                     HorizontalContentAlignment="Center"
+                                                                     ContextMenu="{x:Null}"
+                                                                     Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+
+                                                <DataGridTemplateColumn Header="密码">
+                                                    <DataGridTemplateColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <TextBox Width="110"
+                                                                     HorizontalContentAlignment="Center"
+                                                                     ContextMenu="{x:Null}"
+                                                                     Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                                                        </DataTemplate>
+                                                    </DataGridTemplateColumn.CellTemplate>
+                                                </DataGridTemplateColumn>
+                                            </DataGrid.Columns>
+                                        </DataGrid>
+                                    </StackPanel>
+                                </ContentControl>
                             </StackPanel>
+                        </ContentControl>
 
-                            <Button Margin="20,20,20,5"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="AddFwRule"
-                                    Content="为该软件开放防火墙"
-                                    Style="{StaticResource RedButton}"
-                                    ToolTip="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。" />
-                            <TextBlock Margin="20,0"
-                                       HorizontalAlignment="Center"
-                                       Foreground="Red"
-                                       Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
-                                       TextWrapping="Wrap" />
-
-                            <ContentControl Margin="0,4" Style="{StaticResource Effect2Control}">
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Margin="0,5"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Orientation="Horizontal">
-                                        <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="SSL/TLS" />
-                                        <ToggleButton Margin="30,0"
-                                                      IsChecked="{Binding MqttServerConfig.Encrypt}"
-                                                      Style="{StaticResource ToggleButtonSwitch}" />
-                                    </StackPanel>
-                                    <StackPanel IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}" Visibility="{Binding MqttServerConfig.Encrypt, Converter={wu:False2Collapsed}}">
-                                        <DockPanel>
-                                            <Button Width="30"
-                                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                                    Margin="4"
-                                                    Command="{Binding SelectPfxFileCommand}"
-                                                    Content="{md:PackIcon Kind=FolderOpenOutline}"
-                                                    DockPanel.Dock="Right"
-                                                    Style="{StaticResource Blue_CircleButton}" />
-                                            <TextBox hc:InfoElement.Necessary="True"
-                                                     hc:InfoElement.Placeholder="请选择PFX证书..."
-                                                     hc:TitleElement.Title="PFX证书"
-                                                     Style="{StaticResource FormTextBox}"
-                                                     Text="{Binding MqttServerConfig.PfxFilePath}" />
-                                        </DockPanel>
-
-                                        <PasswordBox hc:InfoElement.Placeholder="请输入PFX证书密码..."
-                                                     hc:TitleElement.Title="PFX证书密码"
-                                                     wu:PasswordExtensions.Password="{Binding MqttServerConfig.PfxPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                     Cursor="IBeam"
-                                                     DockPanel.Dock="Top"
-                                                     Style="{StaticResource FormPasswordBox}">
-                                            <i:Interaction.Behaviors>
-                                                <wu:PasswordBehavior />
-                                            </i:Interaction.Behaviors>
-                                        </PasswordBox>
-                                    </StackPanel>
+                        <!--  快速导入配置  -->
+                        <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
+                            <DockPanel MinWidth="230">
+                                <StackPanel Margin="20,0"
+                                            HorizontalAlignment="Center"
+                                            DockPanel.Dock="Top"
+                                            Orientation="Horizontal">
+                                    <TextBlock Style="{DynamicResource SecondTitle}" Text="快速导入配置" />
+                                    <!--  更新配置列表  -->
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="更新配置列表"
+                                            Command="{Binding RefreshQuickImportListCommand}"
+                                            Content="{md:PackIcon Kind=Refresh}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />
                                 </StackPanel>
-                            </ContentControl>
-
-                            <ContentControl Margin="0,4" Style="{StaticResource Effect2Control}">
-                                <StackPanel Orientation="Vertical">
-                                    <StackPanel Margin="0,5"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                Orientation="Horizontal">
-                                        <TextBlock Style="{DynamicResource DefaultTextBlock}" Text="用户身份验证" />
-                                        <ToggleButton Margin="30,0"
-                                                      IsChecked="{Binding MqttServerConfig.EnableAuthenticate}"
-                                                      Style="{StaticResource ToggleButtonSwitch}" />
-                                    </StackPanel>
-
-                                    <DataGrid Width="Auto"
-                                              AutoGenerateColumns="False"
-                                              Background="Transparent"
-                                              CanUserSortColumns="False"
-                                              HeadersVisibility="Column"
-                                              ItemsSource="{Binding MqttServerConfig.AuthorizedUsers}"
-                                              Visibility="{Binding MqttServerConfig.EnableAuthenticate, Converter={wu:False2Collapsed}}">
-                                        <DataGrid.RowStyle>
-                                            <Style TargetType="DataGridRow">
-                                                <Setter Property="Background" Value="Transparent" />
-                                            </Style>
-                                        </DataGrid.RowStyle>
-
-                                        <DataGrid.RowHeaderTemplate>
+                                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                    <ItemsControl Background="Transparent"
+                                                  DockPanel.Dock="Top"
+                                                  ItemsSource="{Binding ConfigFiles, IsAsync=True}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel HorizontalAlignment="Center" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Grid Width="110">
-                                                    <CheckBox HorizontalAlignment="Center" IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridRow}}" />
-                                                </Grid>
+                                                <Border Margin="4" CornerRadius="4">
+                                                    <WrapPanel Orientation="Horizontal">
+                                                        <Button Command="{Binding DataContext.QuickImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding}"
+                                                                Content="{Binding Name}"
+                                                                Cursor=""
+                                                                IsEnabled="{Binding DataContext.MqttServerConfig.IsOpened, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={wu:ReverseBool}}"
+                                                                Style="{StaticResource MaterialDesignOutlinedButton}" />
+                                                    </WrapPanel>
+                                                </Border>
                                             </DataTemplate>
-                                        </DataGrid.RowHeaderTemplate>
-
-                                        <DataGrid.CellStyle>
-                                            <Style BasedOn="{StaticResource DataGridCellStyle}" TargetType="DataGridCell">
-                                                <Setter Property="IsTabStop" Value="False" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsKeyboardFocused" Value="False">
-                                                        <Setter Property="Background" Value="Transparent" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </DataGrid.CellStyle>
-
-                                        <DataGrid.ContextMenu>
-                                            <ContextMenu StaysOpen="true">
-                                                <MenuItem Margin="2"
-                                                          Command="{Binding AddAuthorizedUserCommand}"
-                                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                                          Header="新增" />
-                                                <MenuItem Margin="2"
-                                                          Command="{Binding DeleteAuthorizedUserCommand}"
-                                                          CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"
-                                                          Foreground="Red"
-                                                          Header="删除" />
-                                            </ContextMenu>
-                                        </DataGrid.ContextMenu>
-
-                                        <DataGrid.Columns>
-                                            <DataGridTemplateColumn Header="用户名">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBox Width="110"
-                                                                 HorizontalContentAlignment="Center"
-                                                                 ContextMenu="{x:Null}"
-                                                                 Text="{Binding UserName, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Header="密码">
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <TextBox Width="110"
-                                                                 HorizontalContentAlignment="Center"
-                                                                 ContextMenu="{x:Null}"
-                                                                 Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                            </DataGridTemplateColumn>
-                                        </DataGrid.Columns>
-                                    </DataGrid>
-                                </StackPanel>
-                            </ContentControl>
-                        </StackPanel>
-                    </ContentControl>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </ContentControl>
+                    </DockPanel>
                 </md:DrawerHost.LeftDrawerContent>
 
 
