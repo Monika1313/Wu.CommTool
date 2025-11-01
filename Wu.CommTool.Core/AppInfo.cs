@@ -2,7 +2,7 @@
 
 public static class AppInfo
 {
-    public const string Version = "1.5.5.8";
+    public const string Version = "1.5.5.9";
 
 #if DEBUG
     public const bool Debug = true;
