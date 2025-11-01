@@ -105,4 +105,52 @@ public partial class MtcpLogViewModel : NavigationViewModel, IDialogHostAware
 
     }
     #endregion
+
+    /// <summary>
+    /// 复制帧内容
+    /// </summary>
+    /// <param name="obj"></param>
+    [RelayCommand]
+    [property: JsonIgnore]
+    private void CopyFrame(MtcpMessageData obj)
+    {
+        try
+        {
+            string re = string.Empty;
+            foreach (var item in obj.MtcpSubMessageData)
+            {
+                re += $"{item.Content} ";
+            }
+            System.Windows.Clipboard.SetDataObject(re);
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"{ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 打开解析页面
+    /// </summary>
+    [RelayCommand]
+    [property: JsonIgnore]
+    private async Task OpenAnalyzeMtcpFrameView(MtcpMessageData data)
+    {
+        try
+        {
+            if (data == null || data.MtcpFrame == null)
+            {
+                return;
+            }
+            DialogParameters param = new()
+            {
+                { "Value", data.MtcpFrame },
+            };
+            var dialogResult = await dialogHost.ShowDialog(nameof(AnalyzeMtcpFrameView), param, nameof(MtcpLogView));
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
 }

@@ -97,11 +97,23 @@ public partial class MtcpFrame : ObservableObject
                 }
                 break;
             case MtcpFunctionCode._0x04:
-                if (ByteFrame.Length.Equals(7 + 5))
+                if (PDU.Length.Equals(5))
                 {
                     MtcpFrameType = MtcpFrameType._0x04请求帧;
                     StartAddr = BitConverter.ToUInt16(ByteFrame.Skip(8).Take(2).Reverse().ToArray(), 0);
                     RegisterNum = BitConverter.ToUInt16(ByteFrame.Skip(10).Take(2).Reverse().ToArray(), 0);
+                }
+                //响应帧  功能码(1) 字节数(1)  寄存器值(N *×2) 校验码(2)
+                else if (PDU.Length >= 4 && PDU.Length % 2 == 0)
+                {
+                    MtcpFrameType = MtcpFrameType._0x04响应帧;
+                    BytesNum = PDU[1];
+                    RegisterValues = PDU.Skip(2).ToArray();
+
+                    if (PDU.Length != 2 + BytesNum)
+                    {
+                        ErrMessage = "寄存器值 数量不符...";
+                    }
                 }
                 break;
             case MtcpFunctionCode._0x84:
@@ -198,9 +210,9 @@ public partial class MtcpFrame : ObservableObject
                 messages.Add(new MtcpSubMessageData($"{RegisterNum:X4}", MtcpMessageType.RegisterNum));
                 break;
             case MtcpFrameType._0x03响应帧:
+            case MtcpFrameType._0x04响应帧:
                 messages.Add(new MtcpSubMessageData($"{BytesNum:X2}", MtcpMessageType.BytesNum));
                 messages.Add(new MtcpSubMessageData($"{RegisterValues.DataFormat(2)}", MtcpMessageType.RegisterValues));
-
                 break;
 
             case MtcpFrameType._0x04请求帧:
