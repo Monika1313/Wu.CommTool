@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HandyControl.Controls;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Text;
@@ -157,18 +158,25 @@ public partial class TcpServerModel : ObservableObject
                 }
             }
         }
+        catch(IOException ex)
+        {
+
+        }
         catch (Exception ex)
         {
             ShowErrorMessage($"处理客户端 {client.Client.RemoteEndPoint} 时出错: {ex.Message}");
         }
         finally
         {
-            ShowMessage($"客户端已断开连接 {client.Client.RemoteEndPoint}");
-            client.Close();
-            Clients.Remove(client); // 从客户端列表中移除
-            if (SelectedClient == client)
+            if (IsRunning && client != null)
             {
-                SelectedClient = Clients.FirstOrDefault(); // 如果断开的客户端是当前选中的，选择下一个客户端
+                ShowMessage($"客户端已断开连接 {client?.Client?.RemoteEndPoint}");
+                client?.Close();
+                Clients.Remove(client); // 从客户端列表中移除
+                if (SelectedClient == client)
+                {
+                    SelectedClient = Clients.FirstOrDefault(); // 如果断开的客户端是当前选中的，选择下一个客户端
+                }
             }
         }
     }
@@ -180,10 +188,32 @@ public partial class TcpServerModel : ObservableObject
     [property:JsonIgnore]
     public void Stop()
     {
-        IsRunning = false;
-        tcpListener.Stop();//关闭服务器
-    }
+        try
+        {
+            IsRunning = false;
 
+            List<TcpClient> clientsToClose = [.. Clients];
+            Clients.Clear();
+
+            foreach (var client in clientsToClose)
+            {
+                try
+                {
+                    client.Close();
+                    client.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"关闭客户端连接时出错: {ex.Message}");
+                }
+            }
+            tcpListener.Stop();//关闭服务器
+        }
+        catch (Exception ex)
+        {
+            Growl.Error($"关闭服务器出错了: {ex.Message}");
+        }
+    }
 
 
     /// <summary>
@@ -201,7 +231,6 @@ public partial class TcpServerModel : ObservableObject
 
         try
         {
-
             var networkStream = SelectedClient.GetStream();
             string message = SendInput;
 
@@ -234,8 +263,6 @@ public partial class TcpServerModel : ObservableObject
                         ShowSendMessage("错误：字符串包含无效的十六进制字符");
                         return;
                     }
-
-
 
                     byte[] data2 = new byte[hexString.Length / 2];
 
