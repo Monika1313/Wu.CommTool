@@ -244,7 +244,8 @@
                         <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
                             <DockPanel MinWidth="230">
                                 <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
-                                    <TextBlock FontWeight="Bold"
+                                    <TextBlock d:Text="Default"
+                                               FontWeight="Bold"
                                                Style="{DynamicResource SecondTitle}"
                                                Text="{Binding CurrentConfigName}"
                                                TextWrapping="Wrap" />

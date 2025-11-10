@@ -56,6 +56,14 @@
                                             DockPanel.Dock="Right"
                                             IsEnabled="{Binding UartModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
                                             Style="{StaticResource Blue_CircleButton}" />
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="保存配置文件"
+                                            Command="{Binding SaveConfigCommand}"
+                                            Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />
                                 </StackPanel>
 
                                 <StackPanel Orientation="Horizontal">
@@ -177,6 +185,13 @@
                     <!--  快速导入配置  -->
                     <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
                         <DockPanel MinWidth="230">
+                            <StackPanel DockPanel.Dock="Top">
+                                <TextBlock d:Text="Default"
+                                           FontWeight="Bold"
+                                           Style="{DynamicResource SecondTitle}"
+                                           Text="{Binding CurrentConfigName}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
                             <StackPanel Margin="20,0"
                                         HorizontalAlignment="Center"
                                         DockPanel.Dock="Top"

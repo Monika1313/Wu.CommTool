@@ -5,14 +5,6 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    private readonly string configDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\UartConfig");
-    private readonly string configExtension = "uartc";
-
-    /// <summary>
-    /// 配置文件列表
-    /// </summary>
-    public ObservableCollection<ConfigFile> ConfigFiles { get => _ConfigFiles; set => SetProperty(ref _ConfigFiles, value); }
-    private ObservableCollection<ConfigFile> _ConfigFiles = [];
     #endregion **************************************** 字段 ****************************************
 
 
@@ -162,6 +154,33 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
     #region ******************************  配置文件  ******************************
     /// <summary>
+    /// 配置文件夹路径
+    /// </summary>
+    private readonly string configDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\UartConfig");
+
+    /// <summary>
+    /// 配置文件扩展名 UartConfig
+    /// </summary>
+    private readonly string configExtension = "uartc";
+
+    /// <summary>
+    /// 当前配置文件名称
+    /// </summary>
+    public string CurrentConfigName => Path.GetFileNameWithoutExtension(CurrentConfigFullName);
+
+    /// <summary>
+    /// 当前配置文件完整路径
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentConfigName))]
+    string currentConfigFullName = string.Empty;
+
+    /// <summary>
+    /// 配置文件列表
+    /// </summary>
+    [ObservableProperty] ObservableCollection<ConfigFile> configFiles = [];
+
+    /// <summary>
     /// 导出配置文件
     /// </summary>
     [RelayCommand]
@@ -184,6 +203,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             };
             if (sfd.ShowDialog() != true)
                 return;
+            CurrentConfigFullName = sfd.FileName;
             //将当前的配置序列化为json字符串
             var content = JsonConvert.SerializeObject(UartModel);
             //保存文件
@@ -197,6 +217,26 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
+    /// <summary>
+    /// 保存配置文件
+    /// </summary>
+    [RelayCommand]
+    private void SaveConfig()
+    {
+        try
+        {
+            //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(UartModel);
+            //保存文件
+            Core.Common.Utils.WriteJsonFile(CurrentConfigFullName, content);
+            HcGrowlExtensions.Success($"保存配置 {Path.GetFileNameWithoutExtension(CurrentConfigName)}");
+            RefreshQuickImportList();
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"保存配置失败 {ex.Message}");
+        }
+    }
     /// <summary>
     /// 导入配置文件
     /// </summary>
@@ -218,6 +258,8 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
 
             if (dlg.ShowDialog() != true)
                 return;
+
+            CurrentConfigFullName = dlg.FileName;
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var xxx = JsonConvert.DeserializeObject<UartModel>(xx)!;
             var importUartModel = JsonConvert.DeserializeObject<UartModel>(xx)!;
@@ -249,6 +291,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             var importUartModel = JsonConvert.DeserializeObject<UartModel>(xx)!;
             UpdateUartModel(importUartModel);//更新当前模型
             HcGrowlExtensions.Success($"配置导入成功 {Path.GetFileNameWithoutExtension(obj.FullName)}");
+            CurrentConfigFullName = obj.FullName;
         }
         catch (Exception ex)
         {
@@ -281,6 +324,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             var filePath = Path.Combine(configDirectory, $"Default.{configExtension}");
+            CurrentConfigFullName = filePath;
             if (File.Exists(filePath))
             {
                 var obj = JsonConvert.DeserializeObject<UartModel>(Core.Common.Utils.ReadJsonFile(filePath));
@@ -302,8 +346,6 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
         {
         }
     }
-
-    #endregion
 
     /// <summary>
     /// 更新快速导入配置列表
@@ -327,6 +369,6 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             Growl.Error("读取配置文件夹异常: " + ex.Message);
         }
     }
-
+    #endregion
 
 }
