@@ -24,6 +24,11 @@
                         <!--  快速导入配置  -->
                         <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
                             <DockPanel>
+                                <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                                    <TextBlock FontWeight="Bold"
+                                               Style="{DynamicResource SecondTitle}"
+                                               Text="{Binding CurrentConfigName}" />
+                                </StackPanel>
                                 <StackPanel HorizontalAlignment="Center"
                                             DockPanel.Dock="Top"
                                             Orientation="Horizontal">
@@ -101,6 +106,14 @@
                                             Cursor="Hand"
                                             DockPanel.Dock="Right"
                                             IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                            Style="{StaticResource Blue_CircleButton}" />
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="保存配置文件"
+                                            Command="{Binding SaveConfigCommand}"
+                                            Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                            DockPanel.Dock="Right"
                                             Style="{StaticResource Blue_CircleButton}" />
                                 </StackPanel>
 

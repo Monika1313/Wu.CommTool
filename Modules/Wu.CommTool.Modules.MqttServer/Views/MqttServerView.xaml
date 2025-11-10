@@ -50,6 +50,15 @@
                                             DockPanel.Dock="Right"
                                             IsEnabled="{Binding MqttServerConfig.IsOpened, Converter={wu:ReverseBool}}"
                                             Style="{StaticResource Blue_CircleButton}" />
+
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="保存配置文件"
+                                            Command="{Binding SaveConfigCommand}"
+                                            Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />
                                 </StackPanel>
                                 <!--<ctl:WuIpBox
                                 Margin="5"
@@ -234,6 +243,12 @@
                         <!--  快速导入配置  -->
                         <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
                             <DockPanel MinWidth="230">
+                                <StackPanel DockPanel.Dock="Top" Orientation="Vertical">
+                                    <TextBlock FontWeight="Bold"
+                                               Style="{DynamicResource SecondTitle}"
+                                               Text="{Binding CurrentConfigName}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
                                 <StackPanel Margin="20,0"
                                             HorizontalAlignment="Center"
                                             DockPanel.Dock="Top"
@@ -243,7 +258,7 @@
                                     <Button Width="30"
                                             Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
                                             Margin="4"
-                                            hc:Poptip.Content="更新配置列表"
+                                            hc:Poptip.Content="刷新配置列表"
                                             Command="{Binding RefreshQuickImportListCommand}"
                                             Content="{md:PackIcon Kind=Refresh}"
                                             Cursor="Hand"
@@ -279,7 +294,6 @@
                         </ContentControl>
                     </DockPanel>
                 </md:DrawerHost.LeftDrawerContent>
-
 
                 <!--  右侧抽屉  -->
                 <md:DrawerHost.RightDrawerContent>

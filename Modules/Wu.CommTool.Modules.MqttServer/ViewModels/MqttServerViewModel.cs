@@ -31,9 +31,21 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     private readonly string configDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttServerConfig");
 
     /// <summary>
-    /// 配置文件扩展名
+    /// 配置文件扩展名 MqttServerConfig
     /// </summary>
     private readonly string configExtension = "jsonMSC";
+
+    /// <summary>
+    /// 当前配置文件名称
+    /// </summary>
+    public string CurrentConfigName => Path.GetFileNameWithoutExtension(CurrentConfigFullName);
+
+    /// <summary>
+    /// 当前配置文件完整路径
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentConfigName))]
+    string currentConfigFullName = string.Empty;
 
     /// <summary>
     /// 配置文件列表
@@ -49,6 +61,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             var filePath = Path.Combine(configDirectory, $"Default.{configExtension}");
+            CurrentConfigFullName = filePath;
             if (File.Exists(filePath))
             {
                 var x = JsonConvert.DeserializeObject<MqttServerConfig>(Core.Common.Utils.ReadJsonFile(filePath));
@@ -115,10 +128,32 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
             HcGrowlExtensions.Success($"配置导出成功 {Path.GetFileNameWithoutExtension(sfd.FileName)}");
             RefreshQuickImportList();
+            CurrentConfigFullName = sfd.FileName;
         }
         catch (Exception ex)
         {
             HcGrowlExtensions.Warning($"配置导出失败 {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 保存配置文件
+    /// </summary>
+    [RelayCommand]
+    private void SaveConfig()
+    {
+        try
+        {
+            //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(MqttServerConfig);
+            //保存文件
+            Core.Common.Utils.WriteJsonFile(CurrentConfigFullName, content);
+            HcGrowlExtensions.Success($"保存配置 {Path.GetFileNameWithoutExtension(CurrentConfigName)}");
+            RefreshQuickImportList();
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"保存配置失败 {ex.Message}");
         }
     }
 
@@ -143,11 +178,12 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 
             if (dlg.ShowDialog() != true)
                 return;
+            CurrentConfigFullName = dlg.FileName;
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var xxx = JsonConvert.DeserializeObject<MqttServerConfig>(xx)!;
             MqttServerConfig = xxx;
             MqttServerConfig.IsOpened = false;//解决旧版本导出配置的问题
-
+            
             Growl.Success($"配置导入成功 {Path.GetFileNameWithoutExtension(dlg.FileName)}");
         }
         catch (Exception ex)
@@ -165,6 +201,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
+            CurrentConfigFullName = obj.FullName;
             var jsonStr = Core.Common.Utils.ReadJsonFile(obj.FullName);//读取文件
             var newConfig = JsonConvert.DeserializeObject<MqttServerConfig>(jsonStr)!;//反序列化
             if (newConfig == null)

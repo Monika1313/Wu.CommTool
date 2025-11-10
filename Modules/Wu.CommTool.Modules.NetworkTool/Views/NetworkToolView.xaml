@@ -87,6 +87,15 @@
                                Style="{StaticResource TitleTextBlock}"
                                Text="IPv4设置" />
                     <DockPanel LastChildFill="False">
+                        <Button Width="30"
+                                Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                Margin="4"
+                                hc:Poptip.Content="导入配置文件"
+                                Command="{Binding SaveConfigCommand}"
+                                Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                DockPanel.Dock="Right"
+                                Style="{StaticResource Blue_CircleButton}" />
+
                         <!--  导入配置文件  -->
                         <Button Width="30"
                                 Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
