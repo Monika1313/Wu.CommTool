@@ -2,18 +2,6 @@
 
 public partial class UartCustomFrame : ObservableObject
 {
-    private Task timerTask;
-
-    /// <summary>
-    /// 最后一次发布消息的时间,用于周期发送使用
-    /// </summary>
-    [JsonIgnore] public DateTime LastPublish { get; set; } = DateTime.MinValue;
-
-    public UartCustomFrame()
-    {
-
-    }
-
     public UartCustomFrame(string frame = "")
     {
         Frame = frame;
@@ -25,9 +13,9 @@ public partial class UartCustomFrame : ObservableObject
     [ObservableProperty] string frame = "";
 
     /// <summary>
-    /// 启用定时发送
+    /// 最后一次发布消息的时间,用于周期发送使用
     /// </summary>
-    [ObservableProperty] bool enableTimer;
+    [JsonIgnore] public DateTime LastPublish { get; set; } = DateTime.MinValue;
 
     /// <summary>
     /// 发送间隔 单位毫秒 最小50ms

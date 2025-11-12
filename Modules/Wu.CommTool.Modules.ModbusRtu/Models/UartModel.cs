@@ -989,7 +989,7 @@ public partial class UartModel : ObservableObject
             {
                 WaitStart.WaitOne();//等待串口打开
                 //遍历判断是否要发送
-                foreach (var x in CustomFrames)
+                foreach (UartCustomFrame x in CustomFrames)
                 {
                     if (x.Enable && (DateTime.Now - x.LastPublish).TotalMilliseconds > x.Interval)
                     {

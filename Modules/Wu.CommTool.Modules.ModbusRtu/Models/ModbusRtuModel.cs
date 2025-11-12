@@ -1,5 +1,4 @@
-﻿using HandyControl.Controls;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.IO.Ports;
 namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
@@ -8,6 +7,8 @@ namespace Wu.CommTool.Modules.ModbusRtu.Models;
 /// </summary>
 public partial class ModbusRtuModel : ObservableObject
 {
+    readonly Task periodSendTask;    //周期发送消息处理线程
+
     public ModbusRtuModel()
     {
         SerialPort.DataReceived += new SerialDataReceivedEventHandler(ReceiveMessage);           //串口接收事件
@@ -16,6 +17,10 @@ public partial class ModbusRtuModel : ObservableObject
         receiveHandleTask = new Task(ReceiveFrame);
         publishHandleTask.Start();
         receiveHandleTask.Start();
+
+        //周期发送线程
+        periodSendTask = new Task(PeriodSendFrameTask);
+        periodSendTask.Start();
 
         //默认选中9600无校验
         SelectedBaudRates.Add(BaudRate._9600);
@@ -26,9 +31,9 @@ public partial class ModbusRtuModel : ObservableObject
         RefreshModbusRtuDataDataView();
 
 
-        CustomFrames = [new (this,"01 03 0000 0001 "),
-                                                  new (this,"01 04 0000 0001 "),
-                                                  new (this,""),];
+        CustomFrames = [new ("01 03 0000 0001 "),
+                                                  new ("01 04 0000 0001 "),
+                                                  new (""),];
     }
 
     private readonly SerialPort SerialPort = new();              //串口
@@ -38,6 +43,7 @@ public partial class ModbusRtuModel : ObservableObject
     readonly Task receiveHandleTask; //接收消息处理线程
     readonly EventWaitHandle WaitPublishFrameEnqueue = new AutoResetEvent(false); //等待发布消息入队
     readonly EventWaitHandle WaitUartReceived = new AutoResetEvent(false); //接收到串口数据完成标志
+    readonly EventWaitHandle WaitStart = new ManualResetEvent(false); //等待开始
     protected System.Timers.Timer timer = new();                 //定时器 定时读取数据
     private readonly string ModbusRtuConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig");                           //ModbusRtu配置文件路径
     public readonly string ModbusRtuAutoResponseConfigDict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuAutoResponseConfig");   //ModbusRtu自动应答配置文件路径
@@ -305,6 +311,8 @@ public partial class ModbusRtuModel : ObservableObject
                 ShowMessage($"打开串口失败, 该串口设备不存在或已被占用。{ex.Message}", MessageType.Error);
                 return;
             }
+
+            WaitStart.Set(); //设置开始标志
         }
         catch (Exception ex)
         {
@@ -346,6 +354,8 @@ public partial class ModbusRtuModel : ObservableObject
             }
             ShowMessage($"关闭串口{SerialPort.PortName}");
             SerialPort.Close();                   //关闭串口 
+
+            WaitStart.Reset(); //重置开始标志
         }
         catch (Exception ex)
         {
@@ -363,7 +373,7 @@ public partial class ModbusRtuModel : ObservableObject
             if (SerialPort.IsOpen == false)
             {
                 //配置串口
-                SerialPort.PortName = ComConfig.ComPort.Port;                              //串口
+                SerialPort.PortName = ComConfig.ComPort.Port;                          //串口
                 SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
                 SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
                 SerialPort.DataBits = ComConfig.DataBits;                              //数据位
@@ -373,6 +383,7 @@ public partial class ModbusRtuModel : ObservableObject
                     SerialPort.Open();               //打开串口
                     ComConfig.IsOpened = true;      //标记串口已打开
                     ShowMessage($"打开串口 {SerialPort.PortName} : {ComConfig.ComPort.DeviceName}");
+                    WaitStart.Set();
                 }
                 catch (Exception ex)
                 {
@@ -1267,7 +1278,7 @@ public partial class ModbusRtuModel : ObservableObject
     [RelayCommand]
     public void AddNewCustomFrame()
     {
-        CustomFrames.Add(new CustomFrame(this, ""));
+        CustomFrames.Add(new CustomFrame(""));
     }
     #endregion
 
@@ -1945,6 +1956,36 @@ public partial class ModbusRtuModel : ObservableObject
         {
             HcGrowlExtensions.Warning($"自动应答配置导入失败 {ex.Message}", ModbusRtuView.ViewName);
             ShowErrorMessage(ex.Message);
+        }
+    }
+    #endregion
+
+
+    #region 周期发送消息
+    /// <summary>
+    /// 周期性发送消息 线程
+    /// </summary>
+    /// <exception cref="NotImplementedException"></exception>
+    private async void PeriodSendFrameTask()
+    {
+        while (true)
+        {
+            try
+            {
+                WaitStart.WaitOne();//等待串口打开
+                //遍历判断是否要发送
+                foreach (CustomFrame x in CustomFrames)
+                {
+                    if (x.Enable && (DateTime.Now - x.LastPublish).TotalMilliseconds > x.Interval)
+                    {
+                        SendCustomFrame(x);
+                        x.LastPublish = DateTime.Now;
+                    }
+                }
+
+                await Task.Delay(10);
+            }
+            catch (Exception) { }
         }
     }
     #endregion

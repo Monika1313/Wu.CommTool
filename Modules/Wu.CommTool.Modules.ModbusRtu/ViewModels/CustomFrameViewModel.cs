@@ -254,7 +254,6 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         if (ModbusRtuModel.CustomFrames.Count > 1)
         {
             ModbusRtuModel.CustomFrames.Remove(frame);
-            frame?.Dispose();
         }
         else
         {

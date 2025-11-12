@@ -1,32 +1,21 @@
 ﻿namespace Wu.CommTool.Modules.ModbusRtu.Models;
 
-public partial class CustomFrame : ObservableObject, IDisposable
+public partial class CustomFrame : ObservableObject
 {
-    private Task timerTask;
-
-    public ModbusRtuModel Owner { get; private set; }
     public CustomFrame(string frame = "")
     {
-        Frame = frame;
-    }
-
-    public CustomFrame(ModbusRtuModel owner, string frame = "")
-    {
-        Owner = owner;
         Frame = frame;
     }
 
     /// <summary>
     /// 帧
     /// </summary>
-    [ObservableProperty]
-    string frame = "";
+    [ObservableProperty] string frame = "";
 
     /// <summary>
-    /// 启用定时发送
+    /// 最后一次发布消息的时间,用于周期发送使用
     /// </summary>
-    [ObservableProperty]
-    bool enableTimer;
+    [JsonIgnore] public DateTime LastPublish { get; set; } = DateTime.MinValue;
 
     /// <summary>
     /// 发送间隔 单位毫秒 最小50ms
@@ -51,39 +40,7 @@ public partial class CustomFrame : ObservableObject, IDisposable
     /// <summary>
     /// 启用定时发送
     /// </summary>
-    public bool Enable
-    {
-        get => enable;
-        set
-        {
-            SetProperty(ref enable, value);
-            if (value)
-            {
-                //启动定时发送线程
-                timerTask = new Task(TimerTask);
-                timerTask.Start();
-            }
-        }
-    }
-    private bool enable;
+    [ObservableProperty] bool enable;
 
-    private async void TimerTask()
-    {
-        while (Enable)
-        {
-            //若串口已打开则发送帧, 否则等待
-            if (Owner != null && Owner.ComConfig.IsOpened && !string.IsNullOrWhiteSpace(Frame))
-            {
-                //发送帧
-                Owner.SendCustomFrame(this);
-            }
-            await Task.Delay(Interval);
-        }
-    }
-
-    public void Dispose()
-    {
-        Enable = false;
-        timerTask?.Dispose();
-    }
+   
 }
