@@ -259,6 +259,14 @@
                                     Cursor="Hand"
                                     IsEnabled="{Binding MtcpDeviceManager.State, Converter={wu:ReverseBool}}"
                                     Style="{StaticResource Blue_CircleButton}" />
+                            <Button Width="30"
+                                    Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                    Margin="4"
+                                    hc:Poptip.Content="保存配置文件"
+                                    Command="{Binding SaveConfigCommand}"
+                                    Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                    DockPanel.Dock="Right"
+                                    Style="{StaticResource Blue_CircleButton}" />
                         </StackPanel>
 
                         <Button Width="30"

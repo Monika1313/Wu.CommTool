@@ -7,7 +7,6 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
     private readonly IDialogHostService dialogHost;
-    private readonly string configFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpServerConfig");
     #endregion **************************************** 字段 ****************************************
 
 
@@ -104,6 +103,34 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
 
     #region 配置文件
     /// <summary>
+    /// 配置文件夹路径
+    /// </summary>
+    private readonly string configDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\TcpServerConfig");
+
+    /// <summary>
+    /// 配置文件扩展名 Json TcpServer
+    /// </summary>
+    private readonly string configExtension = "jts";
+
+    /// <summary>
+    /// 当前配置文件名称
+    /// </summary>
+    public string CurrentConfigName => Path.GetFileNameWithoutExtension(CurrentConfigFullName);
+
+    /// <summary>
+    /// 当前配置文件完整路径
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentConfigName))]
+    string currentConfigFullName = string.Empty;
+
+    ///// <summary>
+    ///// 配置文件列表
+    ///// </summary>
+    //[ObservableProperty] ObservableCollection<ConfigFile> configFiles = [];
+
+
+    /// <summary>
     /// 导出配置文件
     /// </summary>
     [RelayCommand]
@@ -112,30 +139,51 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
         try
         {
             //配置文件目录
-            string dict = configFolder;
-            Wu.Utils.IoUtil.Exists(dict);
+            Wu.Utils.IoUtil.Exists(configDirectory);
             SaveFileDialog sfd = new()
             {
                 Title = "请选择导出配置文件...",                                              //对话框标题
-                Filter = "json files(*.jts)|*.jts",    //文件格式过滤器
+                Filter = $"json files(*.{configExtension})|*.{configExtension}",    //文件格式过滤器
                 FilterIndex = 1,                                                         //默认选中的过滤器
                 FileName = "Default",                                           //默认文件名
-                DefaultExt = "jts",                                     //默认扩展名
-                InitialDirectory = dict,                //指定初始的目录
+                DefaultExt = configExtension,                                     //默认扩展名
+                InitialDirectory = configDirectory,                //指定初始的目录
                 OverwritePrompt = true,                                                  //文件已存在警告
                 AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
             };
             if (sfd.ShowDialog() != true)
                 return;
+            CurrentConfigFullName = sfd.FileName;
             //将当前的配置序列化为json字符串
             var content = JsonConvert.SerializeObject(TcpServerModel);
             //保存文件
             Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
-            HcGrowlExtensions.Success("配置导出完成");
+            HcGrowlExtensions.Success($"导出配置:{CurrentConfigName}");
         }
         catch (Exception ex)
         {
-            HcGrowlExtensions.Warning("配置导出失败");
+            HcGrowlExtensions.Warning($"配置导出失败:{ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 保存配置文件
+    /// </summary>
+    [RelayCommand]
+    private void SaveConfig()
+    {
+        try
+        {
+            //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(TcpServerModel);
+            //保存文件
+            Core.Common.Utils.WriteJsonFile(CurrentConfigFullName, content);
+            HcGrowlExtensions.Success($"保存配置:{CurrentConfigName}");
+            //RefreshQuickImportList();
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"保存配置失败 {ex.Message}");
         }
     }
 
@@ -147,31 +195,29 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
-            //配置文件目录
-            string dict = configFolder;
-            Wu.Utils.IoUtil.Exists(dict);
+            Wu.Utils.IoUtil.Exists(configDirectory);
             //选中配置文件
             OpenFileDialog dlg = new()
             {
                 Title = "请选择导入配置文件...",                      //对话框标题
-                Filter = "json files(*.jts)|*.jts",          //文件格式过滤器
+                Filter = $"json files(*.{configExtension})|*.{configExtension}",          //文件格式过滤器
                 FilterIndex = 1,                                     //默认选中的过滤器
-                InitialDirectory = dict
+                InitialDirectory = configDirectory
             };
 
             if (dlg.ShowDialog() != true)
                 return;
+            CurrentConfigFullName = dlg.FileName;
             var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
             var x = JsonConvert.DeserializeObject<TcpServerModel>(xx);
             TcpServerModel = x;
-            HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(dlg.FileName)}\"导入成功");
+            HcGrowlExtensions.Success($"导入配置:{CurrentConfigName}");
         }
         catch (Exception ex)
         {
             HcGrowlExtensions.Success(ex.Message);
         }
     }
-
 
     /// <summary>
     /// 读取默认配置文件 若无则生成
@@ -181,7 +227,8 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
         //从默认配置文件中读取配置
         try
         {
-            var filePath = Path.Combine(configFolder, @"Default.jts");
+            var filePath = Path.Combine(configDirectory, $"Default.{configExtension}");
+            CurrentConfigFullName = filePath;
             if (File.Exists(filePath))
             {
                 var x = JsonConvert.DeserializeObject<TcpServerModel>(Core.Common.Utils.ReadJsonFile(filePath));
@@ -195,7 +242,7 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
                 //文件不存在则生成默认配置 
                 TcpServerModel = new TcpServerModel();
                 //在默认文件目录生成默认配置文件
-                Wu.Utils.IoUtil.Exists(configFolder);
+                Wu.Utils.IoUtil.Exists(configDirectory);
                 var content = JsonConvert.SerializeObject(TcpServerModel);       //将当前的配置序列化为json字符串
                 Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
             }
@@ -205,29 +252,5 @@ public partial class TcpServerViewModel : NavigationViewModel, IDialogHostAware
             Debug.WriteLine($"配置文件读取失败:{ex.Message}");
         }
     }
-    ///// <summary>
-    ///// 导入配置文件
-    ///// </summary>
-    ///// <param name="filePath"></param>
-    //[RelayCommand]
-    //private void ImportConfig(string filePath)
-    //{
-    //    try
-    //    {
-    //        var xx = Core.Common.Utils.ReadJsonFile(filePath);//读取文件
-    //        var x = JsonConvert.DeserializeObject<TcpClientModel>(xx)!;//反序列化
-    //        if (x == null)
-    //        {
-    //            Growl.Error("读取配置文件失败");
-    //            return;
-    //        }
-    //        TcpClientModel = x;
-    //        HcGrowlExtensions.Success($"配置文件\"{Path.GetFileNameWithoutExtension(filePath)}\"导入成功");
-    //    }
-    //    catch (Exception ex)
-    //    {
-    //        HcGrowlExtensions.Warning($"配置文件导入失败{ex.Message}");
-    //    }
-    //}
     #endregion
 }

@@ -51,6 +51,14 @@
                                         DockPanel.Dock="Right"
                                         IsEnabled="{Binding TcpClientModel.IsConnected, Converter={wu:ReverseBool}}"
                                         Style="{StaticResource Blue_CircleButton}" />
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="保存配置文件"
+                                        Command="{Binding SaveConfigCommand}"
+                                        Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Blue_CircleButton}" />
                             </StackPanel>
                             <!--<ctl:WuIpBox
                              Margin="5"

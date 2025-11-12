@@ -192,14 +192,14 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             Wu.Utils.IoUtil.Exists(configDirectory);
             SaveFileDialog sfd = new()
             {
-                Title = "请选择导出配置文件...",        //对话框标题
+                Title = "请选择导出配置文件...",                                       //对话框标题
                 Filter = $"json files(*.{configExtension})|*.{configExtension}",    //文件格式过滤器
-                FilterIndex = 1,                     //默认选中的过滤器
-                FileName = "Default",                //默认文件名
-                DefaultExt = $"{configExtension}",              //默认扩展名
-                InitialDirectory = configDirectory,            //指定初始的目录
-                OverwritePrompt = true,                                                  //文件已存在警告
-                AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+                FilterIndex = 1,                                                    //默认选中的过滤器
+                FileName = "Default",                                               //默认文件名
+                DefaultExt = configExtension,                                       //默认扩展名
+                InitialDirectory = configDirectory,                                 //指定初始的目录
+                OverwritePrompt = true,                                             //文件已存在警告
+                AddExtension = true,                                                //若用户省略扩展名将自动添加扩展名
             };
             if (sfd.ShowDialog() != true)
                 return;
@@ -208,7 +208,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             var content = JsonConvert.SerializeObject(UartModel);
             //保存文件
             Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
-            HcGrowlExtensions.Success($"配置导出成功 {Path.GetFileNameWithoutExtension(sfd.FileName)}");
+            HcGrowlExtensions.Success($"导出配置:{CurrentConfigName}");
             RefreshQuickImportList();
         }
         catch (Exception ex)
@@ -229,7 +229,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             var content = JsonConvert.SerializeObject(UartModel);
             //保存文件
             Core.Common.Utils.WriteJsonFile(CurrentConfigFullName, content);
-            HcGrowlExtensions.Success($"保存配置 {Path.GetFileNameWithoutExtension(CurrentConfigName)}");
+            HcGrowlExtensions.Success($"保存配置:{CurrentConfigName}");
             RefreshQuickImportList();
         }
         catch (Exception ex)
@@ -264,7 +264,7 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
             var xxx = JsonConvert.DeserializeObject<UartModel>(xx)!;
             var importUartModel = JsonConvert.DeserializeObject<UartModel>(xx)!;
             UpdateUartModel(importUartModel);//更新当前模型
-            HcGrowlExtensions.Success($"配置导入成功 {Path.GetFileNameWithoutExtension(dlg.FileName)}");
+            HcGrowlExtensions.Success($"导入配置:{CurrentConfigName}");
         }
         catch (Exception ex)
         {
@@ -288,10 +288,10 @@ public partial class UartViewModel : NavigationViewModel, IDialogHostAware
                 Growl.Warning("读取配置文件失败");
                 return;
             }
+            CurrentConfigFullName = obj.FullName;
             var importUartModel = JsonConvert.DeserializeObject<UartModel>(xx)!;
             UpdateUartModel(importUartModel);//更新当前模型
-            HcGrowlExtensions.Success($"配置导入成功 {Path.GetFileNameWithoutExtension(obj.FullName)}");
-            CurrentConfigFullName = obj.FullName;
+            HcGrowlExtensions.Success($"导入配置:{CurrentConfigName}");
         }
         catch (Exception ex)
         {
