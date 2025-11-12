@@ -402,6 +402,9 @@
                                                         </TextBox.InputBindings>
                                                         <TextBoxBase.ContextMenu>
                                                             <ContextMenu>
+                                                                <MenuItem Command="{Binding Path=PlacementTarget.Tag.EditCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                                          CommandParameter="{Binding}"
+                                                                          Header="编辑" />
                                                                 <MenuItem Command="{Binding Path=PlacementTarget.Tag.CreateFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                                           CommandParameter="{Binding}"
                                                                           Header="帧生成器" />

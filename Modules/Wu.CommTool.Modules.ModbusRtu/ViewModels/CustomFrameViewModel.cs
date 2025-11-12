@@ -260,5 +260,39 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
             ModbusRtuModel.ShowErrorMessage("不能删除最后一行...");
         }
     }
+
+    /// <summary>
+    /// 自定义帧 编辑
+    /// </summary>
+    [RelayCommand]
+    public async Task EditCustomFrame(CustomFrame model)
+    {
+        try
+        {
+            //添加参数
+            DialogParameters param = new();
+            if (model != null)
+                param.Add("Value", model);
+
+            var dialogResult = await dialogHost.ShowDialog(nameof(EditCustomnFrameView), param, ModbusRtuView.ViewName);
+
+            if (dialogResult.Result == ButtonResult.OK)
+            {
+                try
+                {
+                    //从结果中获取数据
+                    var resultDto = dialogResult.Parameters.GetValue<CustomFrame>("Value");
+                }
+                catch (Exception ex)
+                {
+                    Growl.Error(ex.Message);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Growl.Warning(ex.Message);
+        }
+    }
     #endregion
 }
