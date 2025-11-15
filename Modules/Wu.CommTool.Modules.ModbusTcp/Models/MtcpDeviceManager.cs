@@ -8,14 +8,12 @@ public partial class MtcpDeviceManager : ObservableObject
     /// <summary>
     /// ModbusTcp设备列表
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MtcpDevice> mtcpDevices = [];
+    [ObservableProperty] ObservableCollection<MtcpDevice> mtcpDevices = [];
 
     /// <summary>
     /// 选中的Mtcp设备
     /// </summary>
-    [ObservableProperty]
-    MtcpDevice selectedMtcpDevice;
+    [ObservableProperty] MtcpDevice selectedMtcpDevice;
 
     /// <summary>
     /// 状态

@@ -1,6 +1,4 @@
-﻿using WindowsFirewallHelper.Addresses;
-
-namespace Wu.CommTool.Modules.NetworkTool.Models;
+﻿namespace Wu.CommTool.Modules.NetworkTool.Models;
 
 /// <summary>
 /// 网卡
@@ -65,6 +63,8 @@ public partial class NetworkCard : ObservableObject
             NetConnectionId = mo["NetConnectionID"]?.ToString();//连接名称
             Name = mo["Name"]?.ToString();                   //驱动程序
             Manufacturer = mo["Manufacturer"]?.ToString();   //制造商
+            MACAddress = mo["MACAddress"]?.ToString();
+
 
             //查询该网卡的Win32_NetworkAdapterConfiguration信息,以获取DHCP状态等
             ManagementObjectSearcher searcherConfig = new("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE Index = " + mo["Index"]);
@@ -114,36 +114,35 @@ public partial class NetworkCard : ObservableObject
 
 
 
-    [ObservableProperty]
-    string name;
+    [ObservableProperty] string name;
 
     /// <summary>
     /// 网卡启用禁用状态
     /// </summary>
-    [ObservableProperty]
-    bool netEnabled;
+    [ObservableProperty] bool netEnabled;
 
     /// <summary>
     /// DHCP状态
     /// </summary>
-    [ObservableProperty]
-    bool dhcpEnabled;
+    [ObservableProperty] bool dhcpEnabled;
 
     /// <summary>
     /// 名称
     /// </summary>
-    [ObservableProperty]
-    string netConnectionId;
+    [ObservableProperty] string netConnectionId;
 
     /// <summary>
     /// 制造商
     /// </summary>
-    [ObservableProperty]
-    string manufacturer;
+    [ObservableProperty] string manufacturer;
 
-    [ObservableProperty]
-    ObservableCollection<Ipv4> ipv4List = [];
+    /// <summary>
+    /// 物理地址
+    /// </summary>
+    [ObservableProperty] string mACAddress;
 
-    [ObservableProperty]
-    ObservableCollection<string> defaultGateways = [];
+
+    [ObservableProperty] ObservableCollection<Ipv4> ipv4List = [];
+
+    [ObservableProperty] ObservableCollection<string> defaultGateways = [];
 }

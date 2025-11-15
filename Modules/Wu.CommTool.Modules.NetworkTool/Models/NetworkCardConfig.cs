@@ -5,14 +5,12 @@ public partial class NetworkCardConfig : ObservableObject
     /// <summary>
     /// 配置名称
     /// </summary>
-    [ObservableProperty]
-    string configName = "";
+    [ObservableProperty] string configName = "";
 
     /// <summary>
     /// Ipv4地址列表
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<Ipv4> ipv4s = [];
+    [ObservableProperty] ObservableCollection<Ipv4> ipv4s = [];
 
     ///// <summary>
     ///// 默认网关

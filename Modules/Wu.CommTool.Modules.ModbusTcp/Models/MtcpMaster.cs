@@ -18,17 +18,13 @@ public partial class MtcpMaster : ObservableObject
     ObservableCollection<MessageData> messages = [];
 
     #region ModbusTcp服务器参数
-    [ObservableProperty]
-    string serverIp = "127.0.0.1";
+    [ObservableProperty] string serverIp = "127.0.0.1";
 
-    [ObservableProperty]
-    int serverPort = 502;
+    [ObservableProperty] int serverPort = 502;
 
-    [ObservableProperty]
-    int connectTimeout = 3000;
+    [ObservableProperty] int connectTimeout = 3000;
 
-    [ObservableProperty]
-    int requestTimeout = 1000;
+    [ObservableProperty] int requestTimeout = 1000;
     #endregion
 
     #region 属性

@@ -13,13 +13,10 @@ public partial class MtcpMessageData : MessageData
     }
     #endregion
 
-    [ObservableProperty]
-    MtcpFrame mtcpFrame;
+    [ObservableProperty] MtcpFrame mtcpFrame;
 
     /// <summary>
     /// 子消息
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MtcpSubMessageData> mtcpSubMessageData = [];
-    
+    [ObservableProperty] ObservableCollection<MtcpSubMessageData> mtcpSubMessageData = [];
 }

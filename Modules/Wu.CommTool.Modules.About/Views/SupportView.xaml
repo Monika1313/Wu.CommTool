@@ -55,7 +55,7 @@
                                 <TextBlock Grid.Row="1"
                                            HorizontalAlignment="Center"
                                            Foreground="#07C060"
-                                           Text="微信扫码支付" />
+                                           Text="微信扫码" />
                             </Grid>
 
                             <Grid Margin="30,10" HorizontalAlignment="Center">
@@ -69,7 +69,7 @@
                                 <TextBlock Grid.Row="1"
                                            HorizontalAlignment="Center"
                                            Foreground="#1678FF"
-                                           Text="支付宝扫码支付" />
+                                           Text="支付宝扫码" />
                             </Grid>
                         </StackPanel>
                     </StackPanel>

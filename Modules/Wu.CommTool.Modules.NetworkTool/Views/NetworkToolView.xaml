@@ -388,6 +388,18 @@
                                     <StackPanel Margin="4"
                                                 DockPanel.Dock="Top"
                                                 Orientation="Horizontal">
+                                        <TextBlock VerticalAlignment="Center" Text="物理地址: " />
+
+                                        <TextBox VerticalAlignment="Center"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource MessageTextBox}"
+                                                 Text="{Binding MACAddress}" />
+
+                                    </StackPanel>
+
+                                    <StackPanel Margin="4"
+                                                DockPanel.Dock="Top"
+                                                Orientation="Horizontal">
                                         <Button Margin="4"
                                                 HorizontalAlignment="Left"
                                                 Command="{Binding DataContext.EnableDhcpCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
@@ -419,8 +431,8 @@
                                                 </Style>
                                             </TextBlock.Style>
                                         </TextBlock>
-
                                     </StackPanel>
+
                                     <ItemsControl Margin="6"
                                                   DockPanel.Dock="Top"
                                                   ItemsSource="{Binding Ipv4List}">

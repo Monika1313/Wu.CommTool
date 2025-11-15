@@ -47,7 +47,9 @@ public partial class MtcpDevice : ObservableObject, IDisposable
     /// <summary>
     /// 页面消息
     /// </summary>
-    [ObservableProperty] ObservableCollection<MessageData> messages = [];
+    [ObservableProperty]
+    [property:JsonIgnore]
+    ObservableCollection<MessageData> messages = [];
 
     /// <summary>
     /// 所有者
