@@ -22,17 +22,17 @@
         <DockPanel Background="White">
             <Grid DockPanel.Dock="Top">
                 <TextBlock HorizontalAlignment="Center"
-                       Style="{StaticResource TitleTextBlock}"
-                       Text="{Binding CurrentDevice.Name}" />
+                           Style="{StaticResource TitleTextBlock}"
+                           Text="{Binding CurrentDevice.Name}" />
                 <DockPanel LastChildFill="False">
                     <!--  暂停显示按钮  -->
                     <Button Width="30"
-                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                        Margin="5"
-                        HorizontalAlignment="Left"
-                        Command="{Binding CurrentDevice.PauseCommand}"
-                        Cursor="Hand"
-                        DockPanel.Dock="Left">
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="5"
+                            HorizontalAlignment="Left"
+                            Command="{Binding CurrentDevice.PauseCommand}"
+                            Cursor="Hand"
+                            DockPanel.Dock="Left">
                         <md:PackIcon Width="24" Height="24">
                             <md:PackIcon.Style>
                                 <Style TargetType="md:PackIcon">
@@ -68,27 +68,27 @@
                     </Button>
                     <!--  清空消息按钮  -->
                     <Button Width="30"
-                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                        Margin="5"
-                        hc:Poptip.Content="清空消息"
-                        Command="{Binding CurrentDevice.MessageClearCommand}"
-                        Content="{md:PackIcon Kind=Delete}"
-                        DockPanel.Dock="Left"
-                        Style="{StaticResource Red_CircleButton}" />
+                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                            Margin="5"
+                            hc:Poptip.Content="清空消息"
+                            Command="{Binding CurrentDevice.MessageClearCommand}"
+                            Content="{md:PackIcon Kind=Delete}"
+                            DockPanel.Dock="Left"
+                            Style="{StaticResource Red_CircleButton}" />
                 </DockPanel>
             </Grid>
 
             <ContentControl Margin="4,0"
-                        DockPanel.Dock="Top"
-                        Style="{StaticResource Effect2Control}">
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource Effect2Control}">
                 <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
                     <ItemsControl Background="Transparent" ItemsSource="{Binding CurrentDevice.Messages, Mode=OneWay, IsAsync=True}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <VirtualizingStackPanel VirtualizingPanel.CacheLength="2"
-                                                    VirtualizingPanel.CacheLengthUnit="Page"
-                                                    VirtualizingPanel.IsVirtualizingWhenGrouping="True"
-                                                    VirtualizingPanel.VirtualizationMode="Recycling" />
+                                                        VirtualizingPanel.CacheLengthUnit="Page"
+                                                        VirtualizingPanel.IsVirtualizingWhenGrouping="True"
+                                                        VirtualizingPanel.VirtualizationMode="Recycling" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
 
@@ -97,64 +97,64 @@
                                 <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
                                     <WrapPanel Orientation="Horizontal">
                                         <TextBlock Margin="3"
-                                               VerticalAlignment="Center"
-                                               Style="{StaticResource MessageTextBlock}"
-                                               Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
+                                                   VerticalAlignment="Center"
+                                                   Style="{StaticResource MessageTextBlock}"
+                                                   Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
                                         <TextBlock Margin="5,0"
-                                               VerticalAlignment="Center"
-                                               Style="{StaticResource MessageTextBlock}"
-                                               Text="{Binding Type}" />
+                                                   VerticalAlignment="Center"
+                                                   Style="{StaticResource MessageTextBlock}"
+                                                   Text="{Binding Type}" />
                                         <TextBox VerticalAlignment="Center"
-                                             FontSize="12"
-                                             FontWeight="Bold"
-                                             IsReadOnly="True"
-                                             Style="{StaticResource MessageTextBox}"
-                                             Text="{Binding Content}"
-                                             TextWrapping="Wrap" />
+                                                 FontSize="12"
+                                                 FontWeight="Bold"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource MessageTextBox}"
+                                                 Text="{Binding Content}"
+                                                 TextWrapping="Wrap" />
                                     </WrapPanel>
                                 </Border>
                             </DataTemplate>
 
                             <DataTemplate DataType="{x:Type models:MtcpMessageData}">
                                 <Border Style="{StaticResource MessageBorder}" Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                    <i:Interaction.Triggers>
+                                    <!--<i:Interaction.Triggers>
                                         <i:EventTrigger EventName="MouseLeftButtonUp">
                                             <i:InvokeCommandAction Command="{Binding DataContext.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}" CommandParameter="{Binding}" />
                                         </i:EventTrigger>
-                                    </i:Interaction.Triggers>
+                                    </i:Interaction.Triggers>-->
                                     <Border.ContextMenu>
                                         <ContextMenu>
                                             <MenuItem Command="{Binding Path=PlacementTarget.Tag.CopyFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                  CommandParameter="{Binding}"
-                                                  Header="复制Modbus数据帧"
-                                                  Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
-                                            <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                  CommandParameter="{Binding}"
-                                                  Header="解析数据帧"
-                                                  Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
+                                                      CommandParameter="{Binding}"
+                                                      Header="复制"
+                                                      Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />
+                                            <!--<MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenAnalyzeMtcpFrameViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                      CommandParameter="{Binding}"
+                                                      Header="解析数据帧"
+                                                      Visibility="{Binding MtcpFrame, Converter={core:Null2Collapsed}}" />-->
                                         </ContextMenu>
                                     </Border.ContextMenu>
                                     <WrapPanel Orientation="Horizontal">
                                         <TextBlock Margin="3"
-                                               VerticalAlignment="Center"
-                                               Style="{StaticResource MessageTextBlock}"
-                                               Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
+                                                   VerticalAlignment="Center"
+                                                   Style="{StaticResource MessageTextBlock}"
+                                                   Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss.fff}}" />
                                         <TextBlock Margin="5,0"
-                                               VerticalAlignment="Center"
-                                               Style="{StaticResource MessageTextBlock}"
-                                               Text="{Binding Type}" />
+                                                   VerticalAlignment="Center"
+                                                   Style="{StaticResource MessageTextBlock}"
+                                                   Text="{Binding Type}" />
 
                                         <TextBox VerticalAlignment="Center"
-                                             FontSize="12"
-                                             FontWeight="Bold"
-                                             IsReadOnly="True"
-                                             Style="{StaticResource MessageTextBox}"
-                                             Text="{Binding Content}"
-                                             TextWrapping="Wrap" />
+                                                 FontSize="12"
+                                                 FontWeight="Bold"
+                                                 IsReadOnly="True"
+                                                 Style="{StaticResource MessageTextBox}"
+                                                 Text="{Binding Content}"
+                                                 TextWrapping="Wrap" />
 
                                         <ItemsControl Background="Transparent"
-                                                  ItemsSource="{Binding MtcpSubMessageData}"
-                                                  Visibility="{Binding MtcpSubMessageData.Count, Converter={wu:Zero2Collapsed}}">
+                                                      ItemsSource="{Binding MtcpSubMessageData}"
+                                                      Visibility="{Binding MtcpSubMessageData.Count, Converter={wu:Zero2Collapsed}}">
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <WrapPanel VerticalAlignment="Center" Orientation="Horizontal" />
@@ -163,11 +163,11 @@
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Margin="3,0,3,0"
-                                                           VerticalAlignment="Center"
-                                                           FontWeight="Bold"
-                                                           Style="{StaticResource MtcpMessageTextBlock}"
-                                                           Text="{Binding Content}"
-                                                           TextWrapping="Wrap" />
+                                                               VerticalAlignment="Center"
+                                                               FontWeight="Bold"
+                                                               Style="{StaticResource MtcpMessageTextBlock}"
+                                                               Text="{Binding Content}"
+                                                               TextWrapping="Wrap" />
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
                                         </ItemsControl>
