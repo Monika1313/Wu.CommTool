@@ -1,6 +1,6 @@
 ﻿namespace Wu.CommTool.Modules.MrtuSlave.ViewModels.DialogViewModels;
 
-public partial class MrtuSlaveLogViewModel : NavigationViewModel, IDialogHostAware
+public partial class MrtuSlaveLogViewModel : NavigationViewModel, IDialogHostAware, IDialogAware
 {
     #region    **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
@@ -55,10 +55,14 @@ public partial class MrtuSlaveLogViewModel : NavigationViewModel, IDialogHostAwa
     #region **************************************** 属性 ****************************************
     public string DialogHostName { get; set; }
 
+    public string Title => DialogHostName;
+
     [ObservableProperty]
     object currentDto = new();
 
     [ObservableProperty] MrtuSlaveModel mrtuSlaveModel;
+
+    public event Action<IDialogResult> RequestClose;
 
     #endregion **************************************** 属性 ****************************************
 
@@ -111,6 +115,16 @@ public partial class MrtuSlaveLogViewModel : NavigationViewModel, IDialogHostAwa
         {
             HcGrowlExtensions.Warning(ex.Message);
         }
+    }
+
+    public bool CanCloseDialog()
+    {
+        return true;
+    }
+
+    public void OnDialogClosed()
+    {
+        return;
     }
     #endregion
 }

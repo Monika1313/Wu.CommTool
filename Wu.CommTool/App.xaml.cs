@@ -50,16 +50,13 @@ public partial class App
     /// <param name="containerRegistry"></param>
     protected override void RegisterTypes(IContainerRegistry containerRegistry)
     {
-        //注册自定义对话主机服务
-        containerRegistry.Register<IDialogHostService, DialogHostService>();
+        containerRegistry.Register<IDialogHostService, DialogHostService>();//注册自定义对话主机服务
+        containerRegistry.Register<IDialogService, DialogService>();//注册Prism的对话服务
 
         //注册页面
         containerRegistry.RegisterForNavigation<MsgView, MsgViewModel>();//消息提示窗口
         containerRegistry.RegisterForNavigation<AutoUpdaterView, AutoUpdaterViewModel>();//自动更新窗口
-        //containerRegistry.RegisterForNavigation<ProgressView>();
-        //containerRegistry.RegisterInstance<ILog>(LogManager.GetLogger(typeof(App)));
-        //RegisterSingleton
-
+        
         //注册主题管理
         containerRegistry.RegisterSingleton<ThemeManager>();
     }

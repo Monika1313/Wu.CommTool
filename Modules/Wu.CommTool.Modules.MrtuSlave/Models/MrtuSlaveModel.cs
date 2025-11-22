@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using Prism.Services.Dialogs;
+using System.Collections.Concurrent;
 using System.IO.Ports;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,6 +13,7 @@ public partial class MrtuSlaveModel : ObservableObject
 {
     #region **************************************** 字段 ****************************************
     private readonly IContainerProvider provider;
+    private readonly IDialogService dialogService;
     private static readonly ILog log = LogManager.GetLogger(typeof(MrtuSlaveModel));
     private readonly SerialPort SerialPort = new();              //串口
 
@@ -31,9 +33,10 @@ public partial class MrtuSlaveModel : ObservableObject
         Initial();
     }
 
-    public MrtuSlaveModel(IContainerProvider provider) : this()
+    public MrtuSlaveModel(IContainerProvider provider,IDialogService dialogService) : this()
     {
         this.provider = provider;
+        this.dialogService = dialogService;
     }
 
     private void Initial()
@@ -445,6 +448,21 @@ public partial class MrtuSlaveModel : ObservableObject
     {
         try
         {
+            #region 使用Prism的非模态弹窗
+            //DialogParameters parameters = new()
+            //{
+            //    { "Value", this }
+            //};
+
+            //dialogService.Show(nameof(MrtuSlaveLogView), parameters, result =>
+            //{
+            //    if (result.Result == ButtonResult.OK)
+            //    {
+
+            //    }
+            //}); 
+            #endregion
+
             #region 以非模态窗口显示
             var content = provider.Resolve<MrtuSlaveLogView>();//从容器中取出实例
 
