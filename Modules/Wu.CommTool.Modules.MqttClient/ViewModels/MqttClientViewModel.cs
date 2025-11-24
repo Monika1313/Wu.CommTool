@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Formatter;
-using System.Collections.Generic;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 
@@ -15,6 +14,8 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     private IMqttClient client;
     public string DialogHostName { get; set; } = "MqttClientView";
     private static string viewName = "MqttClientView";
+
+    
 
 
     CancellationTokenSource connectCts = new();
@@ -348,8 +349,11 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 optionsBuilder.WithCredentials(MqttClientConfig.UserName, MqttClientConfig.Password);//登录账号
             }
 
-            //TODO 版本做成可选
-            optionsBuilder.WithProtocolVersion(MqttProtocolVersion.V500);//指定Mqtt版本
+            //MQTT版本
+            if (MqttClientConfig.MqttProtocolVersion != MqttProtocolVersion.Unknown)
+            {
+                optionsBuilder.WithProtocolVersion(MqttClientConfig.MqttProtocolVersion);//指定Mqtt版本
+            }
 
             //加密
             if (MqttClientConfig.Encrypt)

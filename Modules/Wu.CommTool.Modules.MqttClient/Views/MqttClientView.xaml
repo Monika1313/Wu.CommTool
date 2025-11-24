@@ -156,6 +156,10 @@
                                             <wu:PasswordBehavior />
                                         </i:Interaction.Behaviors>
                                     </PasswordBox>
+                                    <ComboBox hc:InfoElement.Title="MQTT版本"
+                                              IsEnabled="{Binding MqttClientConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                              SelectedItem="{Binding MqttClientConfig.MqttVersion, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                              Style="{StaticResource FormComboBox}" />
                                     <StackPanel Margin="0,5"
                                                 VerticalAlignment="Center"
                                                 Orientation="Horizontal">
