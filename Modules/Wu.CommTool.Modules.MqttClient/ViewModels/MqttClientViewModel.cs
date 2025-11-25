@@ -1,6 +1,7 @@
 ﻿using MQTTnet.Formatter;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
+using Wu.CommTool.Modules.MqttClient.Converters;
 
 namespace Wu.CommTool.Modules.MqttClient.ViewModels;
 
@@ -11,11 +12,13 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     private readonly IDialogHostService dialogHost;
     public static readonly ILog log = LogManager.GetLogger(typeof(MqttClientViewModel));
 
+    public Array AvailableMqttVersions => MqttnetVersionConverter.GetFilteredMqttVersions();// 使用转换器获取过滤后的版本列表
+
     private IMqttClient client;
     public string DialogHostName { get; set; } = "MqttClientView";
     private static string viewName = "MqttClientView";
 
-    
+
 
 
     CancellationTokenSource connectCts = new();
@@ -46,27 +49,8 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     /// <param name="navigationContext"></param>
     public override void OnNavigatedTo(NavigationContext navigationContext)
     {
-        //try
-        //{
-        //    while (Messages.Count > 200)
-        //    {
-        //        for (int i = 0; i < 50; i++)
-        //        {
-        //            if (Messages.Count <150)
-        //            {
-        //                break;
-        //            }
-        //            Messages.RemoveAt(0);
-        //        }
-        //    }
-        //}
-        //catch (Exception ex)
-        //{
 
-        //}
     }
-
-
 
 
     #region **************************************** 属性 ****************************************
@@ -332,12 +316,13 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 return false;
             }
 
-            MqttClientOptionsBuilder optionsBuilder = new();//Mqtt客户端配置构造器
-            optionsBuilder.WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort);  //服务器IP和端口
-            optionsBuilder.WithClientId(MqttClientConfig.ClientId);                               //客户端ID
+            MqttClientOptionsBuilder optionsBuilder = new();                     //Mqtt客户端配置构造器
+            optionsBuilder.WithTcpServer(MqttClientConfig.ServerIp, MqttClientConfig.ServerPort);   //服务器IP和端口
+            optionsBuilder.WithClientId(MqttClientConfig.ClientId);                                 //客户端ID
 
-            //optionsBuilder.WithKeepAlivePeriod(new TimeSpan(0, 0, 60));  //心跳时间
-            //optionsBuilder.WithNoKeepAlive();                            //不使用心跳
+            //心跳设置 0=不发送心跳
+            optionsBuilder.WithKeepAlivePeriod(TimeSpan.FromSeconds(MqttClientConfig.KeepAlive));   //心跳时间
+            //optionsBuilder.WithNoKeepAlive();//不使用心跳
 
             //optionsBuilder.WithTimeout(new TimeSpan(0,0,3));//超时没有生效
 

@@ -82,6 +82,11 @@ public partial class MqttClientConfig : ObservableObject
     /// </summary>
     [ObservableProperty] MqttProtocolVersion mqttProtocolVersion = MqttProtocolVersion.V500;
 
+    /// <summary>
+    /// 心跳0=不使用
+    /// </summary>
+    [ObservableProperty] uint keepAlive = 0;
+
     #region 加密
     /// <summary>
     /// SSL/TLS加密
