@@ -3,16 +3,31 @@
 /// <summary>
 /// Mqtt的主题 需要主题作为属性才能实现修改通知
 /// </summary>
-public class MqttTopic : BindableBase
+public partial class MqttTopic : ObservableObject
 {
-    public MqttTopic(string topic)
+    public MqttTopic(string topic,bool noLocal = false)
     {
         Topic = topic;
+        NoLocal = noLocal;
     }
 
     /// <summary>
     /// 主题
     /// </summary>
-    public string Topic { get => _Topic; set => SetProperty(ref _Topic, value); }
-    private string _Topic = string.Empty;
+    [ObservableProperty] string topic = string.Empty;
+
+    /// <summary>
+    /// NoLocal true=不接收自己发布的消息 false=接收自己发布的消息
+    /// </summary>
+    [ObservableProperty] bool noLocal = false;
+
+    /// <summary>
+    /// 消息质量等级
+    /// </summary>
+    [ObservableProperty] QosLevel qosLevel = QosLevel.AtMostOnce;
+
+    public override string ToString()
+    {
+        return $"{Topic} NoLocal:{NoLocal} Qos:{QosLevel}";
+    }
 }

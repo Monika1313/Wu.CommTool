@@ -1,4 +1,6 @@
 ﻿using MQTTnet.Formatter;
+using MQTTnet.Protocol;
+using MQTTnet.Server;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using Wu.CommTool.Modules.MqttClient.Converters;
@@ -17,9 +19,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     private IMqttClient client;
     public string DialogHostName { get; set; } = "MqttClientView";
     private static string viewName = "MqttClientView";
-
-
-
 
     CancellationTokenSource connectCts = new();
     CancellationToken connectCt;
@@ -105,7 +104,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             case "Pause": Pause(); break;
             case "Publish": Publish(); break;
             case "AddTopic": AddTopic(); break;                               //添加订阅的主题
-            case "SubscribeTopic": await SubscribeTopic(NewSubTopic.Topic); break;                               //添加订阅的主题
+            case "SubscribeTopic": await SubscribeTopic(NewSubTopic); break;                               //添加订阅的主题
             case "OpenLeftDrawer": IsDrawersOpen.LeftDrawer = true; break;
             case "OpenRightDrawer": IsDrawersOpen.RightDrawer = true; break;
             case "OpenDialogView": OpenDialogView(); break;
@@ -116,21 +115,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-    /// <summary>
-    /// 暂停更新接收的数据
-    /// </summary>
-    private void Pause()
-    {
-        IsPause = !IsPause;
-        if (IsPause)
-        {
-            ShowMessage("暂停更新接收的数据");
-        }
-        else
-        {
-            ShowMessage("恢复更新接收的数据");
-        }
-    }
+
 
     /// <summary>
     /// 添加订阅的主题
@@ -260,14 +245,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     }
 
     /// <summary>
-    /// 清空页面消息
-    /// </summary>
-    private void Clear()
-    {
-        Messages = [];
-    }
-
-    /// <summary>
     /// 关闭Mqtt客户端
     /// </summary>
     private async void CloseMqttClient()
@@ -296,8 +273,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             ShowMessage($"断开连接失败 {ex.Message}");
         }
     }
-
-
 
     /// <summary>
     /// 打开Mqtt客户端
@@ -383,6 +358,11 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
+    /// <summary>
+    /// 连接中
+    /// </summary>
+    /// <param name="arg"></param>
+    /// <returns></returns>
     private Task Client_ConnectingAsync(MqttClientConnectingEventArgs arg)
     {
         ShowMessage("连接中...");
@@ -408,8 +388,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             //订阅主题
             foreach (var x in MqttClientConfig.SubscribeTopics)
             {
-                await SubscribeTopic(x.Topic);
-                //await SubscribeTopic(x.Topic);
+                await SubscribeTopic(x);
             }
         }
         catch (Exception ex)
@@ -544,18 +523,17 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         return;
     }
 
-
-
     /// <summary>
-    /// 订阅主题
+    /// 订阅主题 这个方法一次只能订阅一个主题
+    /// TODO 在做一个可以一次订阅多个主题的方法
     /// </summary>
     /// <returns></returns>
-    private async Task SubscribeTopic(string topic)
+    private async Task SubscribeTopic(MqttTopic mqttTopic)
     {
         try
         {
             //若已订阅则返回
-            if (MqttClientConfig.SubscribeSucceeds.Contains(topic))
+            if (MqttClientConfig.SubscribeSucceeds.Contains(mqttTopic.Topic))
             {
                 return;
             }
@@ -565,16 +543,74 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 return;
             }
 
-            var result = await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).Build());       //订阅服务端消息
-            //TODO .WithNoLocal() 表示不接收自己发布的消息  MQTT5.0支持 
-            //var result = await client.SubscribeAsync(new MqttTopicFilterBuilder().WithTopic(topic).WithNoLocal().Build());       //订阅服务端消息
-            //根据结果判断
-            ShowMessage($"已订阅主题: {topic}");
-            //订阅成功 添加进订阅成功的列表
-            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            var mtfb = new MqttTopicFilterBuilder()
+                .WithTopic(mqttTopic.Topic)//主题
+                .WithNoLocal(mqttTopic.NoLocal)//MQTT5.0支持功能 true不接收自己发布的消息 false接收自己发布的消息
+                .WithQualityOfServiceLevel((MqttQualityOfServiceLevel)mqttTopic.QosLevel)//消息质量
+                .Build();
+
+            MqttClientSubscribeResult subscribeResult = await client.SubscribeAsync(mtfb);       //订阅服务端消息
+
+            //检查订阅结果
+            foreach (var item in subscribeResult.Items)
             {
-                MqttClientConfig.SubscribeSucceeds.Add(topic);
-            });
+                switch (item.ResultCode)
+                {
+                    // 成功状态码
+                    case MqttClientSubscribeResultCode.GrantedQoS0:
+                        ShowMessage($"订阅成功(QoS 0): {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.GrantedQoS1:
+                        ShowMessage($"订阅成功(QoS 1): {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.GrantedQoS2:
+                        ShowMessage($"订阅成功(QoS 2): {item.TopicFilter.Topic}");
+                        break;
+
+                    // 失败状态码
+                    case MqttClientSubscribeResultCode.NotAuthorized:
+                        ShowErrorMessage($"订阅失败 - 未授权: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.TopicFilterInvalid:
+                        ShowErrorMessage($"订阅失败 - 主题格式无效: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.UnspecifiedError:
+                        ShowErrorMessage($"订阅失败 - 未指定错误: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.ImplementationSpecificError:
+                        ShowErrorMessage($"订阅失败 - 代理特定错误: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.PacketIdentifierInUse:
+                        ShowErrorMessage($"订阅失败 - 数据包标识符冲突: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.QuotaExceeded:
+                        ShowErrorMessage($"订阅失败 - 超出配额限制: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.SharedSubscriptionsNotSupported:
+                        ShowErrorMessage($"订阅失败 - 不支持共享订阅: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.SubscriptionIdentifiersNotSupported:
+                        ShowErrorMessage($"订阅失败 - 不支持订阅标识符: {item.TopicFilter.Topic}");
+                        break;
+                    case MqttClientSubscribeResultCode.WildcardSubscriptionsNotSupported:
+                        ShowErrorMessage($"订阅失败 - 不支持通配符订阅: {item.TopicFilter.Topic}");
+                        break;
+                    default:
+                        ShowErrorMessage($"订阅失败 - 未知错误: {item.TopicFilter.Topic}, 代码: {item.ResultCode}");
+                        break;
+                }
+            }
+
+            if (subscribeResult.Items.All(item =>
+                item.ResultCode >= MqttClientSubscribeResultCode.GrantedQoS0 &&
+                item.ResultCode <= MqttClientSubscribeResultCode.GrantedQoS2))
+            {
+                //订阅成功 添加进订阅成功的列表
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    MqttClientConfig.SubscribeSucceeds.Add(mqttTopic.Topic);
+                });
+            }
         }
         catch (Exception ex)
         {
@@ -607,78 +643,53 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         }
     }
 
-    protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
-
-    protected void ShowReceiveMessage(string message, string title = "")
-    {
-        try
-        {
-            void action()
-            {
-                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
-                log.Info($"接收:{message}");
-                限制消息数量();
-            }
-            Wu.Wpf.Utils.ExecuteFun(action);
-        }
-        catch (Exception)
-        {
-        }
-    }
-
-    private void 限制消息数量()
-    {
-        if (Messages.Count > 200)
-        {
-            for (int i = 0; i < 50; i++)
-            {
-                if (Messages.Count < 150)
-                {
-                    break;
-                }
-                Messages.RemoveAt(0);
-            }
-        }
-    }
-
-    protected void ShowSendMessage(string message, string title = "")
-    {
-        try
-        {
-            void action()
-            {
-                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Send, title));
-                log.Info($"发送:{message}");
-                限制消息数量();
-            }
-            Wu.Wpf.Utils.ExecuteFun(action);
-        }
-        catch (Exception)
-        {
-        }
-    }
-
     /// <summary>
-    /// 界面显示数据
+    /// 移除待订阅的主题
     /// </summary>
-    /// <param name="message"></param>
-    /// <param name="type"></param>
-    protected void ShowMessage(string message, MessageType type = MessageType.Info, string title = "")
+    /// <param name="obj"></param>
+    [RelayCommand]
+    private void RemoveSubTopic(MqttTopic obj)
     {
         try
         {
-            void action()
-            {
-                Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
-                log.Info(message);
-                限制消息数量();
-            }
-            Wu.Wpf.Utils.ExecuteFun(action);
+            var xx = MqttClientConfig.SubscribeTopics.Remove(obj);
         }
-        catch (Exception) { }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex.Message);
+        }
     }
 
+    [RelayCommand]
+    private void SelectCaFile()
+    {
+        try
+        {
+            //配置文件目录
+            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientTlsFiles");
+            Wu.Utils.IoUtil.Exists(dict);
+            //选择配置文件
+            OpenFileDialog dlg = new()
+            {
+                Title = "请选择导入配置文件...",                      //对话框标题
+                Filter = "json files(*.pem)|*.pem",                //文件格式过滤器
+                FilterIndex = 1,                                   //默认选中的过滤器
+                InitialDirectory = dict
+            };
 
+            if (dlg.ShowDialog() != true)
+                return;
+            MqttClientConfig.CaFile = dlg.FileName;
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage(ex.Message);
+        }
+    }
+    #endregion
+
+
+    #region 弹窗
     /// <summary>
     /// 打开该弹窗时执行
     /// </summary>
@@ -762,49 +773,102 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             HcGrowlExtensions.Warning(ex.Message);
         }
     }
+    #endregion
 
 
-    /// <summary>
-    /// 移除待订阅的主题
-    /// </summary>
-    /// <param name="obj"></param>
-    [RelayCommand]
-    private void RemoveSubTopic(MqttTopic obj)
+    #region 页面消息
+    protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
+
+    protected void ShowReceiveMessage(string message, string title = "")
     {
         try
         {
-            var xx = MqttClientConfig.SubscribeTopics.Remove(obj);
+            void action()
+            {
+                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
+                log.Info($"接收:{message}");
+                限制消息数量();
+            }
+            Wu.Wpf.Utils.ExecuteFun(action);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            ShowErrorMessage(ex.Message);
         }
     }
 
-    [RelayCommand]
-    private void SelectCaFile()
+    private void 限制消息数量()
+    {
+        if (Messages.Count > 200)
+        {
+            for (int i = 0; i < 50; i++)
+            {
+                if (Messages.Count < 150)
+                {
+                    break;
+                }
+                Messages.RemoveAt(0);
+            }
+        }
+    }
+
+    protected void ShowSendMessage(string message, string title = "")
     {
         try
         {
-            //配置文件目录
-            string dict = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\MqttClientTlsFiles");
-            Wu.Utils.IoUtil.Exists(dict);
-            //选择配置文件
-            OpenFileDialog dlg = new()
+            void action()
             {
-                Title = "请选择导入配置文件...",                      //对话框标题
-                Filter = "json files(*.pem)|*.pem",                //文件格式过滤器
-                FilterIndex = 1,                                   //默认选中的过滤器
-                InitialDirectory = dict
-            };
-
-            if (dlg.ShowDialog() != true)
-                return;
-            MqttClientConfig.CaFile = dlg.FileName;
+                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Send, title));
+                log.Info($"发送:{message}");
+                限制消息数量();
+            }
+            Wu.Wpf.Utils.ExecuteFun(action);
         }
-        catch (Exception ex)
+        catch (Exception)
         {
-            ShowErrorMessage(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// 界面显示数据
+    /// </summary>
+    /// <param name="message"></param>
+    /// <param name="type"></param>
+    protected void ShowMessage(string message, MessageType type = MessageType.Info, string title = "")
+    {
+        try
+        {
+            void action()
+            {
+                Messages.Add(new MessageData($"{message}", DateTime.Now, type, title));
+                log.Info(message);
+                限制消息数量();
+            }
+            Wu.Wpf.Utils.ExecuteFun(action);
+        }
+        catch (Exception) { }
+    }
+
+    /// <summary>
+    /// 清空页面消息
+    /// </summary>
+    private void Clear()
+    {
+        Messages = [];
+    }
+
+    /// <summary>
+    /// 暂停更新接收的数据
+    /// </summary>
+    private void Pause()
+    {
+        IsPause = !IsPause;
+        if (IsPause)
+        {
+            ShowMessage("暂停更新接收的数据");
+        }
+        else
+        {
+            ShowMessage("恢复更新接收的数据");
         }
     }
     #endregion

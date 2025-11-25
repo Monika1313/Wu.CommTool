@@ -78,7 +78,7 @@
                         </ContentControl>
 
                         <!--  Mqtt客户端配置  -->
-                        <ContentControl MaxWidth="400"
+                        <ContentControl MaxWidth="600"
                                         Padding="10"
                                         Style="{StaticResource Effect2Control}">
                             <DockPanel Cursor="">
@@ -171,7 +171,7 @@
                                         </ComboBox.ItemTemplate>
                                     </ComboBox>
                                     <TextBox hc:InfoElement.Placeholder="请输入心跳..."
-                                             hc:Poptip.Content="设置0=不心跳"
+                                             hc:Poptip.Content="设置0=不发送心跳"
                                              hc:TitleElement.Title="心跳(秒)"
                                              Style="{StaticResource FormTextBox}"
                                              Text="{Binding MqttClientConfig.KeepAlive}" />
@@ -245,13 +245,9 @@
                                                    Text="订阅主题" />
 
                                         <DockPanel Cursor="" DockPanel.Dock="Top">
-                                            <Button Margin="4"
-                                                    Command="{Binding ExecuteCommand}"
-                                                    CommandParameter="AddTopic"
-                                                    Content="添加"
-                                                    DockPanel.Dock="Right" />
                                             <TextBox Margin="4"
                                                      hc:InfoElement.Placeholder="请输入要订阅的主题..."
+                                                     DockPanel.Dock="Top"
                                                      Style="{StaticResource TextBoxExtend}"
                                                      Text="{Binding NewSubTopic.Topic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                      TextWrapping="Wrap">
@@ -261,6 +257,21 @@
                                                                 CommandParameter="AddTopic" />
                                                 </TextBox.InputBindings>
                                             </TextBox>
+                                            <Button Margin="4"
+                                                    Command="{Binding ExecuteCommand}"
+                                                    CommandParameter="AddTopic"
+                                                    Content="添加"
+                                                    DockPanel.Dock="Right" />
+                                            <CheckBox hc:Poptip.Content="不接收自己发布的消息"
+                                                      Content="NoLocal"
+                                                      Cursor="Hand"
+                                                      DockPanel.Dock="Right"
+                                                      IsChecked="{Binding NewSubTopic.NoLocal}"
+                                                      Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}" />
+                                            <ComboBox Margin="5"
+                                                      DockPanel.Dock="Right"
+                                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:QosLevel}}}"
+                                                      SelectedItem="{Binding NewSubTopic.QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                                         </DockPanel>
 
 
@@ -286,6 +297,19 @@
                                                                         Cursor="Hand"
                                                                         DockPanel.Dock="Right"
                                                                         Style="{StaticResource Red_CircleButton}" />
+
+                                                                <CheckBox hc:Poptip.Content="不接收自己发布的消息"
+                                                                          Content="NoLocal"
+                                                                          Cursor="Hand"
+                                                                          DockPanel.Dock="Right"
+                                                                          IsChecked="{Binding NoLocal}"
+                                                                          Style="{StaticResource MaterialDesignFilterChipPrimaryCheckBox}" />
+
+                                                                <ComboBox Margin="5"
+                                                                          DockPanel.Dock="Right"
+                                                                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:QosLevel}}}"
+                                                                          SelectedItem="{Binding QosLevel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
                                                                 <TextBox Margin="4"
                                                                          Foreground="{StaticResource Green_Foreground}"
                                                                          IsReadOnly="false"
@@ -534,7 +558,7 @@
                                             Cursor="Hand"
                                             DockPanel.Dock="Right" />
 
-                                    <CheckBox hc:InfoElement.Placeholder="消息质量"
+                                    <CheckBox hc:Poptip.Content="是否保留消息"
                                               Content="保留消息"
                                               Cursor="Hand"
                                               DockPanel.Dock="Right"
