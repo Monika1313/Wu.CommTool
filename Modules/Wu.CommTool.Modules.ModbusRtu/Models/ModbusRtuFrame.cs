@@ -604,6 +604,10 @@ public class ModbusRtuFrame : BindableBase
                     RegisterValues = Frame.Skip(3).Take(Frame.Length - 5).ToArray();
                     CrcCode = Frame.Skip(Frame.Length - 2).Take(2).ToArray();
                     Type = ModbusRtuFrameType._0x04响应帧;
+                    if (Frame.Length != 5 + BytesNum)
+                    {
+                        ErrMessage = "寄存器值 数量不符!!!";
+                    }
                 }
                 break;
             case ModbusRtuFunctionCode._0x84:

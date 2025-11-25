@@ -203,18 +203,6 @@ public class ModbusRtuData : BindableBase
         };
     }
 
-    ///// <summary>
-    ///// 从大端数组中指定位置读取short数据
-    ///// </summary>
-    ///// <param name="data"></param>
-    ///// <param name="p"></param>
-    ///// <returns></returns>
-    //public static ushort GetUInt16FromBigEndianBytes(byte[] data, int p)
-    //{
-    //    return BitConverter.ToUInt16(SmallBigConvert(data, p, 2), 0);
-    //}
-
-
     /// <summary>
     /// 字节序转换
     /// </summary>
