@@ -1,7 +1,4 @@
-﻿using Wu.CommTool.Modules.MrtuSlave.Models;
-using Wu.Wpf.Models;
-
-namespace Wu.CommTool.Modules.MrtuSlave.ViewModels;
+﻿namespace Wu.CommTool.Modules.MrtuSlave.ViewModels;
 
 public partial class MrtuSlaveViewModel : NavigationViewModel, IDialogHostAware
 {

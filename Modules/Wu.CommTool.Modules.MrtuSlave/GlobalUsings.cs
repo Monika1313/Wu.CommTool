@@ -11,6 +11,7 @@ global using Wu.CommTool.Modules.MrtuSlave.ViewModels;
 global using Wu.CommTool.Modules.MrtuSlave.Views;
 global using Wu.ViewModels;
 global using Wu.Wpf.Common;
+global using Wu.Wpf.Models;
 global using Newtonsoft.Json;
 
 global using System.Collections.ObjectModel;
