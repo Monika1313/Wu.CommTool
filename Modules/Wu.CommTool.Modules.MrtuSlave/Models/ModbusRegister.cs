@@ -66,7 +66,20 @@ public partial class ModbusRegister : ObservableObject
     /// <summary>
     /// 原始值
     /// </summary>
-    [ObservableProperty] private ushort value;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ActualValue))]
+    ushort value;
+
+    public object ActualValue
+    {
+        get => GetActualValue();
+        set
+        {
+            SetActualValue(value);
+            //OnPropertyChanged(nameof(Value));
+        }
+    }
+
 
     /// <summary>
     /// 描述 名称
@@ -76,7 +89,9 @@ public partial class ModbusRegister : ObservableObject
     /// <summary>
     /// 数据类型
     /// </summary>
-    [ObservableProperty] private DataType dataType;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ActualValue))]
+    DataType dataType;
 
     /// <summary>
     /// 字节序
@@ -125,6 +140,8 @@ public partial class ModbusRegister : ObservableObject
         this.writeRegisterCallback = writeRegisterCallback;
         Value = 0;
     }
+
+
 
     /// <summary>
     /// 获取实际值（根据数据类型转换）
