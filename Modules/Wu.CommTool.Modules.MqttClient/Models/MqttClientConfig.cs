@@ -39,7 +39,7 @@ public partial class MqttClientConfig : ObservableObject
     /// <summary>
     /// 消息质量等级
     /// </summary>
-    [ObservableProperty] QosLevel qosLevel = QosLevel.AtMostOnce;
+    [ObservableProperty] QosLevel qosLevel = QosLevel.Qos1;
 
     /// <summary>
     /// 是否为保留消息

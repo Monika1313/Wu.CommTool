@@ -24,7 +24,7 @@ public partial class MqttTopic : ObservableObject
     /// <summary>
     /// 消息质量等级
     /// </summary>
-    [ObservableProperty] QosLevel qosLevel = QosLevel.AtMostOnce;
+    [ObservableProperty] QosLevel qosLevel = QosLevel.Qos1;
 
     public override string ToString()
     {

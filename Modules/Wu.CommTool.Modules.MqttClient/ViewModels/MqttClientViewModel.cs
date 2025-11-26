@@ -162,13 +162,13 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             //根据设置的消息质量发布消息
             switch (MqttClientConfig.QosLevel)
             {
-                case QosLevel.AtLeastOnce:
+                case QosLevel.Qos1:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
                     break;
-                case QosLevel.AtMostOnce:
+                case QosLevel.Qos0:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
                     break;
-                case QosLevel.ExactlyOnce:
+                case QosLevel.Qos2:
                     mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
                     break;
                 default:
@@ -558,15 +558,10 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 {
                     // 成功状态码
                     case MqttClientSubscribeResultCode.GrantedQoS0:
-                        ShowMessage($"订阅成功(QoS 0): {item.TopicFilter.Topic}");
-                        break;
                     case MqttClientSubscribeResultCode.GrantedQoS1:
-                        ShowMessage($"订阅成功(QoS 1): {item.TopicFilter.Topic}");
-                        break;
                     case MqttClientSubscribeResultCode.GrantedQoS2:
-                        ShowMessage($"订阅成功(QoS 2): {item.TopicFilter.Topic}");
+                        ShowMessage($"订阅成功: {item.TopicFilter.Topic} 消息质量:{(QosLevel)item.TopicFilter.QualityOfServiceLevel} Nolocal:{item.TopicFilter.NoLocal}");
                         break;
-
                     // 失败状态码
                     case MqttClientSubscribeResultCode.NotAuthorized:
                         ShowErrorMessage($"订阅失败 - 未授权: {item.TopicFilter.Topic}");

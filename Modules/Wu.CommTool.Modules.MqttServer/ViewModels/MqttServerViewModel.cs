@@ -2,6 +2,7 @@
 using System.Security.Authentication;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using static log4net.Appender.FileAppender;
 
 namespace Wu.CommTool.Modules.MqttServer.ViewModels;
 
@@ -425,21 +426,24 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             //根据选择的消息质量进行设置
             var mqttAMB = new MqttApplicationMessageBuilder();
 
+            //发布消息质量
+            mqttAMB.WithQualityOfServiceLevel((MqttQualityOfServiceLevel)MqttServerConfig.QosLevel);
+
             //根据设置的消息质量发布消息
-            switch (MqttServerConfig.QosLevel)
-            {
-                case QosLevel.AtLeastOnce:
-                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
-                    break;
-                case QosLevel.AtMostOnce:
-                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
-                    break;
-                case QosLevel.ExactlyOnce:
-                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
-                    break;
-                default:
-                    break;
-            }
+            //switch (MqttServerConfig.QosLevel)
+            //{
+            //    case QosLevel.AtLeastOnce:
+            //        mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
+            //        break;
+            //    case QosLevel.AtMostOnce:
+            //        mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
+            //        break;
+            //    case QosLevel.ExactlyOnce:
+            //        mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
+            //        break;
+            //    default:
+            //        break;
+            //}
 
             switch (MqttServerConfig.SendPaylodType)
             {
@@ -582,6 +586,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             //客户端订阅事件
             if (arg == null)
                 return Task.CompletedTask;
+
             //查找客户端列表
             var x = MqttUsers.FirstOrDefault(x => x.ClientId.Equals(arg.ClientId));
             if (x != null)
@@ -592,8 +597,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     x.MqttSubedTopics.Add(new MqttSubedTopic { Parent = x, Topic = arg.TopicFilter.Topic });
                 });
             }
-
-            ShowMessage($"客户端：“{arg.ClientId}” 订阅主题：“{arg.TopicFilter.Topic}”");
+            ShowMessage($"客户端：“{arg.ClientId}” 订阅主题：“{arg.TopicFilter.Topic}” 消息质量:{(QosLevel)arg.TopicFilter.QualityOfServiceLevel} NoLocal:{arg.TopicFilter.NoLocal}");
         }
         catch (Exception ex)
         {
