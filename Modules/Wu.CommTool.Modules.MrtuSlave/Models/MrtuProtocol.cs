@@ -6,7 +6,6 @@
 /// </summary>
 public partial class MrtuProtocol : ObservableObject
 {
-
     private readonly HoldingRegisters holdingRegisters;//保持寄存器
     private readonly InputRegisters inputRegisters;//输入寄存器
     private readonly CoilRegisters coilRegisters;//线圈寄存器

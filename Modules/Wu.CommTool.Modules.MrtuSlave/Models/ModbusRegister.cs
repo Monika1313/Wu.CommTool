@@ -3,6 +3,7 @@
 /// <summary>
 /// 数据类型
 /// </summary>
+[TypeConverter(typeof(EnumDescriptionTypeConverter))]
 public enum DataType
 {
     /// <summary>
