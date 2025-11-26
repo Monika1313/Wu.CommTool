@@ -124,15 +124,17 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
     {
         try
         {
+            NewSubTopic.Topic = NewSubTopic.Topic.Trim();
             if (string.IsNullOrWhiteSpace(NewSubTopic.Topic))
             {
                 //不能订阅空主题
                 return;
             }
+
             //若重复了则不执行操作
             if (MqttClientConfig.SubscribeTopics.FirstOrDefault(x => x.Topic.Equals(NewSubTopic.Topic.Trim())) != null)
                 return;
-            MqttClientConfig.SubscribeTopics.Add(new MqttTopic(NewSubTopic.Topic.Trim()));
+            MqttClientConfig.SubscribeTopics.Add(NewSubTopic);
         }
         catch (Exception ex)
         {
