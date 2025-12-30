@@ -23,94 +23,95 @@
             <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
                 <!--  左侧抽屉  -->
                 <md:DrawerHost.LeftDrawerContent>
-                    <ContentControl Style="{StaticResource Effect2Control}">
-                        <StackPanel Width="300"
-                                    Cursor=""
-                                    Orientation="Vertical">
-                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-                                <TextBlock Margin="10"
-                                           Style="{DynamicResource SecondTitle}"
-                                           Text="主机配置" />
+                    <DockPanel>
+                        <ContentControl DockPanel.Dock="Left" Style="{StaticResource Effect2Control}">
+                            <StackPanel Width="300"
+                                        Cursor=""
+                                        Orientation="Vertical">
+                                <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock Margin="10"
+                                               Style="{DynamicResource SecondTitle}"
+                                               Text="主机配置" />
 
-                                <!--<Button Width="30"
-                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                        Margin="4"
-                                        hc:Poptip.Content="导出配置文件"
-                                        Command="{Binding ExportConfigCommand}"
-                                        Content="{md:PackIcon Kind=Upload}"
-                                        Cursor="Hand"
-                                        DockPanel.Dock="Right"
-                                        Style="{StaticResource Blue_CircleButton}" />
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="导出配置文件"
+                                            Command="{Binding ExportConfigCommand}"
+                                            Content="{md:PackIcon Kind=Upload}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />
 
-                                <Button Width="30"
-                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                        Margin="4"
-                                        hc:Poptip.Content="导入配置文件"
-                                        Command="{Binding ImportConfigCommand}"
-                                        Content="{md:PackIcon Kind=Download}"
-                                        Cursor="Hand"
-                                        DockPanel.Dock="Right"
-                                        IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
-                                        Style="{StaticResource Blue_CircleButton}" />-->
-                            </StackPanel>
-                            <!--<ctl:WuIpBox
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="导入配置文件"
+                                            Command="{Binding ImportConfigCommand}"
+                                            Content="{md:PackIcon Kind=Download}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
+                                            Style="{StaticResource Blue_CircleButton}" />
+                                </StackPanel>
+                                <!--<ctl:WuIpBox
                          Margin="5"
                          Ip="{Binding MqttServerConfig.ServerIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                          IpTitle="IP"
                          TitleWidth="45" />-->
 
-                            <TextBox hc:TitleElement.Title="IP"
-                                     hc:TitleElement.TitleWidth="45"
-                                     IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding UdpClientModel.RemoteIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox hc:TitleElement.Title="IP"
+                                         hc:TitleElement.TitleWidth="45"
+                                         IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding UdpClientModel.RemoteIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBox hc:TitleElement.Title="Port"
-                                     hc:TitleElement.TitleWidth="45"
-                                     IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding UdpClientModel.RemotePort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox hc:TitleElement.Title="Port"
+                                         hc:TitleElement.TitleWidth="45"
+                                         IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding UdpClientModel.RemotePort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBlock Margin="10"
-                                       Style="{DynamicResource SecondTitle}"
-                                       Text="本地配置" />
+                                <TextBlock Margin="10"
+                                           Style="{DynamicResource SecondTitle}"
+                                           Text="本地配置" />
 
-                            <TextBox hc:TitleElement.Title="IP"
-                                     hc:TitleElement.TitleWidth="45"
-                                     Cursor=""
-                                     IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding UdpClientModel.LocalIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox hc:TitleElement.Title="IP"
+                                         hc:TitleElement.TitleWidth="45"
+                                         Cursor=""
+                                         IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding UdpClientModel.LocalIp, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <TextBox hc:InfoElement.Placeholder="本机监听端口"
-                                     hc:TitleElement.Title="Port"
-                                     hc:TitleElement.TitleWidth="45"
-                                     Cursor=""
-                                     IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
-                                     Style="{StaticResource FormTextBox}"
-                                     Text="{Binding UdpClientModel.LocalPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox hc:InfoElement.Placeholder="本机监听端口"
+                                         hc:TitleElement.Title="Port"
+                                         hc:TitleElement.TitleWidth="45"
+                                         Cursor=""
+                                         IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
+                                         Style="{StaticResource FormTextBox}"
+                                         Text="{Binding UdpClientModel.LocalPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-                            <!--  服务器开关  -->
-                            <StackPanel HorizontalAlignment="Center"
-                                        VerticalAlignment="Top"
-                                        Orientation="Horizontal">
-                                <Button Margin="20"
-                                        Command="{Binding UdpClientModel.OpenCommand}"
-                                        Content="打开"
-                                        IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
-                                        Style="{StaticResource GreenButton}" />
+                                <!--  服务器开关  -->
+                                <StackPanel HorizontalAlignment="Center"
+                                            VerticalAlignment="Top"
+                                            Orientation="Horizontal">
+                                    <Button Margin="20"
+                                            Command="{Binding UdpClientModel.OpenCommand}"
+                                            Content="打开"
+                                            IsEnabled="{Binding UdpClientModel.IsOpened, Converter={wu:ReverseBool}}"
+                                            Style="{StaticResource GreenButton}" />
 
-                                <Button Width="60"
-                                        Margin="20"
-                                        Command="{Binding UdpClientModel.CloseCommand}"
-                                        Content="关闭"
-                                        Cursor="Hand"
-                                        DockPanel.Dock="Left"
-                                        IsEnabled="{Binding UdpClientModel.IsOpened}"
-                                        Style="{StaticResource RedButton}" />
-                            </StackPanel>
+                                    <Button Width="60"
+                                            Margin="20"
+                                            Command="{Binding UdpClientModel.CloseCommand}"
+                                            Content="关闭"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Left"
+                                            IsEnabled="{Binding UdpClientModel.IsOpened}"
+                                            Style="{StaticResource RedButton}" />
+                                </StackPanel>
 
-                            <!--<Button Margin="20,20,20,5"
+                                <!--<Button Margin="20,20,20,5"
                                 Command="{Binding ExecuteCommand}"
                                 CommandParameter="AddFwRule"
                                 Content="为该软件开放防火墙"
@@ -122,8 +123,62 @@
                                    Text="若局域网内其他设备需要连接该服务器, 需要为该程序开放防火墙。"
                                    TextWrapping="Wrap" />-->
 
-                        </StackPanel>
-                    </ContentControl>
+                            </StackPanel>
+                        </ContentControl>
+                        <!--  快速导入配置  -->
+                        <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
+                            <DockPanel MinWidth="230">
+                                <StackPanel DockPanel.Dock="Top">
+                                    <TextBlock d:Text="Default"
+                                               FontWeight="Bold"
+                                               Style="{DynamicResource SecondTitle}"
+                                               Text="{Binding CurrentConfigName}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <StackPanel Margin="20,0"
+                                            HorizontalAlignment="Center"
+                                            DockPanel.Dock="Top"
+                                            Orientation="Horizontal">
+                                    <TextBlock Style="{DynamicResource SecondTitle}" Text="快速导入配置" />
+                                    <!--  更新配置列表  -->
+                                    <Button Width="30"
+                                            Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                            Margin="4"
+                                            hc:Poptip.Content="更新配置列表"
+                                            Command="{Binding RefreshQuickImportListCommand}"
+                                            Content="{md:PackIcon Kind=Refresh}"
+                                            Cursor="Hand"
+                                            DockPanel.Dock="Right"
+                                            Style="{StaticResource Blue_CircleButton}" />
+                                </StackPanel>
+                                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                    <ItemsControl Background="Transparent"
+                                                  DockPanel.Dock="Top"
+                                                  ItemsSource="{Binding ConfigFiles, IsAsync=True}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel HorizontalAlignment="Center" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Margin="4" CornerRadius="4">
+                                                    <WrapPanel Orientation="Horizontal">
+                                                        <Button Command="{Binding DataContext.QuickImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                                CommandParameter="{Binding}"
+                                                                Content="{Binding Name}"
+                                                                Cursor=""
+                                                                IsEnabled="{Binding DataContext.UdpClientModel.IsOpened, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={wu:ReverseBool}}"
+                                                                Style="{StaticResource MaterialDesignOutlinedButton}" />
+                                                    </WrapPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </DockPanel>
+                        </ContentControl>
+                    </DockPanel>
                 </md:DrawerHost.LeftDrawerContent>
 
                 <!--  主体内容  -->

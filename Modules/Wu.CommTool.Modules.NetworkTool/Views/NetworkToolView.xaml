@@ -444,7 +444,7 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate DataType="models:Ipv4">
                                                 <StackPanel Orientation="Horizontal">
-                                                    <StackPanel Width="150" Orientation="Horizontal">
+                                                    <StackPanel Width="170" Orientation="Horizontal">
                                                         <TextBlock Text="IPv4地址：" />
                                                         <TextBlock Text="{Binding Address}" />
                                                     </StackPanel>

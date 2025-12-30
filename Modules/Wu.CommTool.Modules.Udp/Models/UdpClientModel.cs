@@ -6,7 +6,9 @@ namespace Wu.CommTool.Modules.Udp.Models;
 
 public partial class UdpClientModel : ObservableObject
 {
+    [JsonIgnore]
     private UdpClient udpClient = new();
+
     public static readonly ILog log = LogManager.GetLogger(typeof(UdpClientModel));
 
     // 线程安全的接收队列
@@ -14,10 +16,12 @@ public partial class UdpClientModel : ObservableObject
 
 
     #region 属性
+    [JsonIgnore]
     public IPEndPoint RemoteEndPoint => new(IPAddress.Parse(RemoteIp), RemotePort);
     [ObservableProperty] string remoteIp = "127.0.0.1";
     [ObservableProperty] int remotePort = 13333;
 
+    [JsonIgnore]
     public IPEndPoint LocalEndPoint => new(IPAddress.Parse(LocalIp), LocalPort);
     [ObservableProperty] string localIp = "0.0.0.0";
     [ObservableProperty] int localPort = 9999;
@@ -41,7 +45,9 @@ public partial class UdpClientModel : ObservableObject
     /// <summary>
     /// UDP客户端是否已打开
     /// </summary>
-    [ObservableProperty] bool isOpened;
+    [ObservableProperty]
+    [property:JsonIgnore]
+    bool isOpened;
     #endregion
 
     /// <summary>
