@@ -221,12 +221,19 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             .Build();
 
             //发布
-            var result = await client.PublishAsync(mam, CancellationToken.None);
-            ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
+            MqttClientPublishResult result = await client.PublishAsync(mam, CancellationToken.None);
+            if (result.IsSuccess)
+            {
+                ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
+            }
+            else
+            {
+                ShowErrorMessage($"发布失败：{result.ReasonCode}");
+            }
         }
         catch (Exception ex)
         {
-            ShowErrorMessage($"发送失败:{ex.Message}");
+            ShowErrorMessage($"发送失败：{ex.Message}");
         }
     }
 
