@@ -235,13 +235,7 @@
                                              Foreground="{DynamicResource FontBrush}"
                                              Style="{StaticResource TextBoxExtend}"
                                              Text="{Binding TcpServerModel.SendInput, UpdateSourceTrigger=PropertyChanged}"
-                                             TextWrapping="Wrap">
-                                        <TextBox.InputBindings>
-                                            <KeyBinding Key="Enter"
-                                                        Command="{Binding ExecuteCommand}"
-                                                        CommandParameter="Publish" />
-                                        </TextBox.InputBindings>
-                                    </TextBox>
+                                             TextWrapping="Wrap" />
                                 </ContentControl>
                             </DockPanel>
                         </Border>
