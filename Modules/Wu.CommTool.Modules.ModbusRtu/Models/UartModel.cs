@@ -889,6 +889,16 @@ public partial class UartModel : ObservableObject
     [property: JsonIgnore]
     public void SendCustomFrame(UartCustomFrame customFrame)
     {
+        //switch (SendDataFormat)
+        //{
+        //    case UartDataFormat.Ascii:
+        //        customFrame.Frame += "\n";
+        //        return;
+        //    case UartDataFormat.Hex:
+        //    default:
+        //        break;
+        //}
+
         //若串口未打开则打开串口
         if (!ComConfig.IsOpened)
         {
@@ -914,6 +924,27 @@ public partial class UartModel : ObservableObject
         {
             ShowErrorMessage(ex.Message);
         }
+    }
+
+    /// <summary>
+    /// 回车发送 发送自定义帧
+    /// </summary>
+    [RelayCommand]
+    [property: JsonIgnore]
+    public void KeySendCustomFrame(UartCustomFrame customFrame)
+    {
+        //判断若是ASCII则添加换行符
+        switch (SendDataFormat)
+        {
+            case UartDataFormat.Ascii:
+                customFrame.Frame += "\n";
+                return;
+            case UartDataFormat.Hex:
+            default:
+                break;
+        }
+
+        SendCustomFrame(customFrame);
     }
 
     /// <summary>

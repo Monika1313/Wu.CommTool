@@ -509,7 +509,7 @@
                                                                     TextWrapping="Wrap">
                                                             <TextBox.InputBindings>
                                                                 <KeyBinding Key="Enter"
-                                                                            Command="{Binding DataContext.UartModel.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
+                                                                            Command="{Binding DataContext.UartModel.KeySendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                                                             CommandParameter="{Binding}" />
                                                             </TextBox.InputBindings>
                                                             <TextBoxBase.ContextMenu>
