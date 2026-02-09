@@ -103,7 +103,6 @@ public partial class ModbusRtuModel : ObservableObject
     /// 自定义帧的输入框
     /// </summary>
     [ObservableProperty]
-    [property:JsonIgnore]
     private ObservableCollection<CustomFrame> customFrames = [];
     #endregion
 

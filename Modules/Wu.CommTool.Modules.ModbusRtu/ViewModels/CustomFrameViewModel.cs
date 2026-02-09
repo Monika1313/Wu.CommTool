@@ -15,13 +15,7 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         this.provider = provider;
         this.dialogHost = dialogHost;
         ModbusRtuModel = modbusRtuModel;
-        if (ModbusRtuModel.CustomFrames == null || ModbusRtuModel.CustomFrames.Count == 0)
-        {
-            ModbusRtuModel.CustomFrames = [new ("01 03 0000 0001 "),
-                                                  new ("01 04 0000 0001 "),
-                                                  new (""),];
-        }
-
+       
         OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
 
         SendCustomFrameCommand = new DelegateCommand<CustomFrame>(SendCustomFrame);
@@ -465,19 +459,19 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         //从默认配置文件中读取配置
         try
         {
-            var filePath = Path.Combine(configDirectory, $"Default.{configExtension}"); CurrentConfigFullName = filePath;
+            var filePath = Path.Combine(configDirectory, $"Default.{configExtension}"); 
+            CurrentConfigFullName = filePath;
             if (File.Exists(filePath))
             {
                 var x = JsonConvert.DeserializeObject<ModbusRtuModel>(Core.Common.Utils.ReadJsonFile(filePath));
                 if (x != null)
                 {
-                    ModbusRtuModel = x;
+                    UpdateModbusRtuModelCustomnFrame(x);
                 }
             }
             else
             {
                 //文件不存在则生成默认配置 
-                ModbusRtuModel = new ModbusRtuModel();
                 //在默认文件目录生成默认配置文件
                 Wu.Utils.IoUtil.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig"));
                 var content = JsonConvert.SerializeObject(ModbusRtuModel);       //将当前的配置序列化为json字符串
@@ -530,7 +524,7 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
 
         if (ModbusRtuModel.CustomFrames == null || ModbusRtuModel.CustomFrames.Count == 0)
         {
-            ModbusRtuModel.CustomFrames = [new ("01 03 0000 0001 "),
+            ModbusRtuModel.CustomFrames = [new CustomFrame ("01 03 0000 0001 "),
                                                   new ("01 04 0000 0001 "),
                                                   new (""),];
         }
