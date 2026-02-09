@@ -7,7 +7,7 @@ public class CustomFrameDesignViewModel : CustomFrameViewModel
     public CustomFrameDesignViewModel()
     {
         ModbusRtuModel = new();
-        OpenDrawers.LeftDrawer = false;
+        OpenDrawers.LeftDrawer = true;
 
         ModbusRtuModel.ShowMessage("这是一条提示信息");
         ModbusRtuModel.ShowErrorMessage("这是一条错误信息");

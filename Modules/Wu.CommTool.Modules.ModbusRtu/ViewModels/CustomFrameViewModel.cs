@@ -15,6 +15,12 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         this.provider = provider;
         this.dialogHost = dialogHost;
         ModbusRtuModel = modbusRtuModel;
+        if (ModbusRtuModel.CustomFrames == null || ModbusRtuModel.CustomFrames.Count == 0)
+        {
+            ModbusRtuModel.CustomFrames = [new ("01 03 0000 0001 "),
+                                                  new ("01 04 0000 0001 "),
+                                                  new (""),];
+        }
 
         OpenAnalyzeFrameViewCommand = new DelegateCommand<ModbusRtuMessageData>(OpenAnalyzeFrameView);
 
@@ -24,6 +30,16 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
 
         //更新串口列表
         ModbusRtuModel.GetComPorts();
+
+        if (ModbusRtuModel.CustomFrames.Count == 0)
+        {
+            ModbusRtuModel.CustomFrames = [new CustomFrame  ("01 03 0000 0001 "),
+                                                    new ("01 04 0000 0001 "),
+                                                    new (""),];
+        }
+
+        GetDefaultConfig();
+        RefreshQuickImportList();//读取配置文件夹
     }
 
 
@@ -292,6 +308,231 @@ public partial class CustomFrameViewModel : NavigationViewModel, IDialogHostAwar
         catch (Exception ex)
         {
             Growl.Warning(ex.Message);
+        }
+    }
+    #endregion
+
+    #region 配置文件
+    /// <summary>
+    /// 配置文件夹路径
+    /// </summary>
+    private readonly string configDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuCustomFrameConfig");
+
+    /// <summary>
+    /// 配置文件扩展名 Json ModbusRtu
+    /// </summary>
+    private readonly string configExtension = "jmrc";
+
+    /// <summary>
+    /// 当前配置文件名称
+    /// </summary>
+    public string CurrentConfigName => Path.GetFileNameWithoutExtension(CurrentConfigFullName);
+
+    /// <summary>
+    /// 当前配置文件完整路径
+    /// </summary>
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(CurrentConfigName))]
+    string currentConfigFullName = string.Empty;
+
+    /// <summary>
+    /// 配置文件列表
+    /// </summary>
+    [ObservableProperty] ObservableCollection<ConfigFile> configFiles = [];
+
+    /// <summary>
+    /// 导出配置文件
+    /// </summary>
+    [RelayCommand]
+    private void ExportConfig()
+    {
+        try
+        {
+            Wu.Utils.IoUtil.Exists(configDirectory);
+            SaveFileDialog sfd = new()
+            {
+                Title = "请选择导出配置文件...",                                              //对话框标题
+                Filter = $"json files(*.{configExtension})|*.{configExtension}",    //文件格式过滤器
+                FilterIndex = 1,                                                         //默认选中的过滤器
+                FileName = "Default",                                           //默认文件名
+                DefaultExt = configExtension,                                     //默认扩展名
+                InitialDirectory = configDirectory,                //指定初始的目录
+                OverwritePrompt = true,                                                  //文件已存在警告
+                AddExtension = true,                                                     //若用户省略扩展名将自动添加扩展名
+            };
+            if (sfd.ShowDialog() != true)
+                return;
+            CurrentConfigFullName = sfd.FileName;
+            //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(ModbusRtuModel);
+            //保存文件
+            Core.Common.Utils.WriteJsonFile(sfd.FileName, content);
+            HcGrowlExtensions.Success($"导出配置:{CurrentConfigName}");
+            RefreshQuickImportList();
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"配置导出失败 {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 保存配置文件
+    /// </summary>
+    [RelayCommand]
+    private void SaveConfig()
+    {
+        try
+        {
+            //将当前的配置序列化为json字符串
+            var content = JsonConvert.SerializeObject(ModbusRtuModel);
+            //保存文件
+            Core.Common.Utils.WriteJsonFile(CurrentConfigFullName, content);
+            HcGrowlExtensions.Success($"保存配置:{CurrentConfigName}");
+            //RefreshQuickImportList();
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"保存配置失败 {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 导入配置文件
+    /// </summary>
+    [RelayCommand]
+    private void ImportConfig()
+    {
+        try
+        {
+            Wu.Utils.IoUtil.Exists(configDirectory);
+            //选中配置文件
+            OpenFileDialog dlg = new()
+            {
+                Title = "请选择导入配置文件...",                      //对话框标题
+                Filter = $"json files(*.{configExtension})|*.{configExtension}",          //文件格式过滤器
+                FilterIndex = 1,                                     //默认选中的过滤器
+                InitialDirectory = configDirectory
+            };
+
+            if (dlg.ShowDialog() != true)
+                return;
+            var xx = Core.Common.Utils.ReadJsonFile(dlg.FileName);
+            var x = JsonConvert.DeserializeObject<ModbusRtuModel>(xx);
+            if (x != null)
+                UpdateModbusRtuModelCustomnFrame(x);
+            HcGrowlExtensions.Success($"导入配置:{CurrentConfigName}");
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// 导入配置文件
+    /// </summary>
+    /// <param name="obj"></param>
+    [RelayCommand]
+    private void QuickImportConfig(ConfigFile obj)
+    {
+        try
+        {
+            var xx = Core.Common.Utils.ReadJsonFile(obj.FullName);//读取文件
+            var x = JsonConvert.DeserializeObject<ModbusRtuModel>(xx)!;//反序列化
+            if (x == null)
+            {
+                Growl.Warning("读取配置文件失败");
+                return;
+            }
+            CurrentConfigFullName = obj.FullName;
+            var importModel = JsonConvert.DeserializeObject<ModbusRtuModel>(xx)!;
+            //ModbusRtuModel = importModel;
+            UpdateModbusRtuModelCustomnFrame(importModel);
+            HcGrowlExtensions.Success($"导入配置:{CurrentConfigName}");
+        }
+        catch (Exception ex)
+        {
+            Growl.Warning($"配置文件导入失败 {ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 读取默认配置文件 若无则生成
+    /// </summary>
+    private void GetDefaultConfig()
+    {
+        //从默认配置文件中读取配置
+        try
+        {
+            var filePath = Path.Combine(configDirectory, $"Default.{configExtension}"); CurrentConfigFullName = filePath;
+            if (File.Exists(filePath))
+            {
+                var x = JsonConvert.DeserializeObject<ModbusRtuModel>(Core.Common.Utils.ReadJsonFile(filePath));
+                if (x != null)
+                {
+                    ModbusRtuModel = x;
+                }
+            }
+            else
+            {
+                //文件不存在则生成默认配置 
+                ModbusRtuModel = new ModbusRtuModel();
+                //在默认文件目录生成默认配置文件
+                Wu.Utils.IoUtil.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\ModbusRtuConfig"));
+                var content = JsonConvert.SerializeObject(ModbusRtuModel);       //将当前的配置序列化为json字符串
+                Core.Common.Utils.WriteJsonFile(filePath, content);                     //保存文件
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"配置文件读取失败:{ex.Message}");
+        }
+    }
+
+    /// <summary>
+    /// 更新快速导入配置列表
+    /// </summary>
+    [RelayCommand]
+    private void RefreshQuickImportList()
+    {
+        try
+        {
+            Wu.Utils.IoUtil.Exists(configDirectory);//验证文件夹是否存在
+            DirectoryInfo Folder = new(configDirectory);
+            var a = Folder.GetFiles().Where(x => x.Extension.ToLower().Equals($".{configExtension}")).Select(item => new ConfigFile(item));
+            ConfigFiles.Clear();
+            foreach (var item in a)
+            {
+                ConfigFiles.Add(item);
+            }
+        }
+        catch (Exception ex)
+        {
+            Growl.Error("读取配置文件夹异常: " + ex.Message);
+        }
+    }
+
+    /// <summary>
+    /// 更新模型
+    /// </summary>
+    /// <param name="import"></param>
+    private void UpdateModbusRtuModelCustomnFrame(ModbusRtuModel import)
+    {
+        ModbusRtuModel.ComConfig = import.ComConfig;
+        ModbusRtuModel.ComConfig.ComPort = ModbusRtuModel.ComPorts.FirstOrDefault(x => x.ComId == import.ComConfig.ComPort.ComId);
+     
+        ModbusRtuModel.InputMessage = import.InputMessage;
+        ModbusRtuModel.CrcMode = import.CrcMode;
+        ModbusRtuModel.IsPause = import.IsPause;
+        ModbusRtuModel.ByteOrder = import.ByteOrder;
+        ModbusRtuModel.CustomFrames = new(import.CustomFrames);
+
+        if (ModbusRtuModel.CustomFrames == null || ModbusRtuModel.CustomFrames.Count == 0)
+        {
+            ModbusRtuModel.CustomFrames = [new ("01 03 0000 0001 "),
+                                                  new ("01 04 0000 0001 "),
+                                                  new (""),];
         }
     }
     #endregion

@@ -21,125 +21,213 @@
     <md:DrawerHost IsLeftDrawerOpen="{Binding OpenDrawers.LeftDrawer}" IsRightDrawerOpen="{Binding OpenDrawers.RightDrawer}">
         <!--  左侧抽屉  -->
         <md:DrawerHost.LeftDrawerContent>
-            <Border DockPanel.Dock="Top" Style="{StaticResource FormBorder}">
-                <ScrollViewer>
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock Margin="5"
-                                   HorizontalAlignment="Center"
-                                   FontSize="24"
-                                   Text="串口设置" />
-                        <StackPanel Orientation="Horizontal">
-                            <ComboBox Width="230"
-                                      hc:InfoElement.Placeholder="请选择串口..."
-                                      hc:InfoElement.Title="串口"
+            <DockPanel>
+                <Border DockPanel.Dock="Left" Style="{StaticResource FormBorder}">
+                    <ScrollViewer>
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <TextBlock Margin="5"
+                                           HorizontalAlignment="Center"
+                                           FontSize="24"
+                                           Text="串口设置" />
+                                <!--  导出配置文件  -->
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="导出配置文件"
+                                        Command="{Binding ExportConfigCommand}"
+                                        Content="{md:PackIcon Kind=Upload}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Blue_CircleButton}" />
+
+                                <!--  导入配置文件  -->
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="导入配置文件"
+                                        Command="{Binding ImportConfigCommand}"
+                                        Content="{md:PackIcon Kind=Download}"
+                                        Cursor="Hand"
+                                        DockPanel.Dock="Right"
+                                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                        Style="{StaticResource Blue_CircleButton}" />
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="4"
+                                        hc:Poptip.Content="保存配置文件"
+                                        Command="{Binding SaveConfigCommand}"
+                                        Content="{md:PackIcon Kind=ContentSaveOutline}"
+                                        DockPanel.Dock="Right"
+                                        Style="{StaticResource Blue_CircleButton}" />
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <ComboBox Width="230"
+                                          hc:InfoElement.Placeholder="请选择串口..."
+                                          hc:InfoElement.Title="串口"
+                                          IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                          ItemsSource="{Binding ModbusRtuModel.ComPorts}"
+                                          SelectedValue="{Binding ModbusRtuModel.ComConfig.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Style="{StaticResource FormComboBox}" />
+                                <Button Width="30"
+                                        Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
+                                        Margin="5"
+                                        HorizontalAlignment="Left"
+                                        hc:Poptip.Content="查找串口设备"
+                                        Command="{Binding ModbusRtuModel.GetComPortsCommand}"
+                                        Content="{md:PackIcon Kind=Search}"
+                                        DockPanel.Dock="Left"
+                                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                        Style="{StaticResource Blue_CircleButton}" />
+                            </StackPanel>
+                            <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
+                                      hc:InfoElement.Title="波特率"
                                       IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                      ItemsSource="{Binding ModbusRtuModel.ComPorts}"
-                                      SelectedValue="{Binding ModbusRtuModel.ComConfig.ComPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:BaudRate}}}"
+                                      SelectedItem="{Binding ModbusRtuModel.ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                       Style="{StaticResource FormComboBox}" />
+
+                            <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
+                                      hc:InfoElement.Title="校验位"
+                                      IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:Parity}}}"
+                                      SelectedValue="{Binding ModbusRtuModel.ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Style="{StaticResource FormComboBox}" />
+
+                            <ComboBox hc:InfoElement.Placeholder="请选择数据位..."
+                                      hc:InfoElement.Title="数据位"
+                                      IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                      ItemsSource="{StaticResource DataBits}"
+                                      SelectedItem="{Binding ModbusRtuModel.ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Style="{StaticResource FormComboBox}" />
+
+                            <ComboBox hc:InfoElement.Placeholder="请选择停止位..."
+                                      hc:InfoElement.Title="停止位"
+                                      IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:StopBits}}}"
+                                      SelectedItem="{Binding ModbusRtuModel.ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                      Style="{StaticResource FormComboBox}" />
+
+                            <TextBox hc:TitleElement.Title="分包超时(ms):"
+                                     hc:TitleElement.TitleWidth="100"
+                                     IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                     Style="{StaticResource FormTextBox}"
+                                     Text="{Binding ModbusRtuModel.ComConfig.TimeOut}" />
+
+                            <TextBox hc:TitleElement.Title="分包最大字节:"
+                                     hc:TitleElement.TitleWidth="100"
+                                     IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                     Style="{StaticResource FormTextBox}"
+                                     Text="{Binding ModbusRtuModel.ComConfig.MaxLength}" />
+
+                            <ComboBox MinWidth="135"
+                                      hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
+                                      hc:TitleElement.Title="字节序"
+                                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
+                                      SelectedItem="{Binding ModbusRtuModel.ByteOrder}"
+                                      Style="{StaticResource FormComboBox}" />
+
+                            <StackPanel HorizontalAlignment="Center"
+                                        VerticalAlignment="Top"
+                                        Orientation="Horizontal">
+                                <Button Margin="20"
+                                        hc:Poptip.Content="打开串口"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="OpenCom"
+                                        Content="打开"
+                                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                        Style="{StaticResource GreenButton}" />
+
+                                <Button Width="60"
+                                        Margin="20"
+                                        hc:Poptip.Content="关闭串口"
+                                        Command="{Binding ExecuteCommand}"
+                                        CommandParameter="CloseCom"
+                                        Content="关闭"
+                                        DockPanel.Dock="Left"
+                                        IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
+                                        Style="{StaticResource RedButton}" />
+                            </StackPanel>
+
+                            <ContentControl Style="{StaticResource Effect2Control}">
+                                <StackPanel>
+                                    <TextBlock Style="{StaticResource TextBlockTitle}" Text="开发中的功能" />
+                                    <TextBlock HorizontalAlignment="Center"
+                                               Foreground="{StaticResource Red_Foreground}"
+                                               Text="若无法正常使用请禁用功能" />
+                                    <DockPanel>
+                                        <TextBlock Margin="10"
+                                                   VerticalAlignment="Center"
+                                                   DockPanel.Dock="Left"
+                                                   Text="自动分帧" />
+
+                                        <ComboBox Margin="10"
+                                                  VerticalAlignment="Center"
+                                                  DockPanel.Dock="Left"
+                                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:Enable}}}"
+                                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.AutoFrame}"
+                                                  Style="{StaticResource ComboBoxCapsule}" />
+                                    </DockPanel>
+                                </StackPanel>
+                            </ContentControl>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+
+                <!--  快速导入配置  -->
+                <ContentControl DockPanel.Dock="Right" Style="{StaticResource Effect2Control}">
+                    <DockPanel MinWidth="230">
+                        <StackPanel DockPanel.Dock="Top">
+                            <TextBlock d:Text="Default"
+                                       FontWeight="Bold"
+                                       Style="{DynamicResource SecondTitle}"
+                                       Text="{Binding CurrentConfigName}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <StackPanel Margin="20,0"
+                                    HorizontalAlignment="Center"
+                                    DockPanel.Dock="Top"
+                                    Orientation="Horizontal">
+                            <TextBlock Style="{DynamicResource SecondTitle}" Text="快速导入配置" />
+                            <!--  更新配置列表  -->
                             <Button Width="30"
                                     Height="{Binding RelativeSource={RelativeSource self}, Path=Width}"
-                                    Margin="5"
-                                    HorizontalAlignment="Left"
-                                    hc:Poptip.Content="查找串口设备"
-                                    Command="{Binding ModbusRtuModel.GetComPortsCommand}"
-                                    Content="{md:PackIcon Kind=Search}"
-                                    DockPanel.Dock="Left"
-                                    IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                    Margin="4"
+                                    hc:Poptip.Content="更新配置列表"
+                                    Command="{Binding RefreshQuickImportListCommand}"
+                                    Content="{md:PackIcon Kind=Refresh}"
+                                    Cursor="Hand"
+                                    DockPanel.Dock="Right"
                                     Style="{StaticResource Blue_CircleButton}" />
                         </StackPanel>
-                        <ComboBox hc:InfoElement.Placeholder="请选择波特率..."
-                                  hc:InfoElement.Title="波特率"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:BaudRate}}}"
-                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
-
-                        <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
-                                  hc:InfoElement.Title="校验位"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:Parity}}}"
-                                  SelectedValue="{Binding ModbusRtuModel.ComConfig.Parity, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
-
-                        <ComboBox hc:InfoElement.Placeholder="请选择数据位..."
-                                  hc:InfoElement.Title="数据位"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{StaticResource DataBits}"
-                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.DataBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
-
-                        <ComboBox hc:InfoElement.Placeholder="请选择停止位..."
-                                  hc:InfoElement.Title="停止位"
-                                  IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:StopBits}}}"
-                                  SelectedItem="{Binding ModbusRtuModel.ComConfig.StopBits, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                  Style="{StaticResource FormComboBox}" />
-
-                        <TextBox hc:TitleElement.Title="分包超时(ms):"
-                                 hc:TitleElement.TitleWidth="100"
-                                 IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                 Style="{StaticResource FormTextBox}"
-                                 Text="{Binding ModbusRtuModel.ComConfig.TimeOut}" />
-
-                        <TextBox hc:TitleElement.Title="分包最大字节:"
-                                 hc:TitleElement.TitleWidth="100"
-                                 IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                 Style="{StaticResource FormTextBox}"
-                                 Text="{Binding ModbusRtuModel.ComConfig.MaxLength}" />
-
-                        <ComboBox MinWidth="135"
-                                  hc:Poptip.Content="PC为小端, PLC为大端, PC读取使用DCBA, PLC读取需要设置ABCD"
-                                  hc:TitleElement.Title="字节序"
-                                  ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:ModbusByteOrder}}}"
-                                  SelectedItem="{Binding ModbusRtuModel.ByteOrder}"
-                                  Style="{StaticResource FormComboBox}" />
-
-                        <StackPanel HorizontalAlignment="Center"
-                                    VerticalAlignment="Top"
-                                    Orientation="Horizontal">
-                            <Button Margin="20"
-                                    hc:Poptip.Content="打开串口"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="OpenCom"
-                                    Content="打开"
-                                    IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
-                                    Style="{StaticResource GreenButton}" />
-
-                            <Button Width="60"
-                                    Margin="20"
-                                    hc:Poptip.Content="关闭串口"
-                                    Command="{Binding ExecuteCommand}"
-                                    CommandParameter="CloseCom"
-                                    Content="关闭"
-                                    DockPanel.Dock="Left"
-                                    IsEnabled="{Binding ModbusRtuModel.ComConfig.IsOpened}"
-                                    Style="{StaticResource RedButton}" />
-                        </StackPanel>
-
-                        <ContentControl Style="{StaticResource Effect2Control}">
-                            <StackPanel>
-                                <TextBlock Style="{StaticResource TextBlockTitle}" Text="开发中的功能" />
-                                <TextBlock HorizontalAlignment="Center"
-                                           Foreground="{StaticResource Red_Foreground}"
-                                           Text="若无法正常使用请禁用功能" />
-                                <DockPanel>
-                                    <TextBlock Margin="10"
-                                               VerticalAlignment="Center"
-                                               DockPanel.Dock="Left"
-                                               Text="自动分帧" />
-
-                                    <ComboBox Margin="10"
-                                              VerticalAlignment="Center"
-                                              DockPanel.Dock="Left"
-                                              ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type core:Enable}}}"
-                                              SelectedItem="{Binding ModbusRtuModel.ComConfig.AutoFrame}"
-                                              Style="{StaticResource ComboBoxCapsule}" />
-                                </DockPanel>
-                            </StackPanel>
-                        </ContentControl>
-                    </StackPanel>
-                </ScrollViewer>
-            </Border>
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                            <ItemsControl Background="Transparent"
+                                          DockPanel.Dock="Top"
+                                          ItemsSource="{Binding ConfigFiles, IsAsync=True}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel HorizontalAlignment="Center" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="4" CornerRadius="4">
+                                            <WrapPanel Orientation="Horizontal">
+                                                <Button Command="{Binding DataContext.QuickImportConfigCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                        CommandParameter="{Binding}"
+                                                        Content="{Binding Name}"
+                                                        Cursor=""
+                                                        IsEnabled="{Binding DataContext.ModbusRtuModel.ComConfig.IsOpened, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={wu:ReverseBool}}"
+                                                        Style="{StaticResource MaterialDesignOutlinedButton}" />
+                                            </WrapPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </DockPanel>
+                </ContentControl>
+            </DockPanel>
         </md:DrawerHost.LeftDrawerContent>
         <!--  主体内容  -->
         <DockPanel>
