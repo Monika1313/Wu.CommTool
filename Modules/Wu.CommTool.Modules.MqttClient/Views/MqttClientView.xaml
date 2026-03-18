@@ -674,6 +674,15 @@
                                                     <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                               CommandParameter="{Binding}"
                                                               Header="查看Json格式化" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.Convert2Utf8Command, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="转换成UTF-8编码" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.Convert2HexCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="转换成Hex编码" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.Convert2Base64Command, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="转换成Base64编码" />
                                                 </ContextMenu>
                                             </Border.ContextMenu>
 
@@ -707,71 +716,6 @@
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.Resources>
-
-                                <!--<ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border
-                                            Margin="3"
-                                            Padding="2"
-                                            BorderThickness="1"
-                                            CornerRadius="4"
-                                            Style="{StaticResource MessageBorder}"
-                                            Tag="{Binding DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}">
-                                            <Border.ContextMenu>
-                                                <ContextMenu>
-                                -->
-                                <!--  MenuItem绑定命令  -->
-                                <!--
-                                                    <MenuItem
-                                                        Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
-                                                        CommandParameter="{Binding}"
-                                                        Header="查看Json格式化" />
-
-                                -->
-                                <!--  MenuItem绑定命令 该方法绑定失败  -->
-                                <!--<MenuItem
-                                                    Command="{Binding DataContext.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}}"
-                                                    CommandParameter="{Binding}"
-                                                    Header="查看Json格式化" />-->
-                                <!--
-
-                                                </ContextMenu>
-                                            </Border.ContextMenu>
-
-                                            <WrapPanel Orientation="Horizontal">
-                                                <TextBlock
-                                                    Margin="3"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Time, StringFormat={}{0:yyyy-MM-dd HH:mm:ss}}" />
-                                                <TextBlock
-                                                    Margin="5,0"
-                                                    VerticalAlignment="Center"
-                                                    Style="{StaticResource MessageTextBlock}"
-                                                    Text="{Binding Type}" />
-
-                                                <TextBox
-                                                    Margin="5,0"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    Style="{StaticResource MessageTextBox}"
-                                                    Text="{Binding Title}"
-                                                    Visibility="{Binding Title, Converter={StaticResource StringIsEmptyVisibilityConverter}}" />
-
-                                                <TextBox
-                                                    Margin="5,0"
-                                                    VerticalAlignment="Center"
-                                                    FontSize="12"
-                                                    FontWeight="Bold"
-                                                    IsReadOnly="True"
-                                                    Style="{StaticResource MessageTextBox}"
-                                                    Text="{Binding Content}"
-                                                    TextWrapping="Wrap" />
-                                            </WrapPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>-->
                             </ItemsControl>
                         </hc:ScrollViewer>
                     </ContentControl>

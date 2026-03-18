@@ -537,7 +537,7 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
             //处理接收的消息
             if (arg.ApplicationMessage.PayloadSegment.Array == null)//若接收的数据为空则
             {
-                ShowReceiveMessage($"", $"主题：{arg.ApplicationMessage.Topic}");
+                ShowReceiveMessage($"", null, $"主题：{arg.ApplicationMessage.Topic}");
                 return Task.CompletedTask;
             }
             else
@@ -550,18 +550,18 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     case MqttPayloadType.Base64Utf8:
                     case MqttPayloadType.Plaintext:
                         //接收的数据以UTF8解码
-                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Encoding.UTF8.GetString(payload)}", payload, $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                     //case MqttPayloadType.Json:
                     //    ShowReceiveMessage($"{Encoding.UTF8.GetString(payload).ToJsonString()}", $"主题:{arg.ApplicationMessage.Topic}");
                     //    break;
                     case MqttPayloadType.Hex:
                         //接收的数据以16进制字符串解码
-                        ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", $"主题:{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{BitConverter.ToString(payload).Replace("-", "").InsertFormat(4, " ")}", payload, $"主题:{arg.ApplicationMessage.Topic}");
                         break;
                     case MqttPayloadType.Base64:
                     case MqttPayloadType.Base64Base64:
-                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", $"主题：{arg.ApplicationMessage.Topic}");
+                        ShowReceiveMessage($"{Convert.ToBase64String(payload)}", payload, $"主题：{arg.ApplicationMessage.Topic}");
                         break;
                 }
             }
@@ -864,13 +864,13 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
 
     protected void ShowErrorMessage(string message) => ShowMessage(message, MessageType.Error);
 
-    protected void ShowReceiveMessage(string message, string title = "")
+    protected void ShowReceiveMessage(string message, byte[] origins, string title = "")
     {
         try
         {
             void action()
             {
-                Messages.Add(new MqttMessageData($"{message}", DateTime.Now, MessageType.Receive, title));
+                Messages.Add(new MqttMessageData($"{message}", origins, DateTime.Now, MessageType.Receive, title));
                 log.Info($"接收:{message}");
                 while (Messages.Count > 100)
                 {
@@ -977,6 +977,58 @@ public partial class MqttServerViewModel : NavigationViewModel, IDialogHostAware
                     };
                 var dialogResult = await dialogHost.ShowDialog("JsonDataView", param, DialogHostName);
             }
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private void Convert2Utf8(MessageData obj)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(obj.Content))
+            {
+                return;
+            }
+            obj.Content = Encoding.UTF8.GetString(obj.Origions);
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private void Convert2Hex(MessageData obj)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(obj.Content))
+            {
+                return;
+            }
+            obj.Content = $"{BitConverter.ToString(obj.Origions).Replace("-", "").InsertFormat(4, " ")}";
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning(ex.Message);
+        }
+    }
+
+    [RelayCommand]
+    private void Convert2Base64(MessageData obj)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(obj.Content))
+            {
+                return;
+            }
+            obj.Content = $"{Convert.ToBase64String(obj.Origions)}";
+
         }
         catch (Exception ex)
         {

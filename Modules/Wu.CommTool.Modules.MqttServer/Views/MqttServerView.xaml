@@ -669,6 +669,15 @@
                                                     <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
                                                               CommandParameter="{Binding}"
                                                               Header="查看Json格式化" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.Convert2Utf8Command, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="转换成UTF-8编码" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.Convert2HexCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="转换成Hex编码" />
+                                                    <MenuItem Command="{Binding Path=PlacementTarget.Tag.Convert2Base64Command, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}"
+                                                              CommandParameter="{Binding}"
+                                                              Header="转换成Base64编码" />
                                                 </ContextMenu>
                                             </Border.ContextMenu>
 

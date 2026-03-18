@@ -30,6 +30,11 @@ public partial class MessageData : ObservableObject
     [ObservableProperty] string title = string.Empty;
 
     /// <summary>
+    /// 原始字节数组
+    /// </summary>
+    public byte[] Origions { get; set; }
+
+    /// <summary>
     /// 消息内容
     /// </summary>
     [ObservableProperty] string content = string.Empty;
