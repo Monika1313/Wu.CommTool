@@ -472,7 +472,7 @@
                                                         <Button Margin="0"
                                                                 Command="{Binding DataContext.UartModel.SendCustomFrameCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
                                                                 CommandParameter="{Binding}"
-                                                                Content="发送"
+                                                                Content="{Binding Description}"
                                                                 Cursor="Hand"
                                                                 DockPanel.Dock="Right" />
 

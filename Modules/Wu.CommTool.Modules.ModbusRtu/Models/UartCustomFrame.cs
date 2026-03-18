@@ -13,6 +13,11 @@ public partial class UartCustomFrame : ObservableObject
     [ObservableProperty] string frame = "";
 
     /// <summary>
+    /// 注释
+    /// </summary>
+    [ObservableProperty] string description = string.Empty;
+
+    /// <summary>
     /// 最后一次发布消息的时间,用于周期发送使用
     /// </summary>
     [JsonIgnore] public DateTime LastPublish { get; set; } = DateTime.MinValue;
