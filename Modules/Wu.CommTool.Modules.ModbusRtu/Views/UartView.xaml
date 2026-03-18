@@ -474,7 +474,20 @@
                                                                 CommandParameter="{Binding}"
                                                                 Content="{Binding Description}"
                                                                 Cursor="Hand"
-                                                                DockPanel.Dock="Right" />
+                                                                DockPanel.Dock="Right">
+                                                            <Button.Style>
+                                                                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                                                    <Style.Triggers>
+                                                                        <DataTrigger Binding="{Binding Description}" Value="">
+                                                                            <Setter Property="Content" Value="发送" />
+                                                                        </DataTrigger>
+                                                                        <DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+                                                                            <Setter Property="Content" Value="发送" />
+                                                                        </DataTrigger>
+                                                                    </Style.Triggers>
+                                                                </Style>
+                                                            </Button.Style>
+                                                        </Button>
 
                                                         <ToggleButton Margin="5,0"
                                                                       md:ToggleButtonAssist.OnContent="{md:PackIcon Kind=TimerOutline}"

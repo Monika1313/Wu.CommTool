@@ -15,7 +15,7 @@ public partial class UartCustomFrame : ObservableObject
     /// <summary>
     /// 注释
     /// </summary>
-    [ObservableProperty] string description = string.Empty;
+    [ObservableProperty] string description = "发送";
 
     /// <summary>
     /// 最后一次发布消息的时间,用于周期发送使用
