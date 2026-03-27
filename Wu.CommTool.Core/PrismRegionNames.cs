@@ -31,4 +31,9 @@ public static class PrismRegionNames
     /// ModbusTcp
     /// </summary>
     public const string ModbusTcpViewRegionName = "ModbusTcpViewRegion";
+
+    /// <summary>
+    /// 加密工具区域
+    /// </summary>
+    public const string CryptoToolsViewRegionName = "CryptoToolsViewRegion";
 }

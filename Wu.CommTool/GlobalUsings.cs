@@ -22,6 +22,8 @@ global using Wu.CommTool.Modules.About;
 global using Wu.CommTool.Modules.About.Views;
 global using Wu.CommTool.Modules.ConvertTools;
 global using Wu.CommTool.Modules.ConvertTools.Views;
+global using Wu.CommTool.Modules.CryptoTool;
+global using Wu.CommTool.Modules.CryptoTool.Views;
 global using Wu.CommTool.Modules.JsonTool;
 global using Wu.CommTool.Modules.Message;
 global using Wu.CommTool.Modules.ModbusRtu;

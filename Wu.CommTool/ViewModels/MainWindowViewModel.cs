@@ -105,6 +105,7 @@ public partial class MainWindowViewModel : ObservableObject, IConfigureService
             new() { Icon = "LanConnect", Title = "UDP", NameSpace = nameof(UdpView) },
             new() { Icon = "ViewInAr", Title = "Json查看工具", NameSpace = "JsonToolView" },
             new() { Icon = "SwapHorizontal", Title = "转换工具", NameSpace = nameof(ConvertToolsView)},
+            new() { Icon = "Lock", Title = "加密解密", NameSpace = nameof(CryptoToolView)},
             new() { Icon = "Lan", Title = "网络设置", NameSpace = nameof(NetworkToolView) },
 #if DEBUG
 #endif

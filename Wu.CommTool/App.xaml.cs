@@ -86,6 +86,7 @@ public partial class App
     protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
     {
         moduleCatalog.AddModule<ConvertToolsModule>();  //转换工具模块
+        moduleCatalog.AddModule<CryptoToolModule>();    //加密解密模块
         moduleCatalog.AddModule<AboutModule>();         //关于模块
         moduleCatalog.AddModule<ModbusTcpModule>();     //ModbusTcp模块
         moduleCatalog.AddModule<JsonToolModule>();      //Json工具模块
