@@ -8,26 +8,22 @@ public partial class MrtuDevice : ObservableObject
     /// <summary>
     /// 设备名
     /// </summary>
-    [ObservableProperty]
-    string name = string.Empty;
+    [ObservableProperty] string name = string.Empty;
 
     /// <summary>
     /// 从站地址
     /// </summary>
-    [ObservableProperty]
-    byte slaveAddr = 1;
+    [ObservableProperty] byte slaveAddr = 1;
 
     /// <summary>
     /// 串口配置
     /// </summary>
-    [ObservableProperty]
-    ComConfig comConfig = new();
+    [ObservableProperty] ComConfig comConfig = new();
 
     /// <summary>
     /// 备注
     /// </summary>
-    [ObservableProperty]
-    string remark;
+    [ObservableProperty] string remark;
 
     /// <summary>
     /// 设备状态
@@ -39,8 +35,7 @@ public partial class MrtuDevice : ObservableObject
     /// <summary>
     /// 字节序
     /// </summary>
-    [ObservableProperty]
-    ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA;
+    [ObservableProperty] ModbusByteOrder modbusByteOrder = ModbusByteOrder.DCBA;
 
     /// <summary>
     /// 读取数据的请求帧
@@ -188,8 +183,7 @@ public partial class MrtuDevice : ObservableObject
     /// <summary>
     /// 测点数据列表
     /// </summary>
-    [ObservableProperty]
-    ObservableCollection<MrtuData> mrtuDatas = [];
+    [ObservableProperty] ObservableCollection<MrtuData> mrtuDatas = [];
 
     /// <summary>
     /// 添加测点数据

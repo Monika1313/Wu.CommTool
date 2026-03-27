@@ -106,7 +106,7 @@
                         DockPanel.Dock="Top"
                         Style="{StaticResource Effect2Control}">
             <hc:ScrollViewer wu:ScrollViewerExtensions.AlwaysScrollToEnd="True" IsInertiaEnabled="True">
-                <ItemsControl Background="Transparent" ItemsSource="{Binding SelectedMrtuSerialPort.Messages, Mode=OneTime, IsAsync=True}">
+                <ItemsControl Background="Transparent" ItemsSource="{Binding SelectedMrtuSerialPort.Messages, Mode=OneWay, IsAsync=True}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel VirtualizingPanel.CacheLength="2"

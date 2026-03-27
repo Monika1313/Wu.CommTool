@@ -356,7 +356,8 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 {
                     currentRequest = message;//设置当前发送的帧,用于接收数据时确定测点地址范围
                     serialPort.Write(data, 0, data.Length);     //发送数据
-                    Debug.Write($"发送:{message}");
+                    //Debug.Write($"发送:{message}");
+                    ShowSendMessage(new ModbusRtuFrame(message));//页面展示发送消息
                     return true;
                 }
                 catch (Exception ex)
@@ -436,9 +437,11 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
                 {
                     continue;
                 }
-                Debug.WriteLine($"接收:{frame.RemoveSpace()}");
+                //Debug.WriteLine($"接收:{frame.RemoveSpace()}");
                 var responseFrame = new ModbusRtuFrame(frame.GetBytes());//实例化ModbusRtu帧
                 var requestFrame = new ModbusRtuFrame(request);
+
+                ShowReceiveMessage(responseFrame);//页面展示接收消息
 
 #if DEBUG
                 //对接收的消息直接进行crc校验
@@ -574,6 +577,10 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     {
         try
         {
+            if (IsPause)
+            {
+                return;
+            }
             void action()
             {
                 var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Receive, frame);
@@ -597,6 +604,10 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     {
         try
         {
+            if (IsPause)
+            {
+                return;
+            }
             void action()
             {
                 var msg = new ModbusRtuMessageData("", DateTime.Now, MessageType.Send, frame);
