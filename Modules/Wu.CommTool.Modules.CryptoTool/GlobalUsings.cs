@@ -13,3 +13,5 @@ global using Wu.CommTool.Modules.CryptoTool.ViewModels;
 global using Wu.CommTool.Modules.CryptoTool.Views;
 global using Wu.ViewModels;
 global using Wu.Wpf.Models;
+global using System.ComponentModel;
+global using Wu.Wpf.Converters;
