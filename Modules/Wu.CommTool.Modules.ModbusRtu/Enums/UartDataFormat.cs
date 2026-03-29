@@ -15,4 +15,6 @@ public enum UartDataFormat
     /// 十六进制格式
     /// </summary>
     Hex,
+
+    Utf8
 }

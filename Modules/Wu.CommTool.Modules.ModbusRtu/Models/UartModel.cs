@@ -452,6 +452,34 @@ public partial class UartModel : ObservableObject
                 }
                 return false;
             }
+            else if (SendDataFormat == UartDataFormat.Utf8)
+            {
+                if (SerialPort.IsOpen)
+                {
+                    try
+                    {
+                        if (!IsPause)
+                            ShowSendMessage(message);
+
+                        byte[] sendBytes = Encoding.UTF8.GetBytes(message.RemoveSpace()); //将字符串转换为字节数组
+                        SerialPort.Write(sendBytes, 0, sendBytes.Length);     //发送数据
+                        SendBytesCount += sendBytes.Length;                    //统计发送数据总数
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowErrorMessage(ex.Message);
+                    }
+                }
+                else
+                {
+                    ShowErrorMessage("串口未打开,发送失败!");
+                    _ = CloseCom();
+                }
+                return false;
+            }
+
 
             //若是Hex则执行以下内容
             //验证数据字符必须符合16进制
@@ -861,6 +889,9 @@ public partial class UartModel : ObservableObject
                     {
                         case UartDataFormat.Ascii:
                             ShowReceiveMessage(System.Text.Encoding.ASCII.GetString(receiveStr));
+                            break;
+                        case UartDataFormat.Utf8:
+                            ShowReceiveMessage(System.Text.Encoding.UTF8.GetString(receiveStr));
                             break;
                         case UartDataFormat.Hex:
                         default:
