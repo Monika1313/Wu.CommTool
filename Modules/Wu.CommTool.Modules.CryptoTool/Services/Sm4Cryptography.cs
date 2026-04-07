@@ -171,7 +171,7 @@ public static class Sm4Cryptography
     {
         return format switch
         {
-            PlainFormat.Utf8 => Encoding.UTF8.GetBytes(text ?? string.Empty),
+            PlainFormat.Utf8 => Encoding.UTF8.GetBytes(NormalizeUtf8PlainText(text)),
             PlainFormat.Hex => ParseHex(text),
             _ => throw new ArgumentOutOfRangeException(nameof(format), format, null)
         };
@@ -246,6 +246,13 @@ public static class Sm4Cryptography
         }
 
         return value;
+    }
+
+    private static string NormalizeUtf8PlainText(string? text)
+    {
+        return (text ?? string.Empty)
+            .Replace("\r\n", "\n")
+            .Replace("\r", "\n");
     }
 
     private static string ToHexString(byte[] bytes)
