@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Formatter;
+using Wu.CommTool.Modules.CryptoTool.Services;
 
 namespace Wu.CommTool.Modules.MqttClient.Models;
 
@@ -99,4 +100,6 @@ public partial class MqttClientConfig : ObservableObject
     [ObservableProperty] string caFile;
     #endregion
 
+
+    [ObservableProperty] Sm4CryptoConfig sm4CryptoConfig = new();
 }

@@ -29,5 +29,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Wu.CommTool.Core\Wu.CommTool.Core.csproj" />
+	  <ProjectReference Include="..\Wu.CommTool.Modules.CryptoTool\Wu.CommTool.Modules.CryptoTool.csproj" />
 	</ItemGroup>
 </Project>

@@ -6,6 +6,7 @@ using MQTTnet.Server;
 using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using Wu.CommTool.Modules.CryptoTool.Services;
 using Wu.CommTool.Modules.MqttClient.Converters;
 
 namespace Wu.CommTool.Modules.MqttClient.ViewModels;
@@ -161,24 +162,7 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                 }
             }
 
-            //根据选择的消息质量进行设置
-            var mqttAMB = new MqttApplicationMessageBuilder();
-
-            //根据设置的消息质量发布消息
-            switch (MqttClientConfig.QosLevel)
-            {
-                case QosLevel.Qos1:
-                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
-                    break;
-                case QosLevel.Qos0:
-                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
-                    break;
-                case QosLevel.Qos2:
-                    mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
-                    break;
-                default:
-                    break;
-            }
+            var mqttAMB = CreatePublishMessageBuilder();
 
             switch (MqttClientConfig.SendPaylodType)
             {
@@ -208,16 +192,6 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
                     break;
             }
 
-            //保留消息
-            if (MqttClientConfig.IsRetain)
-            {
-                mqttAMB.WithRetainFlag();
-            }
-            else
-            {
-                mqttAMB.WithRetainFlag(false);
-            }
-
             var mam = mqttAMB.WithTopic(MqttClientConfig.PublishTopic)                  //发布的主题
             //.WithPayload(SendMessage)
             //.WithExactlyOnceQoS()
@@ -238,6 +212,95 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
         {
             ShowErrorMessage($"发送失败：{ex.Message}");
         }
+    }
+
+
+
+
+
+    [RelayCommand]
+    private async Task<bool> PublishSm4Async()
+    {
+        return await PublishSm4Async(MqttClientConfig.Sm4CryptoConfig);
+    }
+
+
+    public async Task<bool> PublishSm4Async(Sm4CryptoConfig sm4Config)
+    {
+        if (sm4Config == null)
+        {
+            throw new ArgumentNullException(nameof(sm4Config));
+        }
+
+        try
+        {
+            if (string.IsNullOrWhiteSpace(SendMessage))
+            {
+                ShowErrorMessage("发送内容不能为空");
+                return false;
+            }
+
+            if (MqttClientConfig.IsOpened.Equals(false) || client.IsConnected.Equals(false))
+            {
+                var re = await OpenMqttClient();
+                if (re.Equals(false))
+                {
+                    return false;
+                }
+            }
+
+            string encryptedMessage = Sm4Cryptography.Encrypt(SendMessage, sm4Config);
+            var mqttAMB = CreatePublishMessageBuilder();
+            var mam = mqttAMB.WithPayload(encryptedMessage)
+                             .WithTopic(MqttClientConfig.PublishTopic)
+                             .Build();
+
+            MqttClientPublishResult result = await client.PublishAsync(mam, CancellationToken.None);
+            if (result.IsSuccess)
+            {
+                ShowSendMessage($"[SM4]{encryptedMessage}", $"主题：{MqttClientConfig.PublishTopic}");
+                return true;
+            }
+
+            ShowErrorMessage($"发布失败：{result.ReasonCode}");
+            return false;
+        }
+        catch (Exception ex)
+        {
+            ShowErrorMessage($"SM4加密发送失败：{ex.Message}");
+            return false;
+        }
+    }
+
+    private MqttApplicationMessageBuilder CreatePublishMessageBuilder()
+    {
+        var mqttAMB = new MqttApplicationMessageBuilder();
+
+        switch (MqttClientConfig.QosLevel)
+        {
+            case QosLevel.Qos1:
+                mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtLeastOnce);
+                break;
+            case QosLevel.Qos0:
+                mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce);
+                break;
+            case QosLevel.Qos2:
+                mqttAMB.WithQualityOfServiceLevel(MQTTnet.Protocol.MqttQualityOfServiceLevel.ExactlyOnce);
+                break;
+            default:
+                break;
+        }
+
+        if (MqttClientConfig.IsRetain)
+        {
+            mqttAMB.WithRetainFlag();
+        }
+        else
+        {
+            mqttAMB.WithRetainFlag(false);
+        }
+
+        return mqttAMB;
     }
 
     // 编码为Base64

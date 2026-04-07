@@ -1,4 +1,5 @@
 using Wu.CommTool.Modules.CryptoTool.Enums;
+using Wu.CommTool.Modules.CryptoTool.Services;
 
 namespace Wu.CommTool.Modules.CryptoTool.ViewModels;
 
@@ -104,15 +105,15 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
         try
         {
-            OutputText = CryptoAlgorithms.EncryptSm4(
+            OutputText = Sm4Cryptography.Encrypt(
                 InputText,
                 KeyText,
                 IvText,
-                GetCipherMode(),
-                GetPaddingMode(),
-                GetPlainFormat(),
-                GetCipherFormat(),
-                GetKeyFormat());
+                SelectedCipherMode,
+                SelectedPaddingMode,
+                SelectedPlainFormat,
+                SelectedCipherFormat,
+                SelectedKeyFormat);
         }
         catch (Exception ex)
         {
@@ -131,15 +132,15 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
         try
         {
-            OutputText = CryptoAlgorithms.DecryptSm4(
+            OutputText = Sm4Cryptography.Decrypt(
                 InputText,
                 KeyText,
                 IvText,
-                GetCipherMode(),
-                GetPaddingMode(),
-                GetPlainFormat(),
-                GetCipherFormat(),
-                GetKeyFormat());
+                SelectedCipherMode,
+                SelectedPaddingMode,
+                SelectedPlainFormat,
+                SelectedCipherFormat,
+                SelectedKeyFormat);
         }
         catch (Exception ex)
         {
