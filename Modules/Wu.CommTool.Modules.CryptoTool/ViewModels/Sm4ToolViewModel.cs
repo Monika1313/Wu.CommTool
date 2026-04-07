@@ -55,8 +55,6 @@ public partial class Sm4ToolViewModel : NavigationViewModel
     /// </summary>
     [ObservableProperty] Sm4CryptoConfig sm4CryptoConfig = new();
 
-    public bool IsIvEnabled => Sm4CryptoConfig.CipherMode != CipherMode.ECB;
-
     /// <summary>
     /// º”√‹
     /// </summary>

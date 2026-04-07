@@ -97,11 +97,16 @@ public static class Sm4Cryptography
         string padding = paddingMode == CryptoPaddingMode.None ? "NoPadding" : "PKCS7Padding";
         IBufferedCipher cipher = CipherUtilities.GetCipher($"SM4/{mode}/{padding}");
 
-        ICipherParameters parameters = cipherMode == CryptoCipherMode.ECB
-            ? new KeyParameter(keyBytes)
-            : new ParametersWithIV(new KeyParameter(keyBytes), GetIvBytes(key, iv, keyFormat));
+        if (cipherMode == CryptoCipherMode.ECB)
+        {
+            // ECB mode does not use an IV
+            cipher.Init(forEncrypt, new KeyParameter(keyBytes));
+            return cipher;
+        }
 
-        cipher.Init(forEncrypt, parameters);
+        // For CBC (and other) modes, provide IV
+        byte[] ivBytes = GetIvBytes(key, iv, keyFormat);
+        cipher.Init(forEncrypt, new ParametersWithIV(new KeyParameter(keyBytes), ivBytes));
         return cipher;
     }
 
