@@ -2,10 +2,12 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:dvm="clr-namespace:Wu.CommTool.Modules.CryptoTool.ViewModels.DesignViewModels"
              xmlns:enums="clr-namespace:Wu.CommTool.Modules.CryptoTool.Enums"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
+             d:DataContext="{x:Static dvm:Sm4ToolDesignViewModel.Instance}"
              d:DesignHeight="450"
              d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
@@ -32,13 +34,13 @@
                        Text="&#x5BC6;&#x94A5;" />
             <TextBox MinWidth="220"
                      Margin="0,0,12,0"
-                     Text="{Binding KeyText, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding Sm4CryptoConfig.Key, UpdateSourceTrigger=PropertyChanged}" />
             <TextBlock Margin="0,0,8,0"
                        VerticalAlignment="Center"
                        Text="&#x504F;&#x79FB;&#x91CF;" />
             <TextBox Width="220"
                      IsEnabled="{Binding IsIvEnabled}"
-                     Text="{Binding IvText, UpdateSourceTrigger=PropertyChanged}" />
+                     Text="{Binding Sm4CryptoConfig.Iv, UpdateSourceTrigger=PropertyChanged}" />
         </WrapPanel>
 
         <WrapPanel Grid.Row="2"
@@ -49,16 +51,16 @@
                        Text="&#x6A21;&#x5F0F;" />
             <ComboBox Width="auto"
                       Margin="0,0,12,0"
-                      ItemsSource="{Binding CipherModes}"
-                      SelectedItem="{Binding SelectedCipherMode}" />
+                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherMode}}}"
+                      SelectedItem="{Binding Sm4CryptoConfig.CipherMode}" />
 
             <TextBlock Margin="0,0,8,0"
                        VerticalAlignment="Center"
                        Text="&#x586B;&#x5145;" />
             <ComboBox Width="auto"
                       Margin="0,0,12,0"
-                      ItemsSource="{Binding PaddingModes}"
-                      SelectedItem="{Binding SelectedPaddingMode}" />
+                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PaddingMode}}}"
+                      SelectedItem="{Binding Sm4CryptoConfig.PaddingMode}" />
 
             <TextBlock Margin="0,0,8,0"
                        VerticalAlignment="Center"
@@ -66,22 +68,22 @@
             <ComboBox Width="auto"
                       Margin="0,0,12,0"
                       ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:KeyFormat}}}"
-                      SelectedItem="{Binding SelectedKeyFormat}" />
+                      SelectedItem="{Binding Sm4CryptoConfig.KeyFormat}" />
 
             <TextBlock Margin="0,0,8,0"
                        VerticalAlignment="Center"
                        Text="&#x660E;&#x6587;&#x683C;&#x5F0F;" />
             <ComboBox Width="auto"
                       Margin="0,0,12,0"
-                      ItemsSource="{Binding PlainFormats}"
-                      SelectedItem="{Binding SelectedPlainFormat}" />
+                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PlainFormat}}}"
+                      SelectedItem="{Binding Sm4CryptoConfig.PlainFormat}" />
 
             <TextBlock Margin="0,0,8,0"
                        VerticalAlignment="Center"
                        Text="&#x5BC6;&#x6587;&#x683C;&#x5F0F;" />
             <ComboBox Width="auto"
-                      ItemsSource="{Binding CipherFormats}"
-                      SelectedItem="{Binding SelectedCipherFormat}" />
+                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherFormat}}}"
+                      SelectedItem="{Binding Sm4CryptoConfig.CipherFormat}" />
         </WrapPanel>
 
         <TextBox Grid.Row="3"

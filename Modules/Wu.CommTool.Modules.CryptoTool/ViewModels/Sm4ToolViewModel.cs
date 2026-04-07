@@ -1,3 +1,4 @@
+using Newtonsoft.Json;
 using Wu.CommTool.Modules.CryptoTool.Enums;
 using Wu.CommTool.Modules.CryptoTool.Services;
 
@@ -32,11 +33,6 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
     [ObservableProperty] private string outputText = string.Empty;
 
-    [ObservableProperty] private string keyText = "Wu.CommTool";
-
-    [ObservableProperty]
-    private string ivText = "";
-
     public string CurrentConfigFullName
     {
         get => _currentConfigFullName;
@@ -52,48 +48,18 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
     public string CurrentConfigName => System.IO.Path.GetFileNameWithoutExtension(CurrentConfigFullName);
 
-    public ObservableCollection<CipherMode> CipherModes { get; } =
-    [
-        CipherMode.ECB,
-        CipherMode.CBC
-    ];
 
 
-    [ObservableProperty] CipherMode selectedCipherMode = CipherMode.ECB;
+    /// <summary>
+    /// 加密设置
+    /// </summary>
+    [ObservableProperty] Sm4CryptoConfig sm4CryptoConfig = new();
 
-    public ObservableCollection<PaddingMode> PaddingModes { get; } =
-    [
-        PaddingMode.PKCS7,
-        PaddingMode.None
-    ];
+    public bool IsIvEnabled => Sm4CryptoConfig.CipherMode != CipherMode.ECB;
 
-    [ObservableProperty]
-    private PaddingMode selectedPaddingMode = PaddingMode.PKCS7;
-
-
-    [ObservableProperty]
-    private KeyFormat selectedKeyFormat = KeyFormat.Hex;
-
-    public ObservableCollection<PlainFormat> PlainFormats { get; } =
-    [
-        PlainFormat.Utf8,
-        PlainFormat.Hex
-    ];
-
-    [ObservableProperty]
-    private PlainFormat selectedPlainFormat = PlainFormat.Utf8;
-
-    public ObservableCollection<CipherFormat> CipherFormats { get; } =
-    [
-        CipherFormat.Hex,
-        CipherFormat.Base64
-    ];
-
-    [ObservableProperty]
-    private CipherFormat selectedCipherFormat = CipherFormat.Hex;
-
-    public bool IsIvEnabled => SelectedCipherMode != CipherMode.ECB;
-
+    /// <summary>
+    /// 加密
+    /// </summary>
     [RelayCommand]
     private void Encrypt()
     {
@@ -105,15 +71,7 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
         try
         {
-            OutputText = Sm4Cryptography.Encrypt(
-                InputText,
-                KeyText,
-                IvText,
-                SelectedCipherMode,
-                SelectedPaddingMode,
-                SelectedPlainFormat,
-                SelectedCipherFormat,
-                SelectedKeyFormat);
+            OutputText = Sm4Cryptography.Encrypt(InputText, Sm4CryptoConfig);
         }
         catch (Exception ex)
         {
@@ -121,6 +79,9 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         }
     }
 
+    /// <summary>
+    /// 解密
+    /// </summary>
     [RelayCommand]
     private void Decrypt()
     {
@@ -132,15 +93,7 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
         try
         {
-            OutputText = Sm4Cryptography.Decrypt(
-                InputText,
-                KeyText,
-                IvText,
-                SelectedCipherMode,
-                SelectedPaddingMode,
-                SelectedPlainFormat,
-                SelectedCipherFormat,
-                SelectedKeyFormat);
+            OutputText = Sm4Cryptography.Decrypt(InputText, Sm4CryptoConfig);
         }
         catch (Exception ex)
         {
@@ -148,12 +101,18 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         }
     }
 
+    /// <summary>
+    /// 交换
+    /// </summary>
     [RelayCommand]
     private void Swap()
     {
         (InputText, OutputText) = (OutputText, InputText);
     }
 
+    /// <summary>
+    /// 清空
+    /// </summary>
     [RelayCommand]
     private void Clear()
     {
@@ -161,6 +120,9 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         OutputText = string.Empty;
     }
 
+    /// <summary>
+    /// 导入配置
+    /// </summary>
     [RelayCommand]
     private void ImportConfig()
     {
@@ -180,16 +142,16 @@ public partial class Sm4ToolViewModel : NavigationViewModel
                 return;
             }
 
-            CurrentConfigFullName = dlg.FileName;
             string json = Core.Common.Utils.ReadJsonFile(dlg.FileName);
-            Sm4ToolConfig? config = Newtonsoft.Json.JsonConvert.DeserializeObject<Sm4ToolConfig>(json);
+            Sm4CryptoConfig? config = JsonConvert.DeserializeObject<Sm4CryptoConfig>(json);
             if (config == null)
             {
                 HcGrowlExtensions.Warning("读取配置文件失败。");
                 return;
             }
 
-            ApplyConfig(config);
+            Sm4CryptoConfig = config;
+            CurrentConfigFullName = dlg.FileName;
             HcGrowlExtensions.Success($"导入配置：{CurrentConfigName}");
         }
         catch (Exception ex)
@@ -198,6 +160,9 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         }
     }
 
+    /// <summary>
+    /// 导出配置
+    /// </summary>
     [RelayCommand]
     private void ExportConfig()
     {
@@ -230,41 +195,9 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         }
     }
 
-    private CryptoAlgorithms.Sm4CipherMode GetCipherMode()
-    {
-        return SelectedCipherMode == CipherMode.ECB
-            ? CryptoAlgorithms.Sm4CipherMode.Ecb
-            : CryptoAlgorithms.Sm4CipherMode.Cbc;
-    }
-
-    private CryptoAlgorithms.Sm4PaddingMode GetPaddingMode()
-    {
-        return SelectedPaddingMode == PaddingMode.None
-            ? CryptoAlgorithms.Sm4PaddingMode.None
-            : CryptoAlgorithms.Sm4PaddingMode.Pkcs7;
-    }
-
-    private CryptoAlgorithms.Sm4TextFormat GetPlainFormat()
-    {
-        return SelectedPlainFormat == PlainFormat.Hex
-            ? CryptoAlgorithms.Sm4TextFormat.Hex
-            : CryptoAlgorithms.Sm4TextFormat.Utf8;
-    }
-
-    private CryptoAlgorithms.Sm4TextFormat GetCipherFormat()
-    {
-        return SelectedCipherFormat == CipherFormat.Hex
-            ? CryptoAlgorithms.Sm4TextFormat.Hex
-            : CryptoAlgorithms.Sm4TextFormat.Base64;
-    }
-
-    private CryptoAlgorithms.Sm4KeyFormat GetKeyFormat()
-    {
-        return SelectedKeyFormat == KeyFormat.Hex
-            ? CryptoAlgorithms.Sm4KeyFormat.Hex16
-            : CryptoAlgorithms.Sm4KeyFormat.Md5OfText;
-    }
-
+    /// <summary>
+    /// 加载默认配置
+    /// </summary>
     private void LoadDefaultConfig()
     {
         try
@@ -280,10 +213,10 @@ public partial class Sm4ToolViewModel : NavigationViewModel
             }
 
             string json = Core.Common.Utils.ReadJsonFile(filePath);
-            Sm4ToolConfig? config = Newtonsoft.Json.JsonConvert.DeserializeObject<Sm4ToolConfig>(json);
+            Sm4CryptoConfig? config = JsonConvert.DeserializeObject<Sm4CryptoConfig>(json);
             if (config != null)
             {
-                ApplyConfig(config);
+                Sm4CryptoConfig = config;
             }
         }
         catch (Exception ex)
@@ -292,113 +225,29 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         }
     }
 
+    /// <summary>
+    /// 保存配置到文件
+    /// </summary>
+    /// <param name="filePath"></param>
     private void SaveConfigToFile(string filePath)
     {
-        Sm4ToolConfig config = BuildConfig();
-        string json = Newtonsoft.Json.JsonConvert.SerializeObject(config, Newtonsoft.Json.Formatting.Indented);
+        string json = Newtonsoft.Json.JsonConvert.SerializeObject(CreateConfigCopy(Sm4CryptoConfig), Newtonsoft.Json.Formatting.Indented);
         Core.Common.Utils.WriteJsonFile(filePath, json);
         CurrentConfigFullName = filePath;
     }
 
-    private Sm4ToolConfig BuildConfig()
+
+    private static Sm4CryptoConfig CreateConfigCopy(Sm4CryptoConfig config)
     {
-        return new Sm4ToolConfig
+        return new Sm4CryptoConfig
         {
-            KeyText = KeyText,
-            IvText = IvText,
-            SelectedCipherMode = SelectedCipherMode.ToString(),
-            SelectedPaddingMode = SelectedPaddingMode.ToString(),
-            SelectedKeyFormat = SelectedKeyFormat.ToString(),
-            SelectedPlainFormat = SelectedPlainFormat.ToString(),
-            SelectedCipherFormat = SelectedCipherFormat.ToString()
+            Key = config.Key,
+            Iv = config.Iv,
+            CipherMode = config.CipherMode,
+            PaddingMode = config.PaddingMode,
+            KeyFormat = config.KeyFormat,
+            PlainFormat = config.PlainFormat,
+            CipherFormat = config.CipherFormat
         };
-    }
-
-    private void ApplyConfig(Sm4ToolConfig config)
-    {
-        KeyText = config.KeyText ?? string.Empty;
-        IvText = config.IvText ?? string.Empty;
-
-        if (!Enum.TryParse(config.SelectedCipherMode, true, out CipherMode cipherMode))
-        {
-            cipherMode = CipherMode.CBC;
-        }
-        SelectedCipherMode = cipherMode;
-        PaddingMode paddingMode;
-        if (string.Equals(config.SelectedPaddingMode, "无填充", StringComparison.OrdinalIgnoreCase))
-        {
-            paddingMode = PaddingMode.None;
-        }
-        else if (!Enum.TryParse(config.SelectedPaddingMode, true, out paddingMode))
-        {
-            paddingMode = PaddingMode.PKCS7;
-        }
-
-        SelectedPaddingMode = paddingMode;
-
-        KeyFormat keyFormat;
-        if (string.Equals(config.SelectedKeyFormat, "十六进制(16字节)", StringComparison.OrdinalIgnoreCase))
-        {
-            keyFormat = KeyFormat.Hex;
-        }
-        else if (string.Equals(config.SelectedKeyFormat, "文本(自动)", StringComparison.OrdinalIgnoreCase))
-        {
-            keyFormat = KeyFormat.Text;
-        }
-        else if (!Enum.TryParse(config.SelectedKeyFormat, true, out keyFormat))
-        {
-            keyFormat = KeyFormat.Text;
-        }
-
-        SelectedKeyFormat = keyFormat;
-
-        PlainFormat plainFormat;
-        if (string.Equals(config.SelectedPlainFormat, "UTF-8", StringComparison.OrdinalIgnoreCase))
-        {
-            plainFormat = PlainFormat.Utf8;
-        }
-        else if (string.Equals(config.SelectedPlainFormat, "十六进制", StringComparison.OrdinalIgnoreCase))
-        {
-            plainFormat = PlainFormat.Hex;
-        }
-        else if (!Enum.TryParse(config.SelectedPlainFormat, true, out plainFormat))
-        {
-            plainFormat = PlainFormat.Utf8;
-        }
-
-        SelectedPlainFormat = plainFormat;
-
-        CipherFormat cipherFormat;
-        if (string.Equals(config.SelectedCipherFormat, "十六进制", StringComparison.OrdinalIgnoreCase))
-        {
-            cipherFormat = CipherFormat.Hex;
-        }
-        else if (string.Equals(config.SelectedCipherFormat, "Base64", StringComparison.OrdinalIgnoreCase))
-        {
-            cipherFormat = CipherFormat.Base64;
-        }
-        else if (!Enum.TryParse(config.SelectedCipherFormat, true, out cipherFormat))
-        {
-            cipherFormat = CipherFormat.Base64;
-        }
-
-        SelectedCipherFormat = cipherFormat;
-    }
-
-    private sealed class Sm4ToolConfig
-    {
-        public string? KeyText { get; set; }
-
-        public string? IvText { get; set; }
-
-        public string? SelectedCipherMode { get; set; }
-
-        public string? SelectedPaddingMode { get; set; }
-
-        public string? SelectedKeyFormat { get; set; }
-
-        public string? SelectedPlainFormat { get; set; }
-
-        public string? SelectedCipherFormat { get; set; }
     }
 }
