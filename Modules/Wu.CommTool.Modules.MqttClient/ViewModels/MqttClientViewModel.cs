@@ -198,10 +198,10 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
             .Build();
 
             //发布
+            ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
             MqttClientPublishResult result = await client.PublishAsync(mam, CancellationToken.None);
             if (result.IsSuccess)
             {
-                ShowSendMessage($"{SendMessage}", $"主题：{MqttClientConfig.PublishTopic}");
             }
             else
             {
@@ -251,17 +251,40 @@ public partial class MqttClientViewModel : NavigationViewModel, IDialogHostAware
 
             string encryptedMessage = Sm4Cryptography.Encrypt(SendMessage, sm4Config);
             var mqttAMB = CreatePublishMessageBuilder();
-            var mam = mqttAMB.WithPayload(encryptedMessage)
+            switch (MqttClientConfig.SendPaylodType)
+            {
+                case MqttPayloadType.Json:
+                case MqttPayloadType.Plaintext:
+                    mqttAMB.WithPayload(encryptedMessage);
+                    break;
+                case MqttPayloadType.Base64:
+                    mqttAMB.WithPayload(Convert.FromBase64String(encryptedMessage));
+                    break;
+                case MqttPayloadType.Base64Utf8:
+                    mqttAMB.WithPayload(Convert.ToBase64String(Encoding.Default.GetBytes(encryptedMessage)));
+                    break;
+                case MqttPayloadType.Base64Base64:
+                    mqttAMB.WithPayload(Convert.FromBase64String(Convert.ToBase64String(Encoding.Default.GetBytes(encryptedMessage))));
+                    break;
+                case MqttPayloadType.Hex:
+#if NET
+                    mqttAMB.WithPayload(Convert.FromHexString(encryptedMessage.RemoveSpace()));
+#else
+                    mqttAMB.WithPayload(StringExtention.GetBytes(encryptedMessage.Replace(" ", string.Empty)));
+#endif
+                    break;
+            }
+
+            var mam = mqttAMB
                              .WithTopic(MqttClientConfig.PublishTopic)
                              .Build();
 
+            ShowSendMessage($"[SM4][{MqttClientConfig.SendPaylodType.ToString()}]{encryptedMessage}", $"主题：{MqttClientConfig.PublishTopic}");
             MqttClientPublishResult result = await client.PublishAsync(mam, CancellationToken.None);
             if (result.IsSuccess)
             {
-                ShowSendMessage($"[SM4]{encryptedMessage}", $"主题：{MqttClientConfig.PublishTopic}");
                 return true;
             }
-
             ShowErrorMessage($"发布失败：{result.ReasonCode}");
             return false;
         }
