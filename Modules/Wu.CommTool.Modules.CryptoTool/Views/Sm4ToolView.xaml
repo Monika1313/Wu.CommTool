@@ -1,4 +1,4 @@
-<UserControl x:Class="Wu.CommTool.Modules.CryptoTool.Views.Sm4ToolView"
+﻿<UserControl x:Class="Wu.CommTool.Modules.CryptoTool.Views.Sm4ToolView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -27,21 +27,29 @@
 
             <TextBlock Margin="0,0,0,8"
                        Style="{StaticResource TitleTextBlock}"
-                       Text="SM4 &#x52A0;&#x89E3;&#x5BC6;" />
+                       Text="SM4 加密解密" />
 
             <WrapPanel Grid.Row="1"
                        Margin="0,0,0,8"
                        VerticalAlignment="Center">
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x5BC6;&#x94A5;" />
+                           Text="密钥" />
                 <TextBox MinWidth="220"
                          Margin="0,0,12,0"
                          Text="{Binding Sm4CryptoConfig.Key, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x504F;&#x79FB;&#x91CF;" />
+                           Text="偏移量" />
                 <TextBox Width="220" Text="{Binding Sm4CryptoConfig.Iv, UpdateSourceTrigger=PropertyChanged}" />
+                <Button Width="100"
+                        Margin="4"
+                        Command="{Binding ImportConfigCommand}"
+                        Content="导入配置" />
+                <Button Width="100"
+                        Margin="4"
+                        Command="{Binding ExportConfigCommand}"
+                        Content="导出配置" />
             </WrapPanel>
 
             <WrapPanel Grid.Row="2"
@@ -49,7 +57,7 @@
                        VerticalAlignment="Center">
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x6A21;&#x5F0F;" />
+                           Text="模式" />
                 <ComboBox Width="auto"
                           Margin="0,0,12,0"
                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherMode}}}"
@@ -57,7 +65,7 @@
 
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x586B;&#x5145;" />
+                           Text="填充" />
                 <ComboBox Width="auto"
                           Margin="0,0,12,0"
                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PaddingMode}}}"
@@ -65,7 +73,7 @@
 
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x5BC6;&#x94A5;&#x683C;&#x5F0F;" />
+                           Text="密钥格式" />
                 <ComboBox Width="auto"
                           Margin="0,0,12,0"
                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:KeyFormat}}}"
@@ -73,7 +81,7 @@
 
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x660E;&#x6587;&#x683C;&#x5F0F;" />
+                           Text="明文格式" />
                 <ComboBox Width="auto"
                           Margin="0,0,12,0"
                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PlainFormat}}}"
@@ -81,7 +89,7 @@
 
                 <TextBlock Margin="0,0,8,0"
                            VerticalAlignment="Center"
-                           Text="&#x5BC6;&#x6587;&#x683C;&#x5F0F;" />
+                           Text="密文格式" />
                 <ComboBox Width="auto"
                           ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherFormat}}}"
                           SelectedItem="{Binding Sm4CryptoConfig.CipherFormat}" />
@@ -99,35 +107,28 @@
                 <Button Width="90"
                         Margin="4"
                         Command="{Binding EncryptCommand}"
-                        Content="&#x52A0;&#x5BC6;" />
+                        Content="加密" />
                 <Button Width="90"
                         Margin="4"
                         Command="{Binding DecryptCommand}"
-                        Content="&#x89E3;&#x5BC6;" />
+                        Content="解密" />
                 <Button Width="110"
                         Margin="4"
                         Command="{Binding EncryptPipelineCommand}"
-                        Content="&#x52A0;&#x5BC6;&#x4E00;&#x6761;&#x9F99;" />
+                        Content="加密一条龙" />
                 <Button Width="110"
                         Margin="4"
                         Command="{Binding DecryptPipelineCommand}"
-                        Content="&#x89E3;&#x5BC6;&#x4E00;&#x6761;&#x9F99;" />
+                        Content="解密一条龙" />
                 <Button Width="90"
                         Margin="4"
                         Command="{Binding SwapCommand}"
-                        Content="&#x4EA4;&#x6362;" />
+                        Content="交换" />
                 <Button Width="90"
                         Margin="4"
                         Command="{Binding ClearCommand}"
-                        Content="&#x6E05;&#x7A7A;" />
-                <Button Width="100"
-                        Margin="4"
-                        Command="{Binding ImportConfigCommand}"
-                        Content="&#x5BFC;&#x5165;&#x914D;&#x7F6E;" />
-                <Button Width="100"
-                        Margin="4"
-                        Command="{Binding ExportConfigCommand}"
-                        Content="&#x5BFC;&#x51FA;&#x914D;&#x7F6E;" />
+                        Content="清空" />
+
             </WrapPanel>
 
             <TextBox Grid.Row="5"
@@ -139,7 +140,7 @@
                      VerticalScrollBarVisibility="Auto">
                 <TextBox.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}" Header="&#x67E5;&#x770B;Json&#x683C;&#x5F0F;&#x5316;" />
+                        <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}" Header="查看Json格式化" />
                     </ContextMenu>
                 </TextBox.ContextMenu>
             </TextBox>
