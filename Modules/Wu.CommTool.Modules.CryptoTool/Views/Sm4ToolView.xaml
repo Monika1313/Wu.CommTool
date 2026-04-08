@@ -104,6 +104,14 @@
                         Margin="4"
                         Command="{Binding DecryptCommand}"
                         Content="&#x89E3;&#x5BC6;" />
+                <Button Width="110"
+                        Margin="4"
+                        Command="{Binding EncryptPipelineCommand}"
+                        Content="&#x52A0;&#x5BC6;&#x4E00;&#x6761;&#x9F99;" />
+                <Button Width="110"
+                        Margin="4"
+                        Command="{Binding DecryptPipelineCommand}"
+                        Content="&#x89E3;&#x5BC6;&#x4E00;&#x6761;&#x9F99;" />
                 <Button Width="90"
                         Margin="4"
                         Command="{Binding SwapCommand}"

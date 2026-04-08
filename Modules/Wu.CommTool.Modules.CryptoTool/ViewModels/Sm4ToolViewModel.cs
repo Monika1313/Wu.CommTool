@@ -52,6 +52,7 @@ public partial class Sm4ToolViewModel : NavigationViewModel, IDialogHostAware
             }
         }
     }
+
     private string _currentConfigFullName = string.Empty;
 
     public string CurrentConfigName => System.IO.Path.GetFileNameWithoutExtension(CurrentConfigFullName);
@@ -82,6 +83,52 @@ public partial class Sm4ToolViewModel : NavigationViewModel, IDialogHostAware
         catch (Exception ex)
         {
             HcGrowlExtensions.Warning($"加密失败：{ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void EncryptPipeline()
+    {
+        try
+        {
+            string? text = System.Windows.Clipboard.GetText();
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                HcGrowlExtensions.Warning("请先在剪贴板中复制内容。");
+                return;
+            }
+
+            InputText = text;
+            OutputText = Sm4Cryptography.Encrypt(InputText, Sm4CryptoConfig);
+            System.Windows.Clipboard.SetDataObject(OutputText);
+            HcGrowlExtensions.Success("已完成加密并复制结果到剪贴板。");
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"一条龙加密失败：{ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void DecryptPipeline()
+    {
+        try
+        {
+            string? text = System.Windows.Clipboard.GetText();
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                HcGrowlExtensions.Warning("请先在剪贴板中复制内容。");
+                return;
+            }
+
+            InputText = text;
+            OutputText = Sm4Cryptography.Decrypt(InputText, Sm4CryptoConfig);
+            System.Windows.Clipboard.SetDataObject(OutputText);
+            HcGrowlExtensions.Success("已完成解密并复制结果到剪贴板。");
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"一条龙解密失败：{ex.Message}");
         }
     }
 
