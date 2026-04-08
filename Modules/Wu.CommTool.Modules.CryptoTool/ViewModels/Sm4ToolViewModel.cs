@@ -4,11 +4,14 @@ using Wu.CommTool.Modules.CryptoTool.Services;
 
 namespace Wu.CommTool.Modules.CryptoTool.ViewModels;
 
-public partial class Sm4ToolViewModel : NavigationViewModel
+public partial class Sm4ToolViewModel : NavigationViewModel, IDialogHostAware
 {
     private readonly string configDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"Configs\CryptoTool");
     private readonly string configExtension = "jsonSM4";
     private bool initFlag;
+    private readonly IDialogHostService dialogHost;
+
+    public string DialogHostName { get; set; } = nameof(Sm4ToolView);
 
     public Sm4ToolViewModel()
     {
@@ -16,6 +19,11 @@ public partial class Sm4ToolViewModel : NavigationViewModel
 
     public Sm4ToolViewModel(IContainerProvider provider) : base(provider)
     {
+    }
+
+    public Sm4ToolViewModel(IContainerProvider provider, IDialogHostService dialogHost) : base(provider)
+    {
+        this.dialogHost = dialogHost;
     }
 
     public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -74,6 +82,48 @@ public partial class Sm4ToolViewModel : NavigationViewModel
         catch (Exception ex)
         {
             HcGrowlExtensions.Warning($"加密失败：{ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private void Save()
+    {
+        if (!DialogHost.IsDialogOpen(DialogHostName))
+            return;
+
+        DialogParameters param = new();
+        DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.OK, param));
+    }
+
+    [RelayCommand]
+    private void Cancel()
+    {
+        if (DialogHost.IsDialogOpen(DialogHostName))
+            DialogHost.Close(DialogHostName, new DialogResult(ButtonResult.No));
+    }
+
+    [RelayCommand]
+    private async Task OpenJsonDataView()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(OutputText))
+            {
+                HcGrowlExtensions.Warning("无法进行Json格式化。");
+                return;
+            }
+
+            var xx = JsonConvert.DeserializeObject(OutputText);
+
+            DialogParameters param = new()
+            {
+                { "Value", new MessageData(OutputText, DateTime.Now, MessageType.Info, "SM4解密结果") }
+            };
+            var dialogResult = await dialogHost.ShowDialog("JsonDataView", param, DialogHostName);
+        }
+        catch (Exception ex)
+        {
+            HcGrowlExtensions.Warning($"无法进行Json格式化：{ex.Message}");
         }
     }
 
@@ -247,5 +297,9 @@ public partial class Sm4ToolViewModel : NavigationViewModel
             PlainFormat = config.PlainFormat,
             CipherFormat = config.CipherFormat
         };
+    }
+
+    public void OnDialogOpened(IDialogParameters parameters)
+    {
     }
 }

@@ -40,10 +40,6 @@
                                 </StackPanel>
 
                                 <StackPanel DockPanel.Dock="Top">
-                                    <TextBlock Margin="5"
-                                               HorizontalAlignment="Center"
-                                               Style="{DynamicResource SecondTitle}"
-                                               Text="连接的服务器" />
                                     <TextBox hc:TitleElement.Title="密钥"
                                              hc:TitleElement.TitleWidth="Auto"
                                              Style="{StaticResource FormTextBox}"

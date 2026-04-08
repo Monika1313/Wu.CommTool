@@ -4,7 +4,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:dvm="clr-namespace:Wu.CommTool.Modules.CryptoTool.ViewModels.DesignViewModels"
              xmlns:enums="clr-namespace:Wu.CommTool.Modules.CryptoTool.Enums"
+             xmlns:local="clr-namespace:Wu.CommTool.Modules.CryptoTool.Views"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:prism="http://prismlibrary.com/"
              xmlns:wu="https://github.com/Monika1313/Wu"
              d:DataContext="{x:Static dvm:Sm4ToolDesignViewModel.Instance}"
@@ -12,120 +14,127 @@
              d:DesignWidth="800"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <md:DialogHost Identifier="Sm4ToolView" Style="{StaticResource MaterialDesignEmbeddedDialogHost}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
 
-        <TextBlock Margin="0,0,0,8"
-                   Style="{StaticResource TitleTextBlock}"
-                   Text="SM4 &#x52A0;&#x89E3;&#x5BC6;" />
+            <TextBlock Margin="0,0,0,8"
+                       Style="{StaticResource TitleTextBlock}"
+                       Text="SM4 &#x52A0;&#x89E3;&#x5BC6;" />
 
-        <WrapPanel Grid.Row="1"
-                   Margin="0,0,0,8"
-                   VerticalAlignment="Center">
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x5BC6;&#x94A5;" />
-            <TextBox MinWidth="220"
-                     Margin="0,0,12,0"
-                     Text="{Binding Sm4CryptoConfig.Key, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x504F;&#x79FB;&#x91CF;" />
-            <TextBox Width="220"
-                     IsEnabled="{Binding IsIvEnabled}"
-                     Text="{Binding Sm4CryptoConfig.Iv, UpdateSourceTrigger=PropertyChanged}" />
-        </WrapPanel>
+            <WrapPanel Grid.Row="1"
+                       Margin="0,0,0,8"
+                       VerticalAlignment="Center">
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x5BC6;&#x94A5;" />
+                <TextBox MinWidth="220"
+                         Margin="0,0,12,0"
+                         Text="{Binding Sm4CryptoConfig.Key, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x504F;&#x79FB;&#x91CF;" />
+                <TextBox Width="220" Text="{Binding Sm4CryptoConfig.Iv, UpdateSourceTrigger=PropertyChanged}" />
+            </WrapPanel>
 
-        <WrapPanel Grid.Row="2"
-                   Margin="0,0,0,8"
-                   VerticalAlignment="Center">
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x6A21;&#x5F0F;" />
-            <ComboBox Width="auto"
-                      Margin="0,0,12,0"
-                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherMode}}}"
-                      SelectedItem="{Binding Sm4CryptoConfig.CipherMode}" />
+            <WrapPanel Grid.Row="2"
+                       Margin="0,0,0,8"
+                       VerticalAlignment="Center">
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x6A21;&#x5F0F;" />
+                <ComboBox Width="auto"
+                          Margin="0,0,12,0"
+                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherMode}}}"
+                          SelectedItem="{Binding Sm4CryptoConfig.CipherMode}" />
 
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x586B;&#x5145;" />
-            <ComboBox Width="auto"
-                      Margin="0,0,12,0"
-                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PaddingMode}}}"
-                      SelectedItem="{Binding Sm4CryptoConfig.PaddingMode}" />
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x586B;&#x5145;" />
+                <ComboBox Width="auto"
+                          Margin="0,0,12,0"
+                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PaddingMode}}}"
+                          SelectedItem="{Binding Sm4CryptoConfig.PaddingMode}" />
 
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x5BC6;&#x94A5;&#x683C;&#x5F0F;" />
-            <ComboBox Width="auto"
-                      Margin="0,0,12,0"
-                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:KeyFormat}}}"
-                      SelectedItem="{Binding Sm4CryptoConfig.KeyFormat}" />
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x5BC6;&#x94A5;&#x683C;&#x5F0F;" />
+                <ComboBox Width="auto"
+                          Margin="0,0,12,0"
+                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:KeyFormat}}}"
+                          SelectedItem="{Binding Sm4CryptoConfig.KeyFormat}" />
 
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x660E;&#x6587;&#x683C;&#x5F0F;" />
-            <ComboBox Width="auto"
-                      Margin="0,0,12,0"
-                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PlainFormat}}}"
-                      SelectedItem="{Binding Sm4CryptoConfig.PlainFormat}" />
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x660E;&#x6587;&#x683C;&#x5F0F;" />
+                <ComboBox Width="auto"
+                          Margin="0,0,12,0"
+                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:PlainFormat}}}"
+                          SelectedItem="{Binding Sm4CryptoConfig.PlainFormat}" />
 
-            <TextBlock Margin="0,0,8,0"
-                       VerticalAlignment="Center"
-                       Text="&#x5BC6;&#x6587;&#x683C;&#x5F0F;" />
-            <ComboBox Width="auto"
-                      ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherFormat}}}"
-                      SelectedItem="{Binding Sm4CryptoConfig.CipherFormat}" />
-        </WrapPanel>
+                <TextBlock Margin="0,0,8,0"
+                           VerticalAlignment="Center"
+                           Text="&#x5BC6;&#x6587;&#x683C;&#x5F0F;" />
+                <ComboBox Width="auto"
+                          ItemsSource="{Binding Source={wu:EnumBindingSource {x:Type enums:CipherFormat}}}"
+                          SelectedItem="{Binding Sm4CryptoConfig.CipherFormat}" />
+            </WrapPanel>
 
-        <TextBox Grid.Row="3"
-                 AcceptsReturn="True"
-                 Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
-                 TextWrapping="Wrap"
-                 VerticalScrollBarVisibility="Auto" />
+            <TextBox Grid.Row="3"
+                     AcceptsReturn="True"
+                     Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto" />
 
-        <WrapPanel Grid.Row="4"
-                   Margin="0,8"
-                   HorizontalAlignment="Center">
-            <Button Width="90"
-                    Margin="4"
-                    Command="{Binding EncryptCommand}"
-                    Content="&#x52A0;&#x5BC6;" />
-            <Button Width="90"
-                    Margin="4"
-                    Command="{Binding DecryptCommand}"
-                    Content="&#x89E3;&#x5BC6;" />
-            <Button Width="90"
-                    Margin="4"
-                    Command="{Binding SwapCommand}"
-                    Content="&#x4EA4;&#x6362;" />
-            <Button Width="90"
-                    Margin="4"
-                    Command="{Binding ClearCommand}"
-                    Content="&#x6E05;&#x7A7A;" />
-            <Button Width="100"
-                    Margin="4"
-                    Command="{Binding ImportConfigCommand}"
-                    Content="&#x5BFC;&#x5165;&#x914D;&#x7F6E;" />
-            <Button Width="100"
-                    Margin="4"
-                    Command="{Binding ExportConfigCommand}"
-                    Content="&#x5BFC;&#x51FA;&#x914D;&#x7F6E;" />
-        </WrapPanel>
+            <WrapPanel Grid.Row="4"
+                       Margin="0,8"
+                       HorizontalAlignment="Center">
+                <Button Width="90"
+                        Margin="4"
+                        Command="{Binding EncryptCommand}"
+                        Content="&#x52A0;&#x5BC6;" />
+                <Button Width="90"
+                        Margin="4"
+                        Command="{Binding DecryptCommand}"
+                        Content="&#x89E3;&#x5BC6;" />
+                <Button Width="90"
+                        Margin="4"
+                        Command="{Binding SwapCommand}"
+                        Content="&#x4EA4;&#x6362;" />
+                <Button Width="90"
+                        Margin="4"
+                        Command="{Binding ClearCommand}"
+                        Content="&#x6E05;&#x7A7A;" />
+                <Button Width="100"
+                        Margin="4"
+                        Command="{Binding ImportConfigCommand}"
+                        Content="&#x5BFC;&#x5165;&#x914D;&#x7F6E;" />
+                <Button Width="100"
+                        Margin="4"
+                        Command="{Binding ExportConfigCommand}"
+                        Content="&#x5BFC;&#x51FA;&#x914D;&#x7F6E;" />
+            </WrapPanel>
 
-        <TextBox Grid.Row="5"
-                 AcceptsReturn="True"
-                 IsReadOnly="True"
-                 Text="{Binding OutputText}"
-                 TextWrapping="Wrap"
-                 VerticalScrollBarVisibility="Auto" />
-    </Grid>
+            <TextBox Grid.Row="5"
+                     AcceptsReturn="True"
+                     IsReadOnly="True"
+                     Tag="{Binding}"
+                     Text="{Binding OutputText}"
+                     TextWrapping="Wrap"
+                     VerticalScrollBarVisibility="Auto">
+                <TextBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Command="{Binding Path=PlacementTarget.Tag.OpenJsonDataViewCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ContextMenu}}}" Header="&#x67E5;&#x770B;Json&#x683C;&#x5F0F;&#x5316;" />
+                    </ContextMenu>
+                </TextBox.ContextMenu>
+            </TextBox>
+        </Grid>
+    </md:DialogHost>
 </UserControl>
