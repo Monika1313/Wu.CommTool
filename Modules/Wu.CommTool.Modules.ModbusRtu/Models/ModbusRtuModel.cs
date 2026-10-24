@@ -299,7 +299,7 @@ public partial class ModbusRtuModel : ObservableObject
 
             //配置串口
             SerialPort.PortName = ComConfig.ComPort.Port;                          //串口
-            SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+            SerialPort.BaudRate = ComConfig.GetBaudRate();                         //波特率
             SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
             SerialPort.DataBits = ComConfig.DataBits;                              //数据位
             SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位
@@ -378,7 +378,7 @@ public partial class ModbusRtuModel : ObservableObject
             {
                 //配置串口
                 SerialPort.PortName = ComConfig.ComPort.Port;                          //串口
-                SerialPort.BaudRate = (int)ComConfig.BaudRate;                         //波特率
+                SerialPort.BaudRate = ComConfig.GetBaudRate();                         //波特率
                 SerialPort.Parity = (System.IO.Ports.Parity)ComConfig.Parity;          //校验
                 SerialPort.DataBits = ComConfig.DataBits;                              //数据位
                 SerialPort.StopBits = (System.IO.Ports.StopBits)ComConfig.StopBits;    //停止位

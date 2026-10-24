@@ -16,6 +16,32 @@ public partial class ComConfig : ObservableObject
     [ObservableProperty] BaudRate baudRate = BaudRate._9600;
 
     /// <summary>
+    /// 启用自定义波特率
+    /// </summary>
+    [ObservableProperty] bool enableCustonBaudRate = false;
+
+    /// <summary>
+    /// 自定义波特率
+    /// </summary>
+    [ObservableProperty] int custonBaudRate = 9600;
+
+    /// <summary>
+    /// 获取波特率设定值
+    /// </summary>
+    /// <returns></returns>
+    public int GetBaudRate()
+    {
+        if (EnableCustonBaudRate)
+        {
+            return CustonBaudRate;
+        }
+        else
+        {
+            return (int)BaudRate;
+        }
+    }
+
+    /// <summary>
     /// 校验
     /// </summary>
     [ObservableProperty] Parity parity = Parity.None;

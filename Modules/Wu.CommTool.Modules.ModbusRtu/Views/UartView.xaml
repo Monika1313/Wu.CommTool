@@ -92,6 +92,21 @@
                                           SelectedItem="{Binding UartModel.ComConfig.BaudRate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Style="{StaticResource FormComboBox}" />
 
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox MinWidth="150"
+                                             hc:TitleElement.Title="自定义波特率"
+                                             hc:TitleElement.TitleWidth="auto"
+                                             IsEnabled="{Binding UartModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
+                                             Style="{StaticResource FormTextBox}"
+                                             Text="{Binding UartModel.ComConfig.CustonBaudRate}" />
+                                    <TextBlock Margin="5,0"
+                                               VerticalAlignment="Center"
+                                               Text="启用自定义波特率" />
+                                    <ToggleButton Margin="0,0"
+                                                  IsChecked="{Binding UartModel.ComConfig.EnableCustonBaudRate}"
+                                                  Style="{StaticResource ToggleButtonSwitch}" />
+                                </StackPanel>
+
                                 <ComboBox hc:InfoElement.Placeholder="请选择校验位..."
                                           hc:InfoElement.Title="校验位"
                                           IsEnabled="{Binding UartModel.ComConfig.IsOpened, Converter={wu:ReverseBool}}"
@@ -476,7 +491,7 @@
                                                                 Cursor="Hand"
                                                                 DockPanel.Dock="Right">
                                                             <Button.Style>
-                                                                <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignRaisedButton}">
+                                                                <Style BasedOn="{StaticResource MaterialDesignRaisedButton}" TargetType="Button">
                                                                     <Style.Triggers>
                                                                         <DataTrigger Binding="{Binding Description}" Value="">
                                                                             <Setter Property="Content" Value="发送" />

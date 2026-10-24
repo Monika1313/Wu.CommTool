@@ -111,6 +111,32 @@ public partial class MrtuSlaveModel : ObservableObject
     [ObservableProperty] Parity parity = Parity.None;
 
     /// <summary>
+    /// 启用自定义波特率
+    /// </summary>
+    [ObservableProperty] bool enableCustonBaudRate = false;
+
+    /// <summary>
+    /// 自定义波特率
+    /// </summary>
+    [ObservableProperty] int custonBaudRate = 9600;
+
+    /// <summary>
+    /// 获取波特率设定值
+    /// </summary>
+    /// <returns></returns>
+    public int GetBaudRate()
+    {
+        if (EnableCustonBaudRate)
+        {
+            return CustonBaudRate;
+        }
+        else
+        {
+            return (int)BaudRate;
+        }
+    }
+
+    /// <summary>
     /// 数据位
     /// </summary>
     [ObservableProperty] int dataBits = 8;
@@ -237,7 +263,7 @@ public partial class MrtuSlaveModel : ObservableObject
 
             //配置串口
             SerialPort.PortName = ComPort.Port;                          //串口
-            SerialPort.BaudRate = (int)BaudRate;                         //波特率
+            SerialPort.BaudRate = GetBaudRate();                         //波特率
             SerialPort.Parity = (System.IO.Ports.Parity)Parity;          //校验
             SerialPort.DataBits = DataBits;                              //数据位
             SerialPort.StopBits = (System.IO.Ports.StopBits)StopBits;    //停止位

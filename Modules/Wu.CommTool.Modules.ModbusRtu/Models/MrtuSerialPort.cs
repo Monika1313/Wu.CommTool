@@ -38,7 +38,7 @@ public partial class MrtuSerialPort : ObservableObject, IDisposable
     {
         //配置串口
         serialPort.PortName = config.ComPort.Port;                          //串口
-        serialPort.BaudRate = (int)config.BaudRate;                         //波特率
+        serialPort.BaudRate = config.GetBaudRate();                         //波特率
         serialPort.Parity = (System.IO.Ports.Parity)config.Parity;          //校验
         serialPort.DataBits = config.DataBits;                              //数据位
         serialPort.StopBits = (System.IO.Ports.StopBits)config.StopBits;    //停止位
